@@ -6,43 +6,64 @@
 
 ## 新对话启动流程
 
-```
-1. 读 CLAUDE.md       → 项目定义、架构、规则
-2. 读 架构文档.md       → 当前架构、版本记录、开发进度
-3. 读 TASKS.md         → 当前版本未完成的 Task
-4. git log --oneline -5 → 最新提交和进度
-5. 执行对应 Task
-```
+1. 读 `CLAUDE.md` → 项目定义、架构、规则、**工作规范**
+2. 读 `架构文档.md` → 当前架构、版本记录、开发进度
+3. 读本文件 → 找到当前版本未完成的 Task
+4. `git log --oneline -5` → 确认最新提交和进度
+5. 问用户"从哪个 Task 开始？"；若无未完成 Task，问"下一个版本做什么？"
 
 ---
 
-## v0.3.6 — 标题栏精简 + 底部状态条完善 + 迷你展开修复
+## v0.3.6 — 标题栏精简 + 底部状态条完善
 
-> 当前进度：✅ 全部完成（含 hotfix：状态条两行+12px+tooltip双行）
+> 当前进度：✅ 全部完成
 
-### Task 1 ✅ — 标题栏只留 [×]
+- Task 1 ✅ — 标题栏只留 [×]
+- Task 2 ✅ — 底部状态条完善
+- Task 3 ✅ — 迷你展开尺寸+居中修复
+- Task 4 ✅ — 托盘 tooltip 格式更新
 
-`index.html`: 去掉 `[─]` `[□]` 按钮；`main.js`: 移除对应事件绑定（`window_minimize`/`window_toggle_maximize` 命令保留，后续可能复用）
+---
 
-### Task 2 ✅ — 底部状态条完善
+## 整体路线规划
 
-`style.css`: 配色改为按钮栏同色背景 + dim 色文字  
-`main.js`: `updatePermaStatus()` 显示 `v0.3.6 | Player | Scenario | Lv.X | Title | XhXmXs | 成就:N`  
-`index.html`: 移除 `#about-panel`（被永久状态条取代）；移除"状态"按钮
+### v0.3.7 — 剧本填充
 
-### Task 3 ✅ — 迷你展开尺寸+居中修复
+> 规划中，未开始。预计 4-6 Task。
 
-`lib.rs`: `set_window_mode("full")` 加回 `set_size(320, 840)` + `window.center()`
+| Task | 内容 | 说明 |
+|------|------|------|
+| 1 | `.md` 剧本解析器 | Rust 端解析 YAML frontmatter + Markdown 表格，替换现有 `include_str!` JSON 加载 |
+| 2 | 废土剧本扩充至 500 条事件 | AI 按 `剧本MD格式模板.md` 批量生成 |
+| 3 | 中世纪剧本 `.md` 骨架 | 称号表 + 30 条初始事件 + 8 成就 |
+| 4 | 赛博剧本 `.md` 骨架 | 同上 |
+| 5 | 修仙剧本 `.md` 骨架 | 同上 |
+| 6 | 克苏鲁剧本 `.md` 骨架 | 同上 |
 
-### Task 4 ✅ — 托盘 tooltip 格式更新
+### v0.4.0 — 自定义剧本 + AI 生成
 
-`main.js`: `updateTooltip()` 输出 `玩家 | 副本 | Lv.X | 称号 | XhXmXs`
+> 规划中，未开始。
+
+- `.md` 解析器（v0.3.7 已完成后可直接使用）
+- 用户自备 API Key（OpenAI 兼容接口）
+- 输入小说/设定 → AI 按模板生成 `.md`
+- 剧本导入/导出/增删（删除时清理关联存档）
+- AI 输出语言选择
+
+### v0.5.0 — 节假日系统
+
+> 规划中，未开始。日期检测 + 独立事件池 + 剧本定制版事件。
+
+### v0.6.0 — Mac 适配
+
+> 规划中，未开始。菜单栏适配 + 字体路径 + 打包测试。
+
+### v1.0 — Steam 上架
+
+> 规划中，未开始。Steamworks 集成 + 云存档 + P2P 联机 + 商店页面上架。
 
 ---
 
 ## 规范
 
-- 执行前：`git add -A && git commit -m "快照: YYYY-MM-DD vX.Y.Z TaskN 前"`
-- 执行后：更新 TASKS.md 对应 Task 标记 ✅
-- 版本完成：更新架构文档.md 版本记录 + 进度表
-- 最终：`git add -A && git commit -m "vX.Y.Z: 版本说明"`
+详见 `CLAUDE.md` → **「工作规范」** 章节。本文件仅记录 Task 清单。
