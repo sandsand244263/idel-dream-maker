@@ -191,7 +191,7 @@ aboutClose.addEventListener('click', () => aboutPanel.classList.add('hidden'));
 
 function updateAboutPanel() {
   if (!gameState) return;
-  aboutVersion.textContent = 'v0.2.0-beta';
+  aboutVersion.textContent = 'v0.3.0-beta';
   aboutPlayer.textContent = gameState.player_name;
   aboutScenario.textContent = currentScenario?.nameCN || '?';
   aboutLevel.textContent = gameState.level;
@@ -304,7 +304,7 @@ titleValueEl.addEventListener('click', () => {
 
 // ── Init app ──
 init().then(() => {
-  addLog('system', 'v0.2.0-beta 加载完成');
+  addLog('system', 'v0.3.0-beta 加载完成');
 
   if (gameState) {
     applyTheme(gameState.selected_font_theme || 'green');

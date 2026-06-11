@@ -1,5 +1,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    idleworker_lib::run();
+    idel_dream_maker_lib::run();
 }

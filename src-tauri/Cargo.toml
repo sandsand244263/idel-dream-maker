@@ -1,12 +1,12 @@
 [package]
-name = "idleworker"
-version = "0.2.0"
-description = "IdleWorker - A zero-interaction idle narrative game"
+name = "idel-dream-maker"
+version = "0.3.0"
+description = "Idel-DreamMaker - A zero-interaction idle narrative game with Hub system"
 authors = []
 edition = "2024"
 
 [lib]
-name = "idleworker_lib"
+name = "idel_dream_maker_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
