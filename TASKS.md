@@ -633,6 +633,12 @@ game.rs:
   - 确认 tray_by_id("main") 获取正确
   - Hub 模式 tooltip: "Idel-DreamMaker | 大厅 Lv.X"
   - 剧本模式 tooltip: "Lv.X 称号 | 已挂机 XhXm"
+
+### Hotfix — 进入副本死锁
+
+| 问题 | 原因 | 修复 |
+|------|------|------|
+| 进入副本后游戏未响应 | `select_scenario` 在返回前又锁了一次 `state.game`（第 100 行 `&*state.game.lock()`），而此时第 83 行的 `game` 锁仍持有，`Mutex` 不可重入导致死锁 | 改为 `&*game` 复用已有锁 |
 ```
 
 ---

@@ -359,7 +359,7 @@ btnScenario.addEventListener('click', async () => {
 btnTitles.addEventListener('click', () => { renderTitlesPanel(); titlesPanel.classList.remove('hidden'); });
 
 btnAbout.addEventListener('click', () => {
-  aboutVersion.textContent = 'v0.3.1-beta'; aboutPlayer.textContent = gameState?.player_name || '?';
+  aboutVersion.textContent = 'v0.3.1'; aboutPlayer.textContent = gameState?.player_name || '?';
   aboutScenario.textContent = currentScenario?.nameCN || 'Hub';
   aboutLevel.textContent = gameState?.is_in_hub ? `${t('labelHubLevel')} ${hubLevel}` : `${t('labelLevel')} ${gameState?.level || '?'}`;
   aboutTitle.textContent = currentTitle?.name || '?';
