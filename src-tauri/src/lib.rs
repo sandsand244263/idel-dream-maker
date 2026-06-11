@@ -104,6 +104,24 @@ fn select_scenario(id: String, alias: Option<String>, app: AppHandle, state: Sta
 }
 
 #[tauri::command]
+fn draw_scenario(state: State<AppState>) -> Result<serde_json::Value, String> {
+    use rand::Rng;
+    let scenarios = &state.all_scenarios;
+    if scenarios.is_empty() {
+        return Err("No scenarios available".to_string());
+    }
+    let idx = rand::thread_rng().r#gen_range(0..scenarios.len());
+    let s = &scenarios[idx];
+    Ok(serde_json::json!({
+        "id": s.id,
+        "name": s.name,
+        "nameCN": s.name_cn,
+        "description": s.description,
+        "playerTitle": s.player_title,
+    }))
+}
+
+#[tauri::command]
 fn exit_to_hub_cmd(app: AppHandle, state: State<AppState>) -> Result<serde_json::Value, String> {
     let mut game = state.game.lock().map_err(|e| e.to_string())?;
     exit_to_hub(&mut game);
@@ -199,6 +217,7 @@ pub fn run() {
             set_player_name,
             select_scenario,
             exit_to_hub_cmd,
+            draw_scenario,
             set_font_theme,
             show_window,
             hide_window,

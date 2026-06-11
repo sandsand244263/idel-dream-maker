@@ -33,14 +33,25 @@
       </div>
     </header>
 
-    <main id="log-area">
+    <main id="hub-view">
+      <div id="hub-welcome">
+        <div id="hub-greeting">欢迎回来</div>
+        <div id="hub-player-name">Worker</div>
+        <div id="hub-level-display">大厅 Lv.1</div>
+      </div>
+      <div id="hub-scenario-list"></div>
+      <button id="hub-draw-btn">+ 抽取剧本</button>
+    </main>
+
+    <main id="log-area" class="hidden">
       <div class="log-entry system" id="welcome-log">
         <span class="ts">[SYSTEM]</span>
-        <span class="msg">IdleWorker v0.2.0 启动完成。挂机中...</span>
+        <span class="msg">Idel-DreamMaker v0.3.0 启动完成。挂机中...</span>
       </div>
     </main>
 
     <footer id="button-bar">
+      <button id="btn-backhub" class="bar-btn hidden">返回大厅</button>
       <button id="btn-scenario" class="bar-btn">剧本</button>
       <button id="btn-titles" class="bar-btn">称号</button>
       <button id="btn-about" class="bar-btn">状态</button>
