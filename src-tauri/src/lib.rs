@@ -97,7 +97,7 @@ fn select_scenario(id: String, alias: Option<String>, app: AppHandle, state: Sta
             "description": scenario.description,
             "playerTitle": scenario.player_title,
         },
-        "game": &*state.game.lock().map_err(|e| e.to_string())?,
+        "game": &*game,
     }))
 }
 
