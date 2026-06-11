@@ -1,6 +1,6 @@
 [package]
 name = "idel-dream-maker"
-version = "0.3.1"
+version = "0.3.2"
 description = "Idel-DreamMaker - A zero-interaction idle narrative game with Hub system"
 authors = []
 edition = "2024"
@@ -15,7 +15,7 @@ tauri-build = { version = "2", features = [] }
 [dependencies]
 tauri = { version = "2", features = ["tray-icon", "image-png"] }
 tauri-plugin-shell = "2"
-tauri-plugin-notification = "2"
+
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 rand = "0.8"

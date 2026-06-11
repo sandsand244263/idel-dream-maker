@@ -5,7 +5,6 @@ use std::path::PathBuf;
 use tauri::AppHandle;
 use tauri::Emitter;
 use tauri::Manager;
-use tauri_plugin_notification::NotificationExt;
 
 use crate::scenario;
 use crate::scenario::Scenario;
@@ -311,12 +310,14 @@ fn check_and_trigger_event(
             )
             .ok();
 
-        let _ = app_handle
-            .notification()
-            .builder()
-            .title(format!("Idel-DreamMaker - {}", title.name))
-            .body(&event.text[..event.text.len().min(120)])
-            .show();
+        if let Some(window) = app_handle.get_webview_window("main") {
+            if !window.is_visible().unwrap_or(true) {
+                if let Some(tray) = app_handle.tray_by_id("main") {
+                    let short = if event.text.len() > 60 { &event.text[..60] } else { &event.text };
+                    let _ = tray.set_tooltip(Some(format!("[{}] {}", title.name, short)));
+                }
+            }
+        }
     }
 }
 
@@ -355,12 +356,13 @@ fn check_achievements(
                 )
                 .ok();
 
-            let _ = app_handle
-                .notification()
-                .builder()
-                .title("Idel-DreamMaker - 成就解锁")
-                .body(&achievement.name)
-                .show();
+            if let Some(window) = app_handle.get_webview_window("main") {
+                if !window.is_visible().unwrap_or(true) {
+                    if let Some(tray) = app_handle.tray_by_id("main") {
+                        let _ = tray.set_tooltip(Some(format!("成就解锁: {}", achievement.name)));
+                    }
+                }
+            }
         }
     }
 }

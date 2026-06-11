@@ -289,8 +289,9 @@ function renderHubView() {
       try {
         const r = await invoke('select_scenario', { id: s.id, alias });
         gameState = r.game; currentScenario = r.scenario;
-        currentTitle = { name: r.scenario.playerTitle, color: '#888', desc: '' };
+        currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' };
         switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN));
+        updateUI(); updateMiniBar();
       } catch (e) { addLog('system', t('systemEnterFail')); }
     });
     hubScenarioList.appendChild(card);
@@ -304,16 +305,24 @@ hubDrawBtn.addEventListener('click', async () => {
     if (alias === null) return;
     const r = await invoke('select_scenario', { id: s.id, alias });
     gameState = r.game; currentScenario = r.scenario;
-    currentTitle = { name: r.scenario.playerTitle, color: '#888', desc: '' };
+    currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' };
     switchView(false); addLog('info', tf('systemDrew', currentScenario.nameCN));
+    updateUI(); updateMiniBar();
   } catch (e) { addLog('system', t('systemDrawFail')); }
 });
+
+function getTitleByIndex(index) {
+  if (!currentScenario || !currentScenario.titles) return null;
+  const t = currentScenario.titles[index];
+  return t ? { name: t.name, color: t.color, desc: t.desc } : null;
+}
 
 btnBackHub.addEventListener('click', async () => {
   try {
     const r = await invoke('exit_to_hub_cmd'); gameState.hub_total_exp = r.hubTotalExp;
     hubLevel = r.hubLevel; gameState.is_in_hub = true; switchView(true);
     renderHubView(); addLog('info', tf('systemBack', hubLevel));
+    updateUI();
   } catch (e) { addLog('system', t('systemBackFail')); }
 });
 
@@ -322,7 +331,8 @@ btnBackHub.addEventListener('click', async () => {
 function updateUI() {
   if (!gameState) return;
   levelValueEl.textContent = gameState.level;
-  if (currentTitle) { titleValueEl.textContent = currentTitle.name; titleValueEl.style.color = currentTitle.color; }
+  const ct = currentTitle || (currentScenario?.titles && currentScenario.titles[gameState.equipped_title_index || 0]);
+  if (ct) { titleValueEl.textContent = ct.name; titleValueEl.style.color = ct.color || '#888'; }
 }
 
 function addLog(type, message) {
@@ -407,8 +417,9 @@ function renderScenarioPanel() {
       try {
         const r = await invoke('select_scenario', { id: s.id, alias });
         gameState = r.game; currentScenario = r.scenario;
-        currentTitle = { name: r.scenario.playerTitle, color: '#888', desc: '' };
+        currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' };
         switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); scenarioPanel.classList.add('hidden');
+        updateUI(); updateMiniBar();
       } catch (e) { addLog('system', t('systemEnterFail')); }
     });
     scenarioListEl.appendChild(card);
@@ -446,9 +457,25 @@ async function renderTitlesPanel() {
   }
   try {
     const d = await invoke('get_scenario_detail', { id: gameState?.scenario_id });
-    d.titles.forEach(t => {
-      const u = t.level <= gameState.level; const it = document.createElement('div'); it.className = `title-item${u ? '' : ' locked'}`;
+    const currentIdx = gameState?.equipped_title_index ?? 0;
+    d.titles.forEach((t, idx) => {
+      const u = t.level <= gameState.level;
+      const equipped = u && idx === currentIdx;
+      const it = document.createElement('div');
+      it.className = `title-item${u ? '' : ' locked'}${equipped ? ' equipped' : ''}`;
       it.innerHTML = `<span class="title-level">Lv.${t.level}</span><span class="title-name" style="color:${u ? t.color : 'var(--dim)'}">${u ? t.name : '???'}</span><span class="title-desc">${u ? t.desc : '???'}</span>`;
+      if (u) {
+        it.style.cursor = 'pointer';
+        it.addEventListener('click', async () => {
+          try {
+            await invoke('set_title', { index: idx });
+            if (gameState) gameState.equipped_title_index = idx;
+            currentTitle = { name: t.name, color: t.color, desc: t.desc };
+            updateUI(); updateMiniBar();
+            renderTitlesPanel();
+          } catch (e) {}
+        });
+      }
       titlesListEl.appendChild(it);
     });
   } catch (e) {}

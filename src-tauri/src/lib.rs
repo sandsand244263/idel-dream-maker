@@ -96,6 +96,7 @@ fn select_scenario(id: String, alias: Option<String>, app: AppHandle, state: Sta
             "nameCN": scenario.name_cn,
             "description": scenario.description,
             "playerTitle": scenario.player_title,
+            "titles": scenario.titles,
         },
         "game": &*game,
     }))
@@ -159,6 +160,17 @@ fn get_hub_titles(state: State<AppState>) -> Result<Vec<serde_json::Value>, Stri
         }));
     }
     Ok(result)
+}
+
+#[tauri::command]
+fn set_title(index: usize, state: State<AppState>) -> Result<(), String> {
+    let mut game = state.game.lock().map_err(|e| e.to_string())?;
+    let scenario = state.scenario.lock().map_err(|e| e.to_string())?;
+    if index >= scenario.titles.len() {
+        return Err("Title index out of bounds".to_string());
+    }
+    game.equipped_title_index = index;
+    Ok(())
 }
 
 #[tauri::command]
@@ -240,7 +252,6 @@ fn get_scenario_detail(id: String, state: State<AppState>) -> Result<serde_json:
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
-        .plugin(tauri_plugin_notification::init())
         .setup(|app| {
             let scenarios = load_all_scenarios();
             let default_scenario = scenarios.first()
@@ -286,6 +297,7 @@ pub fn run() {
             get_hub_titles,
             set_language,
             set_ai_output_language,
+            set_title,
             set_font_theme,
             show_window,
             hide_window,

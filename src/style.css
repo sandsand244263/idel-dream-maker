@@ -162,6 +162,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 /* ── Titles Panel ── */
 .title-item { display: flex; align-items: center; gap: 8px; padding: 5px 10px; border-bottom: 1px solid rgba(255,255,255,0.04); }
 .title-item.locked { opacity: 0.25; }
+.title-item.equipped { border-left: 3px solid var(--fg); background: rgba(0,255,0,0.06); }
 .title-level { font-size: 11px; color: var(--dim); min-width: 36px; }
 .title-name { font-weight: bold; font-size: 13px; min-width: 70px; }
 .title-desc { font-size: 11px; color: var(--dim); flex: 1; }
