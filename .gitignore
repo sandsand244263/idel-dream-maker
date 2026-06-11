@@ -16,3 +16,8 @@ Thumbs.db
 # Environment
 .env
 .env.local
+
+# Large assets (ignore fonts, download/build separately)
+src-tauri/fonts/*.otf
+src-tauri/fonts/*.ttf
+!src-tauri/fonts/*.md
