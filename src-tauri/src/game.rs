@@ -2,13 +2,21 @@ use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::PathBuf;
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ScenarioProgress {
+    pub total_exp_earned: f64,
+    pub total_runtime_ms: u64,
+    pub triggered_events: Vec<String>,
+    pub unlocked_achievements: Vec<String>,
+    pub equipped_title_index: usize,
+}
 use tauri::AppHandle;
 use tauri::Emitter;
 use tauri::Manager;
 
 use crate::scenario;
 use crate::scenario::Scenario;
-use crate::set_tray_tooltip;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GameState {
@@ -35,6 +43,8 @@ pub struct GameState {
     pub language: String,
     #[serde(default)]
     pub ai_output_language: String,
+    #[serde(default)]
+    pub scenario_progress: HashMap<String, ScenarioProgress>,
 }
 
 impl Default for GameState {
@@ -57,6 +67,7 @@ impl Default for GameState {
             unlocked_title_sets: HashMap::new(),
             language: "zh".to_string(),
             ai_output_language: "zh".to_string(),
+            scenario_progress: HashMap::new(),
         }
     }
 }
@@ -121,24 +132,11 @@ pub struct AppState {
     pub all_scenarios: Vec<Scenario>,
 }
 
-fn format_tooltip_runtime(ms: u64) -> String {
-    let total_sec = ms / 1000;
-    let h = total_sec / 3600;
-    let m = (total_sec % 3600) / 60;
-    if h > 0 {
-        format!("{}h{}m", h, m)
-    } else {
-        format!("{}m", m)
-    }
-}
-
 pub fn start_game_loop(app_handle: AppHandle) {
     std::thread::spawn(move || {
         let mut last_save = std::time::Instant::now();
         let mut last_event_check = std::time::Instant::now();
         let mut last_tick_emit = std::time::Instant::now();
-        let mut last_tooltip_update = std::time::Instant::now();
-
         loop {
             std::thread::sleep(std::time::Duration::from_millis(500));
 
@@ -202,37 +200,44 @@ pub fn start_game_loop(app_handle: AppHandle) {
                 save_game(&app_handle, &game);
                 last_save = std::time::Instant::now();
             }
-
-            if last_tooltip_update.elapsed() >= std::time::Duration::from_secs(30) {
-                let runtime_str = format_tooltip_runtime(game.total_runtime_ms);
-                let tooltip = if game.is_in_hub {
-                    format!("Idel-DreamMaker | 大厅 Lv.{}", scenario::calculate_level(game.hub_total_exp))
-                } else {
-                    let scenario_guard = state.scenario.lock().unwrap();
-                    let tn = scenario::get_current_title(&scenario_guard, game.level);
-                    format!("Lv.{} {} | {}", game.level, tn.name, runtime_str)
-                };
-                set_tray_tooltip(&tooltip);
-                last_tooltip_update = std::time::Instant::now();
-            }
         }
     });
 }
 
 pub fn reset_game_for_scenario(game: &mut GameState, scenario: &Scenario, alias: &str) {
     game.scenario_id = scenario.id.clone();
-    game.level = 1;
     game.exp = 0.0;
-    game.total_exp_earned = 0.0;
-    game.total_runtime_ms = 0;
-    game.equipped_title_index = 0;
-    game.triggered_events.clear();
-    game.unlocked_achievements.clear();
     game.is_in_hub = false;
     game.scenario_alias = alias.to_string();
+
+    if let Some(p) = game.scenario_progress.get(&scenario.id) {
+        game.total_exp_earned = p.total_exp_earned;
+        game.level = scenario::calculate_level(p.total_exp_earned);
+        game.total_runtime_ms = p.total_runtime_ms;
+        game.equipped_title_index = p.equipped_title_index;
+        game.triggered_events = p.triggered_events.clone();
+        game.unlocked_achievements = p.unlocked_achievements.clone();
+    } else {
+        game.level = 1;
+        game.total_exp_earned = 0.0;
+        game.total_runtime_ms = 0;
+        game.equipped_title_index = 0;
+        game.triggered_events.clear();
+        game.unlocked_achievements.clear();
+    }
 }
 
 pub fn exit_to_hub(game: &mut GameState) {
+    if !game.scenario_id.is_empty() {
+        let p = ScenarioProgress {
+            total_exp_earned: game.total_exp_earned,
+            total_runtime_ms: game.total_runtime_ms,
+            triggered_events: game.triggered_events.clone(),
+            unlocked_achievements: game.unlocked_achievements.clone(),
+            equipped_title_index: game.equipped_title_index,
+        };
+        game.scenario_progress.insert(game.scenario_id.clone(), p);
+    }
     game.hub_total_exp += game.total_exp_earned;
     game.scenario_id.clear();
     game.level = 1;
@@ -309,12 +314,7 @@ fn check_and_trigger_event(
             )
             .ok();
 
-        if let Some(window) = app_handle.get_webview_window("main") {
-            if !window.is_visible().unwrap_or(true) {
-                let short = if event.text.len() > 60 { &event.text[..60] } else { &event.text };
-                set_tray_tooltip(&format!("[{}] {}", title.name, short));
-            }
-        }
+        // Tray tooltip is updated via frontend invoke, not from game loop
     }
 }
 
@@ -353,11 +353,7 @@ fn check_achievements(
                 )
                 .ok();
 
-            if let Some(window) = app_handle.get_webview_window("main") {
-                if !window.is_visible().unwrap_or(true) {
-                    set_tray_tooltip(&format!("成就解锁: {}", achievement.name));
-                }
-            }
+            // Tray tooltip for achievement is handled by frontend
         }
     }
 }

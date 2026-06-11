@@ -485,8 +485,60 @@ titleValueEl.addEventListener('click', () => { renderTitlesPanel(); titlesPanel.
 
 // ── Init ──
 
+async function updateTooltip() {
+  if (!gameState) return;
+  const runtime = formatRuntime(gameState.total_runtime_ms);
+  const title = currentTitle?.name || '?';
+  const text = gameState?.is_in_hub
+    ? `Idel-DreamMaker | 大厅 Lv.${hubLevel}`
+    : `Lv.${gameState.level} ${title} | ${runtime}`;
+  try { await invoke('update_tooltip', { text }); } catch (e) {}
+}
+
+// ── Debug Panel ──
+
+const debugPanel = document.getElementById('debug-panel');
+const debugContent = document.getElementById('debug-content');
+const debugClose = document.getElementById('debug-close');
+
+debugClose.addEventListener('click', () => debugPanel.classList.add('hidden'));
+
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+    e.preventDefault();
+    if (debugPanel.classList.contains('hidden')) {
+      const state = {
+        is_in_hub: gameState?.is_in_hub,
+        isMiniMode,
+        hubLevel,
+        scenarioLevel: gameState?.level,
+        totalExp: gameState?.total_exp_earned,
+        runtime: gameState?.total_runtime_ms,
+        equippedTitleIdx: gameState?.equipped_title_index,
+        currentTitle: currentTitle?.name,
+        scenarioId: gameState?.scenario_id,
+        scenarioAlias: gameState?.scenario_alias,
+        language: gameState?.language,
+        aiLanguage: gameState?.ai_output_language,
+        achievements: gameState?.unlocked_achievements?.length,
+        eventsTriggered: gameState?.triggered_events?.length,
+        hubTotalExp: gameState?.hub_total_exp,
+        scenarioProgress: gameState?.scenario_progress ? Object.keys(gameState.scenario_progress) : [],
+        windowSize: `${window.innerWidth}×${window.innerHeight}`,
+        version: 'v0.3.2',
+      };
+      debugContent.textContent = JSON.stringify(state, null, 2);
+      debugPanel.classList.remove('hidden');
+    } else {
+      debugPanel.classList.add('hidden');
+    }
+  }
+});
+
 init().then(() => {
   document.title = 'Idel-DreamMaker'; applyTheme(gameState?.selected_font_theme || 'green');
   if (gameState?.is_in_hub) addLog('system', t('logStartHub'));
   else if (gameState) { switchView(false); addLog('info', tf('logStartScenario', formatRuntime(gameState.total_runtime_ms), gameState.level)); }
+  updateTooltip();
+  setInterval(updateTooltip, 5000);
 });

@@ -5,20 +5,7 @@ use game::{AppState, GameState, reset_game_for_scenario, start_game_loop, save_g
 use scenario::{load_all_scenarios, get_current_title, get_unlocked_titles, find_scenario_by_id};
 
 use std::sync::Mutex;
-use std::sync::OnceLock;
 use tauri::{Manager, AppHandle, State, WindowEvent};
-
-static APP_HANDLE: OnceLock<AppHandle> = OnceLock::new();
-static TRAY_ID: OnceLock<String> = OnceLock::new();
-
-pub fn set_tray_tooltip(tooltip: &str) {
-    if let (Some(app), Some(tid)) = (APP_HANDLE.get(), TRAY_ID.get()) {
-        let id = tauri::tray::TrayIconId(tid.clone());
-        if let Some(tray) = app.tray_by_id(&id) {
-            let _ = tray.set_tooltip(Some(tooltip));
-        }
-    }
-}
 use tauri::tray::{TrayIconBuilder, TrayIconEvent, MouseButton, MouseButtonState};
 use tauri::menu::{MenuBuilder, MenuItemBuilder};
 
@@ -245,6 +232,14 @@ fn set_window_position(x: i32, y: i32, window: tauri::Window) -> Result<(), Stri
 }
 
 #[tauri::command]
+fn update_tooltip(text: String, app: AppHandle) -> Result<(), String> {
+    if let Some(tray) = app.tray_by_id("main") {
+        tray.set_tooltip(Some(&text)).map_err(|e| e.to_string())?;
+    }
+    Ok(())
+}
+
+#[tauri::command]
 fn get_scenario_detail(id: String, state: State<AppState>) -> Result<serde_json::Value, String> {
     let scenario = find_scenario_by_id(&state.all_scenarios, &id)
         .ok_or_else(|| format!("Scenario '{}' not found", id))?;
@@ -288,9 +283,6 @@ pub fn run() {
                 all_scenarios: scenarios,
             });
 
-            let app_handle = app.handle().clone();
-            let _ = APP_HANDLE.set(app_handle);
-
             setup_tray(app)?;
             start_game_loop(app.handle().clone());
 
@@ -319,6 +311,7 @@ pub fn run() {
             hide_window,
             set_window_mode,
             set_window_position,
+            update_tooltip,
             get_scenario_detail,
         ])
         .run(tauri::generate_context!())
@@ -343,7 +336,7 @@ fn setup_tray(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     let icon_image = tauri::image::Image::from_bytes(include_bytes!("../icons/32x32.png"))
         .expect("Failed to load tray icon");
 
-    let tray = TrayIconBuilder::new()
+    TrayIconBuilder::with_id("main")
         .icon(icon_image)
         .menu(&menu)
         .tooltip("Idel-DreamMaker")
@@ -390,9 +383,6 @@ fn setup_tray(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
             }
         })
         .build(app)?;
-
-    let tid = tray.id().clone();
-    let _ = TRAY_ID.set(tid.0.clone());
 
     Ok(())
 }
