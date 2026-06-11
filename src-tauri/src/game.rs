@@ -1,5 +1,6 @@
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::path::PathBuf;
 use tauri::AppHandle;
 use tauri::Emitter;
@@ -28,6 +29,8 @@ pub struct GameState {
     pub hub_total_exp: f64,
     #[serde(default)]
     pub scenario_alias: String,
+    #[serde(default)]
+    pub unlocked_title_sets: HashMap<String, Vec<String>>,
 }
 
 impl Default for GameState {
@@ -47,6 +50,7 @@ impl Default for GameState {
             is_in_hub: true,
             hub_total_exp: 0.0,
             scenario_alias: String::new(),
+            unlocked_title_sets: HashMap::new(),
         }
     }
 }

@@ -379,6 +379,47 @@ titlesClose.addEventListener('click', () => titlesPanel.classList.add('hidden'))
 
 async function renderTitlesPanel() {
   titlesListEl.innerHTML = '';
+
+  if (gameState?.is_in_hub) {
+    try {
+      const hubTitles = await invoke('get_hub_titles');
+      hubTitles.forEach(s => {
+        const group = document.createElement('div');
+        group.className = 'hub-title-group';
+        const summary = document.createElement('div');
+        summary.className = 'hub-title-summary';
+        summary.innerHTML = `
+          <span class="hub-title-arrow">▶</span>
+          <span class="hub-title-scenario">${s.nameCN}</span>
+          <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>
+        `;
+        const body = document.createElement('div');
+        body.className = 'hub-title-body hidden';
+        s.unlockedTitles.forEach(name => {
+          const item = document.createElement('div');
+          item.className = 'title-item';
+          item.innerHTML = `<span class="title-name" style="color:var(--fg);font-size:10px">${name}</span>`;
+          body.appendChild(item);
+        });
+        if (s.unlockedTitles.length === 0) {
+          const empty = document.createElement('div');
+          empty.className = 'title-item';
+          empty.innerHTML = `<span class="title-desc" style="font-size:10px">尚无解锁称号</span>`;
+          body.appendChild(empty);
+        }
+        summary.addEventListener('click', () => {
+          body.classList.toggle('hidden');
+          summary.querySelector('.hub-title-arrow').textContent =
+            body.classList.contains('hidden') ? '▶' : '▼';
+        });
+        group.appendChild(summary);
+        group.appendChild(body);
+        titlesListEl.appendChild(group);
+      });
+    } catch (e) {}
+    return;
+  }
+
   try {
     const detail = await invoke('get_scenario_detail', { id: gameState?.scenario_id });
     detail.titles.forEach(t => {

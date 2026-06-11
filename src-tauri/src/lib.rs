@@ -124,6 +124,16 @@ fn draw_scenario(state: State<AppState>) -> Result<serde_json::Value, String> {
 #[tauri::command]
 fn exit_to_hub_cmd(app: AppHandle, state: State<AppState>) -> Result<serde_json::Value, String> {
     let mut game = state.game.lock().map_err(|e| e.to_string())?;
+    let scenario = state.scenario.lock().map_err(|e| e.to_string())?;
+    let unlocked: Vec<String> = scenario.titles.iter()
+        .filter(|t| t.level <= game.level)
+        .map(|t| t.name.clone())
+        .collect();
+    let sid = game.scenario_id.clone();
+    if !sid.is_empty() {
+        game.unlocked_title_sets.insert(sid, unlocked);
+    }
+    drop(scenario);
     exit_to_hub(&mut game);
     save_game(&app, &game);
 
@@ -132,6 +142,25 @@ fn exit_to_hub_cmd(app: AppHandle, state: State<AppState>) -> Result<serde_json:
         "hubTotalExp": game.hub_total_exp,
         "hubLevel": hub_level,
     }))
+}
+
+#[tauri::command]
+fn get_hub_titles(state: State<AppState>) -> Result<Vec<serde_json::Value>, String> {
+    let game = state.game.lock().map_err(|e| e.to_string())?;
+    let mut result = Vec::new();
+    for s in &state.all_scenarios {
+        let unlocked_titles = game.unlocked_title_sets.get(&s.id).cloned().unwrap_or_default();
+        let total = s.titles.len();
+        result.push(serde_json::json!({
+            "id": s.id,
+            "name": s.name,
+            "nameCN": s.name_cn,
+            "unlockedCount": unlocked_titles.len(),
+            "totalCount": total,
+            "unlockedTitles": unlocked_titles,
+        }));
+    }
+    Ok(result)
 }
 
 #[tauri::command]
@@ -218,6 +247,7 @@ pub fn run() {
             select_scenario,
             exit_to_hub_cmd,
             draw_scenario,
+            get_hub_titles,
             set_font_theme,
             show_window,
             hide_window,

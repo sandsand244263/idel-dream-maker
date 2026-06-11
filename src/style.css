@@ -596,6 +596,46 @@ html, body {
   background: rgba(0, 255, 0, 0.08);
 }
 
+/* ── Hub Titles ── */
+.hub-title-group {
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.hub-title-summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.1s;
+}
+
+.hub-title-summary:hover {
+  background: rgba(0,255,0,0.04);
+}
+
+.hub-title-arrow {
+  font-size: 8px;
+  color: var(--dim);
+  width: 12px;
+}
+
+.hub-title-scenario {
+  font-weight: bold;
+  font-size: 11px;
+  flex: 1;
+}
+
+.hub-title-count {
+  font-size: 10px;
+  color: var(--dim);
+}
+
+.hub-title-body {
+  padding: 0 0 4px 20px;
+}
+
 /* ── Titles Panel ── */
 .title-item {
   display: flex;
