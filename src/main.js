@@ -104,6 +104,25 @@ async function init() {
   });
 }
 
+// ── Edge Dock ──
+
+let edgeTimer = null;
+document.addEventListener('mousemove', (e) => {
+  const threshold = 5;
+  const nearEdge = e.clientX < threshold
+    || e.clientX > window.innerWidth - threshold
+    || e.clientY < threshold;
+  if (nearEdge && !edgeTimer) {
+    edgeTimer = setTimeout(async () => {
+      try { await invoke('hide_window'); } catch (ex) {}
+      edgeTimer = null;
+    }, 1500);
+  } else if (!nearEdge && edgeTimer) {
+    clearTimeout(edgeTimer);
+    edgeTimer = null;
+  }
+});
+
 function switchView(inHub) {
   if (inHub) {
     hubView.classList.remove('hidden');

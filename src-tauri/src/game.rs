@@ -115,11 +115,23 @@ pub struct AppState {
     pub all_scenarios: Vec<Scenario>,
 }
 
+fn format_tooltip_runtime(ms: u64) -> String {
+    let total_sec = ms / 1000;
+    let h = total_sec / 3600;
+    let m = (total_sec % 3600) / 60;
+    if h > 0 {
+        format!("{}h{}m", h, m)
+    } else {
+        format!("{}m", m)
+    }
+}
+
 pub fn start_game_loop(app_handle: AppHandle) {
     std::thread::spawn(move || {
         let mut last_save = std::time::Instant::now();
         let mut last_event_check = std::time::Instant::now();
         let mut last_tick_emit = std::time::Instant::now();
+        let mut last_tooltip_update = std::time::Instant::now();
 
         loop {
             std::thread::sleep(std::time::Duration::from_millis(500));
@@ -183,6 +195,21 @@ pub fn start_game_loop(app_handle: AppHandle) {
                 game.last_save_time = chrono::Utc::now().timestamp_millis() as u64;
                 save_game(&app_handle, &game);
                 last_save = std::time::Instant::now();
+            }
+
+            if last_tooltip_update.elapsed() >= std::time::Duration::from_secs(30) {
+                let runtime_str = format_tooltip_runtime(game.total_runtime_ms);
+                let tooltip = if game.is_in_hub {
+                    format!("Idel-DreamMaker | 大厅 Lv.{}", scenario::calculate_level(game.hub_total_exp))
+                } else {
+                    let scenario_guard = state.scenario.lock().unwrap();
+                    let tn = scenario::get_current_title(&scenario_guard, game.level);
+                    format!("Lv.{} {} | {}", game.level, tn.name, runtime_str)
+                };
+                if let Some(tray) = app_handle.tray_by_id("main") {
+                    let _ = tray.set_tooltip(Some(tooltip.as_str()));
+                }
+                last_tooltip_update = std::time::Instant::now();
             }
         }
     });
