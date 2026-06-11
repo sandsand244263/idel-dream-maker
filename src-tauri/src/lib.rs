@@ -217,16 +217,28 @@ fn start_dragging(window: tauri::Window) -> Result<(), String> {
 fn set_window_mode(mode: String, window: tauri::Window) -> Result<(), String> {
     match mode.as_str() {
         "mini" => {
-            window.set_decorations(false).map_err(|e| e.to_string())?;
             window.set_always_on_top(true).map_err(|e| e.to_string())?;
             window.set_size(tauri::LogicalSize::new(250, 80)).map_err(|e| e.to_string())?;
         }
         "full" => {
-            window.set_decorations(true).map_err(|e| e.to_string())?;
             window.set_always_on_top(false).map_err(|e| e.to_string())?;
-            window.set_size(tauri::LogicalSize::new(320, 840)).map_err(|e| e.to_string())?;
         }
         _ => {}
+    }
+    Ok(())
+}
+
+#[tauri::command]
+fn window_minimize(window: tauri::Window) -> Result<(), String> {
+    window.minimize().map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn window_toggle_maximize(window: tauri::Window) -> Result<(), String> {
+    if window.is_maximized().map_err(|e| e.to_string())? {
+        window.unmaximize().map_err(|e| e.to_string())?;
+    } else {
+        window.maximize().map_err(|e| e.to_string())?;
     }
     Ok(())
 }
@@ -317,6 +329,8 @@ pub fn run() {
             hide_window,
             start_dragging,
             set_window_mode,
+            window_minimize,
+            window_toggle_maximize,
             set_window_position,
             update_tooltip,
             get_scenario_detail,

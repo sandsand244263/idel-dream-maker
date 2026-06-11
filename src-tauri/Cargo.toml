@@ -1,6 +1,6 @@
 [package]
 name = "idel-dream-maker"
-version = "0.3.4"
+version = "0.3.5"
 description = "Idel-DreamMaker - A zero-interaction idle narrative game with Hub system"
 authors = []
 edition = "2024"

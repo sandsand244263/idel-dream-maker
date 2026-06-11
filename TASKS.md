@@ -16,44 +16,44 @@
 
 ---
 
-## v0.3.4 — 自定义标题栏 + 托盘修复 + UI 增强
+## v0.3.5 — 全线修复 + 底部常驻状态条 + 文档对齐
 
 > 当前进度：✅ 全部完成
 
-### Task 1 ✅ — 自定义标题栏
+### Task 1 ✅ — set_window_mode("full") 去掉 decorations
 
-`tauri.conf.json`: `decorations: false`, `shadow: true`  
-`index.html`: `#titlebar`（28px 高，内含 `#titlebar-drag` + 最小化/最大化/关闭按钮）  
-`main.js`: 拖拽 `invoke('start_dragging')`；按钮事件 `minimize()/maximize()/unmaximize()/hide_window()`  
-`style.css`: titlebar 样式，hover 变色，关闭按钮红色背景
+`lib.rs`: `set_window_mode("full")` 中删除 `window.set_decorations(true)` 和 `set_size`；仅保留 `always_on_top(false)`。避免点击迷你展开后 Windows 标题栏重现。
 
-### Task 2 ✅ — 托盘左右键严格区分
+### Task 2 ✅ — Rust 命令替代前端动态 import
 
-`lib.rs`: `.show_menu_on_left_click(false)` + `match` 精确匹配 `Left+Up`
+`lib.rs`: 新增 `window_minimize`、`window_toggle_maximize` 命令  
+`main.js`: 标题栏按钮全部改用 `invoke()` 调用，去掉 `await import('@tauri-apps/api/window')`
 
-### Task 3 ✅ — 时长含秒
+### Task 3 ✅ — 底部常驻状态条
 
-`formatRuntime()` 返回 `XhXmXs`；状态栏/关于面板/tooltip 同步
+`index.html`: 新增 `#perma-status`（按钮栏上方）  
+`style.css`: 10px 字号、dim 色、ellipsis  
+`main.js`: `updatePermaStatus()` 显示 `ID:Worker | Lv.5 | 称号 | XhXmXs | 成就:N`
 
-### Task 4 ✅ — 状态栏 ID + 布局调整
+### Task 4 ✅ — Runtime 保护
 
-`titlebar-id`: `ID:Worker`；`titlebar-lv`: `LV:5`；`titlebar-title`: 称号
+`main.js`: `game-tick` 监听器中，若 payload 的 `total_runtime_ms === 0` 且 `lastRuntime > 0`，保留上次值。  
+`btnBackHub` 回调: `lastRuntime = 0`。  
+进入副本后初始值从 Rust 的 `total_runtime_ms` 恢复（`ScenarioProgress`）。
 
-### Task 5 ✅ — 副本内隐藏"副本"按钮
+### Task 5 ✅ — 大厅空状态提示
 
-`switchView(false)` → `btnScenario.classList.toggle('hidden', inHub)`
+`main.js`  `renderHubView()`: 若 `scenarioList` 为空数组，显示虚线边框的"暂无可用的副本"提示卡。
 
-### Task 6 ✅ — 成就计数更新
+### Task 6 ✅ — 托盘 tooltip 修复
 
-`achievement-unlocked` 监听器中 `gameState.unlockedAchievements.push(id)` + `updateUI()`
+旧二进制未更新导致 tooltip 不工作。确保 `cargo build` 后新二进制覆盖运行。
 
-### Task 7 ✅ — 日志防清空
+### Task 7 ✅ — 文档全线重写
 
-`addLog()` 中 `logArea.children.length > 500` 时移除 `firstChild`；调试面板显示 `logCount`
-
-### Task 8 ✅ — Mini Bar 加 ID
-
-`miniId.textContent = 'ID:...'`
+`CLAUDE.md` 重写: 双层架构/大厅等级/称号聚合/字体/语言/窗口/tooltip/debug/Ctrl+Shift+D/里程碑对齐  
+`架构文档.md`: 版本记录 0.3.5 追加  
+`TASKS.md`: 本次更新覆盖
 
 ---
 
