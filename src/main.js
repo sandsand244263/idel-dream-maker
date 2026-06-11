@@ -3,18 +3,18 @@ import { listen } from '@tauri-apps/api/event';
 
 const LANG = {
   zh: {
-    hubWelcome: '欢迎回来', hubLevel: '大厅 Lv.', drawBtn: '+ 抽取剧本',
-    drawPrompt: '抽到「{0}」— 输入该剧本内的名称（留空用默认）',
-    enterPrompt: '进入「{0}」— 输入该剧本内的名称（留空用默认）',
-    btnMini: '迷你', btnBack: '返回大厅', btnScenario: '剧本', btnTitles: '称号',
+    hubWelcome: '欢迎回来', hubLevel: '大厅 Lv.', drawBtn: '+ 抽取副本',
+    drawPrompt: '抽到「{0}」— 输入该副本内的名称（留空用默认）',
+    enterPrompt: '进入「{0}」— 输入该副本内的名称（留空用默认）',
+    btnMini: '迷你', btnBack: '返回大厅',     btnScenario: '副本', btnTitles: '称号',
     btnStatus: '状态', btnSettings: '设置', btnHide: '隐藏',
-    panelScenario: '剧本选择', panelTitles: '称号一览', panelSettings: '设置', panelAbout: '状态',
-    labelVersion: '版本', labelPlayer: '玩家', labelScenario: '剧本', labelLevel: '等级',
+    panelScenario: '副本选择', panelTitles: '称号一览', panelSettings: '设置', panelAbout: '状态',
+    labelVersion: '版本', labelPlayer: '玩家', labelScenario: '副本', labelLevel: '等级',
     labelHubLevel: '大厅等级', labelTitle: '称号', labelRuntime: '时长', labelAchievement: '成就',
     labelName: '名称', labelTheme: '主题', labelLanguage: '界面语言', labelAILanguage: 'AI 语言',
     btnSave: '保存', eventHeader: '事件', achievementHeader: '成就解锁',
     hubTitleEmpty: '尚无解锁称号', systemLoaded: '加载完成', systemInitFail: '初始化失败',
-    systemEnterFail: '进入剧本失败', systemDrawFail: '抽取失败', systemBackFail: '返回失败',
+    systemEnterFail: '进入副本失败', systemDrawFail: '抽取失败', systemBackFail: '返回失败',
     systemLevelUp: '等级 {0}！{1}',
     systemEntered: '进入: {0}', systemDrew: '抽到并进入: {0}', systemBack: '返回大厅 — 大厅 Lv.{0}',
     logStartHub: 'Idel-DreamMaker v0.3.1 启动完成',
@@ -140,7 +140,7 @@ aliasCancel.addEventListener('click', () => {
 
 aliasConfirm.addEventListener('click', () => {
   aliasModal.classList.add('hidden');
-  if (aliasResolver) { aliasResolver(aliasInput.value.trim() || null); aliasResolver = null; }
+  if (aliasResolver) { aliasResolver(aliasInput.value.trim() || ''); aliasResolver = null; }
 });
 
 aliasInput.addEventListener('keydown', (e) => {
