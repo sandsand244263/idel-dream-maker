@@ -16,7 +16,7 @@ Thumbs.db
 # Environment
 .env
 
-# Accidental artifacts (from npm tauri dev)
+# Accidental artifacts
 idel-dream-maker@*
 tauri
 .env.local
