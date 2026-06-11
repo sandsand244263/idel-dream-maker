@@ -1,4 +1,3 @@
-/* ── Reset & Base ── */
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -11,7 +10,6 @@
   --dim: #0A5A0A;
   --font: 'Courier New', monospace;
   --border: #00FF00;
-  --overlay-bg: rgba(0, 0, 0, 0.85);
 }
 
 html, body {
@@ -21,8 +19,8 @@ html, body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font);
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 11px;
+  line-height: 1.3;
 }
 
 #app {
@@ -34,24 +32,25 @@ html, body {
 /* ── Status Bar ── */
 #status-bar {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px 16px;
-  padding: 8px 12px;
+  gap: 6px 0;
+  padding: 3px 8px;
   border-bottom: 1px solid var(--dim);
   background: rgba(0, 255, 0, 0.03);
   user-select: none;
   flex-shrink: 0;
+  flex-wrap: wrap;
 }
 
 .status-item {
   display: flex;
-  gap: 4px;
+  gap: 2px;
   align-items: center;
+  margin-right: 10px;
 }
 
 .status-item .label {
   color: var(--dim);
-  font-size: 11px;
+  font-size: 9px;
   letter-spacing: 1px;
 }
 
@@ -71,26 +70,16 @@ html, body {
   text-decoration-color: var(--fg);
 }
 
-.version-badge {
-  font-size: 10px;
-  color: var(--dim);
-  margin-left: 6px;
-  padding: 0 4px;
-  border: 1px solid var(--dim);
-  border-radius: 2px;
-  opacity: 0.6;
-}
-
 /* ── Log Area ── */
 #log-area {
   flex: 1;
   overflow-y: auto;
-  padding: 8px 12px;
+  padding: 3px 8px;
   scroll-behavior: smooth;
 }
 
 #log-area::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 
 #log-area::-webkit-scrollbar-track {
@@ -99,23 +88,23 @@ html, body {
 
 #log-area::-webkit-scrollbar-thumb {
   background: var(--dim);
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 .log-entry {
-  padding: 2px 0;
+  padding: 1px 0;
   word-break: break-word;
   animation: fadeIn 0.2s ease-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-4px); }
+  from { opacity: 0; transform: translateY(-2px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .log-entry .ts {
   color: var(--dim);
-  margin-right: 8px;
+  margin-right: 4px;
   white-space: nowrap;
 }
 
@@ -137,7 +126,7 @@ html, body {
 }
 
 .log-entry.levelup .msg::before {
-  content: '[LEVEL UP] ';
+  content: '[UP] ';
   color: #FFEB3B;
 }
 
@@ -146,7 +135,7 @@ html, body {
 }
 
 .log-entry.achievement .msg::before {
-  content: '[ACHIEVEMENT] ';
+  content: '[ACH] ';
   color: #00E5FF;
 }
 
@@ -154,45 +143,46 @@ html, body {
   color: #4FC3F7;
 }
 
-/* ── Input Bar ── */
-#input-bar {
+/* ── Button Bar ── */
+#button-bar {
   display: flex;
-  align-items: center;
-  padding: 8px 12px;
+  flex-shrink: 0;
   border-top: 1px solid var(--dim);
   background: rgba(0, 255, 0, 0.03);
-  flex-shrink: 0;
 }
 
-#input-bar .prompt {
-  color: var(--fg);
-  margin-right: 8px;
-  font-weight: bold;
-}
-
-#cmd-input {
+.bar-btn {
   flex: 1;
   background: transparent;
   border: none;
-  color: var(--fg);
+  color: var(--dim);
   font-family: var(--font);
-  font-size: 14px;
-  outline: none;
+  font-size: 10px;
+  padding: 4px 0;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: color 0.15s, background 0.15s;
+  border-right: 1px solid rgba(10, 90, 10, 0.3);
 }
 
-#cmd-input::placeholder {
-  color: var(--dim);
+.bar-btn:last-child {
+  border-right: none;
+}
+
+.bar-btn:hover {
+  color: var(--fg);
+  background: rgba(0, 255, 0, 0.06);
 }
 
 /* ── Event Overlay ── */
 #event-overlay {
   position: fixed;
-  bottom: 80px;
-  right: 20px;
-  width: 360px;
+  bottom: 30px;
+  right: 6px;
+  width: 280px;
   z-index: 100;
   animation: slideIn 0.3s ease-out;
-  box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+  box-shadow: 0 0 12px rgba(0, 255, 0, 0.15);
 }
 
 @keyframes slideIn {
@@ -207,59 +197,38 @@ html, body {
 #event-box {
   background: var(--bg);
   border: 1px solid var(--fg);
-  border-radius: 4px;
+  border-radius: 3px;
   overflow: hidden;
 }
 
 #event-header {
   background: rgba(0, 255, 0, 0.08);
-  padding: 6px 12px;
+  padding: 3px 8px;
   border-bottom: 1px solid var(--dim);
   font-weight: bold;
-  font-size: 12px;
+  font-size: 10px;
 }
 
 #event-body {
-  padding: 12px;
-  min-height: 60px;
+  padding: 6px 8px;
+  min-height: 30px;
 }
 
 #event-text {
   color: var(--fg);
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-#event-footer {
-  padding: 6px 12px;
-  border-top: 1px solid var(--dim);
-  text-align: right;
-}
-
-#event-close {
-  background: transparent;
-  border: 1px solid var(--dim);
-  color: var(--fg);
-  padding: 4px 16px;
-  cursor: pointer;
-  font-family: var(--font);
-  font-size: 12px;
-}
-
-#event-close:hover {
-  background: rgba(0, 255, 0, 0.1);
-  border-color: var(--fg);
+  font-size: 11px;
+  line-height: 1.4;
 }
 
 /* ── Achievement Overlay ── */
 #achievement-overlay {
   position: fixed;
-  top: 60px;
-  right: 20px;
-  width: 300px;
+  top: 4px;
+  right: 6px;
+  width: 260px;
   z-index: 101;
   animation: slideIn 0.3s ease-out;
-  box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
 }
 
 #achievement-overlay.hidden {
@@ -269,29 +238,29 @@ html, body {
 #achievement-box {
   background: var(--bg);
   border: 1px solid #00E5FF;
-  border-radius: 4px;
+  border-radius: 3px;
   overflow: hidden;
 }
 
 #achievement-header {
   background: rgba(0, 229, 255, 0.1);
-  padding: 6px 12px;
+  padding: 3px 8px;
   border-bottom: 1px solid rgba(0, 229, 255, 0.3);
   font-weight: bold;
-  font-size: 12px;
+  font-size: 10px;
   color: #00E5FF;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
 }
 
 #achievement-body {
-  padding: 12px;
+  padding: 8px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 #achievement-icon {
-  font-size: 28px;
+  font-size: 20px;
   color: #FFD700;
   flex-shrink: 0;
 }
@@ -299,18 +268,85 @@ html, body {
 #achievement-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 #achievement-name {
   font-weight: bold;
   color: #FFD700;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 #achievement-desc {
   color: var(--dim);
+  font-size: 10px;
+}
+
+/* ── About Panel ── */
+#about-panel {
+  position: fixed;
+  bottom: 26px;
+  left: 0;
+  width: 100%;
+  z-index: 150;
+  animation: fadeIn 0.15s ease-out;
+}
+
+#about-panel.hidden {
+  display: none;
+}
+
+#about-box {
+  background: var(--bg);
+  border-top: 1px solid var(--dim);
+  border-bottom: 1px solid var(--dim);
+}
+
+#about-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 8px;
+  border-bottom: 1px solid var(--dim);
+  font-weight: bold;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+#about-header button {
+  background: transparent;
+  border: none;
+  color: var(--dim);
   font-size: 12px;
+  cursor: pointer;
+}
+
+#about-header button:hover {
+  color: var(--fg);
+}
+
+#about-body {
+  padding: 4px 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px 0;
+}
+
+.about-row {
+  display: flex;
+  gap: 4px;
+  padding: 1px 0;
+}
+
+.about-label {
+  color: var(--dim);
+  font-size: 10px;
+  min-width: 28px;
+}
+
+.about-value {
+  color: var(--fg);
+  font-size: 10px;
 }
 
 /* ── Scenario Panel ── */
@@ -318,14 +354,14 @@ html, body {
   position: fixed;
   top: 0;
   right: 0;
-  width: 380px;
+  width: 280px;
   height: 100vh;
   background: var(--bg);
   border-left: 1px solid var(--dim);
   z-index: 200;
   display: flex;
   flex-direction: column;
-  animation: panelSlideIn 0.2s ease-out;
+  animation: panelSlideIn 0.15s ease-out;
 }
 
 @keyframes panelSlideIn {
@@ -341,18 +377,18 @@ html, body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  padding: 6px 10px;
   border-bottom: 1px solid var(--dim);
   font-weight: bold;
-  font-size: 14px;
-  letter-spacing: 2px;
+  font-size: 11px;
+  letter-spacing: 1px;
 }
 
 #scenario-panel-header button, #settings-header button, #titles-panel-header button {
   background: transparent;
   border: none;
   color: var(--dim);
-  font-size: 18px;
+  font-size: 14px;
   cursor: pointer;
 }
 
@@ -363,65 +399,65 @@ html, body {
 #scenario-list, #titles-list {
   flex: 1;
   overflow-y: auto;
-  padding: 8px;
+  padding: 4px;
 }
 
 .scenario-card {
   border: 1px solid var(--dim);
-  border-radius: 4px;
-  padding: 12px;
-  margin-bottom: 8px;
+  border-radius: 3px;
+  padding: 6px 8px;
+  margin-bottom: 4px;
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition: border-color 0.15s, background 0.15s;
 }
 
 .scenario-card:hover {
   border-color: var(--fg);
-  background: rgba(0, 255, 0, 0.05);
+  background: rgba(0, 255, 0, 0.04);
 }
 
 .scenario-card.active {
   border-color: var(--fg);
-  background: rgba(0, 255, 0, 0.08);
+  background: rgba(0, 255, 0, 0.06);
 }
 
 .scenario-card .scenario-name {
   font-weight: bold;
-  font-size: 14px;
-  margin-bottom: 4px;
+  font-size: 11px;
+  margin-bottom: 2px;
 }
 
 .scenario-card .scenario-desc {
-  font-size: 12px;
+  font-size: 10px;
   color: var(--dim);
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 .scenario-card .scenario-stats {
-  font-size: 11px;
+  font-size: 9px;
   color: var(--dim);
-  margin-top: 6px;
+  margin-top: 3px;
   display: flex;
-  gap: 12px;
+  gap: 8px;
 }
 
 /* ── Settings Panel ── */
 #settings-body {
   flex: 1;
-  padding: 16px;
+  padding: 8px;
 }
 
 .setting-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: 4px;
+  margin-bottom: 8px;
 }
 
 .setting-row label {
   color: var(--dim);
-  font-size: 12px;
-  min-width: 70px;
+  font-size: 10px;
+  min-width: 28px;
 }
 
 .setting-row input, .setting-row select {
@@ -429,9 +465,9 @@ html, body {
   background: rgba(0, 255, 0, 0.05);
   border: 1px solid var(--dim);
   color: var(--fg);
-  padding: 6px 8px;
+  padding: 3px 6px;
   font-family: var(--font);
-  font-size: 13px;
+  font-size: 10px;
   outline: none;
 }
 
@@ -448,42 +484,43 @@ html, body {
   background: transparent;
   border: 1px solid var(--dim);
   color: var(--fg);
-  padding: 6px 12px;
+  padding: 3px 8px;
   cursor: pointer;
   font-family: var(--font);
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .setting-row button:hover {
-  background: rgba(0, 255, 0, 0.1);
+  background: rgba(0, 255, 0, 0.08);
 }
 
 /* ── Titles Panel ── */
 .title-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  gap: 6px;
+  padding: 4px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .title-item.locked {
-  opacity: 0.3;
+  opacity: 0.25;
 }
 
 .title-level {
-  font-size: 11px;
+  font-size: 9px;
   color: var(--dim);
-  min-width: 40px;
+  min-width: 30px;
 }
 
 .title-name {
   font-weight: bold;
-  min-width: 80px;
+  font-size: 11px;
+  min-width: 60px;
 }
 
 .title-desc {
-  font-size: 12px;
+  font-size: 10px;
   color: var(--dim);
   flex: 1;
 }
@@ -512,13 +549,10 @@ html, body {
   --border: #222222;
 }
 
-.theme-paper #status-bar { background: rgba(0,0,0,0.03); }
-.theme-paper #input-bar { background: rgba(0,0,0,0.03); }
-.theme-paper #cmd-input::placeholder { color: #bbb; }
-.theme-paper #event-overlay { box-shadow: 0 0 20px rgba(0,0,0,0.15); }
-.theme-paper #achievement-overlay { box-shadow: 0 0 30px rgba(0,0,0,0.2); }
+.theme-paper #status-bar { background: rgba(0,0,0,0.02); }
+.theme-paper #button-bar { background: rgba(0,0,0,0.02); }
 .theme-paper .setting-row input, .theme-paper .setting-row select {
-  background: rgba(0,0,0,0.03);
+  background: rgba(0,0,0,0.02);
 }
 
 /* ── Theme: Matrix ── */
@@ -530,15 +564,10 @@ html, body {
 }
 
 /* ── Responsive ── */
-@media (max-width: 600px) {
-  #status-bar {
-    font-size: 12px;
-    gap: 4px 10px;
-  }
+@media (max-width: 420px) {
   #event-overlay {
-    width: calc(100% - 20px);
-    right: 10px;
-    bottom: 70px;
+    width: calc(100% - 10px);
+    right: 5px;
   }
   #scenario-panel, #settings-panel, #titles-panel {
     width: 100%;

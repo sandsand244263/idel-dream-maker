@@ -4,6 +4,7 @@ use std::path::PathBuf;
 use tauri::AppHandle;
 use tauri::Emitter;
 use tauri::Manager;
+use tauri_plugin_notification::NotificationExt;
 
 use crate::scenario;
 use crate::scenario::Scenario;
@@ -233,6 +234,13 @@ fn check_and_trigger_event(
                 },
             )
             .ok();
+
+        let _ = app_handle
+            .notification()
+            .builder()
+            .title(format!("IdleWorker - {}", title.name))
+            .body(&event.text[..event.text.len().min(120)])
+            .show();
     }
 }
 
@@ -270,6 +278,13 @@ fn check_achievements(
                     }),
                 )
                 .ok();
+
+            let _ = app_handle
+                .notification()
+                .builder()
+                .title("IdleWorker - 成就解锁")
+                .body(&achievement.name)
+                .show();
         }
     }
 }

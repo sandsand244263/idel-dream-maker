@@ -140,6 +140,7 @@ fn get_scenario_detail(id: String, state: State<AppState>) -> Result<serde_json:
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_notification::init())
         .setup(|app| {
             let scenarios = load_all_scenarios();
             let default_scenario = scenarios.first()
@@ -169,7 +170,8 @@ pub fn run() {
             Ok(())
         })
         .on_window_event(|window, event| {
-            if let WindowEvent::CloseRequested { .. } = event {
+            if let WindowEvent::CloseRequested { api, .. } = event {
+                api.prevent_close();
                 let _ = window.hide();
             }
         })
@@ -203,7 +205,11 @@ fn setup_tray(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
         .item(&quit)
         .build()?;
 
+    let icon_image = tauri::image::Image::from_bytes(include_bytes!("../icons/32x32.png"))
+        .expect("Failed to load tray icon");
+
     TrayIconBuilder::new()
+        .icon(icon_image)
         .menu(&menu)
         .tooltip("IdleWorker")
         .on_menu_event(|app, event| {

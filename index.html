@@ -9,47 +9,29 @@
 <body>
   <div id="app">
     <header id="status-bar">
-      <div class="status-item" id="status-player">
-        <span class="label">NAME</span>
-        <span id="player-name" class="value">Worker</span>
-        <span id="version-badge" class="version-badge">beta</span>
-      </div>
-      <div class="status-item" id="status-scenario">
-        <span class="label">SCENARIO</span>
-        <span id="scenario-name" class="value">废土</span>
-      </div>
       <div class="status-item" id="status-level">
-        <span class="label">LEVEL</span>
+        <span class="label">LV</span>
         <span id="level-value" class="value">1</span>
       </div>
       <div class="status-item" id="status-title">
         <span class="label">TITLE</span>
         <span id="title-value" class="value">拾荒者</span>
       </div>
-      <div class="status-item" id="status-exp">
-        <span class="label">EXP</span>
-        <span id="exp-value" class="value">0</span>
-      </div>
-      <div class="status-item" id="status-runtime">
-        <span class="label">RUNTIME</span>
-        <span id="runtime-value" class="value">00:00:00</span>
-      </div>
-      <div class="status-item" id="status-achievements">
-        <span class="label">ACHIEVEMENTS</span>
-        <span id="achievements-value" class="value">0</span>
-      </div>
     </header>
 
     <main id="log-area">
       <div class="log-entry system" id="welcome-log">
         <span class="ts">[SYSTEM]</span>
-        <span class="msg">IdleWorker v0.1.0 启动完成。挂机中...</span>
+        <span class="msg">IdleWorker v0.2.0 启动完成。挂机中...</span>
       </div>
     </main>
 
-    <footer id="input-bar">
-      <span class="prompt">&gt;</span>
-      <input type="text" id="cmd-input" placeholder="输入 help 查看命令..." autofocus spellcheck="false" />
+    <footer id="button-bar">
+      <button id="btn-scenario" class="bar-btn">剧本</button>
+      <button id="btn-titles" class="bar-btn">称号</button>
+      <button id="btn-about" class="bar-btn">状态</button>
+      <button id="btn-settings" class="bar-btn">设置</button>
+      <button id="btn-hide" class="bar-btn">隐藏</button>
     </footer>
   </div>
 
@@ -60,9 +42,6 @@
       </div>
       <div id="event-body">
         <p id="event-text"></p>
-      </div>
-      <div id="event-footer">
-        <button id="event-close">OK</button>
       </div>
     </div>
   </div>
@@ -76,6 +55,24 @@
           <span id="achievement-name"></span>
           <span id="achievement-desc"></span>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="about-panel" class="hidden">
+    <div id="about-box">
+      <div id="about-header">
+        <span>状态</span>
+        <button id="about-close">✕</button>
+      </div>
+      <div id="about-body">
+        <div class="about-row"><span class="about-label">版本</span><span id="about-version" class="about-value">0.2.0-beta</span></div>
+        <div class="about-row"><span class="about-label">玩家</span><span id="about-player" class="about-value">Worker</span></div>
+        <div class="about-row"><span class="about-label">剧本</span><span id="about-scenario" class="about-value">废土</span></div>
+        <div class="about-row"><span class="about-label">等级</span><span id="about-level" class="about-value">1</span></div>
+        <div class="about-row"><span class="about-label">称号</span><span id="about-title" class="about-value">拾荒者</span></div>
+        <div class="about-row"><span class="about-label">时长</span><span id="about-runtime" class="about-value">00:00:00</span></div>
+        <div class="about-row"><span class="about-label">成就</span><span id="about-achievements" class="about-value">0</span></div>
       </div>
     </div>
   </div>
@@ -95,18 +92,18 @@
     </div>
     <div id="settings-body">
       <div class="setting-row">
-        <label>玩家名称</label>
+        <label>名称</label>
         <input type="text" id="settings-name" />
         <button id="settings-name-save">保存</button>
       </div>
       <div class="setting-row">
-        <label>字体主题</label>
+        <label>主题</label>
         <select id="settings-theme">
-          <option value="green">绿色终端 (Green)</option>
-          <option value="amber">琥珀色 (Amber)</option>
-          <option value="cold">冷白 (Cold)</option>
-          <option value="paper">纸质 (Paper)</option>
-          <option value="matrix">矩阵 (Matrix)</option>
+          <option value="green">绿色终端</option>
+          <option value="amber">琥珀色</option>
+          <option value="cold">冷白</option>
+          <option value="paper">纸质</option>
+          <option value="matrix">矩阵</option>
         </select>
       </div>
     </div>
