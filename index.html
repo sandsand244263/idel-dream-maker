@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IdleWorker</title>
+  <link rel="stylesheet" href="src/style.css" />
+</head>
+<body>
+  <div id="app">
+    <header id="status-bar">
+      <div class="status-item" id="status-player">
+        <span class="label">NAME</span>
+        <span id="player-name" class="value">Worker</span>
+        <span id="version-badge" class="version-badge">beta</span>
+      </div>
+      <div class="status-item" id="status-scenario">
+        <span class="label">SCENARIO</span>
+        <span id="scenario-name" class="value">废土</span>
+      </div>
+      <div class="status-item" id="status-level">
+        <span class="label">LEVEL</span>
+        <span id="level-value" class="value">1</span>
+      </div>
+      <div class="status-item" id="status-title">
+        <span class="label">TITLE</span>
+        <span id="title-value" class="value">拾荒者</span>
+      </div>
+      <div class="status-item" id="status-exp">
+        <span class="label">EXP</span>
+        <span id="exp-value" class="value">0</span>
+      </div>
+      <div class="status-item" id="status-runtime">
+        <span class="label">RUNTIME</span>
+        <span id="runtime-value" class="value">00:00:00</span>
+      </div>
+      <div class="status-item" id="status-achievements">
+        <span class="label">ACHIEVEMENTS</span>
+        <span id="achievements-value" class="value">0</span>
+      </div>
+    </header>
+
+    <main id="log-area">
+      <div class="log-entry system" id="welcome-log">
+        <span class="ts">[SYSTEM]</span>
+        <span class="msg">IdleWorker v0.1.0 启动完成。挂机中...</span>
+      </div>
+    </main>
+
+    <footer id="input-bar">
+      <span class="prompt">&gt;</span>
+      <input type="text" id="cmd-input" placeholder="输入 help 查看命令..." autofocus spellcheck="false" />
+    </footer>
+  </div>
+
+  <div id="event-overlay" class="hidden">
+    <div id="event-box">
+      <div id="event-header">
+        <span id="event-title">事件</span>
+      </div>
+      <div id="event-body">
+        <p id="event-text"></p>
+      </div>
+      <div id="event-footer">
+        <button id="event-close">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="achievement-overlay" class="hidden">
+    <div id="achievement-box">
+      <div id="achievement-header">成就解锁</div>
+      <div id="achievement-body">
+        <span id="achievement-icon">★</span>
+        <div id="achievement-info">
+          <span id="achievement-name"></span>
+          <span id="achievement-desc"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="scenario-panel" class="hidden">
+    <div id="scenario-panel-header">
+      <span>剧本选择</span>
+      <button id="scenario-close">✕</button>
+    </div>
+    <div id="scenario-list"></div>
+  </div>
+
+  <div id="settings-panel" class="hidden">
+    <div id="settings-header">
+      <span>设置</span>
+      <button id="settings-close">✕</button>
+    </div>
+    <div id="settings-body">
+      <div class="setting-row">
+        <label>玩家名称</label>
+        <input type="text" id="settings-name" />
+        <button id="settings-name-save">保存</button>
+      </div>
+      <div class="setting-row">
+        <label>字体主题</label>
+        <select id="settings-theme">
+          <option value="green">绿色终端 (Green)</option>
+          <option value="amber">琥珀色 (Amber)</option>
+          <option value="cold">冷白 (Cold)</option>
+          <option value="paper">纸质 (Paper)</option>
+          <option value="matrix">矩阵 (Matrix)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div id="titles-panel" class="hidden">
+    <div id="titles-panel-header">
+      <span>称号一览</span>
+      <button id="titles-close">✕</button>
+    </div>
+    <div id="titles-list"></div>
+  </div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
