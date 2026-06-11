@@ -222,6 +222,8 @@ fn set_window_mode(mode: String, window: tauri::Window) -> Result<(), String> {
         }
         "full" => {
             window.set_always_on_top(false).map_err(|e| e.to_string())?;
+            window.set_size(tauri::LogicalSize::new(320, 840)).map_err(|e| e.to_string())?;
+            window.center().map_err(|e| e.to_string())?;
         }
         _ => {}
     }

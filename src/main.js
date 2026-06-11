@@ -86,15 +86,6 @@ const settingsAILanguage = document.getElementById('settings-ai-language');
 const titlesPanel = document.getElementById('titles-panel');
 const titlesClose = document.getElementById('titles-close');
 const titlesListEl = document.getElementById('titles-list');
-const aboutPanel = document.getElementById('about-panel');
-const aboutClose = document.getElementById('about-close');
-const aboutVersion = document.getElementById('about-version');
-const aboutPlayer = document.getElementById('about-player');
-const aboutScenario = document.getElementById('about-scenario');
-const aboutLevel = document.getElementById('about-level');
-const aboutTitle = document.getElementById('about-title');
-const aboutRuntime = document.getElementById('about-runtime');
-const aboutAchievements = document.getElementById('about-achievements');
 const btnBackHub = document.getElementById('btn-backhub');
 const btnMini = document.getElementById('btn-mini');
 const btnScenario = document.getElementById('btn-scenario');
@@ -256,7 +247,8 @@ function updatePermaStatus() {
   const rt = gameState.is_in_hub ? '—' : formatRuntime(gameState.total_runtime_ms || 0);
   const ach = gameState.unlockedAchievements?.length || 0;
   const dl = gameState.is_in_hub ? `Hub Lv.${hubLevel}` : `Lv.${gameState.level}`;
-  permaStatus.textContent = `${gameState.player_name} | ${dl} | ${currentTitle?.name || '?'} | ${rt} | 成就:${ach}`;
+  const sc = currentScenario?.nameCN || 'Hub';
+  permaStatus.textContent = `v0.3.6 | ${gameState.player_name} | ${sc} | ${dl} | ${currentTitle?.name || '?'} | ${rt} | 成就:${ach}`;
 }
 
 function addLog(type, message) {
@@ -285,16 +277,6 @@ achievementOverlay.addEventListener('click', () => { achievementOverlay.classLis
 
 btnScenario.addEventListener('click', async () => { try { scenarioList = await invoke('get_scenario_list'); } catch (e) {} renderScenarioPanel(); scenarioPanel.classList.remove('hidden'); });
 btnTitles.addEventListener('click', () => { renderTitlesPanel(); titlesPanel.classList.remove('hidden'); });
-btnAbout.addEventListener('click', () => {
-  aboutVersion.textContent = 'v0.3.5'; aboutPlayer.textContent = gameState?.player_name || '?';
-  aboutScenario.textContent = currentScenario?.nameCN || 'Hub';
-  aboutLevel.textContent = gameState?.is_in_hub ? `${t('labelHubLevel')} ${hubLevel}` : `${t('labelLevel')} ${gameState?.level || '?'}`;
-  aboutTitle.textContent = currentTitle?.name || '?';
-  aboutRuntime.textContent = gameState?.is_in_hub ? t('statusNone') : formatRuntime(gameState?.total_runtime_ms || 0);
-  aboutAchievements.textContent = `${gameState?.unlockedAchievements?.length || 0}`;
-  aboutPanel.classList.remove('hidden');
-});
-aboutClose.addEventListener('click', () => aboutPanel.classList.add('hidden'));
 btnSettings.addEventListener('click', () => { settingsName.value = gameState?.player_name || ''; settingsTheme.value = gameState?.selected_font_theme || 'green'; settingsLanguage.value = gameState?.language || 'zh'; settingsAILanguage.value = gameState?.ai_output_language || 'zh'; settingsPanel.classList.remove('hidden'); });
 settingsClose.addEventListener('click', () => settingsPanel.classList.add('hidden'));
 settingsNameSave.addEventListener('click', async () => { const n = settingsName.value.trim(); if (!n) return; try { await invoke('set_player_name', { name: n }); if (gameState) gameState.player_name = n; renderHubView(); updateUI(); } catch (e) {} });
@@ -328,9 +310,11 @@ async function renderTitlesPanel() {
 
 async function updateTooltip() {
   if (!gameState) return;
-  const rt = formatRuntime(gameState.total_runtime_ms); const title = currentTitle?.name || '?';
-  const lv = gameState.is_in_hub ? `大厅 Lv.${hubLevel}` : `Lv.${gameState.level} ${title}`;
-  try { await invoke('update_tooltip', { text: `${lv} | ${rt}` }); } catch (e) {}
+  const rt = formatRuntime(gameState.total_runtime_ms);
+  const title = currentTitle?.name || '?';
+  const lv = gameState.is_in_hub ? `大厅 Lv.${hubLevel}` : `Lv.${gameState.level}`;
+  const sc = currentScenario?.nameCN || (gameState.is_in_hub ? '大厅' : '?');
+  try { await invoke('update_tooltip', { text: `${gameState.player_name} | ${sc} | ${lv} | ${title} | ${rt}` }); } catch (e) {}
 }
 
 // ── Debug ──

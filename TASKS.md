@@ -16,44 +16,27 @@
 
 ---
 
-## v0.3.5 — 全线修复 + 底部常驻状态条 + 文档对齐
+## v0.3.6 — 标题栏精简 + 底部状态条完善 + 迷你展开修复
 
 > 当前进度：✅ 全部完成
 
-### Task 1 ✅ — set_window_mode("full") 去掉 decorations
+### Task 1 ✅ — 标题栏只留 [×]
 
-`lib.rs`: `set_window_mode("full")` 中删除 `window.set_decorations(true)` 和 `set_size`；仅保留 `always_on_top(false)`。避免点击迷你展开后 Windows 标题栏重现。
+`index.html`: 去掉 `[─]` `[□]` 按钮；`main.js`: 移除对应事件绑定（`window_minimize`/`window_toggle_maximize` 命令保留，后续可能复用）
 
-### Task 2 ✅ — Rust 命令替代前端动态 import
+### Task 2 ✅ — 底部状态条完善
 
-`lib.rs`: 新增 `window_minimize`、`window_toggle_maximize` 命令  
-`main.js`: 标题栏按钮全部改用 `invoke()` 调用，去掉 `await import('@tauri-apps/api/window')`
+`style.css`: 配色改为按钮栏同色背景 + dim 色文字  
+`main.js`: `updatePermaStatus()` 显示 `v0.3.6 | Player | Scenario | Lv.X | Title | XhXmXs | 成就:N`  
+`index.html`: 移除 `#about-panel`（被永久状态条取代）；移除"状态"按钮
 
-### Task 3 ✅ — 底部常驻状态条
+### Task 3 ✅ — 迷你展开尺寸+居中修复
 
-`index.html`: 新增 `#perma-status`（按钮栏上方）  
-`style.css`: 10px 字号、dim 色、ellipsis  
-`main.js`: `updatePermaStatus()` 显示 `ID:Worker | Lv.5 | 称号 | XhXmXs | 成就:N`
+`lib.rs`: `set_window_mode("full")` 加回 `set_size(320, 840)` + `window.center()`
 
-### Task 4 ✅ — Runtime 保护
+### Task 4 ✅ — 托盘 tooltip 格式更新
 
-`main.js`: `game-tick` 监听器中，若 payload 的 `total_runtime_ms === 0` 且 `lastRuntime > 0`，保留上次值。  
-`btnBackHub` 回调: `lastRuntime = 0`。  
-进入副本后初始值从 Rust 的 `total_runtime_ms` 恢复（`ScenarioProgress`）。
-
-### Task 5 ✅ — 大厅空状态提示
-
-`main.js`  `renderHubView()`: 若 `scenarioList` 为空数组，显示虚线边框的"暂无可用的副本"提示卡。
-
-### Task 6 ✅ — 托盘 tooltip 修复
-
-旧二进制未更新导致 tooltip 不工作。确保 `cargo build` 后新二进制覆盖运行。
-
-### Task 7 ✅ — 文档全线重写
-
-`CLAUDE.md` 重写: 双层架构/大厅等级/称号聚合/字体/语言/窗口/tooltip/debug/Ctrl+Shift+D/里程碑对齐  
-`架构文档.md`: 版本记录 0.3.5 追加  
-`TASKS.md`: 本次更新覆盖
+`main.js`: `updateTooltip()` 输出 `玩家 | 副本 | Lv.X | 称号 | XhXmXs`
 
 ---
 
