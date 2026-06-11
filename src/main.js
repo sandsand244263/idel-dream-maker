@@ -90,7 +90,6 @@ const btnBackHub = document.getElementById('btn-backhub');
 const btnMini = document.getElementById('btn-mini');
 const btnScenario = document.getElementById('btn-scenario');
 const btnTitles = document.getElementById('btn-titles');
-const btnAbout = document.getElementById('btn-about');
 const btnSettings = document.getElementById('btn-settings');
 const btnHide = document.getElementById('btn-hide');
 const permaStatus = document.getElementById('perma-status');
@@ -118,8 +117,6 @@ document.getElementById('titlebar-drag').addEventListener('mousedown', (e) => {
   if (e.target.closest('#titlebar-btns')) return;
   invoke('start_dragging').catch(() => {});
 });
-document.getElementById('btn-minimize').addEventListener('click', () => { invoke('window_minimize').catch(() => {}); });
-document.getElementById('btn-maximize').addEventListener('click', () => { invoke('window_toggle_maximize').catch(() => {}); });
 document.getElementById('btn-close').addEventListener('click', () => { invoke('hide_window').catch(() => {}); });
 
 // ── Alias Modal ──
@@ -243,12 +240,12 @@ function updateUI() {
 }
 
 function updatePermaStatus() {
-  if (!gameState) { permaStatus.textContent = ''; return; }
+  if (!gameState) { permaStatus.innerHTML = ''; return; }
   const rt = gameState.is_in_hub ? '—' : formatRuntime(gameState.total_runtime_ms || 0);
   const ach = gameState.unlockedAchievements?.length || 0;
   const dl = gameState.is_in_hub ? `Hub Lv.${hubLevel}` : `Lv.${gameState.level}`;
   const sc = currentScenario?.nameCN || 'Hub';
-  permaStatus.textContent = `v0.3.6 | ${gameState.player_name} | ${sc} | ${dl} | ${currentTitle?.name || '?'} | ${rt} | 成就:${ach}`;
+  permaStatus.innerHTML = `v0.3.6 | ${gameState.player_name} | ${sc}<br>${dl} | ${currentTitle?.name || '?'} | ${rt} | 成就:${ach}`;
 }
 
 function addLog(type, message) {
@@ -314,7 +311,7 @@ async function updateTooltip() {
   const title = currentTitle?.name || '?';
   const lv = gameState.is_in_hub ? `大厅 Lv.${hubLevel}` : `Lv.${gameState.level}`;
   const sc = currentScenario?.nameCN || (gameState.is_in_hub ? '大厅' : '?');
-  try { await invoke('update_tooltip', { text: `${gameState.player_name} | ${sc} | ${lv} | ${title} | ${rt}` }); } catch (e) {}
+  try { await invoke('update_tooltip', { text: `${gameState.player_name} | ${sc}\n${lv} | ${title} | ${rt}` }); } catch (e) {}
 }
 
 // ── Debug ──
