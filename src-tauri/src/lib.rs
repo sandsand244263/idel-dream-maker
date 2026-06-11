@@ -8,10 +8,16 @@ use std::sync::Mutex;
 use std::sync::OnceLock;
 use tauri::{Manager, AppHandle, State, WindowEvent};
 
-static TRAY: OnceLock<tauri::tray::TrayIcon<tauri::Wry>> = OnceLock::new();
+static APP_HANDLE: OnceLock<AppHandle> = OnceLock::new();
+static TRAY_ID: OnceLock<String> = OnceLock::new();
 
-pub fn get_tray() -> Option<&'static tauri::tray::TrayIcon<tauri::Wry>> {
-    TRAY.get()
+pub fn set_tray_tooltip(tooltip: &str) {
+    if let (Some(app), Some(tid)) = (APP_HANDLE.get(), TRAY_ID.get()) {
+        let id = tauri::tray::TrayIconId(tid.clone());
+        if let Some(tray) = app.tray_by_id(&id) {
+            let _ = tray.set_tooltip(Some(tooltip));
+        }
+    }
 }
 use tauri::tray::{TrayIconBuilder, TrayIconEvent, MouseButton, MouseButtonState};
 use tauri::menu::{MenuBuilder, MenuItemBuilder};
@@ -282,6 +288,9 @@ pub fn run() {
                 all_scenarios: scenarios,
             });
 
+            let app_handle = app.handle().clone();
+            let _ = APP_HANDLE.set(app_handle);
+
             setup_tray(app)?;
             start_game_loop(app.handle().clone());
 
@@ -382,7 +391,8 @@ fn setup_tray(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
         })
         .build(app)?;
 
-    let _ = TRAY.set(tray);
+    let tid = tray.id().clone();
+    let _ = TRAY_ID.set(tid.0.clone());
 
     Ok(())
 }

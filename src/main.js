@@ -158,7 +158,7 @@ miniExpand.addEventListener('click', async () => {
 });
 
 miniCollapse.addEventListener('click', async () => {
-  try { await invoke('set_window_mode', { mode: 'mini' }); } catch (e) {}
+  try { await invoke('hide_window'); } catch (e) {}
 });
 
 miniClose.addEventListener('click', async () => {
@@ -369,7 +369,7 @@ btnScenario.addEventListener('click', async () => {
 btnTitles.addEventListener('click', () => { renderTitlesPanel(); titlesPanel.classList.remove('hidden'); });
 
 btnAbout.addEventListener('click', () => {
-  aboutVersion.textContent = 'v0.3.1'; aboutPlayer.textContent = gameState?.player_name || '?';
+  aboutVersion.textContent = 'v0.3.2'; aboutPlayer.textContent = gameState?.player_name || '?';
   aboutScenario.textContent = currentScenario?.nameCN || 'Hub';
   aboutLevel.textContent = gameState?.is_in_hub ? `${t('labelHubLevel')} ${hubLevel}` : `${t('labelLevel')} ${gameState?.level || '?'}`;
   aboutTitle.textContent = currentTitle?.name || '?';
