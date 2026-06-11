@@ -249,7 +249,10 @@ function updatePermaStatus() {
 }
 
 function addLog(type, message) {
-  const entry = document.createElement('div'); entry.className = `log-entry ${type}`;
+  const prev = logArea.querySelector('.log-entry.latest');
+  if (prev) prev.classList.remove('latest');
+
+  const entry = document.createElement('div'); entry.className = `log-entry ${type} latest`;
   const ts = document.createElement('span'); ts.className = 'ts';
   const now = new Date(); ts.textContent = `[${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}]`;
   const msg = document.createElement('span'); msg.className = 'msg'; msg.textContent = message;

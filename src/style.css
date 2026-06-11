@@ -41,14 +41,15 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 .log-entry { padding: 2px 0; word-break: break-word; animation: fadeIn 0.2s ease-out; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-2px); } to { opacity: 1; transform: translateY(0); } }
 .log-entry .ts { color: var(--dim); margin-right: 6px; white-space: nowrap; }
-.log-entry.system .msg { color: var(--dim); }
-.log-entry.event .msg { color: var(--fg); }
+.log-entry .msg { color: var(--dim); }
 .log-entry.event .msg::before { content: '[!] '; color: #FF9800; }
-.log-entry.levelup .msg { color: #FFEB3B; }
 .log-entry.levelup .msg::before { content: '[UP] '; color: #FFEB3B; }
-.log-entry.achievement .msg { color: #00E5FF; }
 .log-entry.achievement .msg::before { content: '[ACH] '; color: #00E5FF; }
-.log-entry.info .msg { color: #4FC3F7; }
+
+.log-entry.latest.event .msg { color: var(--fg); }
+.log-entry.latest.levelup .msg { color: #FFEB3B; }
+.log-entry.latest.achievement .msg { color: #00E5FF; }
+.log-entry.latest.info .msg { color: #4FC3F7; }
 
 /* ── Perma Status ── */
 #perma-status { flex-shrink: 0; padding: 3px 10px; font-size: 12px; color: var(--dim); border-top: 1px solid var(--dim); background: rgba(0,255,0,0.03); line-height: 1.5; }
