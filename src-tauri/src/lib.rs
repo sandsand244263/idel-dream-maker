@@ -164,6 +164,20 @@ fn get_hub_titles(state: State<AppState>) -> Result<Vec<serde_json::Value>, Stri
 }
 
 #[tauri::command]
+fn set_language(lang: String, state: State<AppState>) -> Result<(), String> {
+    let mut game = state.game.lock().map_err(|e| e.to_string())?;
+    game.language = lang;
+    Ok(())
+}
+
+#[tauri::command]
+fn set_ai_output_language(lang: String, state: State<AppState>) -> Result<(), String> {
+    let mut game = state.game.lock().map_err(|e| e.to_string())?;
+    game.ai_output_language = lang;
+    Ok(())
+}
+
+#[tauri::command]
 fn set_font_theme(theme: String, state: State<AppState>) -> Result<(), String> {
     let mut game = state.game.lock().map_err(|e| e.to_string())?;
     game.selected_font_theme = theme;
@@ -248,6 +262,8 @@ pub fn run() {
             exit_to_hub_cmd,
             draw_scenario,
             get_hub_titles,
+            set_language,
+            set_ai_output_language,
             set_font_theme,
             show_window,
             hide_window,

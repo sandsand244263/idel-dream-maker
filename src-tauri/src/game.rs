@@ -31,6 +31,10 @@ pub struct GameState {
     pub scenario_alias: String,
     #[serde(default)]
     pub unlocked_title_sets: HashMap<String, Vec<String>>,
+    #[serde(default)]
+    pub language: String,
+    #[serde(default)]
+    pub ai_output_language: String,
 }
 
 impl Default for GameState {
@@ -51,6 +55,8 @@ impl Default for GameState {
             hub_total_exp: 0.0,
             scenario_alias: String::new(),
             unlocked_title_sets: HashMap::new(),
+            language: "zh".to_string(),
+            ai_output_language: "zh".to_string(),
         }
     }
 }
