@@ -1,7 +1,7 @@
 mod game;
 mod scenario;
 
-use game::{AppState, GameState, reset_game_for_scenario, start_game_loop, save_game, load_save};
+use game::{AppState, GameState, reset_game_for_scenario, start_game_loop, save_game, load_save, exit_to_hub};
 use scenario::{load_all_scenarios, get_current_title, get_unlocked_titles, find_scenario_by_id};
 
 use std::sync::Mutex;
@@ -22,8 +22,11 @@ fn get_full_state(state: State<AppState>) -> Result<serde_json::Value, String> {
     let scenario = state.scenario.lock().map_err(|e| e.to_string())?;
     let current_title = get_current_title(&scenario, game.level);
 
+    let hub_level = scenario::calculate_level(game.hub_total_exp);
+
     Ok(serde_json::json!({
         "game": &*game,
+        "hubLevel": hub_level,
         "scenario": {
             "id": scenario.id,
             "name": scenario.name,
@@ -71,13 +74,14 @@ fn set_player_name(name: String, state: State<AppState>) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn select_scenario(id: String, app: AppHandle, state: State<AppState>) -> Result<serde_json::Value, String> {
+fn select_scenario(id: String, alias: Option<String>, app: AppHandle, state: State<AppState>) -> Result<serde_json::Value, String> {
     let scenario = find_scenario_by_id(&state.all_scenarios, &id)
         .ok_or_else(|| format!("Scenario '{}' not found", id))?
         .clone();
 
+    let alias = alias.unwrap_or_default();
     let mut game = state.game.lock().map_err(|e| e.to_string())?;
-    reset_game_for_scenario(&mut game, &scenario);
+    reset_game_for_scenario(&mut game, &scenario, &alias);
 
     let mut scenario_lock = state.scenario.lock().map_err(|e| e.to_string())?;
     *scenario_lock = scenario.clone();
@@ -96,6 +100,19 @@ fn select_scenario(id: String, app: AppHandle, state: State<AppState>) -> Result
             "playerTitle": scenario.player_title,
         },
         "game": &*state.game.lock().map_err(|e| e.to_string())?,
+    }))
+}
+
+#[tauri::command]
+fn exit_to_hub_cmd(app: AppHandle, state: State<AppState>) -> Result<serde_json::Value, String> {
+    let mut game = state.game.lock().map_err(|e| e.to_string())?;
+    exit_to_hub(&mut game);
+    save_game(&app, &game);
+
+    let hub_level = scenario::calculate_level(game.hub_total_exp);
+    Ok(serde_json::json!({
+        "hubTotalExp": game.hub_total_exp,
+        "hubLevel": hub_level,
     }))
 }
 
@@ -181,6 +198,7 @@ pub fn run() {
             get_scenario_list,
             set_player_name,
             select_scenario,
+            exit_to_hub_cmd,
             set_font_theme,
             show_window,
             hide_window,
@@ -211,7 +229,7 @@ fn setup_tray(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     TrayIconBuilder::new()
         .icon(icon_image)
         .menu(&menu)
-        .tooltip("IdleWorker")
+        .tooltip("Idel-DreamMaker")
         .on_menu_event(|app, event| {
             match event.id.as_ref() {
                 "show" => {

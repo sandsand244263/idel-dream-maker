@@ -22,6 +22,12 @@ pub struct GameState {
     pub triggered_events: Vec<String>,
     pub unlocked_achievements: Vec<String>,
     pub selected_font_theme: String,
+    #[serde(default)]
+    pub is_in_hub: bool,
+    #[serde(default)]
+    pub hub_total_exp: f64,
+    #[serde(default)]
+    pub scenario_alias: String,
 }
 
 impl Default for GameState {
@@ -38,6 +44,9 @@ impl Default for GameState {
             triggered_events: Vec::new(),
             unlocked_achievements: Vec::new(),
             selected_font_theme: "green".to_string(),
+            is_in_hub: true,
+            hub_total_exp: 0.0,
+            scenario_alias: String::new(),
         }
     }
 }
@@ -117,6 +126,20 @@ pub fn start_game_loop(app_handle: AppHandle) {
                 Err(_) => continue,
             };
 
+            if game.is_in_hub {
+                if last_tick_emit.elapsed() >= std::time::Duration::from_secs(1) {
+                    let payload = GameTickPayload::from(&*game);
+                    app_handle.emit("game-tick", payload).ok();
+                    last_tick_emit = std::time::Instant::now();
+                }
+                if last_save.elapsed() >= std::time::Duration::from_secs(30) {
+                    game.last_save_time = chrono::Utc::now().timestamp_millis() as u64;
+                    save_game(&app_handle, &game);
+                    last_save = std::time::Instant::now();
+                }
+                continue;
+            }
+
             game.exp += 1.0;
             game.total_exp_earned += 1.0;
             game.total_runtime_ms += 1000;
@@ -161,7 +184,7 @@ pub fn start_game_loop(app_handle: AppHandle) {
     });
 }
 
-pub fn reset_game_for_scenario(game: &mut GameState, scenario: &Scenario) {
+pub fn reset_game_for_scenario(game: &mut GameState, scenario: &Scenario, alias: &str) {
     game.scenario_id = scenario.id.clone();
     game.level = 1;
     game.exp = 0.0;
@@ -170,6 +193,22 @@ pub fn reset_game_for_scenario(game: &mut GameState, scenario: &Scenario) {
     game.equipped_title_index = 0;
     game.triggered_events.clear();
     game.unlocked_achievements.clear();
+    game.is_in_hub = false;
+    game.scenario_alias = alias.to_string();
+}
+
+pub fn exit_to_hub(game: &mut GameState) {
+    game.hub_total_exp += game.total_exp_earned;
+    game.scenario_id.clear();
+    game.level = 1;
+    game.exp = 0.0;
+    game.total_exp_earned = 0.0;
+    game.total_runtime_ms = 0;
+    game.equipped_title_index = 0;
+    game.triggered_events.clear();
+    game.unlocked_achievements.clear();
+    game.scenario_alias.clear();
+    game.is_in_hub = true;
 }
 
 fn check_and_trigger_event(
@@ -238,7 +277,7 @@ fn check_and_trigger_event(
         let _ = app_handle
             .notification()
             .builder()
-            .title(format!("IdleWorker - {}", title.name))
+            .title(format!("Idel-DreamMaker - {}", title.name))
             .body(&event.text[..event.text.len().min(120)])
             .show();
     }
@@ -282,7 +321,7 @@ fn check_achievements(
             let _ = app_handle
                 .notification()
                 .builder()
-                .title("IdleWorker - 成就解锁")
+                .title("Idel-DreamMaker - 成就解锁")
                 .body(&achievement.name)
                 .show();
         }
