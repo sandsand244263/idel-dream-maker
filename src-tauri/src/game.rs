@@ -8,6 +8,7 @@ use tauri::Manager;
 
 use crate::scenario;
 use crate::scenario::Scenario;
+use crate::get_tray;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GameState {
@@ -211,7 +212,7 @@ pub fn start_game_loop(app_handle: AppHandle) {
                     let tn = scenario::get_current_title(&scenario_guard, game.level);
                     format!("Lv.{} {} | {}", game.level, tn.name, runtime_str)
                 };
-                if let Some(tray) = app_handle.tray_by_id("main") {
+                if let Some(tray) = get_tray() {
                     let _ = tray.set_tooltip(Some(tooltip.as_str()));
                 }
                 last_tooltip_update = std::time::Instant::now();
@@ -312,7 +313,7 @@ fn check_and_trigger_event(
 
         if let Some(window) = app_handle.get_webview_window("main") {
             if !window.is_visible().unwrap_or(true) {
-                if let Some(tray) = app_handle.tray_by_id("main") {
+                if let Some(tray) = get_tray() {
                     let short = if event.text.len() > 60 { &event.text[..60] } else { &event.text };
                     let _ = tray.set_tooltip(Some(format!("[{}] {}", title.name, short)));
                 }
@@ -358,7 +359,7 @@ fn check_achievements(
 
             if let Some(window) = app_handle.get_webview_window("main") {
                 if !window.is_visible().unwrap_or(true) {
-                    if let Some(tray) = app_handle.tray_by_id("main") {
+                    if let Some(tray) = get_tray() {
                         let _ = tray.set_tooltip(Some(format!("成就解锁: {}", achievement.name)));
                     }
                 }

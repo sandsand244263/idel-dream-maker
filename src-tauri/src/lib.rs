@@ -5,7 +5,14 @@ use game::{AppState, GameState, reset_game_for_scenario, start_game_loop, save_g
 use scenario::{load_all_scenarios, get_current_title, get_unlocked_titles, find_scenario_by_id};
 
 use std::sync::Mutex;
+use std::sync::OnceLock;
 use tauri::{Manager, AppHandle, State, WindowEvent};
+
+static TRAY: OnceLock<tauri::tray::TrayIcon<tauri::Wry>> = OnceLock::new();
+
+pub fn get_tray() -> Option<&'static tauri::tray::TrayIcon<tauri::Wry>> {
+    TRAY.get()
+}
 use tauri::tray::{TrayIconBuilder, TrayIconEvent, MouseButton, MouseButtonState};
 use tauri::menu::{MenuBuilder, MenuItemBuilder};
 
@@ -327,7 +334,7 @@ fn setup_tray(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     let icon_image = tauri::image::Image::from_bytes(include_bytes!("../icons/32x32.png"))
         .expect("Failed to load tray icon");
 
-    TrayIconBuilder::new()
+    let tray = TrayIconBuilder::new()
         .icon(icon_image)
         .menu(&menu)
         .tooltip("Idel-DreamMaker")
@@ -374,6 +381,8 @@ fn setup_tray(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
             }
         })
         .build(app)?;
+
+    let _ = TRAY.set(tray);
 
     Ok(())
 }

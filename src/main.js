@@ -330,7 +330,7 @@ btnBackHub.addEventListener('click', async () => {
 
 function updateUI() {
   if (!gameState) return;
-  levelValueEl.textContent = gameState.level;
+  levelValueEl.textContent = gameState.is_in_hub ? hubLevel : gameState.level;
   const ct = currentTitle || (currentScenario?.titles && currentScenario.titles[gameState.equipped_title_index || 0]);
   if (ct) { titleValueEl.textContent = ct.name; titleValueEl.style.color = ct.color || '#888'; }
 }
