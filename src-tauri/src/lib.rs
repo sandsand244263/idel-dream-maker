@@ -198,6 +198,30 @@ fn hide_window(window: tauri::Window) -> Result<(), String> {
 }
 
 #[tauri::command]
+fn set_window_mode(mode: String, window: tauri::Window) -> Result<(), String> {
+    match mode.as_str() {
+        "mini" => {
+            window.set_decorations(false).map_err(|e| e.to_string())?;
+            window.set_always_on_top(true).map_err(|e| e.to_string())?;
+            window.set_size(tauri::LogicalSize::new(250, 80)).map_err(|e| e.to_string())?;
+        }
+        "full" => {
+            window.set_decorations(true).map_err(|e| e.to_string())?;
+            window.set_always_on_top(false).map_err(|e| e.to_string())?;
+            window.set_size(tauri::LogicalSize::new(320, 840)).map_err(|e| e.to_string())?;
+        }
+        _ => {}
+    }
+    Ok(())
+}
+
+#[tauri::command]
+fn set_window_position(x: i32, y: i32, window: tauri::Window) -> Result<(), String> {
+    window.set_position(tauri::PhysicalPosition::new(x, y)).map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
 fn get_scenario_detail(id: String, state: State<AppState>) -> Result<serde_json::Value, String> {
     let scenario = find_scenario_by_id(&state.all_scenarios, &id)
         .ok_or_else(|| format!("Scenario '{}' not found", id))?;
@@ -267,6 +291,8 @@ pub fn run() {
             set_font_theme,
             show_window,
             hide_window,
+            set_window_mode,
+            set_window_position,
             get_scenario_detail,
         ])
         .run(tauri::generate_context!())

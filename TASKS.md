@@ -484,9 +484,162 @@ style.css:
 
 ---
 
+## v0.3.1 — Mini Bar + 别名弹窗 + 字体调大
+
+> 当前进度：✅ 全部完成 — v0.3.1
+
+### Task 1 ✅ — 字体调大 + 删贴边隐藏
+
+| 项目 | 值 |
+|------|-----|
+| 难度 | 低 |
+| 预计 | 15min |
+| 范围 | CSS + JS |
+
+**改动清单：**
+
+```
+style.css:
+  - 全局 font-size: 12px → 14px
+  - 状态栏 label font-size: 9px → 11px
+  - 日志 font-size 保持 14px
+  - 按钮 font-size: 10px → 12px
+  - 弹窗/面板各字号按比例调大
+
+main.js:
+  - 删除整个 "// ── Edge Dock ──" 代码块（mousemove + edgeTimer 约 20 行）
+```
+
+### Task 2 ✅ — 别名弹窗 UI 化
+
+| 项目 | 值 |
+|------|-----|
+| 难度 | 中 |
+| 预计 | 30min |
+| 范围 | HTML + CSS + JS |
+
+**改动清单：**
+
+```
+index.html:
+  - 新增 #alias-modal（覆盖全屏遮罩 + 居中弹窗）
+    <div id="alias-modal" class="hidden">
+      <div id="alias-box">
+        <div id="alias-title">进入剧本</div>
+        <div id="alias-desc"></div>
+        <input type="text" id="alias-input" placeholder="输入名称（留空用默认）" />
+        <div id="alias-buttons">
+          <button id="alias-cancel">取消</button>
+          <button id="alias-confirm">进入</button>
+        </div>
+      </div>
+    </div>
+
+style.css:
+  - #alias-modal: fixed 全屏, 半透明黑色遮罩, z-index 300
+  - #alias-box: 居中, 主题色边框, 深色背景, 与游戏统一字体配色
+  - #alias-input: 同设置面板 input 风格
+  - #alias-buttons: 并排两按钮
+
+main.js:
+  - 新增 showAliasModal(scenarioName) → Promise<string|null>
+  - 替换所有 window.prompt() 调用
+  - 取消按钮返回 null, 确认按钮返回输入值
+```
+
+### Task 3 ✅ — Mini Bar 模式
+
+| 项目 | 值 |
+|------|-----|
+| 难度 | 大 |
+| 预计 | 2h |
+| 范围 | HTML + CSS + JS + Rust |
+
+**设计规格：**
+
+```
+Mini Bar 尺寸: 250 × 80
+背景: rgba(10, 10, 10, 0.85) 半透明
+行为: 始终置顶 (always_on_top), 无装饰边框 (decorations: false)，整个区域可拖拽
+布局:
+  ┌──────────────────────┐
+  │ [▶] Lv.5  拾荒者     │  ← 展开按钮 + 等级 + 称号（行1, 30px）
+  │ ████████████░░░ 62%  │  ← EXP 进度条 + 百分比（行2, 20px）
+  │                    [-] [×] │  ← 收起 / 关闭 靠右（行3, 30px）
+  └──────────────────────┘
+
+切换流程:
+  [▶] → set_window_mode("full") → 320×840, 有边框, 取消置顶
+  [-] → set_window_mode("mini") → 250×80, 无边框, 置顶
+  [×] → hide_window() → 隐藏到托盘
+```
+
+**改动清单：**
+
+```
+index.html:
+  - 新增 #mini-bar 固定于 body 底部（只在 mini 模式显示）
+    <div id="mini-bar" class="hidden">
+      <div id="mini-row1">
+        <button id="mini-expand">▶</button>
+        <span id="mini-level">Lv.1</span>
+        <span id="mini-title">拾荒者</span>
+      </div>
+      <div id="mini-row2">
+        <div id="mini-progress-bar"><div id="mini-progress-fill" style="width:0%"></div></div>
+        <span id="mini-pct">0%</span>
+      </div>
+      <div id="mini-row3">
+        <button id="mini-collapse">─</button>
+        <button id="mini-close">×</button>
+      </div>
+    </div>
+
+style.css:
+  - #mini-bar: fixed bottom, 250×80, 半透明背景, border, z-index 500
+  - #mini-row1/2/3 布局
+  - #mini-progress-bar: 全宽, 深色背景, 圆角
+  - #mini-progress-fill: 绿色渐变填充, 过渡动画
+  - #mini-expand/collapse/close: 按钮样式
+
+main.js:
+  - 新增 switchMiniMode() / switchFullMode()
+  - Mini 模式下:
+    - 更新等级/称号/进度条(pct + fill width)
+    - [▶] 触发 invoke('set_window_mode', { mode: 'full' })
+    - [-] 触发 invoke('set_window_mode', { mode: 'mini' })
+    - [×] 触发 hide_window
+  - 在 game-tick 事件中同步 Mini Bar 更新
+  - 拖拽: mousedown 调用 window.start_dragging()
+
+lib.rs:
+  - 新增 set_window_mode(mode: String, window: Window) 命令
+    - "mini": decorations=false, always_on_top=true, LogicalSize(250,80)
+    - "full": decorations=true, always_on_top=false, LogicalSize(320,840)
+  - 注册新命令
+```
+
+### Task 4 ✅ — 托盘 tooltip 修复
+
+| 项目 | 值 |
+|------|-----|
+| 难度 | 低 |
+| 预计 | 10min |
+
+**改动清单：**
+
+```
+game.rs:
+  - 确认 tray_by_id("main") 获取正确
+  - Hub 模式 tooltip: "Idel-DreamMaker | 大厅 Lv.X"
+  - 剧本模式 tooltip: "Lv.X 称号 | 已挂机 XhXm"
+```
+
+---
+
 ## v0.4.0（规划中）
 
-> 以下为规划内容，具体 Task 待 v0.3.0 完成后细化
+> 以下为规划内容
 
 - `.md` 剧本解析器（Rust 端读取 frontmatter + 表格）
 - AI 生成剧本（用户自备 API Key，调用 OpenAI 兼容接口）
