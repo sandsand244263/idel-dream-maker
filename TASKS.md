@@ -7,58 +7,59 @@
 ## 新对话启动流程
 
 ```
-1. 读 CLAUDE.md       → 了解项目定义、架构、规则
-2. 读 架构文档.md       → 了解当前架构、版本记录、开发进度
-3. 读 TASKS.md         → 找到当前版本未完成的 Task
-4. git log --oneline -5 → 确认最新提交和进度
+1. 读 CLAUDE.md       → 项目定义、架构、规则
+2. 读 架构文档.md       → 当前架构、版本记录、开发进度
+3. 读 TASKS.md         → 当前版本未完成的 Task
+4. git log --oneline -5 → 最新提交和进度
 5. 执行对应 Task
 ```
 
 ---
 
-## v0.3.3 — 托盘修复 + 副本进度保留 + 调试面板
+## v0.3.4 — 自定义标题栏 + 托盘修复 + UI 增强
 
-> 当前进度：✅ 全部完成 — v0.3.3 已执行
+> 当前进度：✅ 全部完成
 
-### Task 1 ✅ — 托盘 tooltip 修复
+### Task 1 ✅ — 自定义标题栏
 
-| 项目 | 值 |
-|------|-----|
-| 原因 | `TrayIconBuilder::new()` 不设置 ID，导致 `app.tray_by_id("main")` 找不到托盘 |
-| 修复 | 改为 `TrayIconBuilder::with_id("main")`（和 AquaTray 一致）；前端每 5s 通过 `invoke('update_tooltip')` 更新 tooltip |
-| 涉及文件 | `lib.rs` `game.rs` `main.js` |
+`tauri.conf.json`: `decorations: false`, `shadow: true`  
+`index.html`: `#titlebar`（28px 高，内含 `#titlebar-drag` + 最小化/最大化/关闭按钮）  
+`main.js`: 拖拽 `invoke('start_dragging')`；按钮事件 `minimize()/maximize()/unmaximize()/hide_window()`  
+`style.css`: titlebar 样式，hover 变色，关闭按钮红色背景
 
-### Task 2 ✅ — 副本进度保留（累积式 B）
+### Task 2 ✅ — 托盘左右键严格区分
 
-| 项目 | 值 |
-|------|-----|
-| 改动 | 新增 `ScenarioProgress` 结构体；`GameState` 新增 `scenario_progress: HashMap<String, ScenarioProgress>` |
-| 行为 | 退出副本时保存等级/经验/触发事件/成就/称号索引到 HashMap；下次进入同一副本时恢复进度；进入不同副本时从该副本进度恢复（或无进度则从 1 级开始） |
-| 涉及文件 | `game.rs` |
+`lib.rs`: `.show_menu_on_left_click(false)` + `match` 精确匹配 `Left+Up`
 
-### Task 3 ✅ — 开发者工具
+### Task 3 ✅ — 时长含秒
 
-| 项目 | 值 |
-|------|-----|
-| 触发 | `Ctrl+Shift+D` 打开/关闭半透明调试面板 |
-| 内容 | `is_in_hub` / `isMiniMode` / 等级 / 经验 / 称号索引 / 语言 / 窗口尺寸 / 完整 json 序列化 |
-| 涉及文件 | `index.html` `main.js` `style.css` |
+`formatRuntime()` 返回 `XhXmXs`；状态栏/关于面板/tooltip 同步
 
-### Task 4 ✅ — Mini Bar [–] 修复
+### Task 4 ✅ — 状态栏 ID + 布局调整
 
-| 改动 | 改为 `hide_window()`（之前是 no-op 的 `set_window_mode("mini")`） |
-|------|----------------------------------------------------------------|
+`titlebar-id`: `ID:Worker`；`titlebar-lv`: `LV:5`；`titlebar-title`: 称号
 
-### Task 5 ✅ — 等级显示修复
+### Task 5 ✅ — 副本内隐藏"副本"按钮
 
-| 改动 | Hub 模式状态栏 `LV` 显示 `hubLevel` 而非 `gameState.level` |
-|------|----------------------------------------------------------|
+`switchView(false)` → `btnScenario.classList.toggle('hidden', inHub)`
+
+### Task 6 ✅ — 成就计数更新
+
+`achievement-unlocked` 监听器中 `gameState.unlockedAchievements.push(id)` + `updateUI()`
+
+### Task 7 ✅ — 日志防清空
+
+`addLog()` 中 `logArea.children.length > 500` 时移除 `firstChild`；调试面板显示 `logCount`
+
+### Task 8 ✅ — Mini Bar 加 ID
+
+`miniId.textContent = 'ID:...'`
 
 ---
 
 ## 规范
 
-- 每个 Task 执行前：`git add -A && git commit -m "快照: YYYY-MM-DD vX.Y.Z TaskN 前"`
-- 每个 Task 执行后：更新 TASKS.md 中对应 Task 标记为 ✅
-- 整个版本完成后：更新架构文档.md 版本记录 + 进度表
+- 执行前：`git add -A && git commit -m "快照: YYYY-MM-DD vX.Y.Z TaskN 前"`
+- 执行后：更新 TASKS.md 对应 Task 标记 ✅
+- 版本完成：更新架构文档.md 版本记录 + 进度表
 - 最终：`git add -A && git commit -m "vX.Y.Z: 版本说明"`

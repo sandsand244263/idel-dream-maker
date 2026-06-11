@@ -22,16 +22,20 @@
 </head>
 <body>
   <div id="app">
-    <header id="status-bar">
-      <div class="status-item" id="status-level">
-        <span class="label">LV</span>
-        <span id="level-value" class="value">1</span>
+    <div id="titlebar">
+      <div id="titlebar-drag">
+        <span id="titlebar-id">ID:Worker</span>
+        <span class="titlebar-sep">|</span>
+        <span id="titlebar-lv">LV:1</span>
+        <span class="titlebar-sep">|</span>
+        <span id="titlebar-title">拾荒者</span>
       </div>
-      <div class="status-item" id="status-title">
-        <span class="label">TITLE</span>
-        <span id="title-value" class="value">拾荒者</span>
+      <div id="titlebar-btns">
+        <button id="btn-minimize" class="titlebar-btn">─</button>
+        <button id="btn-maximize" class="titlebar-btn">□</button>
+        <button id="btn-close" class="titlebar-btn titlebar-btn-close">×</button>
       </div>
-    </header>
+    </div>
 
     <main id="hub-view">
       <div id="hub-welcome">
@@ -46,7 +50,7 @@
     <main id="log-area" class="hidden">
       <div class="log-entry system" id="welcome-log">
         <span class="ts">[SYSTEM]</span>
-        <span class="msg">Idel-DreamMaker v0.3.0 启动完成。挂机中...</span>
+        <span class="msg">Idel-DreamMaker v0.3.4 启动完成。挂机中...</span>
       </div>
     </main>
 
@@ -64,6 +68,7 @@
   <div id="mini-bar" class="hidden">
     <div id="mini-row1">
       <button id="mini-expand">▶</button>
+      <span id="mini-id">ID:Worker</span>
       <span id="mini-level">Lv.1</span>
       <span id="mini-title">拾荒者</span>
     </div>
@@ -114,7 +119,7 @@
     <div id="about-box">
       <div id="about-header"><span>状态</span><button id="about-close">✕</button></div>
       <div id="about-body">
-        <div class="about-row"><span class="about-label">版本</span><span id="about-version" class="about-value">0.3.2</span></div>
+        <div class="about-row"><span class="about-label">版本</span><span id="about-version" class="about-value">v0.3.4</span></div>
         <div class="about-row"><span class="about-label">玩家</span><span id="about-player" class="about-value">Worker</span></div>
         <div class="about-row"><span class="about-label">副本</span><span id="about-scenario" class="about-value">废土</span></div>
         <div class="about-row"><span class="about-label">等级</span><span id="about-level" class="about-value">1</span></div>

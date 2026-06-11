@@ -208,6 +208,12 @@ fn hide_window(window: tauri::Window) -> Result<(), String> {
 }
 
 #[tauri::command]
+fn start_dragging(window: tauri::Window) -> Result<(), String> {
+    window.start_dragging().map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
 fn set_window_mode(mode: String, window: tauri::Window) -> Result<(), String> {
     match mode.as_str() {
         "mini" => {
@@ -309,6 +315,7 @@ pub fn run() {
             set_font_theme,
             show_window,
             hide_window,
+            start_dragging,
             set_window_mode,
             set_window_position,
             update_tooltip,
@@ -364,22 +371,21 @@ fn setup_tray(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
                 _ => {}
             }
         })
+        .show_menu_on_left_click(false)
         .on_tray_icon_event(|tray, event| {
-            if let TrayIconEvent::Click {
-                button: MouseButton::Left,
-                button_state: MouseButtonState::Up,
-                ..
-            } = event
-            {
-                let app = tray.app_handle();
-                if let Some(window) = app.get_webview_window("main") {
-                    if window.is_visible().unwrap_or(false) {
-                        let _ = window.hide();
-                    } else {
-                        let _ = window.show();
-                        let _ = window.set_focus();
+            match &event {
+                TrayIconEvent::Click { button: MouseButton::Left, button_state: MouseButtonState::Up, .. } => {
+                    let app = tray.app_handle();
+                    if let Some(window) = app.get_webview_window("main") {
+                        if window.is_visible().unwrap_or(false) {
+                            let _ = window.hide();
+                        } else {
+                            let _ = window.show();
+                            let _ = window.set_focus();
+                        }
                     }
                 }
+                _ => {}
             }
         })
         .build(app)?;

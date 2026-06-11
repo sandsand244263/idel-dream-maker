@@ -1,24 +1,19 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-:root {
-  --fg: #00FF00;
-  --bg: #0A0A0A;
-  --dim: #0A5A0A;
-  --font: 'MapleMonoNFCN', 'Courier New', monospace;
-  --border: #00FF00;
-}
-
+:root { --fg: #00FF00; --bg: #0A0A0A; --dim: #0A5A0A; --font: 'MapleMonoNFCN', 'Courier New', monospace; --border: #00FF00; }
 html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 14px; line-height: 1.4; }
-
 #app { display: flex; flex-direction: column; height: 100vh; }
 
-/* ── Status Bar ── */
-#status-bar { display: flex; gap: 8px 0; padding: 4px 10px; border-bottom: 1px solid var(--dim); background: rgba(0,255,0,0.03); user-select: none; flex-shrink: 0; flex-wrap: wrap; }
-.status-item { display: flex; gap: 4px; align-items: center; margin-right: 14px; }
-.status-item .label { color: var(--dim); font-size: 11px; letter-spacing: 1px; }
-.status-item .value { color: var(--fg); font-weight: bold; }
-#status-title .value { cursor: pointer; text-decoration: underline; text-decoration-color: var(--dim); text-underline-offset: 2px; }
-#status-title .value:hover { text-decoration-color: var(--fg); }
+/* ── Titlebar ── */
+#titlebar { display: flex; align-items: center; height: 28px; flex-shrink: 0; background: rgba(0,255,0,0.04); border-bottom: 1px solid var(--dim); user-select: none; }
+#titlebar-drag { flex: 1; display: flex; align-items: center; gap: 6px; padding: 0 8px; height: 100%; cursor: default; font-size: 12px; }
+#titlebar-id { color: var(--fg); font-weight: bold; }
+.titlebar-sep { color: var(--dim); font-size: 10px; }
+#titlebar-lv { color: var(--fg); }
+#titlebar-title { color: var(--fg); }
+#titlebar-btns { display: flex; height: 100%; }
+.titlebar-btn { width: 28px; height: 28px; background: transparent; border: none; color: var(--dim); font-family: var(--font); font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.titlebar-btn:hover { background: rgba(0,255,0,0.08); color: var(--fg); }
+.titlebar-btn-close:hover { background: rgba(244,67,54,0.3); color: #F44336; }
 
 /* ── Hub View ── */
 #hub-view { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
@@ -63,7 +58,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 
 /* ── Mini Bar ── */
 #mini-bar { position: fixed; top: 0; left: 0; width: 250px; height: 80px; background: rgba(10,10,10,0.85); border: 1px solid var(--dim); z-index: 500; display: flex; flex-direction: column; user-select: none; cursor: default; backdrop-filter: blur(4px); }
-#mini-row1 { display: flex; align-items: center; gap: 6px; padding: 4px 8px 0; height: 28px; }
+#mini-row1 { display: flex; align-items: center; gap: 4px; padding: 4px 8px 0; height: 28px; }
 #mini-row2 { display: flex; align-items: center; gap: 6px; padding: 0 8px; height: 24px; }
 #mini-row3 { display: flex; justify-content: flex-end; gap: 2px; padding: 0 4px 2px; height: 22px; }
 #mini-expand { background: transparent; border: none; color: var(--fg); font-size: 12px; cursor: pointer; padding: 0 2px; font-family: var(--font); }
@@ -72,6 +67,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #mini-expand:hover { color: #4CAF50; }
 #mini-collapse:hover { color: var(--fg); }
 #mini-close:hover { color: #FF1744; }
+#mini-id { font-size: 10px; color: var(--dim); }
 #mini-level { font-weight: bold; font-size: 13px; color: var(--fg); }
 #mini-title { font-size: 12px; color: var(--dim); flex: 1; }
 #mini-progress-bg { flex: 1; height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
@@ -94,7 +90,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #alias-cancel { color: var(--dim) !important; }
 #alias-cancel:hover { color: var(--fg) !important; }
 
-/* ── Event Overlay ── */
+/* ── Event & Achievement Overlays ── */
 #event-overlay { position: fixed; bottom: 40px; right: 8px; width: 300px; z-index: 100; animation: slideIn 0.3s ease-out; box-shadow: 0 0 15px rgba(0,255,0,0.15); }
 @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 #event-overlay.hidden { display: none; }
@@ -102,9 +98,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #event-header { background: rgba(0,255,0,0.08); padding: 4px 10px; border-bottom: 1px solid var(--dim); font-weight: bold; font-size: 12px; }
 #event-body { padding: 8px 10px; min-height: 36px; }
 #event-text { color: var(--fg); font-size: 13px; line-height: 1.5; }
-
-/* ── Achievement Overlay ── */
-#achievement-overlay { position: fixed; top: 6px; right: 8px; width: 280px; z-index: 101; animation: slideIn 0.3s ease-out; box-shadow: 0 0 25px rgba(0,229,255,0.2); }
+#achievement-overlay { position: fixed; top: 36px; right: 8px; width: 280px; z-index: 101; animation: slideIn 0.3s ease-out; box-shadow: 0 0 25px rgba(0,229,255,0.2); }
 #achievement-overlay.hidden { display: none; }
 #achievement-box { background: var(--bg); border: 1px solid #00E5FF; border-radius: 4px; overflow: hidden; }
 #achievement-header { background: rgba(0,229,255,0.1); padding: 4px 10px; border-bottom: 1px solid rgba(0,229,255,0.3); font-weight: bold; font-size: 12px; color: #00E5FF; letter-spacing: 1px; }
@@ -125,7 +119,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 .about-label { color: var(--dim); font-size: 12px; min-width: 32px; }
 .about-value { color: var(--fg); font-size: 12px; }
 
-/* ── Scenario Panel ── */
+/* ── Scenario / Settings / Titles Panels ── */
 #scenario-panel, #settings-panel, #titles-panel { position: fixed; top: 0; right: 0; width: 280px; height: 100vh; background: var(--bg); border-left: 1px solid var(--dim); z-index: 200; display: flex; flex-direction: column; animation: panelSlideIn 0.15s ease-out; }
 @keyframes panelSlideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 #scenario-panel.hidden, #settings-panel.hidden, #titles-panel.hidden { display: none; }
@@ -139,8 +133,6 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 .scenario-card .scenario-name { font-weight: bold; font-size: 13px; margin-bottom: 3px; }
 .scenario-card .scenario-desc { font-size: 11px; color: var(--dim); line-height: 1.4; }
 .scenario-card .scenario-stats { font-size: 10px; color: var(--dim); margin-top: 4px; display: flex; gap: 10px; }
-
-/* ── Settings Panel ── */
 #settings-body { flex: 1; padding: 10px; }
 .setting-row { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
 .setting-row label { color: var(--dim); font-size: 12px; min-width: 32px; }
@@ -159,7 +151,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 .hub-title-count { font-size: 11px; color: var(--dim); }
 .hub-title-body { padding: 0 0 4px 24px; }
 
-/* ── Titles Panel ── */
+/* ── Titles List ── */
 .title-item { display: flex; align-items: center; gap: 8px; padding: 5px 10px; border-bottom: 1px solid rgba(255,255,255,0.04); }
 .title-item.locked { opacity: 0.25; }
 .title-item.equipped { border-left: 3px solid var(--fg); background: rgba(0,255,0,0.06); }
@@ -175,18 +167,14 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #debug-header button:hover { color: var(--fg); }
 #debug-content { flex: 1; overflow: auto; padding: 8px 10px; font-family: var(--font); font-size: 10px; color: var(--fg); white-space: pre-wrap; word-break: break-all; line-height: 1.4; }
 
-/* ── Theme: Amber ── */
+/* ── Themes ── */
 .theme-amber { --fg: #FFB000; --bg: #0A0A0A; --dim: #6B4A00; --border: #FFB000; }
 .theme-cold { --fg: #E0E0E0; --bg: #1A1A2E; --dim: #555577; --border: #E0E0E0; }
 .theme-paper { --fg: #222222; --bg: #F5F0E8; --dim: #999084; --border: #222222; }
-.theme-paper #status-bar { background: rgba(0,0,0,0.02); }
+.theme-paper #titlebar { background: rgba(0,0,0,0.02); }
 .theme-paper #button-bar { background: rgba(0,0,0,0.02); }
 .theme-paper .setting-row input, .theme-paper .setting-row select { background: rgba(0,0,0,0.02); }
 .theme-matrix { --fg: #00FF41; --bg: #000000; --dim: #003B00; --border: #00FF41; }
 
-@media (max-width: 420px) {
-  #event-overlay { width: calc(100% - 10px); right: 5px; }
-  #scenario-panel, #settings-panel, #titles-panel { width: 100%; }
-}
-
+@media (max-width: 420px) { #event-overlay { width: calc(100% - 10px); right: 5px; } #scenario-panel, #settings-panel, #titles-panel { width: 100%; } }
 .hidden { display: none !important; }
