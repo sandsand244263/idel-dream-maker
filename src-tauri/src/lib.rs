@@ -85,11 +85,9 @@ fn select_scenario(id: String, alias: Option<String>, app: AppHandle, state: Sta
 
     let mut scenario_lock = state.scenario.lock().map_err(|e| e.to_string())?;
     *scenario_lock = scenario.clone();
-
-    if let Ok(game_ref) = state.game.lock() {
-        save_game(&app, &game_ref);
-    }
     drop(scenario_lock);
+
+    save_game(&app, &game);
 
     Ok(serde_json::json!({
         "scenario": {
