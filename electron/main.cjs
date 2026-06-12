@@ -273,6 +273,7 @@ function startGameLoop() {
       triggered_events: gameState.triggeredEvents,
       language: gameState.language,
       currentTitle: currentTitle ? currentTitle.name : null,
+      scenario_name: currentScenario ? (currentScenario.name_cn || currentScenario.nameCN || currentScenario.name) : null,
     };
     try { mainWindow.webContents.send('game-tick', payload); } catch {}
     forwardToPet('game-tick', payload);

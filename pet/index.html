@@ -7,29 +7,15 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="pet-container">
-    <div id="title-bar">
-      <span id="pet-name">Pet</span>
-      <div id="title-btns">
-        <span id="btn-prev" class="nav-btn">◀</span>
-        <span id="btn-next" class="nav-btn">▶</span>
-        <span id="btn-close" class="close-btn">×</span>
-      </div>
-    </div>
-    <div id="canvas-wrap">
-      <canvas id="pet-canvas"></canvas>
-      <div id="tooltip" class="tooltip-hidden"></div>
-      <div id="bubble" class="bubble-hidden"></div>
-      <div id="ctx-menu">
-        <div id="ctx-prev">◀ 上一个宠物</div>
-        <div id="ctx-next">下一个宠物 ▶</div>
-        <div class="ctx-sep"></div>
-        <div id="ctx-close">× 隐藏</div>
-      </div>
-    </div>
-    <div id="pet-select-bar">
-      <span id="pet-slug"></span>
-      <span id="disclaimer">ⓘ</span>
+  <div id="container">
+    <canvas id="pet-canvas"></canvas>
+    <div id="tooltip" class="hidden"></div>
+    <div id="bubble" class="hidden"></div>
+    <div id="ctx-menu" class="hidden">
+      <div id="ctx-prev">◀ 上一个宠物</div>
+      <div id="ctx-next">下一个宠物 ▶</div>
+      <div class="ctx-sep"></div>
+      <div id="ctx-close">× 隐藏</div>
     </div>
   </div>
   <script src="pet.js"></script>

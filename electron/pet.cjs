@@ -99,6 +99,14 @@ function registerPetIpcHandlers(mainWindow, app) {
     return true;
   });
 
+  ipcMain.handle('toggle-pet-window', () => {
+    if (petWindow && !petWindow.isDestroyed()) {
+      if (petWindow.isVisible()) { petWindow.hide(); }
+      else { petWindow.show(); petWindow.focus(); }
+    }
+    return true;
+  });
+
   ipcMain.handle('scan-pets', () => {
     scanPets(app);
     return { pets: currentPetList, selected: selectedPetIndex };

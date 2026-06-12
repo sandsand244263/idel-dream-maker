@@ -11,7 +11,7 @@ contextBridge.exposeInMainWorld('electron', {
       'window-minimize', 'window-toggle-maximize',
       'set-window-position', 'update-tooltip',
       'get-scenario-detail', 'set-scenario-progress',
-      'hide-pet-window',
+      'hide-pet-window', 'toggle-pet-window',
     ];
     if (validChannels.includes(channel)) {
       return ipcRenderer.invoke(channel, ...args);
