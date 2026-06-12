@@ -24,7 +24,7 @@ const DEFAULT_STATES = {
 const STATE_KEYS = Object.keys(DEFAULT_STATES);
 
 let pets = [], selIdx = 0, spritesheet = null, cols = 8, stateConfig = null;
-let curState = 'idle', frameIdx = 0, frameList = [], animTimer = null;
+let curState = 'idle', frameIdx = 0, frameList = [], animTimer = null, returnTimer = null;
 let gameInfo = { level:1, title:'—', exp:0, scenario:'大厅', runtime:'0h0m0s', ach:0 };
 let bubbleTimer = null, bubbleExpanded = false;
 
@@ -76,9 +76,15 @@ function play(state) {
 
 function transitionTo(state) {
   if (curState === state) return;
+  if (returnTimer) { clearTimeout(returnTimer); returnTimer = null; }
   play(state);
-  const dur = loadStateCfg(state).dur * (loadStateCfg(state).frames || 6);
-  setTimeout(() => { if (curState !== 'idle') play('idle'); }, dur * 1.3 || 1500);
+  if (state === 'idle') return;
+  // total duration = sum of all frame durations
+  const totalMs = frameList.reduce((s,f) => s + f.d, 0);
+  returnTimer = setTimeout(() => {
+    returnTimer = null;
+    if (curState !== 'idle') play('idle');
+  }, totalMs * 1.15);
 }
 
 function animToIdle() { if (curState !== 'idle') play('idle'); }
@@ -126,14 +132,15 @@ function showBubble(text, type) {
 }
 
 // Drag
-let dragging = false, dragOff = {x:0,y:0};
+let dragging = false, mouseOff = {x:0,y:0};
 canvas.addEventListener('mousedown', e => {
-  dragging = true; dragOff = {x:e.offsetX, y:e.offsetY};
-  window.pet.invoke('pet-drag-start',{offsetX:e.screenX-dragOff.x,offsetY:e.screenY-dragOff.y}).catch(()=>{});
+  dragging = true;
+  mouseOff.x = e.screenX - (window.screenLeft || 0);
+  mouseOff.y = e.screenY - (window.screenTop || 0);
 });
 document.addEventListener('mousemove', e => {
   if (!dragging) return;
-  window.pet.invoke('pet-drag-move',{screenX:e.screenX,screenY:e.screenY}).catch(()=>{});
+  window.pet.invoke('pet-drag-move',{x:e.screenX-mouseOff.x, y:e.screenY-mouseOff.y}).catch(()=>{});
 });
 document.addEventListener('mouseup', () => {
   if (dragging) { dragging = false; window.pet.invoke('pet-drag-end').catch(()=>{}); }

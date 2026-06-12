@@ -140,6 +140,9 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #debug-header { display: flex; justify-content: space-between; align-items: center; padding: 4px 10px; border-bottom: 1px solid var(--dim); font-weight: bold; font-size: 12px; }
 #debug-header button { background: transparent; border: none; color: var(--dim); font-size: 14px; cursor: pointer; }
 #debug-header button:hover { color: var(--fg); }
+#debug-toolbar { display: flex; gap: 6px; padding: 4px 10px; border-bottom: 1px solid var(--dim); }
+#debug-toolbar button { background: rgba(0,255,0,0.06); border: 1px solid var(--dim); color: var(--fg); font-family: var(--font); font-size: 11px; padding: 2px 8px; cursor: pointer; }
+#debug-toolbar button:hover { background: rgba(0,255,0,0.12); }
 #debug-content { flex: 1; overflow: auto; padding: 8px 10px; font-family: var(--font); font-size: 10px; color: var(--fg); white-space: pre-wrap; word-break: break-all; line-height: 1.4; }
 
 /* ── Themes ── */

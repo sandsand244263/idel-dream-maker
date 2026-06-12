@@ -124,16 +124,13 @@ function registerPetIpcHandlers(mainWindow, app) {
     return { hasData: !!mainWindow };
   });
 
-  ipcMain.handle('pet-drag-start', (_, { offsetX, offsetY }) => {
-    if (petWindow && !petWindow.isDestroyed()) {
-      petWindow._dragOffset = { x: offsetX, y: offsetY };
-    }
+  ipcMain.handle('pet-drag-start', () => {
     return true;
   });
 
-  ipcMain.handle('pet-drag-move', (_, { screenX, screenY }) => {
-    if (petWindow && !petWindow.isDestroyed() && petWindow._dragOffset) {
-      petWindow.setPosition(screenX - petWindow._dragOffset.x, screenY - petWindow._dragOffset.y);
+  ipcMain.handle('pet-drag-move', (_, { x, y }) => {
+    if (petWindow && !petWindow.isDestroyed()) {
+      petWindow.setPosition(x, y);
     }
     return true;
   });

@@ -288,6 +288,22 @@ async function updateTooltip() {
 // ── Debug ──
 const debugPanel = document.getElementById('debug-panel'), debugContent = document.getElementById('debug-content'), debugClose = document.getElementById('debug-close');
 debugClose.addEventListener('click', () => debugPanel.classList.add('hidden'));
+document.getElementById('dbg-event').addEventListener('click', async () => {
+  const r = await window.electron.invoke('dev-trigger-event').catch(()=>null);
+  if (r) addLog('event', r.text);
+});
+document.getElementById('dbg-levelup').addEventListener('click', async () => {
+  const r = await window.electron.invoke('dev-level-up', { levels: 10 }).catch(()=>null);
+  if (r) addLog('levelup', `[DEV] 升级至 Lv.${r.level} ${r.title||''}`);
+});
+document.getElementById('dbg-achievement').addEventListener('click', async () => {
+  const r = await window.electron.invoke('dev-achievement').catch(()=>null);
+  if (r) addLog('achievement', `[DEV] 成就: ${r.name}`);
+});
+document.getElementById('dbg-runtime').addEventListener('click', async () => {
+  await window.electron.invoke('dev-runtime', { hours: 1 }).catch(()=>{});
+  addLog('system', '[DEV] +1h 运行时长');
+});
 document.addEventListener('keydown', (e) => {
   if (e.ctrlKey && e.shiftKey && e.key === 'D') {
     e.preventDefault();

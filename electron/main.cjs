@@ -540,6 +540,48 @@ function registerIpcHandlers() {
     writeSave(gameState);
     return true;
   });
+
+  // ── Dev Tools ──
+  ipcMain.handle('dev-trigger-event', () => {
+    if (!currentScenario || gameState.isInHub) return null;
+    const event = checkAndTriggerEvent();
+    if (event) {
+      const evPayload = { id: event.id, title: event.title || '事件', color: event.color || '#FFA500', text: event.text };
+      try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
+      forwardToPet('event-triggered', evPayload);
+    }
+    return event ? { text: event.text } : null;
+  });
+
+  ipcMain.handle('dev-level-up', (_, { levels }) => {
+    const gain = levels || 10;
+    gameState.totalExpEarned += gain * 100 * gameState.level;
+    gameState.level = calcLevel(gameState.totalExpEarned);
+    currentTitle = getCurrentTitle(currentScenario, gameState.level);
+    if (currentTitle && currentScenario) {
+      gameState.equippedTitleIndex = currentScenario.titles.indexOf(currentTitle);
+    }
+    const luPayload = { level: gameState.level, title: currentTitle ? currentTitle.name : null, titleColor: currentTitle ? currentTitle.color : null, titleDesc: currentTitle ? currentTitle.desc : null };
+    try { mainWindow.webContents.send('level-up', luPayload); } catch {}
+    forwardToPet('level-up', luPayload);
+    return { level: gameState.level, title: currentTitle ? currentTitle.name : null };
+  });
+
+  ipcMain.handle('dev-achievement', () => {
+    if (!currentScenario || gameState.isInHub) return null;
+    const unlocked = checkAchievements();
+    for (const a of unlocked) {
+      const achPayload = { id: a.id, name: a.name, desc: a.desc, icon: a.icon || '★' };
+      try { mainWindow.webContents.send('achievement-unlocked', achPayload); } catch {}
+      forwardToPet('achievement-unlocked', achPayload);
+    }
+    return unlocked.length > 0 ? { name: unlocked[0].name } : null;
+  });
+
+  ipcMain.handle('dev-runtime', (_, { hours }) => {
+    gameState.totalRuntimeMs += (hours || 1) * 3600000;
+    return { runtime: gameState.totalRuntimeMs };
+  });
 }
 
 // ── App Lifecycle ──
