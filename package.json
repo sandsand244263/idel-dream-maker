@@ -2,18 +2,22 @@
   "name": "idel-dream-maker",
   "private": true,
   "version": "1.0.0",
-  "main": "electron/main.js",
+  "type": "module",
+  "main": "electron/main.cjs",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:1420 && electron .\"",
-    "electron:build": "vite build && electron-builder"
+    "predev": "node build.js",
+    "prebuild": "node build.js",
+    "electron:dev": "node build.js && concurrently \"npm run dev\" \"wait-on http://localhost:1420 && electron .\"",
+    "electron:build": "node build.js && vite build && electron-builder"
   },
   "devDependencies": {
     "concurrently": "^9",
     "electron": "^34.5.8",
     "electron-builder": "^25",
     "vite": "^6",
-    "wait-on": "^8"
+    "wait-on": "^8",
+    "yaml": "^2.9.0"
   }
 }
