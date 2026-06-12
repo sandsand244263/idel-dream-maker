@@ -125,17 +125,20 @@ function loadSpritesheet(b64,ext,cfg){
   d('loading');
   const img=new Image();
   img.onload=()=>{
-    d('onload:'+img.naturalWidth+'x'+img.naturalHeight);
-    spritesheet=img;
-    const iw=img.naturalWidth,ih=img.naturalHeight;
-    if(iw%192===0&&ih%208===0){FW=192;FH=208;}
-    else if(iw%128===0&&ih%128===0){FW=128;FH=128;}
-    else if(iw%64===0&&ih%64===0){FW=64;FH=64;}
-    else{FW=192;FH=208;}
-    cols=Math.floor(iw/FW);rows=Math.floor(ih/FH);
-    stateConfig=cfg||null;
-    try{play('idle');d('play_ok');}catch(e){d('play_err:'+e.message);}
-    ctx.fillStyle='#FF00FF';ctx.fillRect(0,0,40,40);
+    try{
+      d('onload:'+img.naturalWidth+'x'+img.naturalHeight);
+      spritesheet=img;
+      const iw=img.naturalWidth,ih=img.naturalHeight;
+      if(iw%192===0&&ih%208===0){FW=192;FH=208;}
+      else if(iw%128===0&&ih%128===0){FW=128;FH=128;}
+      else if(iw%64===0&&ih%64===0){FW=64;FH=64;}
+      else{FW=192;FH=208;}
+      cols=Math.floor(iw/FW);rows=Math.floor(ih/FH);
+      stateConfig=cfg||null;
+      play('idle');
+      d('ok');
+      ctx.fillStyle='#FF00FF';ctx.fillRect(0,0,40,40);
+    }catch(e){d('ERR:'+e.message);}
   };
   img.onerror=()=>{d('imgerr');spritesheet=null;};
   img.src=`data:image/${ext==='.png'?'png':'webp'};base64,${b64}`;
