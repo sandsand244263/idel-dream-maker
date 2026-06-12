@@ -31,6 +31,7 @@
 - **每个 Task 完成后**：`git add -A && git commit -m "vX.Y.Z TaskN: 改动说明"`
 - **版本完成后**：更新 TASKS.md + 架构文档.md，然后 `git add -A && git commit -m "vX.Y.Z: 版本说明"`
 - **禁止**：`amend`、`force push`、跳过 snapshot 直接改代码
+- **推送**：每次 commit 后执行 `git push origin main`，确保远程与本地同步。Tag 在版本完成时一次性推送 `git push origin --tags`
 
 ### 文档更新规范
 

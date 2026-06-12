@@ -119,6 +119,7 @@
 cargo test          # Rust 测试全过
 cargo check         # 编译通过
 npx vite build      # 前端构建通过
+git push origin main  # 推送到 GitHub
 ```
 
 版本结束时额外：
