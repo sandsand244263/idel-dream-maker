@@ -1,5 +1,4 @@
-import { invoke } from '@tauri-apps/api/core';
-import { listen } from '@tauri-apps/api/event';
+// IPC via window.electron (provided by preload.cjs)
 
 const LANG = {
   zh: {
@@ -115,9 +114,9 @@ let aliasResolver = null;
 // ── Titlebar ──
 document.getElementById('titlebar-drag').addEventListener('mousedown', (e) => {
   if (e.target.closest('#titlebar-btns')) return;
-  invoke('start_dragging').catch(() => {});
+  window.electron.invoke('start-dragging').catch(() => {});
 });
-document.getElementById('btn-close').addEventListener('click', () => { invoke('hide_window').catch(() => {}); });
+document.getElementById('btn-close').addEventListener('click', () => { window.electron.invoke('hide-window').catch(() => {}); });
 
 // ── Alias Modal ──
 function showAliasModal(sn) {
@@ -134,15 +133,15 @@ aliasConfirm.addEventListener('click', () => { aliasModal.classList.add('hidden'
 aliasInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') aliasConfirm.click(); if (e.key === 'Escape') aliasCancel.click(); });
 
 // ── Mini Bar ──
-miniExpand.addEventListener('click', async () => { try { await invoke('set_window_mode', { mode: 'full' }); } catch (e) {} isMiniMode = false; document.getElementById('app').classList.remove('hidden'); miniBar.classList.add('hidden'); });
-miniCollapse.addEventListener('click', () => { invoke('hide_window').catch(() => {}); });
-miniClose.addEventListener('click', () => { invoke('hide_window').catch(() => {}); });
+miniExpand.addEventListener('click', async () => { try { await window.electron.invoke('set-window-mode', { mode: 'full' }); } catch (e) {} isMiniMode = false; document.getElementById('app').classList.remove('hidden'); miniBar.classList.add('hidden'); });
+miniCollapse.addEventListener('click', () => { window.electron.invoke('hide-window').catch(() => {}); });
+miniClose.addEventListener('click', () => { window.electron.invoke('hide-window').catch(() => {}); });
 
 let dragging = false;
 miniBar.addEventListener('mousedown', (e) => {
   if (e.target.tagName === 'BUTTON') return;
   dragging = true; const r = miniBar.getBoundingClientRect(); const ox = e.clientX - r.left, oy = e.clientY - r.top;
-  const mh = (ev) => { if (!dragging) return; invoke('set_window_position', { x: ev.screenX - ox, y: ev.screenY - oy }).catch(() => {}); };
+  const mh = (ev) => { if (!dragging) return; window.electron.invoke('set-window-position', { x: ev.screenX - ox, y: ev.screenY - oy }).catch(() => {}); };
   const uh = () => { dragging = false; document.removeEventListener('mousemove', mh); document.removeEventListener('mouseup', uh); };
   document.addEventListener('mousemove', mh); document.addEventListener('mouseup', uh);
 });
@@ -155,7 +154,7 @@ function updateMiniBar() {
   const pct = nr > cr ? Math.min(100, ((t - cr) / (nr - cr)) * 100) : 0;
   miniPct.textContent = `${Math.round(pct)}%`; miniFill.style.width = `${pct}%`;
 }
-async function switchToMini() { try { await invoke('set_window_mode', { mode: 'mini' }); } catch (e) {} isMiniMode = true; document.getElementById('app').classList.add('hidden'); miniBar.classList.remove('hidden'); updateMiniBar(); }
+async function switchToMini() { try { await window.electron.invoke('set-window-mode', { mode: 'mini' }); } catch (e) {} isMiniMode = true; document.getElementById('app').classList.add('hidden'); miniBar.classList.remove('hidden'); updateMiniBar(); }
 btnMini.addEventListener('click', () => switchToMini());
 
 function getTitleByIndex(idx) {
@@ -165,13 +164,13 @@ function getTitleByIndex(idx) {
 
 async function init() {
   try {
-    const full = await invoke('get_full_state');
+    const full = await window.electron.invoke('get-full-state');
     gameState = full.game; currentScenario = full.scenario; currentTitle = full.currentTitle;
-    hubLevel = full.hubLevel || 1; scenarioList = await invoke('get_scenario_list');
+    hubLevel = full.hubLevel || 1; scenarioList = await window.electron.invoke('get-scenario-list');
   } catch (e) { addLog('system', `${t('systemInitFail')}: ${e}`); }
   updateUI(); renderHubView(); switchView(gameState?.is_in_hub !== false);
-  listen('game-tick', (event) => {
-    const p = event.payload;
+  window.electron.on('game-tick', (event) => {
+    const p = event;
     if (gameState?.is_in_hub) {
       gameState = { ...gameState, ...p };
       if (p.hub_total_exp !== undefined) hubLevel = calcLevel(p.hub_total_exp);
@@ -184,10 +183,10 @@ async function init() {
       updateUI(); updateMiniBar();
     }
   });
-  listen('event-triggered', (event) => { addLog('event', event.payload.text); showEventOverlay(event.payload.title, event.payload.color, event.payload.text); });
-  listen('level-up', (event) => { currentTitle = { name: event.payload.title, color: event.payload.titleColor, desc: event.payload.titleDesc }; addLog('levelup', tf('systemLevelUp', event.payload.level, event.payload.title)); updateUI(); updateMiniBar(); });
-  listen('achievement-unlocked', (event) => { const { name, desc, icon } = event.payload; addLog('achievement', `${name}: ${desc}`); showAchievementOverlay(icon, name, desc); gameState?.unlockedAchievements.push(event.payload.id); updateUI(); });
-  listen('scenario-changed', (event) => { gameState = event.payload.game; currentScenario = event.payload.scenario; currentTitle = { name: event.payload.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); });
+  window.electron.on('event-triggered', (event) => { addLog('event', event.text); showEventOverlay(event.title, event.color, event.text); });
+  window.electron.on('level-up', (event) => { currentTitle = { name: event.title, color: event.titleColor, desc: event.titleDesc }; addLog('levelup', tf('systemLevelUp', event.level, event.title)); updateUI(); updateMiniBar(); });
+  window.electron.on('achievement-unlocked', (event) => { const { name, desc, icon } = event; addLog('achievement', `${name}: ${desc}`); showAchievementOverlay(icon, name, desc); gameState?.unlockedAchievements.push(event.id); updateUI(); });
+  window.electron.on('scenario-changed', (event) => { gameState = event.game; currentScenario = event.scenario; currentTitle = { name: event.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); });
 }
 
 function switchView(inHub) {
@@ -215,18 +214,18 @@ function renderHubView() {
     card.innerHTML = `<div class="hub-card-name">${s.nameCN} (${s.name})</div><div class="hub-card-desc">${s.description}</div><div class="hub-card-meta">${s.eventCount} ${t('scenarioEvent')} · ${s.achievementCount} ${t('scenarioAchievement')}</div>`;
     card.addEventListener('click', async () => {
       const alias = await showAliasModal(s.nameCN); if (alias === null) return;
-      try { const r = await invoke('select_scenario', { id: s.id, alias }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); updateMiniBar(); } catch (e) { addLog('system', t('systemEnterFail')); }
+      try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); updateMiniBar(); } catch (e) { addLog('system', t('systemEnterFail')); }
     });
     hubScenarioList.appendChild(card);
   });
 }
 
 hubDrawBtn.addEventListener('click', async () => {
-  try { const s = await invoke('draw_scenario'); if (!s) return; const alias = await showAliasModal(s.nameCN); if (alias === null) return; const r = await invoke('select_scenario', { id: s.id, alias }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemDrew', currentScenario.nameCN)); updateUI(); updateMiniBar(); } catch (e) { addLog('system', t('systemDrawFail')); }
+  try { const s = await window.electron.invoke('draw-scenario'); if (!s) return; const alias = await showAliasModal(s.nameCN); if (alias === null) return; const r = await window.electron.invoke('select-scenario', { id: s.id, alias }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemDrew', currentScenario.nameCN)); updateUI(); updateMiniBar(); } catch (e) { addLog('system', t('systemDrawFail')); }
 });
 
 btnBackHub.addEventListener('click', async () => {
-  try { const r = await invoke('exit_to_hub_cmd'); gameState.hub_total_exp = r.hubTotalExp; hubLevel = r.hubLevel; gameState.is_in_hub = true; switchView(true); renderHubView(); addLog('info', tf('systemBack', hubLevel)); updateUI(); lastRuntime = 0; } catch (e) { addLog('system', t('systemBackFail')); }
+  try { const r = await window.electron.invoke('exit-to-hub'); gameState.hub_total_exp = r.hubTotalExp; hubLevel = r.hubLevel; gameState.is_in_hub = true; switchView(true); renderHubView(); addLog('info', tf('systemBack', hubLevel)); updateUI(); lastRuntime = 0; } catch (e) { addLog('system', t('systemBackFail')); }
 });
 
 // ── UI ──
@@ -275,15 +274,15 @@ function showAchievementOverlay(icon, name, desc) {
 }
 achievementOverlay.addEventListener('click', () => { achievementOverlay.classList.add('hidden'); if (achievementDismissTimer) clearTimeout(achievementDismissTimer); });
 
-btnScenario.addEventListener('click', async () => { try { scenarioList = await invoke('get_scenario_list'); } catch (e) { addLog('system', `获取副本列表失败: ${e}`); } renderScenarioPanel(); scenarioPanel.classList.remove('hidden'); });
+btnScenario.addEventListener('click', async () => { try { scenarioList = await window.electron.invoke('get-scenario-list'); } catch (e) { addLog('system', `获取副本列表失败: ${e}`); } renderScenarioPanel(); scenarioPanel.classList.remove('hidden'); });
 btnTitles.addEventListener('click', () => { renderTitlesPanel(); titlesPanel.classList.remove('hidden'); });
 btnSettings.addEventListener('click', () => { settingsName.value = gameState?.player_name || ''; settingsTheme.value = gameState?.selected_font_theme || 'green'; settingsLanguage.value = gameState?.language || 'zh'; settingsAILanguage.value = gameState?.ai_output_language || 'zh'; settingsPanel.classList.remove('hidden'); });
 settingsClose.addEventListener('click', () => settingsPanel.classList.add('hidden'));
-settingsNameSave.addEventListener('click', async () => { const n = settingsName.value.trim(); if (!n) return; try { await invoke('set_player_name', { name: n }); if (gameState) gameState.player_name = n; renderHubView(); updateUI(); } catch (e) { addLog('system', `保存名称失败: ${e}`); } });
-settingsTheme.addEventListener('change', async () => { const v = settingsTheme.value; try { await invoke('set_font_theme', { theme: v }); if (gameState) gameState.selected_font_theme = v; applyTheme(v); } catch (e) { addLog('system', `切换主题失败: ${e}`); } });
-settingsLanguage.addEventListener('change', async () => { const v = settingsLanguage.value; try { await invoke('set_language', { lang: v }); if (gameState) gameState.language = v; applyLanguage(); renderHubView(); } catch (e) { addLog('system', `切换语言失败: ${e}`); } });
-settingsAILanguage.addEventListener('change', async () => { const v = settingsAILanguage.value; try { await invoke('set_ai_output_language', { lang: v }); if (gameState) gameState.ai_output_language = v; } catch (e) { addLog('system', `切换 AI 语言失败: ${e}`); } });
-btnHide.addEventListener('click', () => { invoke('hide_window').catch(() => {}); });
+settingsNameSave.addEventListener('click', async () => { const n = settingsName.value.trim(); if (!n) return; try { await window.electron.invoke('set-player-name', { name: n }); if (gameState) gameState.player_name = n; renderHubView(); updateUI(); } catch (e) { addLog('system', `保存名称失败: ${e}`); } });
+settingsTheme.addEventListener('change', async () => { const v = settingsTheme.value; try { await window.electron.invoke('set-font-theme', { theme: v }); if (gameState) gameState.selected_font_theme = v; applyTheme(v); } catch (e) { addLog('system', `切换主题失败: ${e}`); } });
+settingsLanguage.addEventListener('change', async () => { const v = settingsLanguage.value; try { await window.electron.invoke('set-language', { lang: v }); if (gameState) gameState.language = v; applyLanguage(); renderHubView(); } catch (e) { addLog('system', `切换语言失败: ${e}`); } });
+settingsAILanguage.addEventListener('change', async () => { const v = settingsAILanguage.value; try { await window.electron.invoke('set-ai-output-language', { lang: v }); if (gameState) gameState.ai_output_language = v; } catch (e) { addLog('system', `切换 AI 语言失败: ${e}`); } });
+btnHide.addEventListener('click', () => { window.electron.invoke('hide-window').catch(() => {}); });
 
 function applyTheme(id) { document.documentElement.className = `theme-${id}`; }
 function applyLanguage() { document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); }); }
@@ -293,7 +292,7 @@ function renderScenarioPanel() {
   scenarioList.forEach(s => {
     const card = document.createElement('div'); card.className = `scenario-card${s.id === cid ? ' active' : ''}`;
     card.innerHTML = `<div class="scenario-name" style="color:${s.id === cid ? '#0F0' : '#888'}">${s.nameCN} (${s.name})</div><div class="scenario-desc">${s.description}</div><div class="scenario-stats"><span>${s.eventCount} ${t('scenarioEvent')}</span><span>${s.achievementCount} ${t('scenarioAchievement')}</span></div>`;
-    card.addEventListener('click', async () => { const alias = await showAliasModal(s.nameCN); if (alias === null) return; try { const r = await invoke('select_scenario', { id: s.id, alias }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); scenarioPanel.classList.add('hidden'); updateUI(); updateMiniBar(); } catch (e) { addLog('system', t('systemEnterFail')); } });
+    card.addEventListener('click', async () => { const alias = await showAliasModal(s.nameCN); if (alias === null) return; try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); scenarioPanel.classList.add('hidden'); updateUI(); updateMiniBar(); } catch (e) { addLog('system', t('systemEnterFail')); } });
     scenarioListEl.appendChild(card);
   });
 }
@@ -303,9 +302,9 @@ titlesClose.addEventListener('click', () => titlesPanel.classList.add('hidden'))
 async function renderTitlesPanel() {
   titlesListEl.innerHTML = '';
   if (gameState?.is_in_hub) {
-    try { const ht = await invoke('get_hub_titles'); ht.forEach(s => { const g = document.createElement('div'); g.className = 'hub-title-group'; const sm = document.createElement('div'); sm.className = 'hub-title-summary'; sm.innerHTML = `▶ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>`; const bd = document.createElement('div'); bd.className = 'hub-title-body hidden'; (s.unlockedTitles.length ? s.unlockedTitles : [t('hubTitleEmpty')]).forEach(n => { const it = document.createElement('div'); it.className = 'title-item'; it.innerHTML = `<span class="title-name" style="color:var(--fg);font-size:12px">${n}</span>`; bd.appendChild(it); }); sm.addEventListener('click', () => { bd.classList.toggle('hidden'); sm.innerHTML = bd.classList.contains('hidden') ? `▶ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>` : `▼ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>`; }); g.appendChild(sm); g.appendChild(bd); titlesListEl.appendChild(g); }); } catch (e) { addLog('system', `获取大厅称号失败: ${e}`); } return;
+    try { const ht = await window.electron.invoke('get-hub-titles'); ht.forEach(s => { const g = document.createElement('div'); g.className = 'hub-title-group'; const sm = document.createElement('div'); sm.className = 'hub-title-summary'; sm.innerHTML = `▶ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>`; const bd = document.createElement('div'); bd.className = 'hub-title-body hidden'; (s.unlockedTitles.length ? s.unlockedTitles : [t('hubTitleEmpty')]).forEach(n => { const it = document.createElement('div'); it.className = 'title-item'; it.innerHTML = `<span class="title-name" style="color:var(--fg);font-size:12px">${n}</span>`; bd.appendChild(it); }); sm.addEventListener('click', () => { bd.classList.toggle('hidden'); sm.innerHTML = bd.classList.contains('hidden') ? `▶ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>` : `▼ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>`; }); g.appendChild(sm); g.appendChild(bd); titlesListEl.appendChild(g); }); } catch (e) { addLog('system', `获取大厅称号失败: ${e}`); } return;
   }
-  try { const d = await invoke('get_scenario_detail', { id: gameState?.scenario_id }); const cur = gameState?.equipped_title_index ?? 0; d.titles.forEach((t, idx) => { const u = t.level <= gameState.level; const eq = u && idx === cur; const it = document.createElement('div'); it.className = `title-item${u ? '' : ' locked'}${eq ? ' equipped' : ''}`; it.innerHTML = `<span class="title-level">Lv.${t.level}</span><span class="title-name" style="color:${u ? t.color : 'var(--dim)'}">${u ? t.name : '???'}</span><span class="title-desc">${u ? t.desc : '???'}</span>`; if (u) { it.style.cursor = 'pointer'; it.addEventListener('click', async () => { try { await invoke('set_title', { index: idx }); if (gameState) gameState.equipped_title_index = idx; currentTitle = { name: t.name, color: t.color, desc: t.desc }; updateUI(); updateMiniBar(); renderTitlesPanel(); } catch (e) { addLog('system', `佩戴称号失败: ${e}`); } }); } titlesListEl.appendChild(it); }); } catch (e) { addLog('system', `获取副本详情失败: ${e}`); }
+  try { const d = await window.electron.invoke('get-scenario-detail', { id: gameState?.scenario_id }); const cur = gameState?.equipped_title_index ?? 0; d.titles.forEach((t, idx) => { const u = t.level <= gameState.level; const eq = u && idx === cur; const it = document.createElement('div'); it.className = `title-item${u ? '' : ' locked'}${eq ? ' equipped' : ''}`; it.innerHTML = `<span class="title-level">Lv.${t.level}</span><span class="title-name" style="color:${u ? t.color : 'var(--dim)'}">${u ? t.name : '???'}</span><span class="title-desc">${u ? t.desc : '???'}</span>`; if (u) { it.style.cursor = 'pointer'; it.addEventListener('click', async () => { try { await window.electron.invoke('set-title', { index: idx }); if (gameState) gameState.equipped_title_index = idx; currentTitle = { name: t.name, color: t.color, desc: t.desc }; updateUI(); updateMiniBar(); renderTitlesPanel(); } catch (e) { addLog('system', `佩戴称号失败: ${e}`); } }); } titlesListEl.appendChild(it); }); } catch (e) { addLog('system', `获取副本详情失败: ${e}`); }
 }
 
 async function updateTooltip() {
@@ -314,7 +313,7 @@ async function updateTooltip() {
   const title = currentTitle?.name || '?';
   const lv = gameState.is_in_hub ? `大厅 Lv.${hubLevel}` : `Lv.${gameState.level}`;
   const sc = currentScenario?.nameCN || (gameState.is_in_hub ? '大厅' : '?');
-  try { await invoke('update_tooltip', { text: `${gameState.player_name} | ${sc}\n${lv} | ${title} | ${rt}` }); } catch (e) {}
+  try { await window.electron.invoke('update-tooltip', { text: `${gameState.player_name} | ${sc}\n${lv} | ${title} | ${rt}` }); } catch (e) {}
 }
 
 // ── Debug ──
