@@ -134,6 +134,9 @@ function loadSpritesheet(b64,ext,cfg){
     else{FW=192;FH=208;}
     cols=Math.floor(iw/FW);rows=Math.floor(ih/FH);
     stateConfig=cfg||null;play('idle');
+    d('after_play:'+(spritesheet?'yes':'no'));
+    // Direct draw test
+    ctx.fillStyle='#FF00FF';ctx.fillRect(0,0,40,40);
   };
   img.onerror=()=>{d('imgerr');spritesheet=null;};
   img.src=`data:image/${ext==='.png'?'png':'webp'};base64,${b64}`;
