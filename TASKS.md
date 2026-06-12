@@ -422,17 +422,33 @@ npx electron-builder   # 打包验证
 
 ---
 
+## v2.0 — 像素宠物窗口
+
+> **当前阶段：v2.0（执行中）**
+>
+> 用 PetDex 社区精灵像素宠物窗口替换 Mini Bar。玩家从 https://petdex.dev/ 手动下载精灵，放入存档目录，应用加载渲染。
+>
+> **版权策略：** 应用不捆绑任何宠物精灵；宠物文件存放于 `%APPDATA%/Idel-DreamMaker/pets/`（用户数据）；应用内显示免责声明。
+
+| # | 内容 | 涉及文件 | 状态 |
+|--:|------|---------|:----:|
+| 1 | **Pet 窗口核心** — 创建/关闭/拖拽，IPC 桥接 | `electron/pet.cjs`, `electron/pet-preload.cjs` (新建) | ⬜ |
+| 2 | **Pet 前端** — Canvas 8×9 帧动画渲染 + 信息覆盖层 | `pet/index.html`, `pet/style.css`, `pet/pet.js` (新建) | ⬜ |
+| 3 | **主进程集成** — IPC 通道 + `scanPets()` + game-tick 转发 | `electron/main.cjs`, `electron/preload.cjs` (改) | ⬜ |
+| 4 | **Mini Bar 替换** — 「迷你」按钮 → 宠物窗口；清理旧 Mini Bar | `src/main.js` (改), `index.html` (删 `#mini-bar`), `style.css` (删 Mini Bar 样式) | ⬜ |
+
+---
+
 ## 规划（待定）
 
-以下内容在 v1.0 迁移完成后考虑：
+以下内容在 v2.0 完成后考虑：
 
 | 内容 | 说明 |
 |------|------|
-| 像素宠物窗口（替换 Mini Bar） | 原 v0.4.0 计划，延后至 Electron 迁移完成后 |
 | 节假日系统 | 原 v0.3.8，延后 |
 | 新副本（中世纪/赛博/修仙/克苏鲁） | 延后 |
 | UI 动效 + 错误提示 + 首次引导 | 延后 |
-| Mac 适配 | Electron 天然支持，迁移完成后即可 |
+| Mac 适配 | Electron 天然支持，待测试并修复 |
 | Steam 上架 | Electron 版本打包后上架 |
 
 ---
@@ -443,7 +459,3 @@ npx electron-builder   # 打包验证
 |------|--------|------|
 | v0.4.0 | AI 生成 + 导入导出 + API Key 设置 | 不再开放玩家自制副本 |
 | v0.3.8 | 节假日系统 | 优先级低于引擎迁移 |
-
----
-
-所有工作规范详见 `CLAUDE.md` → **「工作规范」** 章节。
