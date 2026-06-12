@@ -31,7 +31,8 @@ function scanPets(app) {
       if (fs.existsSync(metaPath)) {
         try {
           const meta = JSON.parse(fs.readFileSync(metaPath, 'utf-8'));
-          if (meta.name) petName = meta.name;
+          if (meta.displayName) petName = meta.displayName;
+          else if (meta.name) petName = meta.name;
           if (meta.author) petAuthor = meta.author;
         } catch {}
       }
