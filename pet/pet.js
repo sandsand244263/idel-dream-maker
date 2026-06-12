@@ -160,9 +160,7 @@ canvas.addEventListener('mouseleave',()=>{
   if(debounceTimer){clearTimeout(debounceTimer);debounceTimer=null;}
   setTimeout(()=>{if(curState==='review')animToIdle();},200);
 });
-canvas.addEventListener('click',e=>{
-  if(e.detail===1&&!dragMoved) transitionTo('wave');
-});
+canvas.addEventListener('click',()=>{});
 canvas.addEventListener('dblclick',e=>{
   e.preventDefault();
   if(!dragMoved){
