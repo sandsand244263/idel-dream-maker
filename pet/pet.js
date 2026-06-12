@@ -1,5 +1,10 @@
+const diag = document.getElementById('diag');
+function d(msg) { if(diag) diag.textContent = msg; }
+d('a0');
 const canvas = document.getElementById('pet-canvas');
-const ctx = canvas.getContext('2d');
+d(canvas?'a1':'a1_no_canvas');
+const ctx = canvas ? canvas.getContext('2d') : null;
+d(ctx?'a2':'a2_no_ctx');
 const dotEl = document.getElementById('bubble-dot');
 const dotSymbol = document.getElementById('dot-symbol');
 const bubbleZone = document.getElementById('bubble-zone');
@@ -132,8 +137,12 @@ function loadSpritesheet(b64,ext,cfg){
   img.src=`data:image/${ext==='.png'?'png':'webp'};base64,${b64}`;
 }
 function loadPet(idx){
-  if(idx<0||idx>=pets.length){ctx.clearRect(0,0,120,140);ctx.fillStyle='#FF0000';ctx.font='10px monospace';ctx.textAlign='center';ctx.fillText('no pet',60,70);return;}
-  window.pet.invoke('get-pet-spritesheet',{index:idx}).then(r=>{if(r)loadSpritesheet(r.data,r.ext,r.config||null);else{ctx.clearRect(0,0,120,140);ctx.fillStyle='#FF6600';ctx.font='10px monospace';ctx.textAlign='center';ctx.fillText('null data',60,70);}}).catch(()=>{ctx.clearRect(0,0,120,140);ctx.fillStyle='#FF6600';ctx.font='10px monospace';ctx.textAlign='center';ctx.fillText('ipc err',60,70);});
+  d('loadPet:'+idx+'/'+pets.length);
+  if(idx<0||idx>=pets.length){d('nopet');return;}
+  window.pet.invoke('get-pet-spritesheet',{index:idx}).then(r=>{
+    d(r?'got:'+(r.data?r.data.length:'0'):'null');
+    if(r)loadSpritesheet(r.data,r.ext,r.config||null);
+  }).catch(e=>{d('ipc:'+e.message);});
 }
 
 function updateExpBar(){
@@ -197,7 +206,10 @@ window.pet.on('event-triggered',d=>{transitionTo('wave');nq.enqueue({text:d.text
 window.pet.on('level-up',d=>{gameInfo.title=d.title||gameInfo.title;transitionTo('jump');nq.enqueue({text:`升级! Lv.${d.level}`,type:'levelup'},2);});
 window.pet.on('achievement-unlocked',d=>{transitionTo('extra1');nq.enqueue({text:`${d.icon||'★'} ${d.name}`,type:'achievement'},3);});
 
-window.pet.invoke('scan-pets').then(r=>{pets=r.pets||[];selIdx=r.selected||0;loadPet(selIdx);}).catch(()=>{});
+window.pet.invoke('scan-pets').then(r=>{
+  d('scanned:'+(r?r.pets?r.pets.length:'nopets':'null'));
+  pets=r.pets||[];selIdx=r.selected||0;loadPet(selIdx);
+}).catch(e=>{d('scan_err:'+(e.message||'?'));});
 window.pet.invoke('pet-get-state').then(()=>updateInfoBar()).catch(()=>{});
 
 setInterval(updateExpBar,50);
