@@ -426,16 +426,16 @@ npx electron-builder   # 打包验证
 
 > **当前阶段：v2.0（执行中）**
 >
-> 用 PetDex 社区精灵像素宠物窗口替换 Mini Bar。玩家从 https://petdex.dev/ 手动下载精灵，放入存档目录，应用加载渲染。
+> PetDex 社区精灵像素宠物窗口，常驻桌面。独立 BrowserWindow，透明/置顶/可拖拽。动画对齐 PetDex 8 状态系统，点击交互（单击挥手/双击跳跃/右键菜单），事件气泡。不与主窗口切换，两者共存。
 >
 > **版权策略：** 应用不捆绑任何宠物精灵；宠物文件存放于 `%APPDATA%/Idel-DreamMaker/pets/`（用户数据）；应用内显示免责声明。
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **Pet 窗口核心** — 创建/关闭/拖拽，IPC 桥接 | `electron/pet.cjs`, `electron/pet-preload.cjs` (新建) | ⬜ |
-| 2 | **Pet 前端** — Canvas 8×9 帧动画渲染 + 信息覆盖层 | `pet/index.html`, `pet/style.css`, `pet/pet.js` (新建) | ⬜ |
-| 3 | **主进程集成** — IPC 通道 + `scanPets()` + game-tick 转发 | `electron/main.cjs`, `electron/preload.cjs` (改) | ⬜ |
-| 4 | **Mini Bar 替换** — 「迷你」按钮 → 宠物窗口；清理旧 Mini Bar | `src/main.js` (改), `index.html` (删 `#mini-bar`), `style.css` (删 Mini Bar 样式) | ⬜ |
+| 1 | **动画 + 交互重写** — 读 `pet.json` states，按状态前向循环；点击→wave，双击→jump，悬停→tooltip，右键菜单 | `pet/pet.js` (改), `pet/index.html` (改), `pet/style.css` (改) | ⬜ |
+| 2 | **常驻窗口** — 宠物独立 BrowserWindow，启动自启/常驻/透明/置顶/可拖拽 | `electron/pet.cjs` (改), `pet-preload.cjs` (改) | ⬜ |
+| 3 | **事件转发** — `event-triggered`/`level-up`/`achievement-unlocked` 推送到宠物窗口 | `electron/main.cjs` (改), `electron/preload.cjs` (改) | ⬜ |
+| 4 | **主窗口适配** — 「迷你」按钮切换宠物显示/隐藏；移除 `exit-pet-mode` | `src/main.js` (改) | ⬜ |
 
 ---
 
