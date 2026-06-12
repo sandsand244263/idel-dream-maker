@@ -11,28 +11,31 @@ body { font-family:var(--font); color:var(--fg); }
 
 #container { width:100%;height:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 0;position:relative; }
 
-/* Canvas */
-#pet-canvas { image-rendering:pixelated; cursor:grab; }
-
-/* Info bar (centered above canvas) */
+/* Info bar */
 #info-bar { text-align:center;height:18px;display:flex;align-items:center;justify-content:center;pointer-events:none;flex-shrink:0; }
 #info-text { font-size:12px;color:color-mix(in srgb,var(--fg) 60%,transparent);white-space:nowrap; }
 
-/* Dot bubble */
-#bubble-dot { position:absolute;top:2px;right:2px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;cursor:pointer;z-index:12;transition:transform 0.2s ease,opacity 0.2s ease;pointer-events:auto; }
-#bubble-dot:hover { transform:scale(1.15); }
-.dot-none { background:color-mix(in srgb,var(--fg) 8%,transparent); border:1px solid color-mix(in srgb,var(--fg) 15%,transparent); color:color-mix(in srgb,var(--fg) 30%,transparent); }
-.dot-event { background:rgba(0,191,255,0.15); border:1px solid rgba(0,191,255,0.4); color:#00BFFF; }
-.dot-levelup { background:rgba(0,255,0,0.15); border:1px solid rgba(0,255,0,0.4); color:#00FF00; }
-.dot-achievement { background:rgba(255,215,0,0.15); border:1px solid rgba(255,215,0,0.4); color:#FFD700; }
+/* Canvas wrap — bubble anchors here */
+#canvas-wrap { position:relative;width:120px;height:140px;flex-shrink:0; }
+#pet-canvas { width:120px;height:140px;image-rendering:pixelated;cursor:grab; }
 
-/* Bubble text (top area, left of dot, above canvas) */
-#bubble-text { position:absolute;top:0;left:2px;right:26px;background:rgba(0,0,0,0.9);border:1px solid #00BFFF;border-radius:4px;padding:2px 6px;font-size:12px;color:#E0E0E0;line-height:1.3;pointer-events:auto;z-index:15;word-break:break-word;animation:bubbleIn 0.2s ease;max-height:20px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis; }
-#bubble-text:hover { max-height:none;white-space:normal; }
-@keyframes bubbleIn { from { opacity:0;transform:translateY(-4px) scale(0.9); } to { opacity:1;transform:translateY(0) scale(1); } }
+/* Dot bubble (canvas-wrap top-right) */
+#bubble-dot { position:absolute;top:2px;right:2px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;cursor:pointer;z-index:12;transition:transform 0.2s ease,opacity 0.2s ease;pointer-events:auto; }
+#bubble-dot:hover { transform:scale(1.15); }
+.dot-none { background:color-mix(in srgb,var(--fg) 8%,transparent);border:1px solid color-mix(in srgb,var(--fg) 15%,transparent);color:color-mix(in srgb,var(--fg) 30%,transparent);animation:none; }
+.dot-event { background:rgba(0,191,255,0.15);border:1px solid rgba(0,191,255,0.4);color:#00BFFF;animation:pulse 1.5s ease-in-out infinite; }
+.dot-levelup { background:rgba(0,255,0,0.15);border:1px solid rgba(0,255,0,0.4);color:#00FF00;animation:pulse 1.5s ease-in-out infinite; }
+.dot-achievement { background:rgba(255,215,0,0.15);border:1px solid rgba(255,215,0,0.4);color:#FFD700;animation:pulse 1.5s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { transform:scale(1);opacity:0.6; } 50% { transform:scale(1.2);opacity:1; } }
+
+/* Bubble text (below dot, right-aligned) */
+#bubble-text { position:absolute;top:24px;right:0;max-width:200px;background:rgba(0,0,0,0.92);border:1px solid #00BFFF;border-radius:4px;padding:4px 8px;font-size:12px;color:#E0E0E0;line-height:1.4;pointer-events:auto;z-index:13;word-break:break-word;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transform-origin:top right;transition:transform 0.2s ease,opacity 0.2s ease; }
+#bubble-text.bubble-show { display:block;transform:scale(1);opacity:1; }
+#bubble-text.bubble-hide { display:block;transform:scale(0);opacity:0; }
+#bubble-text.bubble-hidden { display:none; }
 
 /* Tooltip */
-#tooltip { position:absolute;bottom:34px;left:50%;transform:translateX(-50%);background:color-mix(in srgb,var(--bg) 85%,transparent);border:1px solid var(--border-color);border-radius:4px;padding:6px 10px;font-size:13px;line-height:1.6;color:var(--fg);white-space:nowrap;pointer-events:none;z-index:10;transition:opacity 0.15s; }
+#tooltip { position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:color-mix(in srgb,var(--bg) 85%,transparent);border:1px solid var(--border-color);border-radius:4px;padding:5px 8px;font-size:12px;line-height:1.5;color:var(--fg);white-space:nowrap;pointer-events:none;z-index:10;transition:opacity 0.15s; }
 
 /* Context menu */
 #ctx-menu { position:absolute;background:color-mix(in srgb,var(--bg) 95%,transparent);border:1px solid var(--border-color);border-radius:4px;padding:4px 0;min-width:130px;z-index:20;font-size:11px; }

@@ -10,15 +10,12 @@ const expFill = document.getElementById('exp-fill');
 const expPct = document.getElementById('exp-pct');
 const expDetail = document.getElementById('exp-detail');
 
-// Unified canvas size — CSS matches these values
-const CANVAS_W = 120, CANVAS_H = 140;
-canvas.width = CANVAS_W;
-canvas.height = CANVAS_H;
-canvas.style.width = CANVAS_W + 'px';
-canvas.style.height = CANVAS_H + 'px';
+canvas.width = 120;
+canvas.height = 140;
+canvas.style.width = '120px';
+canvas.style.height = '140px';
 
-// PetDex standard frame size (fallback, detected from image)
-let FW = 192, FH = 208;
+const FW = 192, FH = 208;
 
 const DEFAULT_STATES = {
   idle:{row:0,frames:6,dur:140,firstMult:2,lastMult:2.3}, wave:{row:1,frames:4,dur:140,firstMult:2,lastMult:2},
@@ -30,8 +27,53 @@ const DEFAULT_STATES = {
 let pets=[],selIdx=0,spritesheet=null,cols=8,rows=9,stateConfig=null;
 let curState='idle',frameIdx=0,frameList=[],animTimer=null,returnTimer=null,debounceTimer=null;
 let gameInfo={level:1,title:'—',exp:0,scenario:'大厅',runtime:'0h0m0s',ach:0,theme:'green'};
-let hasEvent=false,dotExpandTimer=null,dotExpanded=false;
 let displayExp=0,dragMoved=false;
+
+// ── Notification Queue ──
+class NotificationQueue{
+  constructor(){this.q=[];this.playing=false;this.timer=null;this.paused=false;this.current=null;}
+  enqueue(item,priority){
+    item.prio=priority;
+    let i=0;while(i<this.q.length&&this.q[i].prio>=priority)i++;
+    this.q.splice(i,0,item);
+    if(!this.playing)this.next();
+  }
+  next(){
+    if(this.q.length===0){this.playing=false;this.current=null;return;}
+    this.playing=true;
+    this.current=this.q.shift();
+    this._show(this.current);
+  }
+  _show(item){
+    if(item.type==='achievement'){dotSymbol.textContent='★';dotEl.className='dot-achievement';}
+    else if(item.type==='levelup'){dotSymbol.textContent='↑';dotEl.className='dot-levelup';}
+    else {dotSymbol.textContent='!';dotEl.className='dot-event';}
+    bubbleText.textContent=item.text;
+    bubbleText.className='bubble-show';
+    if(item.type==='achievement')bubbleText.style.borderColor='#FFD700';
+    else if(item.type==='levelup')bubbleText.style.borderColor='#00FF00';
+    else bubbleText.style.borderColor='#00BFFF';
+    this._startTimer();
+  }
+  _startTimer(){
+    if(this.timer)clearTimeout(this.timer);
+    this.timer=setTimeout(()=>{
+      this.timer=null;bubbleText.className='bubble-hide';
+      setTimeout(()=>{if(!this.paused){dotEl.className='dot-none';dotSymbol.textContent='○';this.next();}},200);
+    },6000);
+  }
+  pause(){this.paused=true;if(this.timer){clearTimeout(this.timer);this.timer=null;}}
+  resume(){
+    this.paused=false;
+    if(this.current){this._show(this.current);}
+  }
+  close(){
+    if(this.timer){clearTimeout(this.timer);this.timer=null;}
+    bubbleText.className='bubble-hide';
+    setTimeout(()=>{dotEl.className='dot-none';dotSymbol.textContent='○';this.next();},200);
+  }
+}
+const nq=new NotificationQueue();
 
 function loadStateCfg(s){
   let c=null;
@@ -43,7 +85,7 @@ function buildFrames(s){
   for(let i=0;i<n;i++){let d=b;if(i===0)d*=c.firstMult||2;else if(i===n-1)d*=c.lastMult||2;f.push({c:i,r:c.row,d});}
   return f;
 }
-function drawSprite(col,row){if(!spritesheet)return;ctx.clearRect(0,0,CANVAS_W,CANVAS_H);ctx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,CANVAS_W,CANVAS_H);}
+function drawSprite(col,row){if(!spritesheet)return;ctx.clearRect(0,0,120,140);ctx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,120,140);}
 function stopAnim(){if(animTimer){clearInterval(animTimer);animTimer=null;}}
 function play(s){
   if(s===curState&&animTimer)return;curState=s;stopAnim();
@@ -62,32 +104,26 @@ function animToIdle(){if(curState!=='idle')play('idle');}
 
 function calcExpForLevel(lv){if(lv<=1)return 0;return 100*(lv-1)*(lv-1);}
 
-// ── Spritesheet ──
 function loadSpritesheet(b64,ext,cfg){
   const img=new Image();
   img.onload=()=>{
     spritesheet=img;
-    // Detect frame size from actual image dimensions
-    const iw=img.naturalWidth, ih=img.naturalHeight;
-    // PetDex standard: 1536×1872 → 8×9 grid of 192×208
-    // Try standard first; if mismatch, estimate from known grid sizes
+    const iw=img.naturalWidth,ih=img.naturalHeight;
     if(iw%192===0&&ih%208===0){FW=192;FH=208;}
     else if(iw%128===0&&ih%128===0){FW=128;FH=128;}
     else if(iw%64===0&&ih%64===0){FW=64;FH=64;}
     else{FW=192;FH=208;}
     cols=Math.floor(iw/FW);rows=Math.floor(ih/FH);
-    stateConfig=cfg||null;
-    play('idle');
+    stateConfig=cfg||null;play('idle');
   };
-  img.onerror=()=>{spritesheet=null;ctx.clearRect(0,0,CANVAS_W,CANVAS_H);};
+  img.onerror=()=>{spritesheet=null;ctx.clearRect(0,0,120,140);};
   img.src=`data:image/${ext==='.png'?'png':'webp'};base64,${b64}`;
 }
 function loadPet(idx){
-  if(idx<0||idx>=pets.length){ctx.clearRect(0,0,CANVAS_W,CANVAS_H);return;}
+  if(idx<0||idx>=pets.length){ctx.clearRect(0,0,120,140);return;}
   window.pet.invoke('get-pet-spritesheet',{index:idx}).then(r=>{if(r)loadSpritesheet(r.data,r.ext,r.config||null);}).catch(()=>{});
 }
 
-// ── EXP bar ──
 function updateExpBar(){
   const e=gameInfo.exp||0,lv=gameInfo.level||1;
   const nr=calcExpForLevel(lv+1),cr=calcExpForLevel(lv);
@@ -99,107 +135,49 @@ function updateExpBar(){
   expPct.textContent=`${rounded}%`;
   expDetail.textContent=`${Math.floor(e)} / ${nr} (${rounded}%)`;
 }
-
-// ── Info bar ──
 function updateInfoBar(){
   const title=gameInfo.title&&gameInfo.title!=='—'?gameInfo.title:'';
   infoText.textContent=title?`${gameInfo.scenario} | Lv.${gameInfo.level} | ${title}`:`${gameInfo.scenario} | Lv.${gameInfo.level}`;
   updateExpBar();
 }
-
-// ── Dot bubble ──
-function showDot(type){
-  hasEvent=true;
-  if(type==='achievement'){dotSymbol.textContent='★';dotEl.className='dot-achievement';}
-  else if(type==='levelup'){dotSymbol.textContent='↑';dotEl.className='dot-levelup';}
-  else {dotSymbol.textContent='!';dotEl.className='dot-event';}
-  clearTimeout(dotExpandTimer);
-  dotExpandTimer=setTimeout(()=>{hasEvent=false;dotEl.className='dot-none';dotSymbol.textContent='○';},8000);
-}
-function expandDot(text,type){
-  if(!text)return;
-  dotExpanded=true;
-  bubbleText.textContent=text;
-  bubbleText.className='';
-  if(type==='achievement')bubbleText.style.borderColor='#FFD700';
-  else if(type==='levelup')bubbleText.style.borderColor='#00FF00';
-  else bubbleText.style.borderColor='#00BFFF';
-  dotEl.style.opacity='0';
-  clearTimeout(dotExpandTimer);
-}
-function collapseDot(){
-  dotExpanded=false;
-  bubbleText.className='hidden';
-  dotEl.style.opacity='1';
-  if(!hasEvent){dotEl.className='dot-none';dotSymbol.textContent='○';}
-}
-
-// ── Drag ──
-let dragging=false,mouseOff={x:0,y:0};
-canvas.addEventListener('mousedown',e=>{
-  dragging=true;dragMoved=false;
-  mouseOff.x=e.screenX-(window.screenLeft||0);mouseOff.y=e.screenY-(window.screenTop||0);
-});
-document.addEventListener('mousemove',e=>{
-  if(!dragging)return;
-  const dx=Math.abs(e.screenX-(window.screenLeft||0)-mouseOff.x);
-  const dy=Math.abs(e.screenY-(window.screenTop||0)-mouseOff.y);
-  if(dx>3||dy>3)dragMoved=true;
-  window.pet.invoke('pet-drag-move',{x:e.screenX-mouseOff.x,y:e.screenY-mouseOff.y}).catch(()=>{});
-});
-document.addEventListener('mouseup',()=>{if(dragging){dragging=false;window.pet.invoke('pet-drag-end').catch(()=>{});}});
-
-// ── Interactions ──
-canvas.addEventListener('mouseenter',()=>{
-  tooltip.classList.remove('hidden');updateTooltip();
-  if(debounceTimer)clearTimeout(debounceTimer);
-  debounceTimer=setTimeout(()=>{transitionTo('review');},300);
-});
-canvas.addEventListener('mouseleave',()=>{
-  tooltip.classList.add('hidden');
-  if(debounceTimer){clearTimeout(debounceTimer);debounceTimer=null;}
-  setTimeout(()=>{if(curState==='review')animToIdle();},200);
-});
-canvas.addEventListener('click',()=>{});
-canvas.addEventListener('dblclick',e=>{
-  e.preventDefault();
-  if(!dragMoved){
-    transitionTo('jump');
-    window.pet.invoke('toggle-main-window').catch(()=>{});
-  }
-});
-canvas.addEventListener('contextmenu',e=>{
-  e.preventDefault();ctxMenu.classList.remove('hidden');
-  const r=canvas.getBoundingClientRect();
-  ctxMenu.style.left=(e.clientX-r.left)+'px';ctxMenu.style.top=(e.clientY-r.top)+'px';
-});
-document.addEventListener('click',e=>{if(!ctxMenu.contains(e.target))ctxMenu.classList.add('hidden');});
-
-// ── Dot hover ──
-dotEl.addEventListener('mouseenter',()=>{
-  if(!hasEvent)return;
-  expandDot(dotEl.dataset.text,dotEl.dataset.type);
-});
-bubbleText.addEventListener('mouseleave',()=>{collapseDot();});
-
-// ── Context menu ──
-document.getElementById('ctx-close').addEventListener('click',()=>{ctxMenu.classList.add('hidden');window.pet.invoke('hide-pet-window').catch(()=>{});});
-document.getElementById('ctx-prev').addEventListener('click',()=>{ctxMenu.classList.add('hidden');if(pets.length===0)return;selIdx=(selIdx-1+pets.length)%pets.length;window.pet.invoke('select-pet',{index:selIdx}).catch(()=>{});});
-document.getElementById('ctx-next').addEventListener('click',()=>{ctxMenu.classList.add('hidden');if(pets.length===0)return;selIdx=(selIdx+1)%pets.length;window.pet.invoke('select-pet',{index:selIdx}).catch(()=>{});});
-
-// ── Tooltip ──
 function updateTooltip(){
   const e=gameInfo.exp||0,lv=gameInfo.level||1;
   const nr=calcExpForLevel(lv+1),cr=calcExpForLevel(lv);
   const pct=nr>cr?Math.min(100,((e-cr)/(nr-cr))*100):0;
   tooltip.innerHTML=`<b>Lv.${lv}</b> ${gameInfo.title}<br>${gameInfo.scenario} · ${gameInfo.runtime}<br>成就:${gameInfo.ach} · ${Math.round(pct)}%`;
 }
-
-// ── Theme ──
 function applyTheme(theme){
   document.body.className='';
   if(theme&&theme!=='green')document.body.classList.add('theme-'+theme);
 }
+
+// ── Drag ──
+let dragging=false,mouseOff={x:0,y:0};
+canvas.addEventListener('mousedown',e=>{dragging=true;dragMoved=false;mouseOff.x=e.screenX-(window.screenLeft||0);mouseOff.y=e.screenY-(window.screenTop||0);});
+document.addEventListener('mousemove',e=>{if(!dragging)return;const dx=Math.abs(e.screenX-(window.screenLeft||0)-mouseOff.x);const dy=Math.abs(e.screenY-(window.screenTop||0)-mouseOff.y);if(dx>3||dy>3)dragMoved=true;window.pet.invoke('pet-drag-move',{x:e.screenX-mouseOff.x,y:e.screenY-mouseOff.y}).catch(()=>{});});
+document.addEventListener('mouseup',()=>{if(dragging){dragging=false;window.pet.invoke('pet-drag-end').catch(()=>{});}});
+
+// ── Interactions ──
+canvas.addEventListener('mouseenter',()=>{tooltip.classList.remove('hidden');updateTooltip();if(debounceTimer)clearTimeout(debounceTimer);debounceTimer=setTimeout(()=>{transitionTo('review');},300);});
+canvas.addEventListener('mouseleave',()=>{tooltip.classList.add('hidden');if(debounceTimer){clearTimeout(debounceTimer);debounceTimer=null;}setTimeout(()=>{if(curState==='review')animToIdle();},200);});
+canvas.addEventListener('click',()=>{});
+canvas.addEventListener('dblclick',e=>{e.preventDefault();if(!dragMoved){transitionTo('jump');window.pet.invoke('toggle-main-window').catch(()=>{});}});
+canvas.addEventListener('contextmenu',e=>{e.preventDefault();ctxMenu.classList.remove('hidden');const r=canvas.getBoundingClientRect();ctxMenu.style.left=(e.clientX-r.left)+'px';ctxMenu.style.top=(e.clientY-r.top)+'px';});
+document.addEventListener('click',e=>{if(!ctxMenu.contains(e.target))ctxMenu.classList.add('hidden');});
+
+// ── Dot hover — pause/resume timer ──
+dotEl.addEventListener('mouseenter',()=>{nq.pause();});
+dotEl.addEventListener('mouseleave',()=>{nq.resume();});
+bubbleText.addEventListener('mouseenter',()=>{nq.pause();});
+bubbleText.addEventListener('mouseleave',()=>{nq.resume();});
+
+// Click bubble to dismiss
+bubbleText.addEventListener('click',()=>{nq.close();});
+
+// ── Context menu ──
+document.getElementById('ctx-close').addEventListener('click',()=>{ctxMenu.classList.add('hidden');window.pet.invoke('hide-pet-window').catch(()=>{});});
+document.getElementById('ctx-prev').addEventListener('click',()=>{ctxMenu.classList.add('hidden');if(pets.length===0)return;selIdx=(selIdx-1+pets.length)%pets.length;window.pet.invoke('select-pet',{index:selIdx}).catch(()=>{});});
+document.getElementById('ctx-next').addEventListener('click',()=>{ctxMenu.classList.add('hidden');if(pets.length===0)return;selIdx=(selIdx+1)%pets.length;window.pet.invoke('select-pet',{index:selIdx}).catch(()=>{});});
 
 // ── IPC ──
 window.pet.on('pet-list',d=>{pets=d.pets||[];selIdx=d.selected||0;loadPet(selIdx);});
@@ -215,24 +193,13 @@ window.pet.on('game-tick',d=>{
   updateInfoBar();
   if(!tooltip.classList.contains('hidden'))updateTooltip();
 });
-window.pet.on('event-triggered',d=>{
-  transitionTo('wave');showDot('event');
-  dotEl.dataset.text=d.text;dotEl.dataset.type='event';
-});
-window.pet.on('level-up',d=>{
-  gameInfo.title=d.title||gameInfo.title;transitionTo('jump');
-  showDot('levelup');dotEl.dataset.text=`升级! Lv.${d.level}`;dotEl.dataset.type='levelup';
-});
-window.pet.on('achievement-unlocked',d=>{
-  transitionTo('extra1');showDot('achievement');
-  dotEl.dataset.text=`${d.icon||'★'} ${d.name}`;dotEl.dataset.type='achievement';
-});
+window.pet.on('event-triggered',d=>{transitionTo('wave');nq.enqueue({text:d.text,type:'event'},1);});
+window.pet.on('level-up',d=>{gameInfo.title=d.title||gameInfo.title;transitionTo('jump');nq.enqueue({text:`升级! Lv.${d.level}`,type:'levelup'},2);});
+window.pet.on('achievement-unlocked',d=>{transitionTo('extra1');nq.enqueue({text:`${d.icon||'★'} ${d.name}`,type:'achievement'},3);});
 
 window.pet.invoke('scan-pets').then(r=>{pets=r.pets||[];selIdx=r.selected||0;loadPet(selIdx);}).catch(()=>{});
 window.pet.invoke('pet-get-state').then(()=>updateInfoBar()).catch(()=>{});
 
-// EXP bar animation loop
 setInterval(updateExpBar,50);
 
-// Keyboard
 document.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='h')window.pet.invoke('hide-pet-window').catch(()=>{});});
