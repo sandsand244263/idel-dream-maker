@@ -1,5 +1,8 @@
 use serde::{Deserialize, Serialize};
 
+// 引入构建时生成的二进制场景数据
+include!(concat!(env!("OUT_DIR"), "/scenarios_data.rs"));
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Scenario {
     pub id: String,
@@ -57,9 +60,12 @@ pub enum AchievementCondition {
 }
 
 pub fn load_all_scenarios() -> Vec<Scenario> {
-    let wasteland: Scenario = serde_json::from_str(include_str!("../scenarios/wasteland.json"))
-        .expect("Failed to parse wasteland scenario");
-    vec![wasteland]
+    ALL_SCENARIO_DATA
+        .iter()
+        .map(|data| {
+            bincode::deserialize(data).expect("Failed to deserialize scenario data")
+        })
+        .collect()
 }
 
 pub fn find_scenario_by_id<'a>(scenarios: &'a [Scenario], id: &str) -> Option<&'a Scenario> {

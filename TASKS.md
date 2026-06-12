@@ -36,14 +36,14 @@
 
 | Task | 内容 | 涉及文件 |
 |------|------|---------|
-| **1** | **Cargo 依赖 + build.rs 框架** | `Cargo.toml` (+bincode), `build.rs` (新建) |
-| **2** | **.md 解析器**：YAML frontmatter + 3 种 Markdown 表格解析 | `scenario.rs` |
-| **3** | **build-time 序列化**：.md → bincode → `scenarios_data.rs`（自动生成，不进版本库） | `build.rs`, `scenarios_data.rs` |
-| **4** | **运行时反序列化**：从生成字节加载 Scenario | `scenario.rs` |
-| **5** | **内容校验**：ID 唯一、Level 升序、weight 1-10、文本 30-80 字、必填项非空 | `build.rs` |
-| **6** | **核心引擎测试**（5 个）：等级计算、称号查找、事件过滤、成就检测、权重随机 | `scenario.rs` (末尾 `#[test]`) |
-| **7** | **前端错误处理**：所有 `catch(e){}` 改为 toast 或日志输出 | `main.js` |
-| **8** | **废土 500 事件**：wasteland.json → wasteland.md，扩充到 500 条 | `scenarios/wasteland.md` |
+| **1** | **Cargo 依赖 + build.rs 框架** | `Cargo.toml` (+bincode), `build.rs` (新建) | ✅ |
+| **2** | **.md 解析器**：YAML frontmatter + 3 种 Markdown 表格解析 | `build.rs` (parse_*) | ✅ |
+| **3** | **build-time 序列化**：.md → bincode → `scenarios_data.rs`（自动生成，OUT_DIR） | `build.rs` | ✅ |
+| **4** | **运行时反序列化**：从生成字节加载 Scenario | `scenario.rs` | ✅ |
+| **5** | **内容校验**：ID 校验、weight 范围、事件文本长度、成就条件合理性 | `build.rs` (validate_scenario) | ✅ |
+| **6** | **核心引擎测试**（5 个）：等级计算、称号查找、事件过滤、成就检测、权重随机 | `scenario.rs` (末尾 `#[test]`) | ⬜ |
+| **7** | **前端错误处理**：所有 `catch(e){}` 改为 toast 或日志输出 | `main.js` | ⬜ |
+| **8** | **废土 500 事件**：wasteland.md 扩充到 500 条事件 | `scenarios/wasteland.md` | ⬜ |
 
 > 执行顺序：先 1-7（基础架构 + 测试 + 修复），再 8（内容填充）
 
