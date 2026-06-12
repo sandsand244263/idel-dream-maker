@@ -298,7 +298,7 @@ document.getElementById('dbg-levelup').addEventListener('click', async () => {
 });
 document.getElementById('dbg-achievement').addEventListener('click', async () => {
   const r = await window.electron.invoke('dev-achievement').catch(()=>null);
-  if (r) addLog('achievement', `[DEV] 成就: ${r.name}`);
+  if (r) addLog('achievement', `[DEV] ${r.name || r.info || '无'}`);
 });
 document.getElementById('dbg-runtime').addEventListener('click', async () => {
   await window.electron.invoke('dev-runtime', { hours: 1 }).catch(()=>{});

@@ -7,11 +7,17 @@ const bubbleText = document.getElementById('bubble-text');
 const ctxMenu = document.getElementById('ctx-menu');
 const infoText = document.getElementById('info-text');
 const expFill = document.getElementById('exp-fill');
+const expPct = document.getElementById('exp-pct');
 
-canvas.width = 128;
-canvas.height = 148;
+// Unified canvas size — CSS matches these values
+const CANVAS_W = 120, CANVAS_H = 140;
+canvas.width = CANVAS_W;
+canvas.height = CANVAS_H;
+canvas.style.width = CANVAS_W + 'px';
+canvas.style.height = CANVAS_H + 'px';
 
-const FW = 192, FH = 208;
+// PetDex standard frame size (fallback, detected from image)
+let FW = 192, FH = 208;
 
 const DEFAULT_STATES = {
   idle:{row:0,frames:6,dur:140,firstMult:2,lastMult:2.3}, wave:{row:1,frames:4,dur:140,firstMult:2,lastMult:2},
@@ -20,11 +26,11 @@ const DEFAULT_STATES = {
   extra1:{row:6,frames:6,dur:140,firstMult:1.5,lastMult:1.8}, extra2:{row:7,frames:6,dur:140,firstMult:1.5,lastMult:1.8},
 };
 
-let pets=[],selIdx=0,spritesheet=null,cols=8,stateConfig=null;
+let pets=[],selIdx=0,spritesheet=null,cols=8,rows=9,stateConfig=null;
 let curState='idle',frameIdx=0,frameList=[],animTimer=null,returnTimer=null,debounceTimer=null;
-let gameInfo={level:1,title:'—',exp:0,scenario:'大厅',runtime:'0h0m0s',ach:0};
+let gameInfo={level:1,title:'—',exp:0,scenario:'大厅',runtime:'0h0m0s',ach:0,theme:'green'};
 let hasEvent=false,dotExpandTimer=null,dotExpanded=false;
-let displayExp=0;
+let displayExp=0,dragMoved=false;
 
 function loadStateCfg(s){
   let c=null;
@@ -36,7 +42,7 @@ function buildFrames(s){
   for(let i=0;i<n;i++){let d=b;if(i===0)d*=c.firstMult||2;else if(i===n-1)d*=c.lastMult||2;f.push({c:i,r:c.row,d});}
   return f;
 }
-function drawSprite(col,row){if(!spritesheet)return;ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,canvas.width,canvas.height);}
+function drawSprite(col,row){if(!spritesheet)return;ctx.clearRect(0,0,CANVAS_W,CANVAS_H);ctx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,CANVAS_W,CANVAS_H);}
 function stopAnim(){if(animTimer){clearInterval(animTimer);animTimer=null;}}
 function play(s){
   if(s===curState&&animTimer)return;curState=s;stopAnim();
@@ -58,40 +64,38 @@ function calcExpForLevel(lv){if(lv<=1)return 0;return 100*(lv-1)*(lv-1);}
 // ── Spritesheet ──
 function loadSpritesheet(b64,ext,cfg){
   const img=new Image();
-  img.onload=()=>{spritesheet=img;cols=Math.floor(img.width/FW);stateConfig=cfg||null;play('idle');};
-  img.onerror=()=>{spritesheet=null;ctx.clearRect(0,0,canvas.width,canvas.height);};
+  img.onload=()=>{
+    spritesheet=img;
+    // Detect frame size from actual image dimensions
+    const iw=img.naturalWidth, ih=img.naturalHeight;
+    // PetDex standard: 1536×1872 → 8×9 grid of 192×208
+    // Try standard first; if mismatch, estimate from known grid sizes
+    if(iw%192===0&&ih%208===0){FW=192;FH=208;}
+    else if(iw%128===0&&ih%128===0){FW=128;FH=128;}
+    else if(iw%64===0&&ih%64===0){FW=64;FH=64;}
+    else{FW=192;FH=208;}
+    cols=Math.floor(iw/FW);rows=Math.floor(ih/FH);
+    stateConfig=cfg||null;
+    play('idle');
+  };
+  img.onerror=()=>{spritesheet=null;ctx.clearRect(0,0,CANVAS_W,CANVAS_H);};
   img.src=`data:image/${ext==='.png'?'png':'webp'};base64,${b64}`;
 }
 function loadPet(idx){
-  if(idx<0||idx>=pets.length){ctx.clearRect(0,0,canvas.width,canvas.height);return;}
+  if(idx<0||idx>=pets.length){ctx.clearRect(0,0,CANVAS_W,CANVAS_H);return;}
   window.pet.invoke('get-pet-spritesheet',{index:idx}).then(r=>{if(r)loadSpritesheet(r.data,r.ext,r.config||null);}).catch(()=>{});
 }
 
-// ── Canvas overlay draw ──
-function drawOverlay(){
-  if(!canvas)return;
-  // top info: scenario | Lv.X
-  const txt=`${gameInfo.scenario} | Lv.${gameInfo.level}`;
-  ctx.save();
-  ctx.fillStyle='rgba(0,255,0,0.6)';ctx.font='9px monospace';ctx.textAlign='left';
-  ctx.fillText(txt,4,12);
-  ctx.restore();
-}
-
-// Combined draw: sprite + overlay
-function drawFrame(col,row){
-  drawSprite(col,row);
-  drawOverlay();
-}
-
-// ── EXP bar (smoothed) ──
+// ── EXP bar ──
 function updateExpBar(){
   const e=gameInfo.exp||0,lv=gameInfo.level||1;
   const nr=calcExpForLevel(lv+1),cr=calcExpForLevel(lv);
   const target=nr>cr?Math.min(100,((e-cr)/(nr-cr))*100):0;
   displayExp+=(target-displayExp)*0.3;
   if(Math.abs(displayExp-target)<0.3)displayExp=target;
-  expFill.style.width=`${Math.round(displayExp)}%`;
+  const rounded=Math.round(displayExp);
+  expFill.style.width=`${rounded}%`;
+  expPct.textContent=`${rounded}%`;
 }
 
 // ── Info bar ──
@@ -129,8 +133,17 @@ function collapseDot(){
 
 // ── Drag ──
 let dragging=false,mouseOff={x:0,y:0};
-canvas.addEventListener('mousedown',e=>{dragging=true;mouseOff.x=e.screenX-(window.screenLeft||0);mouseOff.y=e.screenY-(window.screenTop||0);});
-document.addEventListener('mousemove',e=>{if(!dragging)return;window.pet.invoke('pet-drag-move',{x:e.screenX-mouseOff.x,y:e.screenY-mouseOff.y}).catch(()=>{});});
+canvas.addEventListener('mousedown',e=>{
+  dragging=true;dragMoved=false;
+  mouseOff.x=e.screenX-(window.screenLeft||0);mouseOff.y=e.screenY-(window.screenTop||0);
+});
+document.addEventListener('mousemove',e=>{
+  if(!dragging)return;
+  const dx=Math.abs(e.screenX-(window.screenLeft||0)-mouseOff.x);
+  const dy=Math.abs(e.screenY-(window.screenTop||0)-mouseOff.y);
+  if(dx>3||dy>3)dragMoved=true;
+  window.pet.invoke('pet-drag-move',{x:e.screenX-mouseOff.x,y:e.screenY-mouseOff.y}).catch(()=>{});
+});
 document.addEventListener('mouseup',()=>{if(dragging){dragging=false;window.pet.invoke('pet-drag-end').catch(()=>{});}});
 
 // ── Interactions ──
@@ -145,8 +158,7 @@ canvas.addEventListener('mouseleave',()=>{
   setTimeout(()=>{if(curState==='review')animToIdle();},200);
 });
 canvas.addEventListener('click',e=>{
-  if(e.detail===1){
-    // left click: toggle main window
+  if(e.detail===1&&!dragMoved){
     transitionTo('wave');
     window.pet.invoke('toggle-main-window').catch(()=>{});
   }
@@ -159,10 +171,10 @@ canvas.addEventListener('contextmenu',e=>{
 });
 document.addEventListener('click',e=>{if(!ctxMenu.contains(e.target))ctxMenu.classList.add('hidden');});
 
-// ── Dot hover expansion ──
+// ── Dot hover ──
 dotEl.addEventListener('mouseenter',()=>{
   if(!hasEvent)return;
-  // find latest event text from bubble
+  expandDot(dotEl.dataset.text,dotEl.dataset.type);
 });
 bubbleText.addEventListener('mouseleave',()=>{collapseDot();});
 
@@ -179,6 +191,12 @@ function updateTooltip(){
   tooltip.innerHTML=`<b>Lv.${lv}</b> ${gameInfo.title}<br>${gameInfo.scenario} · ${gameInfo.runtime}<br>成就:${gameInfo.ach} · ${Math.round(pct)}%`;
 }
 
+// ── Theme ──
+function applyTheme(theme){
+  document.body.className='';
+  if(theme&&theme!=='green')document.body.classList.add('theme-'+theme);
+}
+
 // ── IPC ──
 window.pet.on('pet-list',d=>{pets=d.pets||[];selIdx=d.selected||0;loadPet(selIdx);});
 window.pet.on('pet-selected',d=>{selIdx=d.index;loadPet(selIdx);});
@@ -189,6 +207,7 @@ window.pet.on('game-tick',d=>{
   const ms=d.total_runtime_ms||0,s=Math.floor(ms/1000);
   gameInfo.runtime=`${Math.floor(s/3600)}h${Math.floor((s%3600)/60)}m${s%60}s`;
   gameInfo.ach=(d.unlockedAchievements||[]).length;
+  if(d.theme&&d.theme!==gameInfo.theme){gameInfo.theme=d.theme;applyTheme(d.theme);}
   updateInfoBar();
   if(!tooltip.classList.contains('hidden'))updateTooltip();
 });
@@ -209,7 +228,7 @@ window.pet.invoke('scan-pets').then(r=>{pets=r.pets||[];selIdx=r.selected||0;loa
 window.pet.invoke('pet-get-state').then(()=>updateInfoBar()).catch(()=>{});
 
 // EXP bar animation loop
-setInterval(updateExpBar, 50);
+setInterval(updateExpBar,50);
 
 // Keyboard
 document.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='h')window.pet.invoke('hide-pet-window').catch(()=>{});});

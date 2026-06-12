@@ -274,6 +274,7 @@ function startGameLoop() {
       language: gameState.language,
       currentTitle: currentTitle ? currentTitle.name : null,
       scenario_name: currentScenario ? (currentScenario.name_cn || currentScenario.nameCN || currentScenario.name) : null,
+      theme: gameState.selectedFontTheme || 'green',
     };
     try { mainWindow.webContents.send('game-tick', payload); } catch {}
     forwardToPet('game-tick', payload);
@@ -568,14 +569,14 @@ function registerIpcHandlers() {
   });
 
   ipcMain.handle('dev-achievement', () => {
-    if (!currentScenario || gameState.isInHub) return null;
+    if (!currentScenario || gameState.isInHub) return { info: '在副本内才能解锁成就' };
     const unlocked = checkAchievements();
     for (const a of unlocked) {
       const achPayload = { id: a.id, name: a.name, desc: a.desc, icon: a.icon || '★' };
       try { mainWindow.webContents.send('achievement-unlocked', achPayload); } catch {}
       forwardToPet('achievement-unlocked', achPayload);
     }
-    return unlocked.length > 0 ? { name: unlocked[0].name } : null;
+    return unlocked.length > 0 ? { name: unlocked[0].name } : { info: '暂无可解锁的成就，试试先 +10 级' };
   });
 
   ipcMain.handle('dev-runtime', (_, { hours }) => {
