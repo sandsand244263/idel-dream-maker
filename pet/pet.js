@@ -8,6 +8,7 @@ const ctxMenu = document.getElementById('ctx-menu');
 const infoText = document.getElementById('info-text');
 const expFill = document.getElementById('exp-fill');
 const expPct = document.getElementById('exp-pct');
+const expDetail = document.getElementById('exp-detail');
 
 // Unified canvas size — CSS matches these values
 const CANVAS_W = 120, CANVAS_H = 140;
@@ -96,11 +97,13 @@ function updateExpBar(){
   const rounded=Math.round(displayExp);
   expFill.style.width=`${rounded}%`;
   expPct.textContent=`${rounded}%`;
+  expDetail.textContent=`${Math.floor(e)} / ${nr} (${rounded}%)`;
 }
 
 // ── Info bar ──
 function updateInfoBar(){
-  infoText.textContent=`${gameInfo.scenario} | Lv.${gameInfo.level}`;
+  const title=gameInfo.title&&gameInfo.title!=='—'?gameInfo.title:'';
+  infoText.textContent=title?`${gameInfo.scenario} | Lv.${gameInfo.level} | ${title}`:`${gameInfo.scenario} | Lv.${gameInfo.level}`;
   updateExpBar();
 }
 
@@ -158,12 +161,15 @@ canvas.addEventListener('mouseleave',()=>{
   setTimeout(()=>{if(curState==='review')animToIdle();},200);
 });
 canvas.addEventListener('click',e=>{
-  if(e.detail===1&&!dragMoved){
-    transitionTo('wave');
+  if(e.detail===1&&!dragMoved) transitionTo('wave');
+});
+canvas.addEventListener('dblclick',e=>{
+  e.preventDefault();
+  if(!dragMoved){
+    transitionTo('jump');
     window.pet.invoke('toggle-main-window').catch(()=>{});
   }
 });
-canvas.addEventListener('dblclick',e=>{e.preventDefault();transitionTo('jump');});
 canvas.addEventListener('contextmenu',e=>{
   e.preventDefault();ctxMenu.classList.remove('hidden');
   const r=canvas.getBoundingClientRect();
