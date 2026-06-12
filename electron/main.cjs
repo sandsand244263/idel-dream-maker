@@ -4,6 +4,7 @@ const fs = require('fs');
 
 const { createMainWindow, getMainWindow } = require('./windows.cjs');
 const { createTray, setToolTip, getTray } = require('./tray.cjs');
+const { scanPets, registerPetIpcHandlers, forwardGameTickToPet, closePetWindow } = require('./pet.cjs');
 
 let mainWindow = null;
 let tray = null;
@@ -265,8 +266,10 @@ function startGameLoop() {
       unlockedAchievements: gameState.unlockedAchievements,
       triggered_events: gameState.triggeredEvents,
       language: gameState.language,
+      currentTitle: currentTitle ? currentTitle.name : null,
     };
     try { mainWindow.webContents.send('game-tick', payload); } catch {}
+    forwardGameTickToPet(payload);
 
     // Auto-save every 30s
     if (gameState.totalRuntimeMs % 30000 < delta) {
@@ -578,6 +581,8 @@ app.whenReady().then(() => {
   createWindow();
   setupTray();
   registerIpcHandlers();
+  scanPets(app);
+  registerPetIpcHandlers(mainWindow, app);
   startGameLoop();
 
   // Tooltip update every 5s

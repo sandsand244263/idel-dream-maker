@@ -1,0 +1,27 @@
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: transparent; font-family: 'MapleMonoNFCN', 'Courier New', monospace; color: #00FF00; user-select: none; -webkit-app-region: no-drag; }
+#pet-container { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; background: rgba(10,10,10,0.75); border: 1px solid rgba(0,255,0,0.15); border-radius: 8px; overflow: hidden; backdrop-filter: blur(8px); }
+
+#title-bar { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 4px 8px; height: 26px; flex-shrink: 0; -webkit-app-region: drag; }
+#pet-name { font-size: 11px; color: rgba(0,255,0,0.6); }
+#title-btns { display: flex; gap: 4px; -webkit-app-region: no-drag; }
+#title-btns button { background: transparent; border: none; color: rgba(0,255,0,0.4); font-size: 14px; cursor: pointer; padding: 0 2px; font-family: inherit; line-height: 1; }
+#title-btns button:hover { color: #00FF00; }
+#btn-close:hover { color: #F44336; }
+
+#canvas-wrap { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; min-height: 0; }
+#pet-canvas { width: 128px; height: 148px; image-rendering: pixelated; }
+
+#info-bar { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 2px 8px; height: 22px; flex-shrink: 0; }
+#info-level { font-size: 12px; font-weight: bold; color: #00FF00; }
+#info-title { font-size: 10px; color: rgba(0,255,0,0.6); max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+#exp-bar-bg { width: calc(100% - 16px); height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; margin: 0 8px; flex-shrink: 0; }
+#exp-bar-fill { height: 100%; background: linear-gradient(90deg, #0A5A0A, #00FF00); border-radius: 3px; transition: width 0.5s ease; }
+
+#pet-select-bar { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 4px 8px; height: 26px; flex-shrink: 0; }
+#pet-select-bar button { background: transparent; border: none; color: rgba(0,255,0,0.4); font-size: 12px; cursor: pointer; padding: 0 4px; font-family: inherit; }
+#pet-select-bar button:hover { color: #00FF00; }
+#pet-select-name { font-size: 10px; color: rgba(0,255,0,0.5); max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+#disclaimer { position: absolute; bottom: 2px; right: 4px; font-size: 9px; color: rgba(0,255,0,0.15); cursor: help; }

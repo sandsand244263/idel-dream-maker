@@ -52,7 +52,6 @@ function tf(key, ...args) { let s = t(key); args.forEach((a, i) => { s = s.repla
 
 let gameState = null, scenarioList = [], currentScenario = null, currentTitle = null, hubLevel = 1, appVersion = '1.0.0';
 let eventDismissTimer = null, achievementDismissTimer = null;
-let isMiniMode = false;
 let lastRuntime = 0;
 
 const logArea = document.getElementById('log-area');
@@ -93,16 +92,6 @@ const btnSettings = document.getElementById('btn-settings');
 const btnHide = document.getElementById('btn-hide');
 const permaStatus = document.getElementById('perma-status');
 
-const miniBar = document.getElementById('mini-bar');
-const miniExpand = document.getElementById('mini-expand');
-const miniCollapse = document.getElementById('mini-collapse');
-const miniClose = document.getElementById('mini-close');
-const miniId = document.getElementById('mini-id');
-const miniLevel = document.getElementById('mini-level');
-const miniTitle = document.getElementById('mini-title');
-const miniPct = document.getElementById('mini-pct');
-const miniFill = document.getElementById('mini-progress-fill');
-
 const aliasModal = document.getElementById('alias-modal');
 const aliasTitle = document.getElementById('alias-title');
 const aliasDesc = document.getElementById('alias-desc');
@@ -132,30 +121,11 @@ aliasCancel.addEventListener('click', () => { aliasModal.classList.add('hidden')
 aliasConfirm.addEventListener('click', () => { aliasModal.classList.add('hidden'); if (aliasResolver) { aliasResolver(aliasInput.value.trim() || ''); aliasResolver = null; } });
 aliasInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') aliasConfirm.click(); if (e.key === 'Escape') aliasCancel.click(); });
 
-// ── Mini Bar ──
-miniExpand.addEventListener('click', async () => { try { await window.electron.invoke('set-window-mode', { mode: 'full' }); } catch (e) {} isMiniMode = false; document.getElementById('app').classList.remove('hidden'); miniBar.classList.add('hidden'); });
-miniCollapse.addEventListener('click', () => { window.electron.invoke('hide-window').catch(() => {}); });
-miniClose.addEventListener('click', () => { window.electron.invoke('hide-window').catch(() => {}); });
-
-let dragging = false;
-miniBar.addEventListener('mousedown', (e) => {
-  if (e.target.tagName === 'BUTTON') return;
-  dragging = true; const r = miniBar.getBoundingClientRect(); const ox = e.clientX - r.left, oy = e.clientY - r.top;
-  const mh = (ev) => { if (!dragging) return; window.electron.invoke('set-window-position', { x: ev.screenX - ox, y: ev.screenY - oy }).catch(() => {}); };
-  const uh = () => { dragging = false; document.removeEventListener('mousemove', mh); document.removeEventListener('mouseup', uh); };
-  document.addEventListener('mousemove', mh); document.addEventListener('mouseup', uh);
-});
-
-function updateMiniBar() {
-  if (!gameState || !isMiniMode) return;
-  miniId.textContent = `ID:${gameState.player_name}`; miniLevel.textContent = gameState.is_in_hub ? `Lv.${hubLevel}` : `Lv.${gameState.level}`;
-  miniTitle.textContent = currentTitle?.name || '?';
-  const t = gameState.total_exp_earned || 0, nr = calcExpForLevel(gameState.level + 1), cr = calcExpForLevel(gameState.level);
-  const pct = nr > cr ? Math.min(100, ((t - cr) / (nr - cr)) * 100) : 0;
-  miniPct.textContent = `${Math.round(pct)}%`; miniFill.style.width = `${pct}%`;
+// ── Pet Window ──
+async function openPetWindow() {
+  try { await window.electron.invoke('enter-pet-mode'); } catch (e) { console.error('pet window error:', e); }
 }
-async function switchToMini() { try { await window.electron.invoke('set-window-mode', { mode: 'mini' }); } catch (e) {} isMiniMode = true; document.getElementById('app').classList.add('hidden'); miniBar.classList.remove('hidden'); updateMiniBar(); }
-btnMini.addEventListener('click', () => switchToMini());
+btnMini.addEventListener('click', () => openPetWindow());
 
 function getTitleByIndex(idx) {
   if (!currentScenario?.titles) return null;
@@ -180,11 +150,11 @@ async function init() {
       if (p.total_runtime_ms === 0 && lastRuntime > 0) p.total_runtime_ms = lastRuntime;
       gameState = { ...gameState, ...p };
       lastRuntime = gameState.total_runtime_ms;
-      updateUI(); updateMiniBar();
+      updateUI();
     }
   });
   window.electron.on('event-triggered', (event) => { addLog('event', event.text); showEventOverlay(event.title, event.color, event.text); });
-  window.electron.on('level-up', (event) => { currentTitle = { name: event.title, color: event.titleColor, desc: event.titleDesc }; addLog('levelup', tf('systemLevelUp', event.level, event.title)); updateUI(); updateMiniBar(); });
+  window.electron.on('level-up', (event) => { currentTitle = { name: event.title, color: event.titleColor, desc: event.titleDesc }; addLog('levelup', tf('systemLevelUp', event.level, event.title)); updateUI(); });
   window.electron.on('achievement-unlocked', (event) => { const { name, desc, icon } = event; addLog('achievement', `${name}: ${desc}`); showAchievementOverlay(icon, name, desc); gameState?.unlockedAchievements.push(event.id); updateUI(); });
   window.electron.on('scenario-changed', (event) => { gameState = event.game; currentScenario = event.scenario; currentTitle = { name: event.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); });
 }
@@ -214,14 +184,14 @@ function renderHubView() {
     card.innerHTML = `<div class="hub-card-name">${s.nameCN} (${s.name})</div><div class="hub-card-desc">${s.description}</div><div class="hub-card-meta">${s.eventCount} ${t('scenarioEvent')} · ${s.achievementCount} ${t('scenarioAchievement')}</div>`;
     card.addEventListener('click', async () => {
       const alias = await showAliasModal(s.nameCN); if (alias === null) return;
-      try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); updateMiniBar(); } catch (e) { addLog('system', t('systemEnterFail')); }
+      try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); } catch (e) { addLog('system', t('systemEnterFail')); }
     });
     hubScenarioList.appendChild(card);
   });
 }
 
 hubDrawBtn.addEventListener('click', async () => {
-  try { const s = await window.electron.invoke('draw-scenario'); if (!s) return; const alias = await showAliasModal(s.nameCN); if (alias === null) return; const r = await window.electron.invoke('select-scenario', { id: s.id, alias }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemDrew', currentScenario.nameCN)); updateUI(); updateMiniBar(); } catch (e) { addLog('system', t('systemDrawFail')); }
+  try { const s = await window.electron.invoke('draw-scenario'); if (!s) return; const alias = await showAliasModal(s.nameCN); if (alias === null) return; const r = await window.electron.invoke('select-scenario', { id: s.id, alias }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemDrew', currentScenario.nameCN)); updateUI(); } catch (e) { addLog('system', t('systemDrawFail')); }
 });
 
 btnBackHub.addEventListener('click', async () => {
@@ -292,7 +262,7 @@ function renderScenarioPanel() {
   scenarioList.forEach(s => {
     const card = document.createElement('div'); card.className = `scenario-card${s.id === cid ? ' active' : ''}`;
     card.innerHTML = `<div class="scenario-name" style="color:${s.id === cid ? '#0F0' : '#888'}">${s.nameCN} (${s.name})</div><div class="scenario-desc">${s.description}</div><div class="scenario-stats"><span>${s.eventCount} ${t('scenarioEvent')}</span><span>${s.achievementCount} ${t('scenarioAchievement')}</span></div>`;
-    card.addEventListener('click', async () => { const alias = await showAliasModal(s.nameCN); if (alias === null) return; try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); scenarioPanel.classList.add('hidden'); updateUI(); updateMiniBar(); } catch (e) { addLog('system', t('systemEnterFail')); } });
+    card.addEventListener('click', async () => { const alias = await showAliasModal(s.nameCN); if (alias === null) return; try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); scenarioPanel.classList.add('hidden'); updateUI(); } catch (e) { addLog('system', t('systemEnterFail')); } });
     scenarioListEl.appendChild(card);
   });
 }
@@ -304,7 +274,7 @@ async function renderTitlesPanel() {
   if (gameState?.is_in_hub) {
     try { const ht = await window.electron.invoke('get-hub-titles'); ht.forEach(s => { const g = document.createElement('div'); g.className = 'hub-title-group'; const sm = document.createElement('div'); sm.className = 'hub-title-summary'; sm.innerHTML = `▶ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>`; const bd = document.createElement('div'); bd.className = 'hub-title-body hidden'; (s.unlockedTitles.length ? s.unlockedTitles : [t('hubTitleEmpty')]).forEach(n => { const it = document.createElement('div'); it.className = 'title-item'; it.innerHTML = `<span class="title-name" style="color:var(--fg);font-size:12px">${n}</span>`; bd.appendChild(it); }); sm.addEventListener('click', () => { bd.classList.toggle('hidden'); sm.innerHTML = bd.classList.contains('hidden') ? `▶ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>` : `▼ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>`; }); g.appendChild(sm); g.appendChild(bd); titlesListEl.appendChild(g); }); } catch (e) { addLog('system', `获取大厅称号失败: ${e}`); } return;
   }
-  try { const d = await window.electron.invoke('get-scenario-detail', { id: gameState?.scenario_id }); const cur = gameState?.equipped_title_index ?? 0; d.titles.forEach((t, idx) => { const u = t.level <= gameState.level; const eq = u && idx === cur; const it = document.createElement('div'); it.className = `title-item${u ? '' : ' locked'}${eq ? ' equipped' : ''}`; it.innerHTML = `<span class="title-level">Lv.${t.level}</span><span class="title-name" style="color:${u ? t.color : 'var(--dim)'}">${u ? t.name : '???'}</span><span class="title-desc">${u ? t.desc : '???'}</span>`; if (u) { it.style.cursor = 'pointer'; it.addEventListener('click', async () => { try { await window.electron.invoke('set-title', { index: idx }); if (gameState) gameState.equipped_title_index = idx; currentTitle = { name: t.name, color: t.color, desc: t.desc }; updateUI(); updateMiniBar(); renderTitlesPanel(); } catch (e) { addLog('system', `佩戴称号失败: ${e}`); } }); } titlesListEl.appendChild(it); }); } catch (e) { addLog('system', `获取副本详情失败: ${e}`); }
+  try { const d = await window.electron.invoke('get-scenario-detail', { id: gameState?.scenario_id }); const cur = gameState?.equipped_title_index ?? 0; d.titles.forEach((t, idx) => { const u = t.level <= gameState.level; const eq = u && idx === cur; const it = document.createElement('div'); it.className = `title-item${u ? '' : ' locked'}${eq ? ' equipped' : ''}`; it.innerHTML = `<span class="title-level">Lv.${t.level}</span><span class="title-name" style="color:${u ? t.color : 'var(--dim)'}">${u ? t.name : '???'}</span><span class="title-desc">${u ? t.desc : '???'}</span>`; if (u) { it.style.cursor = 'pointer'; it.addEventListener('click', async () => { try { await window.electron.invoke('set-title', { index: idx }); if (gameState) gameState.equipped_title_index = idx; currentTitle = { name: t.name, color: t.color, desc: t.desc }; updateUI(); renderTitlesPanel(); } catch (e) { addLog('system', `佩戴称号失败: ${e}`); } }); } titlesListEl.appendChild(it); }); } catch (e) { addLog('system', `获取副本详情失败: ${e}`); }
 }
 
 async function updateTooltip() {
@@ -323,7 +293,7 @@ document.addEventListener('keydown', (e) => {
   if (e.ctrlKey && e.shiftKey && e.key === 'D') {
     e.preventDefault();
     if (debugPanel.classList.contains('hidden')) {
-      const state = { is_in_hub: gameState?.is_in_hub, isMiniMode, hubLevel, lv: gameState?.level, totalExp: gameState?.total_exp_earned, runtime: formatRuntime(gameState?.total_runtime_ms || 0), equippedIdx: gameState?.equipped_title_index, title: currentTitle?.name, scenarioId: gameState?.scenario_id, language: gameState?.language, achievements: gameState?.unlockedAchievements?.length, events: gameState?.triggered_events?.length, logCount: logArea?.children?.length || 0, scenarios: scenarioList?.length || 0, winSize: `${window.innerWidth}×${window.innerHeight}` };
+      const state = { is_in_hub: gameState?.is_in_hub, hubLevel, lv: gameState?.level, totalExp: gameState?.total_exp_earned, runtime: formatRuntime(gameState?.total_runtime_ms || 0), equippedIdx: gameState?.equipped_title_index, title: currentTitle?.name, scenarioId: gameState?.scenario_id, language: gameState?.language, achievements: gameState?.unlockedAchievements?.length, events: gameState?.triggered_events?.length, logCount: logArea?.children?.length || 0, scenarios: scenarioList?.length || 0, winSize: `${window.innerWidth}×${window.innerHeight}` };
       debugContent.textContent = JSON.stringify(state, null, 2);
       debugPanel.classList.remove('hidden');
     } else { debugPanel.classList.add('hidden'); }
