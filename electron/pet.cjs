@@ -107,6 +107,14 @@ function registerPetIpcHandlers(mainWindow, app) {
     return true;
   });
 
+  ipcMain.handle('toggle-main-window', () => {
+    if (mainWindow) {
+      if (mainWindow.isVisible()) { mainWindow.hide(); }
+      else { mainWindow.show(); mainWindow.focus(); }
+    }
+    return true;
+  });
+
   ipcMain.handle('scan-pets', () => {
     scanPets(app);
     return { pets: currentPetList, selected: selectedPetIndex };

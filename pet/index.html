@@ -10,13 +10,16 @@
   <div id="container">
     <canvas id="pet-canvas"></canvas>
     <div id="tooltip" class="hidden"></div>
-    <div id="bubble" class="hidden"></div>
+    <div id="bubble-dot" class="dot-none"><span id="dot-symbol">○</span></div>
+    <div id="bubble-text" class="hidden"></div>
     <div id="ctx-menu" class="hidden">
       <div id="ctx-prev">◀ 上一个宠物</div>
       <div id="ctx-next">下一个宠物 ▶</div>
       <div class="ctx-sep"></div>
       <div id="ctx-close">× 隐藏</div>
     </div>
+    <div id="info-bar"><span id="info-text"></span></div>
+    <div id="exp-track"><div id="exp-fill"></div></div>
   </div>
   <script src="pet.js"></script>
 </body>

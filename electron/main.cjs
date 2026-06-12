@@ -628,6 +628,25 @@ app.whenReady().then(() => {
   hubLevel = calcLevel(gameState.hubTotalExp);
 
   createWindow();
+
+  // Restore window position from save
+  if (gameState.windowX !== undefined && gameState.windowY !== undefined) {
+    mainWindow.setPosition(gameState.windowX, gameState.windowY);
+  }
+
+  // Save window position on move
+  let moveTimer = null;
+  mainWindow.on('move', () => {
+    if (moveTimer) clearTimeout(moveTimer);
+    moveTimer = setTimeout(() => {
+      if (gameState && mainWindow) {
+        const [x, y] = mainWindow.getPosition();
+        gameState.windowX = x;
+        gameState.windowY = y;
+      }
+    }, 300);
+  });
+
   setupTray();
   registerIpcHandlers();
   registerPetIpcHandlers(mainWindow, app);
@@ -654,7 +673,14 @@ app.on('before-quit', () => {
   isQuitting = true;
   stopGameLoop();
   if (tooltipInterval) clearInterval(tooltipInterval);
-  if (gameState) writeSave(gameState);
+  if (gameState) {
+    if (mainWindow) {
+      const [x, y] = mainWindow.getPosition();
+      gameState.windowX = x;
+      gameState.windowY = y;
+    }
+    writeSave(gameState);
+  }
 });
 
 app.on('window-all-closed', () => {

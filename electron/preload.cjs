@@ -11,7 +11,7 @@ contextBridge.exposeInMainWorld('electron', {
       'window-minimize', 'window-toggle-maximize',
       'set-window-position', 'update-tooltip',
       'get-scenario-detail', 'set-scenario-progress',
-      'hide-pet-window', 'toggle-pet-window',
+      'hide-pet-window', 'toggle-pet-window', 'toggle-main-window',
       'dev-trigger-event', 'dev-level-up', 'dev-achievement', 'dev-runtime',
     ];
     if (validChannels.includes(channel)) {
