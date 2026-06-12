@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const SCENARIOS_DIR = path.join(__dirname, 'src-tauri', 'scenarios');
+const SCENARIOS_DIR = path.join(__dirname, 'scenarios');
 const OUTPUT_PATH = path.join(__dirname, 'public', 'scenarios_data.json');
 
 const COL_NORM = {

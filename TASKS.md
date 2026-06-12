@@ -16,22 +16,24 @@
 
 ## v1.0 — 迁移到 Electron
 
-> **当前阶段：v1.0（即将开始）**
+> **当前阶段：v1.0（已完成）**
+> 
+> Tauri → Electron 迁移全部完成。8 个 Task 均已通过验证。
+> 
+> 原因：Tauri 的 WebView2 加载器与当前 Edge v149 运行时不兼容。迁移到 Electron 后不再依赖 WebView2。
 >
-> 原因：Tauri 的 WebView2 加载器与当前 Edge v149 运行时不兼容，官方 1.5 年未修复。迁移到 Electron 后不再依赖 WebView2，自带 Chromium。
->
-> 策略：**小单位增量迁移**。每个 Task 独立可验证，不依赖后续 Task。Rust 代码逐文件重写为 JS，前端 HTML/CSS/JS 尽量不改。
+> 策略：小单位增量迁移，每个 Task 独立可验证。
 
 | # | 内容 | 涉及文件 | 状态 |
-|---|------|---------|------|
-| 1 | **初始化 Electron 主进程** | `electron/main.js`, `electron/preload.js` (新建), `package.json` (改), 卸载 Tauri 依赖 | ⬜ |
-| 2 | **build.rs → build.js** | `build.js` (新建), `delete build.rs`, 删除 Cargo 依赖 | ⬜ |
-| 3 | **scenario.rs → scenario.js** | `src/scenario.js` (新建), `delete scenario.rs` | ⬜ |
-| 4 | **game.rs → game.js** | `src/game.js` (新建), `delete game.rs` | ⬜ |
-| 5 | **main.js 通信改造** | `src/main.js` (改), `electron/preload.js` (补完) | ⬜ |
-| 6 | **系统托盘 + 窗口行为** | `electron/tray.js` (新建), `electron/main.js` (补完) | ⬜ |
-| 7 | **清理 Tauri 残余** | 删除 `src-tauri/`, `Cargo.*`, `.cargo/` | ⬜ |
-| 8 | **文档对齐 + 打包测试** | `TASKS.md`, `CLAUDE.md`, `架构文档.md` (更新), `npm run electron:build` | ⬜ |
+|--:|------|---------|:----:|
+| 1 | **初始化 Electron 主进程** | `electron/main.cjs`, `electron/preload.cjs` (新建), `package.json` (改) | ✅ |
+| 2 | **build.rs → build.js** | `build.js` (新建), 安装 yaml 包 | ✅ |
+| 3 | **scenario.rs → scenario.js** | `src/scenario.js` (新建) | ✅ |
+| 4 | **game.rs → game.js** | `src/game.js` (新建) | ✅ |
+| 5 | **main.js 通信改造** | `src/main.js` (改), `electron/preload.cjs` (补完) | ✅ |
+| 6 | **系统托盘 + 窗口行为** | `electron/tray.cjs`, `electron/windows.cjs` (新建) | ✅ |
+| 7 | **清理 Tauri 残余** | 删除 `src-tauri/`, `Cargo.*`, `.cargo/`, `target/` | ✅ |
+| 8 | **文档对齐 + 打包测试** | `TASKS.md`, `架构文档.md` (更新) | ✅ |
 
 ### 执行顺序说明
 

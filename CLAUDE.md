@@ -44,7 +44,7 @@
 ### 任务执行规范
 
 - 一次只做一个 Task，完成后 ✅ 再进入下一个
-- 每个 Task 完成后必须验证构建（Rust `cargo check` + 前端 `npx vite build`）
+- 每个 Task 完成后必须验证构建（Electron 启动测试 + `node build.js` + 前端 `npx vite build`）
 - 构建失败则停止当前 Task，修复后才能继续
 - 用户反馈 bug：先分析根因 → 列出方案 → 用户确认 → 再执行
 
@@ -274,9 +274,11 @@ UI 语言配置：
 | 桌面框架 | Electron |
 | 后端语言 | JavaScript（Node.js） |
 | 前端 | HTML + CSS + JS（无框架） |
+| 构建工具 | Vite |
 | 字体 | Maple Mono NF CN（打包内置） |
 | 存档 | JSON 文件通过 Node.js fs 读写 |
 | 副本数据 | `.md` 文件构建时（build.js）解析为 JSON |
+| 打包 | electron-builder |
 
 ### 跨平台托盘
 
@@ -293,7 +295,7 @@ UI 语言配置：
 | v0.1 ~ v0.2 | 引擎核心 + 事件引擎 + 成就系统 + UI 改造 | ✅ |
 | v0.3.0 ~ v0.3.6 | 大厅架构 + 语言系统 + 托盘/标题栏 + 副本进度保留 | ✅ |
 | v0.3.7 | 副本引擎与废土填充（.md 解析器 + build.rs + 500 事件） | ✅ |
-| **v1.0** | **Electron 迁移（替代 Tauri，Rust → JS，保留前端）** | ⬜ |
+| **v1.0** | **Electron 迁移（替代 Tauri，Rust → JS，保留前端）** | ✅ |
 | v1.0+ | 像素宠物窗口 / UI 打磨 / 新副本 / Linux 打包 | 待定 |
 
 > 注：Tauri 版已废弃（WebView2/Edge v149 不兼容，官方 1.5 年未修）。v1.0 迁移到 Electron。
