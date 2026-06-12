@@ -31,45 +31,42 @@ let displayExp=0,dragMoved=false;
 
 // ── Notification Queue ──
 class NotificationQueue{
-  constructor(){this.q=[];this.playing=false;this.timer=null;this.paused=false;this.current=null;}
+  constructor(){this.q=[];this.timer=null;this.current=null;}
   enqueue(item,priority){
     item.prio=priority;
     let i=0;while(i<this.q.length&&this.q[i].prio>=priority)i++;
     this.q.splice(i,0,item);
-    if(!this.playing)this.next();
+    if(!this.current)this.next();
   }
   next(){
-    if(this.q.length===0){this.playing=false;this.current=null;bubbleZone.className='zone-hidden';return;}
-    this.playing=true;
+    if(this.q.length===0){this.current=null;dotEl.className='dot-none';dotSymbol.textContent='○';return;}
     this.current=this.q.shift();
-    this.show(this.current);
-  }
-  show(item){
-    if(item.type==='achievement'){dotSymbol.textContent='★';dotEl.className='dot-achievement';}
-    else if(item.type==='levelup'){dotSymbol.textContent='↑';dotEl.className='dot-levelup';}
-    else{dotSymbol.textContent='!';dotEl.className='dot-event';}
-    bubbleText.textContent=item.text;
-    bubbleZone.className='zone-show';
-    bubbleZone.style.borderColor=item.type==='achievement'?'#FFD700':item.type==='levelup'?'#00FF00':'#00BFFF';
-    this.positionZone();
+    this.showDotOnly();
     this.startTimer();
   }
-  positionZone(){
-    const isLeft=(window.screenLeft||0) < (window.screen.availWidth||1920)/2;
-    bubbleZone.style.left=isLeft?'auto':'2px';
-    bubbleZone.style.right=isLeft?'2px':'auto';
+  showDotOnly(){
+    if(this.current.type==='achievement'){dotSymbol.textContent='★';dotEl.className='dot-achievement';}
+    else if(this.current.type==='levelup'){dotSymbol.textContent='↑';dotEl.className='dot-levelup';}
+    else{dotSymbol.textContent='!';dotEl.className='dot-event';}
+    dotEl.dataset.text=this.current.text;
+    dotEl.dataset.type=this.current.type;
   }
   startTimer(){
     if(this.timer)clearTimeout(this.timer);
     this.timer=setTimeout(()=>{
-      this.timer=null;bubbleZone.className='zone-hide';
-      setTimeout(()=>{if(!this.paused){dotEl.className='dot-none';dotSymbol.textContent='○';this.next();}},200);
+      this.timer=null;dotEl.className='dot-none';dotSymbol.textContent='○';
+      bubbleZone.className='zone-hide';
+      setTimeout(()=>{this.next();},200);
     },6000);
   }
-  pause(){this.paused=true;if(this.timer){clearTimeout(this.timer);this.timer=null;}}
-  resume(){
-    this.paused=false;
-    if(this.current){this.show(this.current);}
+  showBubble(){
+    if(!this.current||bubbleZone.className==='zone-show')return;
+    bubbleText.textContent=this.current.text;
+    bubbleZone.className='zone-show';
+    bubbleZone.style.borderLeftColor=this.current.type==='achievement'?'#FFD700':this.current.type==='levelup'?'#00FF00':'#00BFFF';
+  }
+  hideBubble(){
+    bubbleZone.className='zone-hide';
   }
   close(){
     if(this.timer){clearTimeout(this.timer);this.timer=null;}
@@ -161,10 +158,10 @@ canvas.addEventListener('contextmenu',e=>{e.preventDefault();ctxMenu.classList.r
 document.addEventListener('click',e=>{if(!ctxMenu.contains(e.target))ctxMenu.classList.add('hidden');});
 
 // ── Dot hover ──
-dotEl.addEventListener('mouseenter',()=>{nq.pause();});
-dotEl.addEventListener('mouseleave',()=>{nq.resume();});
-bubbleZone.addEventListener('mouseenter',()=>{nq.pause();});
-bubbleZone.addEventListener('mouseleave',()=>{nq.resume();});
+dotEl.addEventListener('mouseenter',()=>{nq.showBubble();});
+dotEl.addEventListener('mouseleave',()=>{nq.hideBubble();});
+bubbleZone.addEventListener('mouseenter',()=>{nq.showBubble();});
+bubbleZone.addEventListener('mouseleave',()=>{nq.hideBubble();});
 bubbleZone.addEventListener('click',()=>{nq.close();});
 
 // ── Context menu ──
