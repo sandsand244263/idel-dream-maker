@@ -27,6 +27,9 @@ function createWindow() {
   }
 
   mainWindow._isQuitting = false;
+  mainWindow.on('show', () => {
+    forwardToPet('main-shown', {});
+  });
   mainWindow.on('close', (e) => {
     if (!isQuitting && !mainWindow._isQuitting) {
       e.preventDefault();

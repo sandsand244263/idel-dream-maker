@@ -32,7 +32,7 @@ let displayExp=0,dragMoved=false;
 
 // ── Notification Queue ──
 class NotificationQueue{
-  constructor(){this.q=[];this.timer=null;this.current=null;}
+  constructor(){this.q=[];this.current=null;}
   enqueue(item,priority){
     item.prio=priority;
     let i=0;while(i<this.q.length&&this.q[i].prio>=priority)i++;
@@ -43,7 +43,6 @@ class NotificationQueue{
     if(this.q.length===0){this.current=null;dotEl.className='dot-none';dotSymbol.textContent='○';return;}
     this.current=this.q.shift();
     this.showDotOnly();
-    this.startTimer();
   }
   showDotOnly(){
     if(this.current.type==='achievement'){dotSymbol.textContent='★';dotEl.className='dot-achievement';}
@@ -51,15 +50,6 @@ class NotificationQueue{
     else{dotSymbol.textContent='!';dotEl.className='dot-event';}
     dotEl.dataset.text=this.current.text;
     dotEl.dataset.type=this.current.type;
-  }
-  startTimer(){
-    if(this.timer)clearTimeout(this.timer);
-    this.timer=setTimeout(()=>{
-      this.timer=null;dotEl.className='dot-none';dotSymbol.textContent='○';
-      bubbleZone.className='zone-hide';
-      if(expWrap)expWrap.style.display='flex';
-      setTimeout(()=>{this.next();},200);
-    },6000);
   }
   showBubble(){
     if(!this.current||bubbleZone.className==='zone-show')return;
@@ -73,10 +63,16 @@ class NotificationQueue{
     if(expWrap)expWrap.style.display='flex';
   }
   close(){
-    if(this.timer){clearTimeout(this.timer);this.timer=null;}
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
     setTimeout(()=>{dotEl.className='dot-none';dotSymbol.textContent='○';this.next();},200);
+  }
+  clearQueue(){
+    this.q=[];
+    this.current=null;
+    bubbleZone.className='zone-hide';
+    if(expWrap)expWrap.style.display='flex';
+    dotEl.className='dot-none';dotSymbol.textContent='○';
   }
 }
 const nq=new NotificationQueue();
@@ -196,6 +192,7 @@ window.pet.on('game-tick',d=>{
 window.pet.on('event-triggered',d=>{transitionTo('wave');nq.enqueue({text:d.text,type:'event'},1);});
 window.pet.on('level-up',d=>{gameInfo.title=d.title||gameInfo.title;transitionTo('jump');nq.enqueue({text:`升级! Lv.${d.level}`,type:'levelup'},2);});
 window.pet.on('achievement-unlocked',d=>{transitionTo('extra1');nq.enqueue({text:`${d.icon||'★'} ${d.name}`,type:'achievement'},3);});
+window.pet.on('main-shown',()=>{nq.clearQueue();});
 
 window.pet.invoke('scan-pets').then(r=>{pets=r.pets||[];selIdx=r.selected||0;loadPet(selIdx);}).catch(()=>{});
 window.pet.invoke('pet-get-state').then(()=>updateInfoBar()).catch(()=>{});

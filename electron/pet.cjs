@@ -135,7 +135,7 @@ function registerPetIpcHandlers(mainWindow, app) {
   ipcMain.handle('toggle-main-window', () => {
     if (mainWindow) {
       if (mainWindow.isVisible()) { mainWindow.hide(); }
-      else { mainWindow.show(); mainWindow.focus(); }
+      else { mainWindow.show(); mainWindow.focus(); forwardToPet('main-shown', {}); }
     }
     return true;
   });
