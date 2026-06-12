@@ -432,7 +432,7 @@ npx electron-builder   # 打包验证
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **队列永久保留 + main-shown 清除 + debug 默认打开** | `pet/pet.js`, `electron/main.cjs`, `electron/pet-preload.cjs`, `electron/pet.cjs`, `src/main.js` | ⬜ |
+| 1 | **队列永久保留 + main-shown 清除 + debug 默认打开** | `pet/pet.js`, `electron/main.cjs`, `electron/pet-preload.cjs`, `electron/pet.cjs`, `src/main.js` | ✅ |
 
 ---
 
