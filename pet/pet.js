@@ -140,7 +140,6 @@ function updateExpBar(){
   if(Math.abs(displayExp-target)<0.3)displayExp=target;
   const rounded=Math.round(displayExp);
   expFill.style.width=`${rounded}%`;
-  expPct.textContent=`${rounded}%`;
   expDetail.textContent=`${Math.floor(e)} / ${nr} (${rounded}%)`;
 }
 function updateInfoBar(){
@@ -164,12 +163,17 @@ canvas.addEventListener('dblclick',e=>{e.preventDefault();if(!dragMoved){transit
 canvas.addEventListener('contextmenu',e=>{e.preventDefault();ctxMenu.classList.remove('hidden');const r=canvas.getBoundingClientRect();ctxMenu.style.left=(e.clientX-r.left)+'px';ctxMenu.style.top=(e.clientY-r.top)+'px';});
 document.addEventListener('click',e=>{if(!ctxMenu.contains(e.target))ctxMenu.classList.add('hidden');});
 
-// ── Dot hover ──
-dotEl.addEventListener('mouseenter',()=>{nq.showBubble();});
-dotEl.addEventListener('mouseleave',()=>{nq.hideBubble();});
-bubbleZone.addEventListener('mouseenter',()=>{nq.showBubble();});
-bubbleZone.addEventListener('mouseleave',()=>{nq.hideBubble();});
-bubbleZone.addEventListener('click',()=>{nq.close();});
+// ── Dot click toggle ──
+dotEl.addEventListener('click',(e)=>{
+  e.stopPropagation();
+  if(bubbleZone.className==='zone-show'){nq.hideBubble();}
+  else{nq.showBubble();}
+});
+bubbleZone.addEventListener('click',(e)=>{
+  e.stopPropagation();
+  nq.close();
+});
+document.addEventListener('click',()=>{nq.hideBubble();});
 
 // ── Context menu ──
 document.getElementById('ctx-close').addEventListener('click',()=>{ctxMenu.classList.add('hidden');window.pet.invoke('hide-pet-window').catch(()=>{});});
