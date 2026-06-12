@@ -96,7 +96,12 @@ function buildFrames(s){
   for(let i=0;i<n;i++){let d=b;if(i===0)d*=c.firstMult||2;else if(i===n-1)d*=c.lastMult||2;f.push({c:i,r:c.row,d});}
   return f;
 }
-function drawSprite(col,row){if(!spritesheet)return;ctx.clearRect(0,0,120,140);ctx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,120,140);}
+function drawSprite(col,row){
+  if(!spritesheet){d('draw:null');return;}
+  ctx.clearRect(0,0,120,140);
+  ctx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,120,140);
+  d('draw:'+col+','+row);
+}
 function stopAnim(){if(animTimer){clearInterval(animTimer);animTimer=null;}}
 function play(s){
   if(s===curState&&animTimer)return;curState=s;stopAnim();
