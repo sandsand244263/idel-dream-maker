@@ -73,7 +73,7 @@ function createPetWindow(app) {
 
   petWindow = new BrowserWindow({
     width: 192,
-    height: 260,
+    height: 240,
     frame: false,
     transparent: true,
     alwaysOnTop: true,
