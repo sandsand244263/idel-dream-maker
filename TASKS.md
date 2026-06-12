@@ -432,11 +432,11 @@ npx electron-builder   # 打包验证
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **主题 CSS 变量化** — 5 套主题（green/amber/cold/paper/matrix）驱动宠物窗口全部颜色 | `pet/style.css` | ⬜ |
-| 2 | **Canvas 尺寸对齐** — 统一为 120×140，与外层 CSS 一致 | `pet/pet.js` | ⬜ |
-| 3 | **帧尺寸动态检测** — 读取 spritesheet 实际宽高计算 FW/FH，后备 192×208 | `pet/pet.js` | ⬜ |
-| 4 | **fillText 替换为 DOM** — 移除 Canvas 覆盖层，改用 DOM `#info-bar` 避免主题不同步 | `pet/pet.js`, `pet/index.html` | ⬜ |
-| 5 | **game-tick 传 theme** — 宠物窗口接收并切换 body class | `electron/main.cjs`, `pet/pet.js` | ⬜ |
+| 1 | **shimmer 扫描光效** — 宽幅渐变位移动画替代窄带 | `pet/style.css` | ⬜ |
+| 2 | **进度条布局** — 宽度 70%、间距、经验文本 `当前/所需 (百分比%)` | `pet/style.css`, `pet/index.html`, `pet/pet.js` | ⬜ |
+| 3 | **字号加大** — tooltip 11→13、气泡 11→13/220px、info-bar 11→12 | `pet/style.css` | ⬜ |
+| 4 | **info-bar 加称号** — `副本 \| Lv.X \| 称号` | `pet/pet.js` | ⬜ |
+| 5 | **双击 toggle 主窗口** — 单击只 wave，双击才 toggle | `pet/pet.js` | ⬜ |
 
 ---
 
