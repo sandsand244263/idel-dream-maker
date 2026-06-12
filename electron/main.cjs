@@ -476,9 +476,11 @@ function registerIpcHandlers() {
   ipcMain.handle('set-window-mode', (_, { mode }) => {
     if (!mainWindow) return;
     if (mode === 'mini') {
+      mainWindow.setMinimumSize(0, 0);
       mainWindow.setAlwaysOnTop(true);
       mainWindow.setSize(250, 80);
     } else if (mode === 'full') {
+      mainWindow.setMinimumSize(280, 400);
       mainWindow.setAlwaysOnTop(false);
       mainWindow.setSize(320, 840);
       mainWindow.center();
