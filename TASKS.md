@@ -432,9 +432,9 @@ npx electron-builder   # 打包验证
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **shimmer 光效** — 频率 4s、渐变范围调大 | `pet/style.css` | ⬜ |
+| 1 | **shimmer 光效** — `background-position` 渐变位移，3s `ease-in-out`，用 `var(--fg)` | `pet/style.css` | ⬜ |
 | 2 | **位置错乱** — `#container padding-top` 去掉，`#info-bar top:0` | `pet/style.css` | ⬜ |
-| 3 | **双击重复动画** — click 不触发动画，dblclick 统一处理 | `pet/pet.js` | ⬜ |
+| 3 | **双击修复** — click 不触发动画，dblclick 统一处理 | `pet/pet.js` | ⬜ |
 
 ---
 
