@@ -432,7 +432,7 @@ npx electron-builder   # 打包验证
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **气泡/进度条共用区域** — 气泡显示时隐藏 exp-wrap，气泡隐藏时恢复 exp-wrap | `pet/style.css`, `pet/pet.js` | ⬜ |
+| 1 | **zone-hide 恢复 + expWrap 保护 + 宠物窗口位置记忆** | `pet/style.css`, `pet/pet.js`, `electron/pet.cjs` | ⬜ |
 
 ---
 
