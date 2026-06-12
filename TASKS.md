@@ -432,11 +432,9 @@ npx electron-builder   # 打包验证
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **shimmer 扫描光效** — 宽幅渐变位移动画替代窄带 | `pet/style.css` | ⬜ |
-| 2 | **进度条布局** — 宽度 70%、间距、经验文本 `当前/所需 (百分比%)` | `pet/style.css`, `pet/index.html`, `pet/pet.js` | ⬜ |
-| 3 | **字号加大** — tooltip 11→13、气泡 11→13/220px、info-bar 11→12 | `pet/style.css` | ⬜ |
-| 4 | **info-bar 加称号** — `副本 \| Lv.X \| 称号` | `pet/pet.js` | ⬜ |
-| 5 | **双击 toggle 主窗口** — 单击只 wave，双击才 toggle | `pet/pet.js` | ⬜ |
+| 1 | **shimmer 光效** — 频率 4s、渐变范围调大 | `pet/style.css` | ⬜ |
+| 2 | **位置错乱** — `#container padding-top` 去掉，`#info-bar top:0` | `pet/style.css` | ⬜ |
+| 3 | **双击重复动画** — click 不触发动画，dblclick 统一处理 | `pet/pet.js` | ⬜ |
 
 ---
 
