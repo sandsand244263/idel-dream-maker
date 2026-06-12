@@ -432,10 +432,10 @@ npx electron-builder   # 打包验证
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **动画 + 交互重写** — 读 `pet.json` states，按状态前向循环；点击→wave，双击→jump，悬停→tooltip，右键菜单 | `pet/pet.js` (改), `pet/index.html` (改), `pet/style.css` (改) | ⬜ |
-| 2 | **常驻窗口** — 宠物独立 BrowserWindow，启动自启/常驻/透明/置顶/可拖拽 | `electron/pet.cjs` (改), `pet-preload.cjs` (改) | ⬜ |
-| 3 | **事件转发** — `event-triggered`/`level-up`/`achievement-unlocked` 推送到宠物窗口 | `electron/main.cjs` (改), `electron/preload.cjs` (改) | ⬜ |
-| 4 | **主窗口适配** — 「迷你」按钮切换宠物显示/隐藏；移除 `exit-pet-mode` | `src/main.js` (改) | ⬜ |
+| 1 | **动画对齐 PetDex** — 6 帧/行默认，每帧独立时长（首帧/尾帧加倍），前向循环 | `pet/pet.js` | ⬜ |
+| 2 | **UI 精简** — 窗口只留 canvas + 气泡 + tooltip + 右键菜单，canvas 本身可拖拽 | `pet/index.html`, `pet/style.css`, `pet/pet.js` | ⬜ |
+| 3 | **Toggle 切换** — 「迷你」→「宠物」按钮，`toggle-pet-window` IPC | `src/main.js`, `electron/pet.cjs`, `electron/preload.cjs`, `electron/pet-preload.cjs` | ⬜ |
+| 4 | **气泡展开** — 默认 3 行截断，悬停展开全文换行 | `pet/pet.js`, `pet/style.css` | ⬜ |
 
 ---
 
