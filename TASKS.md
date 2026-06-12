@@ -432,8 +432,10 @@ npx electron-builder   # 打包验证
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **canvas-wrap 包裹层** — 气泡相对 canvas 定位；圆点右上角、气泡从圆点下往左展开 + scale 动效 + 脉冲呼吸 | `pet/index.html`, `pet/style.css`, `pet/pet.js` | ⬜ |
-| 2 | **通知队列** — 成就>升级>事件 优先级；悬停暂停、点击关闭播放下一条 | `pet/pet.js` | ⬜ |
+| 1 | **气泡侧边自适应** — 窗口左右侧判断，气泡在容器左/右侧展开，不遮挡宠物 | `pet/index.html`, `pet/style.css`, `pet/pet.js` | ⬜ |
+| 2 | **工具提示移除** — 删除冗余的悬停 tooltip | `pet/index.html`, `pet/style.css`, `pet/pet.js` | ⬜ |
+| 3 | **底部字体加大** — exp-pct/detail 10→11px | `pet/style.css` | ⬜ |
+| 4 | **Debug 强制触发事件** — 跳过概率检查 | `electron/main.cjs`, `electron/preload.cjs`, `src/main.js` | ⬜ |
 
 ---
 
