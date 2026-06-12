@@ -432,7 +432,7 @@ npx electron-builder   # 打包验证
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **zone-hide 恢复 + expWrap 保护 + 宠物窗口位置记忆** | `pet/style.css`, `pet/pet.js`, `electron/pet.cjs` | ⬜ |
+| 1 | **气泡点击展开 + 字号加大 + exp-pct 隐藏** | `pet/pet.js`, `pet/style.css` | ⬜ |
 
 ---
 
