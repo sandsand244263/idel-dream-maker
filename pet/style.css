@@ -17,7 +17,7 @@ body { font-family:var(--font); color:var(--fg); }
 
 /* Canvas wrap */
 #canvas-wrap { position:relative;width:120px;height:140px;flex-shrink:0; }
-#pet-canvas { width:120px;height:140px;image-rendering:pixelated;cursor:grab;display:block; }
+#pet-canvas { width:120px;height:140px;image-rendering:pixelated;cursor:grab;display:block;background:rgba(0,100,0,0.2); }
 
 /* Dot bubble (canvas-wrap top-right) */
 #bubble-dot { position:absolute;top:2px;right:2px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;cursor:pointer;z-index:12;transition:transform 0.2s ease,opacity 0.2s ease;pointer-events:auto; }
