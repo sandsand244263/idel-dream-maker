@@ -1,10 +1,5 @@
-const diag = document.getElementById('diag');
-function d(msg) { if(diag) diag.textContent = msg; }
-d('a0');
 const canvas = document.getElementById('pet-canvas');
-d(canvas?'a1':'a1_no_canvas');
-const ctx = canvas ? canvas.getContext('2d') : null;
-d(ctx?'a2':'a2_no_ctx');
+const ctx = canvas.getContext('2d');
 const dotEl = document.getElementById('bubble-dot');
 const dotSymbol = document.getElementById('dot-symbol');
 const bubbleZone = document.getElementById('bubble-zone');
@@ -21,7 +16,7 @@ canvas.height = 140;
 canvas.style.width = '120px';
 canvas.style.height = '140px';
 
-const FW = 192, FH = 208;
+let FW = 192, FH = 208;
 
 const DEFAULT_STATES = {
   idle:{row:0,frames:6,dur:140,firstMult:2,lastMult:2.3}, wave:{row:1,frames:4,dur:140,firstMult:2,lastMult:2},
@@ -96,12 +91,7 @@ function buildFrames(s){
   for(let i=0;i<n;i++){let d=b;if(i===0)d*=c.firstMult||2;else if(i===n-1)d*=c.lastMult||2;f.push({c:i,r:c.row,d});}
   return f;
 }
-function drawSprite(col,row){
-  if(!spritesheet){d('draw:null');return;}
-  ctx.clearRect(0,0,120,140);
-  ctx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,120,140);
-  d('draw:'+col+','+row);
-}
+function drawSprite(col,row){if(!spritesheet)return;ctx.clearRect(0,0,120,140);ctx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,120,140);}
 function stopAnim(){if(animTimer){clearInterval(animTimer);animTimer=null;}}
 function play(s){
   if(s===curState&&animTimer)return;curState=s;stopAnim();
@@ -121,35 +111,25 @@ function animToIdle(){if(curState!=='idle')play('idle');}
 function calcExpForLevel(lv){if(lv<=1)return 0;return 100*(lv-1)*(lv-1);}
 
 function loadSpritesheet(b64,ext,cfg){
-  if(!b64||b64.length<100){d('nodata');return;}
-  d('loading');
+  if(!b64||b64.length<100)return;
   const img=new Image();
   img.onload=()=>{
-    try{
-      d('onload:'+img.naturalWidth+'x'+img.naturalHeight);
-      spritesheet=img;
-      const iw=img.naturalWidth,ih=img.naturalHeight;
-      if(iw%192===0&&ih%208===0){FW=192;FH=208;}
-      else if(iw%128===0&&ih%128===0){FW=128;FH=128;}
-      else if(iw%64===0&&ih%64===0){FW=64;FH=64;}
-      else{FW=192;FH=208;}
-      cols=Math.floor(iw/FW);rows=Math.floor(ih/FH);
-      stateConfig=cfg||null;
-      play('idle');
-      d('ok');
-      ctx.fillStyle='#FF00FF';ctx.fillRect(0,0,40,40);
-    }catch(e){d('ERR:'+e.message);}
+    spritesheet=img;
+    const iw=img.naturalWidth,ih=img.naturalHeight;
+    if(iw%192===0&&ih%208===0){FW=192;FH=208;}
+    else if(iw%128===0&&ih%128===0){FW=128;FH=128;}
+    else if(iw%64===0&&ih%64===0){FW=64;FH=64;}
+    else{FW=192;FH=208;}
+    cols=Math.floor(iw/FW);rows=Math.floor(ih/FH);
+    stateConfig=cfg||null;
+    play('idle');
   };
-  img.onerror=()=>{d('imgerr');spritesheet=null;};
+  img.onerror=()=>{spritesheet=null;};
   img.src=`data:image/${ext==='.png'?'png':'webp'};base64,${b64}`;
 }
 function loadPet(idx){
-  d('loadPet:'+idx+'/'+pets.length);
-  if(idx<0||idx>=pets.length){d('nopet');return;}
-  window.pet.invoke('get-pet-spritesheet',{index:idx}).then(r=>{
-    d(r?'got:'+(r.data?r.data.length:'0'):'null');
-    if(r)loadSpritesheet(r.data,r.ext,r.config||null);
-  }).catch(e=>{d('ipc:'+e.message);});
+  if(idx<0||idx>=pets.length)return;
+  window.pet.invoke('get-pet-spritesheet',{index:idx}).then(r=>{if(r)loadSpritesheet(r.data,r.ext,r.config||null);}).catch(()=>{});
 }
 
 function updateExpBar(){
@@ -213,10 +193,7 @@ window.pet.on('event-triggered',d=>{transitionTo('wave');nq.enqueue({text:d.text
 window.pet.on('level-up',d=>{gameInfo.title=d.title||gameInfo.title;transitionTo('jump');nq.enqueue({text:`升级! Lv.${d.level}`,type:'levelup'},2);});
 window.pet.on('achievement-unlocked',d=>{transitionTo('extra1');nq.enqueue({text:`${d.icon||'★'} ${d.name}`,type:'achievement'},3);});
 
-window.pet.invoke('scan-pets').then(r=>{
-  d('scanned:'+(r?r.pets?r.pets.length:'nopets':'null'));
-  pets=r.pets||[];selIdx=r.selected||0;loadPet(selIdx);
-}).catch(e=>{d('scan_err:'+(e.message||'?'));});
+window.pet.invoke('scan-pets').then(r=>{pets=r.pets||[];selIdx=r.selected||0;loadPet(selIdx);}).catch(()=>{});
 window.pet.invoke('pet-get-state').then(()=>updateInfoBar()).catch(()=>{});
 
 setInterval(updateExpBar,50);
