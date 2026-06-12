@@ -432,12 +432,11 @@ npx electron-builder   # 打包验证
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **圆圈气泡** — 右上角圆圈符号，悬停 scale 展开全文，缩回缩圈 | `pet/index.html`, `pet/style.css`, `pet/pet.js` | ⬜ |
-| 2 | **左键点击 toggle 主窗口** — 宠物点击显示/隐藏主窗口 | `pet/pet.js`, `electron/pet-preload.cjs`, `electron/pet.cjs`, `electron/preload.cjs` | ⬜ |
-| 3 | **主窗口位置记忆** — 存档读写 `windowX`/`windowY` | `electron/main.cjs` | ⬜ |
-| 4 | **悬浮防抖** — 300ms 延迟才切 review 动画 | `pet/pet.js` | ⬜ |
-| 5 | **EXP 进度条+脉动** — 全局同步 + pulsing 动画 | `pet/index.html`, `pet/style.css`, `pet/pet.js` | ⬜ |
-| 6 | **Canvas 信息叠加** — fillText 副本名+等级 | `pet/pet.js`, `pet/style.css` | ⬜ |
+| 1 | **主题 CSS 变量化** — 5 套主题（green/amber/cold/paper/matrix）驱动宠物窗口全部颜色 | `pet/style.css` | ⬜ |
+| 2 | **Canvas 尺寸对齐** — 统一为 120×140，与外层 CSS 一致 | `pet/pet.js` | ⬜ |
+| 3 | **帧尺寸动态检测** — 读取 spritesheet 实际宽高计算 FW/FH，后备 192×208 | `pet/pet.js` | ⬜ |
+| 4 | **fillText 替换为 DOM** — 移除 Canvas 覆盖层，改用 DOM `#info-bar` 避免主题不同步 | `pet/pet.js`, `pet/index.html` | ⬜ |
+| 5 | **game-tick 传 theme** — 宠物窗口接收并切换 body class | `electron/main.cjs`, `pet/pet.js` | ⬜ |
 
 ---
 
