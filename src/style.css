@@ -5,13 +5,13 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 
 /* ── Titlebar ── */
 #titlebar { display: flex; align-items: center; height: 28px; flex-shrink: 0; background: rgba(0,255,0,0.04); border-bottom: 1px solid var(--dim); user-select: none; }
-#titlebar-drag { flex: 1; display: flex; align-items: center; gap: 6px; padding: 0 8px; height: 100%; cursor: default; font-size: 12px; }
+#titlebar-drag { flex: 1; display: flex; align-items: center; gap: 6px; padding: 0 8px; height: 100%; cursor: default; font-size: 12px; -webkit-app-region: drag; }
 #titlebar-id { color: var(--fg); font-weight: bold; }
 .titlebar-sep { color: var(--dim); font-size: 10px; }
 #titlebar-lv { color: var(--fg); }
 #titlebar-title { color: var(--fg); }
 #titlebar-btns { display: flex; height: 100%; }
-.titlebar-btn { width: 28px; height: 28px; background: transparent; border: none; color: var(--dim); font-family: var(--font); font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.titlebar-btn { width: 28px; height: 28px; background: transparent; border: none; color: var(--dim); font-family: var(--font); font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; -webkit-app-region: no-drag; }
 .titlebar-btn:hover { background: rgba(0,255,0,0.08); color: var(--fg); }
 .titlebar-btn-close:hover { background: rgba(244,67,54,0.3); color: #F44336; }
 

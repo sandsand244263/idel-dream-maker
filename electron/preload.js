@@ -1,0 +1,33 @@
+const { contextBridge, ipcRenderer } = require('electron');
+
+contextBridge.exposeInMainWorld('electron', {
+  invoke: (channel, ...args) => {
+    const validChannels = [
+      'get-full-state', 'get-scenario-list', 'set-player-name',
+      'select-scenario', 'draw-scenario', 'exit-to-hub',
+      'get-hub-titles', 'set-title', 'set-language',
+      'set-ai-output-language', 'set-font-theme',
+      'hide-window', 'start-dragging', 'set-window-mode',
+      'window-minimize', 'window-toggle-maximize',
+      'set-window-position', 'update-tooltip',
+      'get-scenario-detail', 'set-scenario-progress',
+    ];
+    if (validChannels.includes(channel)) {
+      return ipcRenderer.invoke(channel, ...args);
+    }
+    return Promise.reject(new Error(`Invalid channel: ${channel}`));
+  },
+  on: (channel, callback) => {
+    const validChannels = [
+      'game-tick', 'event-triggered', 'level-up',
+      'achievement-unlocked', 'scenario-changed',
+    ];
+    if (validChannels.includes(channel)) {
+      const listener = (_, data) => callback(data);
+      ipcRenderer.on(channel, listener);
+      return () => ipcRenderer.removeListener(channel, listener);
+    }
+    console.warn(`Invalid listen channel: ${channel}`);
+    return () => {};
+  },
+});
