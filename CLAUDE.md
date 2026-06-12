@@ -284,6 +284,7 @@ UI 语言配置：
 |------|---------|
 | Windows | `electron.Tray`（已实现） |
 | macOS | `electron.Tray`（Electron 自动适配菜单栏） |
+| Linux (Ubuntu/Debian/Fedora) | `electron.Tray`（打包时配置 linux target） |
 
 ### 版本路线
 
@@ -293,6 +294,6 @@ UI 语言配置：
 | v0.3.0 ~ v0.3.6 | 大厅架构 + 语言系统 + 托盘/标题栏 + 副本进度保留 | ✅ |
 | v0.3.7 | 副本引擎与废土填充（.md 解析器 + build.rs + 500 事件） | ✅ |
 | **v1.0** | **Electron 迁移（替代 Tauri，Rust → JS，保留前端）** | ⬜ |
-| v1.0+ | 像素宠物窗口 / UI 打磨 / 新副本 | 待定 |
+| v1.0+ | 像素宠物窗口 / UI 打磨 / 新副本 / Linux 打包 | 待定 |
 
 > 注：Tauri 版已废弃（WebView2/Edge v149 不兼容，官方 1.5 年未修）。v1.0 迁移到 Electron。
