@@ -554,6 +554,24 @@ function registerIpcHandlers() {
     return event ? { text: event.text } : null;
   });
 
+  ipcMain.handle('dev-force-trigger-event', () => {
+    if (!currentScenario || !currentScenario.events || gameState.isInHub) return { info: '需要在副本内' };
+    const pool = currentScenario.events.filter(e => {
+      const runtimeHours = gameState.totalRuntimeMs / 3600000;
+      if (e.minLevel && e.minLevel > gameState.level) return false;
+      if (e.minHours && e.minHours > runtimeHours) return false;
+      if (e.once && gameState.triggeredEvents.includes(e.id)) return false;
+      return true;
+    });
+    if (pool.length === 0) return { info: '无可触发的事件' };
+    const choice = pool[Math.floor(Math.random() * pool.length)];
+    if (choice.once) gameState.triggeredEvents.push(choice.id);
+    const evPayload = { id: choice.id, title: choice.title || '事件', color: choice.color || '#FFA500', text: choice.text };
+    try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
+    forwardToPet('event-triggered', evPayload);
+    return { text: choice.text };
+  });
+
   ipcMain.handle('dev-level-up', (_, { levels }) => {
     const gain = levels || 10;
     gameState.totalExpEarned += gain * 100 * gameState.level;

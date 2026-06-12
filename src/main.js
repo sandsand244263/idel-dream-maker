@@ -289,8 +289,8 @@ async function updateTooltip() {
 const debugPanel = document.getElementById('debug-panel'), debugContent = document.getElementById('debug-content'), debugClose = document.getElementById('debug-close');
 debugClose.addEventListener('click', () => debugPanel.classList.add('hidden'));
 document.getElementById('dbg-event').addEventListener('click', async () => {
-  const r = await window.electron.invoke('dev-trigger-event').catch(()=>null);
-  if (r) addLog('event', r.text);
+  const r = await window.electron.invoke('dev-force-trigger-event').catch(()=>null);
+  if (r) addLog('event', r.text || r.info);
 });
 document.getElementById('dbg-levelup').addEventListener('click', async () => {
   const r = await window.electron.invoke('dev-level-up', { levels: 10 }).catch(()=>null);

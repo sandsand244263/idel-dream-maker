@@ -1,8 +1,8 @@
 const canvas = document.getElementById('pet-canvas');
 const ctx = canvas.getContext('2d');
-const tooltip = document.getElementById('tooltip');
 const dotEl = document.getElementById('bubble-dot');
 const dotSymbol = document.getElementById('dot-symbol');
+const bubbleZone = document.getElementById('bubble-zone');
 const bubbleText = document.getElementById('bubble-text');
 const ctxMenu = document.getElementById('ctx-menu');
 const infoText = document.getElementById('info-text');
@@ -39,37 +39,41 @@ class NotificationQueue{
     if(!this.playing)this.next();
   }
   next(){
-    if(this.q.length===0){this.playing=false;this.current=null;return;}
+    if(this.q.length===0){this.playing=false;this.current=null;bubbleZone.className='zone-hidden';return;}
     this.playing=true;
     this.current=this.q.shift();
-    this._show(this.current);
+    this.show(this.current);
   }
-  _show(item){
+  show(item){
     if(item.type==='achievement'){dotSymbol.textContent='★';dotEl.className='dot-achievement';}
     else if(item.type==='levelup'){dotSymbol.textContent='↑';dotEl.className='dot-levelup';}
-    else {dotSymbol.textContent='!';dotEl.className='dot-event';}
+    else{dotSymbol.textContent='!';dotEl.className='dot-event';}
     bubbleText.textContent=item.text;
-    bubbleText.className='bubble-show';
-    if(item.type==='achievement')bubbleText.style.borderColor='#FFD700';
-    else if(item.type==='levelup')bubbleText.style.borderColor='#00FF00';
-    else bubbleText.style.borderColor='#00BFFF';
-    this._startTimer();
+    bubbleZone.className='zone-show';
+    bubbleZone.style.borderColor=item.type==='achievement'?'#FFD700':item.type==='levelup'?'#00FF00':'#00BFFF';
+    this.positionZone();
+    this.startTimer();
   }
-  _startTimer(){
+  positionZone(){
+    const isLeft=(window.screenLeft||0) < (window.screen.availWidth||1920)/2;
+    bubbleZone.style.left=isLeft?'auto':'2px';
+    bubbleZone.style.right=isLeft?'2px':'auto';
+  }
+  startTimer(){
     if(this.timer)clearTimeout(this.timer);
     this.timer=setTimeout(()=>{
-      this.timer=null;bubbleText.className='bubble-hide';
+      this.timer=null;bubbleZone.className='zone-hide';
       setTimeout(()=>{if(!this.paused){dotEl.className='dot-none';dotSymbol.textContent='○';this.next();}},200);
     },6000);
   }
   pause(){this.paused=true;if(this.timer){clearTimeout(this.timer);this.timer=null;}}
   resume(){
     this.paused=false;
-    if(this.current){this._show(this.current);}
+    if(this.current){this.show(this.current);}
   }
   close(){
     if(this.timer){clearTimeout(this.timer);this.timer=null;}
-    bubbleText.className='bubble-hide';
+    bubbleZone.className='zone-hide';
     setTimeout(()=>{dotEl.className='dot-none';dotSymbol.textContent='○';this.next();},200);
   }
 }
@@ -140,12 +144,6 @@ function updateInfoBar(){
   infoText.textContent=title?`${gameInfo.scenario} | Lv.${gameInfo.level} | ${title}`:`${gameInfo.scenario} | Lv.${gameInfo.level}`;
   updateExpBar();
 }
-function updateTooltip(){
-  const e=gameInfo.exp||0,lv=gameInfo.level||1;
-  const nr=calcExpForLevel(lv+1),cr=calcExpForLevel(lv);
-  const pct=nr>cr?Math.min(100,((e-cr)/(nr-cr))*100):0;
-  tooltip.innerHTML=`<b>Lv.${lv}</b> ${gameInfo.title}<br>${gameInfo.scenario} · ${gameInfo.runtime}<br>成就:${gameInfo.ach} · ${Math.round(pct)}%`;
-}
 function applyTheme(theme){
   document.body.className='';
   if(theme&&theme!=='green')document.body.classList.add('theme-'+theme);
@@ -158,21 +156,16 @@ document.addEventListener('mousemove',e=>{if(!dragging)return;const dx=Math.abs(
 document.addEventListener('mouseup',()=>{if(dragging){dragging=false;window.pet.invoke('pet-drag-end').catch(()=>{});}});
 
 // ── Interactions ──
-canvas.addEventListener('mouseenter',()=>{tooltip.classList.remove('hidden');updateTooltip();if(debounceTimer)clearTimeout(debounceTimer);debounceTimer=setTimeout(()=>{transitionTo('review');},300);});
-canvas.addEventListener('mouseleave',()=>{tooltip.classList.add('hidden');if(debounceTimer){clearTimeout(debounceTimer);debounceTimer=null;}setTimeout(()=>{if(curState==='review')animToIdle();},200);});
-canvas.addEventListener('click',()=>{});
 canvas.addEventListener('dblclick',e=>{e.preventDefault();if(!dragMoved){transitionTo('jump');window.pet.invoke('toggle-main-window').catch(()=>{});}});
 canvas.addEventListener('contextmenu',e=>{e.preventDefault();ctxMenu.classList.remove('hidden');const r=canvas.getBoundingClientRect();ctxMenu.style.left=(e.clientX-r.left)+'px';ctxMenu.style.top=(e.clientY-r.top)+'px';});
 document.addEventListener('click',e=>{if(!ctxMenu.contains(e.target))ctxMenu.classList.add('hidden');});
 
-// ── Dot hover — pause/resume timer ──
+// ── Dot hover ──
 dotEl.addEventListener('mouseenter',()=>{nq.pause();});
 dotEl.addEventListener('mouseleave',()=>{nq.resume();});
-bubbleText.addEventListener('mouseenter',()=>{nq.pause();});
-bubbleText.addEventListener('mouseleave',()=>{nq.resume();});
-
-// Click bubble to dismiss
-bubbleText.addEventListener('click',()=>{nq.close();});
+bubbleZone.addEventListener('mouseenter',()=>{nq.pause();});
+bubbleZone.addEventListener('mouseleave',()=>{nq.resume();});
+bubbleZone.addEventListener('click',()=>{nq.close();});
 
 // ── Context menu ──
 document.getElementById('ctx-close').addEventListener('click',()=>{ctxMenu.classList.add('hidden');window.pet.invoke('hide-pet-window').catch(()=>{});});
@@ -191,7 +184,6 @@ window.pet.on('game-tick',d=>{
   gameInfo.ach=(d.unlockedAchievements||[]).length;
   if(d.theme&&d.theme!==gameInfo.theme){gameInfo.theme=d.theme;applyTheme(d.theme);}
   updateInfoBar();
-  if(!tooltip.classList.contains('hidden'))updateTooltip();
 });
 window.pet.on('event-triggered',d=>{transitionTo('wave');nq.enqueue({text:d.text,type:'event'},1);});
 window.pet.on('level-up',d=>{gameInfo.title=d.title||gameInfo.title;transitionTo('jump');nq.enqueue({text:`升级! Lv.${d.level}`,type:'levelup'},2);});
@@ -201,5 +193,4 @@ window.pet.invoke('scan-pets').then(r=>{pets=r.pets||[];selIdx=r.selected||0;loa
 window.pet.invoke('pet-get-state').then(()=>updateInfoBar()).catch(()=>{});
 
 setInterval(updateExpBar,50);
-
 document.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='h')window.pet.invoke('hide-pet-window').catch(()=>{});});
