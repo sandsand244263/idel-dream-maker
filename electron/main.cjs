@@ -4,7 +4,7 @@ const fs = require('fs');
 
 const { createMainWindow, getMainWindow } = require('./windows.cjs');
 const { createTray, setToolTip, getTray } = require('./tray.cjs');
-const { scanPets, registerPetIpcHandlers, forwardGameTickToPet, closePetWindow } = require('./pet.cjs');
+const { registerPetIpcHandlers, forwardToPet, initPet } = require('./pet.cjs');
 
 let mainWindow = null;
 let tray = null;
@@ -232,7 +232,9 @@ function startGameLoop() {
       if (title) {
         currentTitle = title;
         gameState.equippedTitleIndex = currentScenario.titles.indexOf(title);
-        try { mainWindow.webContents.send('level-up', { level: gameState.level, title: title.name, titleColor: title.color, titleDesc: title.desc }); } catch {}
+        const luPayload = { level: gameState.level, title: title.name, titleColor: title.color, titleDesc: title.desc };
+        try { mainWindow.webContents.send('level-up', luPayload); } catch {}
+        forwardToPet('level-up', luPayload);
       } else {
         try { mainWindow.webContents.send('level-up', { level: gameState.level, title: null, titleColor: null, titleDesc: null }); } catch {}
       }
@@ -242,14 +244,18 @@ function startGameLoop() {
     if (Math.random() < delta / 60000) {
       const event = checkAndTriggerEvent();
       if (event) {
-        try { mainWindow.webContents.send('event-triggered', { id: event.id, title: event.title || '事件', color: event.color || '#FFA500', text: event.text }); } catch {}
+        const evPayload = { id: event.id, title: event.title || '事件', color: event.color || '#FFA500', text: event.text };
+        try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
+        forwardToPet('event-triggered', evPayload);
       }
     }
 
     // Achievement check
     const newAchievements = checkAchievements();
     for (const a of newAchievements) {
-      try { mainWindow.webContents.send('achievement-unlocked', { id: a.id, name: a.name, desc: a.desc, icon: a.icon || '★' }); } catch {}
+      const achPayload = { id: a.id, name: a.name, desc: a.desc, icon: a.icon || '★' };
+      try { mainWindow.webContents.send('achievement-unlocked', achPayload); } catch {}
+      forwardToPet('achievement-unlocked', achPayload);
     }
 
     // Send game tick
@@ -269,7 +275,7 @@ function startGameLoop() {
       currentTitle: currentTitle ? currentTitle.name : null,
     };
     try { mainWindow.webContents.send('game-tick', payload); } catch {}
-    forwardGameTickToPet(payload);
+    forwardToPet('game-tick', payload);
 
     // Auto-save every 30s
     if (gameState.totalRuntimeMs % 30000 < delta) {
@@ -581,8 +587,8 @@ app.whenReady().then(() => {
   createWindow();
   setupTray();
   registerIpcHandlers();
-  scanPets(app);
   registerPetIpcHandlers(mainWindow, app);
+  initPet(app);
   startGameLoop();
 
   // Tooltip update every 5s

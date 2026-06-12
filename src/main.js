@@ -122,10 +122,10 @@ aliasConfirm.addEventListener('click', () => { aliasModal.classList.add('hidden'
 aliasInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') aliasConfirm.click(); if (e.key === 'Escape') aliasCancel.click(); });
 
 // ── Pet Window ──
-async function openPetWindow() {
-  try { await window.electron.invoke('enter-pet-mode'); } catch (e) { console.error('pet window error:', e); }
+async function togglePetWindow() {
+  try { await window.electron.invoke('hide-pet-window'); } catch (e) { console.error('pet window error:', e); }
 }
-btnMini.addEventListener('click', () => openPetWindow());
+btnMini.addEventListener('click', () => togglePetWindow());
 
 function getTitleByIndex(idx) {
   if (!currentScenario?.titles) return null;

@@ -27,6 +27,7 @@ function scanPets(app) {
       if (!spritesheet) continue;
       let petName = entry.name;
       let petAuthor = '';
+      let petConfig = null;
       const metaPath = path.join(petDir, 'pet.json');
       if (fs.existsSync(metaPath)) {
         try {
@@ -34,6 +35,7 @@ function scanPets(app) {
           if (meta.displayName) petName = meta.displayName;
           else if (meta.name) petName = meta.name;
           if (meta.author) petAuthor = meta.author;
+          if (meta.states || meta.animations) petConfig = meta.states || meta.animations;
         } catch {}
       }
       currentPetList.push({
@@ -41,6 +43,7 @@ function scanPets(app) {
         name: petName,
         author: petAuthor,
         spritesheet: spritesheet,
+        config: petConfig,
       });
     }
   } catch (e) {
@@ -50,7 +53,6 @@ function scanPets(app) {
 }
 
 function findSpritesheet(dir) {
-  // Try .png first, then .webp
   for (const ext of ['.png', '.webp']) {
     for (const file of ['spritesheet' + ext, 'sprite' + ext, 'sheet' + ext]) {
       const p = path.join(dir, file);
@@ -60,29 +62,23 @@ function findSpritesheet(dir) {
   return null;
 }
 
-function getPetList() {
-  return currentPetList;
+function sendToPet(channel, data) {
+  if (petWindow && !petWindow.isDestroyed()) {
+    try { petWindow.webContents.send(channel, data); } catch {}
+  }
 }
 
-function createPetWindow(mainWindow, app) {
-  if (petWindow) {
-    petWindow.show();
-    petWindow.focus();
-    return petWindow;
-  }
+function createPetWindow(app) {
+  if (petWindow && !petWindow.isDestroyed()) return petWindow;
 
   petWindow = new BrowserWindow({
-    width: 200,
+    width: 192,
     height: 260,
-    minWidth: 150,
-    minHeight: 200,
-    maxWidth: 400,
-    maxHeight: 500,
     frame: false,
     transparent: true,
     alwaysOnTop: true,
-    show: false,
-    resizable: true,
+    show: true,
+    resizable: false,
     skipTaskbar: true,
     webPreferences: {
       preload: path.join(__dirname, 'pet-preload.cjs'),
@@ -93,39 +89,13 @@ function createPetWindow(mainWindow, app) {
 
   petWindow.loadFile(path.join(__dirname, '..', 'pet', 'index.html'));
 
-  petWindow.on('closed', () => {
-    petWindow = null;
-  });
-
+  petWindow.on('closed', () => { petWindow = null; });
   return petWindow;
 }
 
-function closePetWindow() {
-  if (petWindow) {
-    petWindow.close();
-    petWindow = null;
-  }
-}
-
-function sendToPet(channel, data) {
-  if (petWindow && !petWindow.isDestroyed()) {
-    try { petWindow.webContents.send(channel, data); } catch {}
-  }
-}
-
 function registerPetIpcHandlers(mainWindow, app) {
-  ipcMain.handle('enter-pet-mode', () => {
-    const win = createPetWindow(mainWindow, app);
-    win.show();
-    mainWindow.hide();
-    sendToPet('pet-list', { pets: currentPetList, selected: selectedPetIndex });
-    return true;
-  });
-
-  ipcMain.handle('exit-pet-mode', () => {
-    closePetWindow();
-    mainWindow.show();
-    mainWindow.focus();
+  ipcMain.handle('hide-pet-window', () => {
+    if (petWindow && !petWindow.isDestroyed()) petWindow.hide();
     return true;
   });
 
@@ -148,26 +118,20 @@ function registerPetIpcHandlers(mainWindow, app) {
 
   ipcMain.handle('pet-drag-start', (_, { offsetX, offsetY }) => {
     if (petWindow && !petWindow.isDestroyed()) {
-      const bounds = petWindow.getBounds();
       petWindow._dragOffset = { x: offsetX, y: offsetY };
-      petWindow._dragBounds = bounds;
     }
     return true;
   });
 
   ipcMain.handle('pet-drag-move', (_, { screenX, screenY }) => {
     if (petWindow && !petWindow.isDestroyed() && petWindow._dragOffset) {
-      const nx = screenX - petWindow._dragOffset.x;
-      const ny = screenY - petWindow._dragOffset.y;
-      petWindow.setPosition(nx, ny);
+      petWindow.setPosition(screenX - petWindow._dragOffset.x, screenY - petWindow._dragOffset.y);
     }
     return true;
   });
 
   ipcMain.handle('pet-drag-end', () => {
-    if (petWindow) {
-      petWindow._dragOffset = null;
-    }
+    if (petWindow) petWindow._dragOffset = null;
     return true;
   });
 
@@ -176,15 +140,26 @@ function registerPetIpcHandlers(mainWindow, app) {
       const pet = currentPetList[index];
       try {
         const data = fs.readFileSync(pet.spritesheet);
-        return { data: data.toString('base64'), ext: path.extname(pet.spritesheet) };
+        return { data: data.toString('base64'), ext: path.extname(pet.spritesheet), config: pet.config || null };
       } catch {}
     }
     return null;
   });
 }
 
-function forwardGameTickToPet(payload) {
-  sendToPet('game-tick', payload);
+function forwardToPet(channel, payload) {
+  sendToPet(channel, payload);
 }
 
-module.exports = { scanPets, getPetList, registerPetIpcHandlers, forwardGameTickToPet, closePetWindow };
+function showPetWindow() {
+  if (petWindow && !petWindow.isDestroyed()) petWindow.show();
+}
+
+function initPet(app) {
+  scanPets(app);
+  const win = createPetWindow(app);
+  sendToPet('pet-list', { pets: currentPetList, selected: selectedPetIndex });
+  return win;
+}
+
+module.exports = { scanPets, registerPetIpcHandlers, forwardToPet, showPetWindow, initPet };

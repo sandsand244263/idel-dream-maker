@@ -3,9 +3,9 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('pet', {
   invoke: (channel, ...args) => {
     const validChannels = [
-      'enter-pet-mode', 'exit-pet-mode', 'scan-pets', 'select-pet',
-      'pet-get-state', 'pet-drag-start', 'pet-drag-move', 'pet-drag-end',
-      'get-pet-spritesheet',
+      'scan-pets', 'select-pet', 'pet-get-state',
+      'pet-drag-start', 'pet-drag-move', 'pet-drag-end',
+      'get-pet-spritesheet', 'hide-pet-window',
     ];
     if (validChannels.includes(channel)) {
       return ipcRenderer.invoke(channel, ...args);
@@ -13,7 +13,10 @@ contextBridge.exposeInMainWorld('pet', {
     return Promise.reject(new Error(`Invalid pet channel: ${channel}`));
   },
   on: (channel, callback) => {
-    const validChannels = ['game-tick', 'pet-list', 'pet-selected'];
+    const validChannels = [
+      'game-tick', 'pet-list', 'pet-selected',
+      'event-triggered', 'level-up', 'achievement-unlocked',
+    ];
     if (validChannels.includes(channel)) {
       const listener = (_, data) => callback(data);
       ipcRenderer.on(channel, listener);

@@ -11,27 +11,27 @@
     <div id="title-bar">
       <span id="pet-name">Pet</span>
       <div id="title-btns">
-        <button id="btn-expand">◀</button>
-        <button id="btn-close">×</button>
+        <span id="btn-prev" class="nav-btn">◀</span>
+        <span id="btn-next" class="nav-btn">▶</span>
+        <span id="btn-close" class="close-btn">×</span>
       </div>
     </div>
     <div id="canvas-wrap">
       <canvas id="pet-canvas"></canvas>
-    </div>
-    <div id="info-bar">
-      <span id="info-level">Lv.1</span>
-      <span id="info-title">—</span>
-    </div>
-    <div id="exp-bar-bg">
-      <div id="exp-bar-fill" style="width:0%"></div>
+      <div id="tooltip" class="tooltip-hidden"></div>
+      <div id="bubble" class="bubble-hidden"></div>
+      <div id="ctx-menu">
+        <div id="ctx-prev">◀ 上一个宠物</div>
+        <div id="ctx-next">下一个宠物 ▶</div>
+        <div class="ctx-sep"></div>
+        <div id="ctx-close">× 隐藏</div>
+      </div>
     </div>
     <div id="pet-select-bar">
-      <button id="btn-prev">◀</button>
-      <span id="pet-select-name">—</span>
-      <button id="btn-next">▶</button>
+      <span id="pet-slug"></span>
+      <span id="disclaimer">ⓘ</span>
     </div>
   </div>
-  <div id="disclaimer" title="宠物精灵由玩家自行从 PetDex 社区获取，版权归原作者或 IP 权利人所有">ⓘ</div>
   <script src="pet.js"></script>
 </body>
 </html>
