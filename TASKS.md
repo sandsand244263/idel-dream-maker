@@ -432,7 +432,8 @@ npx electron-builder   # 打包验证
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **纯 flex 布局** — 去掉所有 `position:absolute`，info-bar/canvas/exp-wrap 全用 flex 自然堆叠 | `pet/style.css`, `electron/pet.cjs` | ⬜ |
+| 1 | **canvas-wrap 包裹层** — 气泡相对 canvas 定位；圆点右上角、气泡从圆点下往左展开 + scale 动效 + 脉冲呼吸 | `pet/index.html`, `pet/style.css`, `pet/pet.js` | ⬜ |
+| 2 | **通知队列** — 成就>升级>事件 优先级；悬停暂停、点击关闭播放下一条 | `pet/pet.js` | ⬜ |
 
 ---
 
