@@ -432,10 +432,12 @@ npx electron-builder   # 打包验证
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **动画修复** — `transitionTo` clearTimeout，避免状态覆盖 | `pet/pet.js` | ⬜ |
-| 2 | **拖拽算法重写** — 前端算窗口偏移，后端直接 `setPosition` | `pet/pet.js`, `electron/pet.cjs` | ⬜ |
-| 3 | **按钮文字** — HTML 硬编码 `迷你`→`宠物` | `index.html` | ⬜ |
-| 4 | **开发者调试** — Ctrl+Shift+D 面板增加触发按钮（事件/升级/成就/时长） | `src/main.js`, `electron/main.cjs`, `electron/preload.cjs` | ⬜ |
+| 1 | **圆圈气泡** — 右上角圆圈符号，悬停 scale 展开全文，缩回缩圈 | `pet/index.html`, `pet/style.css`, `pet/pet.js` | ⬜ |
+| 2 | **左键点击 toggle 主窗口** — 宠物点击显示/隐藏主窗口 | `pet/pet.js`, `electron/pet-preload.cjs`, `electron/pet.cjs`, `electron/preload.cjs` | ⬜ |
+| 3 | **主窗口位置记忆** — 存档读写 `windowX`/`windowY` | `electron/main.cjs` | ⬜ |
+| 4 | **悬浮防抖** — 300ms 延迟才切 review 动画 | `pet/pet.js` | ⬜ |
+| 5 | **EXP 进度条+脉动** — 全局同步 + pulsing 动画 | `pet/index.html`, `pet/style.css`, `pet/pet.js` | ⬜ |
+| 6 | **Canvas 信息叠加** — fillText 副本名+等级 | `pet/pet.js`, `pet/style.css` | ⬜ |
 
 ---
 
