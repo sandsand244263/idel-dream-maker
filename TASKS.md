@@ -432,10 +432,10 @@ npx electron-builder   # 打包验证
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **动画对齐 PetDex** — 6 帧/行默认，每帧独立时长（首帧/尾帧加倍），前向循环 | `pet/pet.js` | ⬜ |
-| 2 | **UI 精简** — 窗口只留 canvas + 气泡 + tooltip + 右键菜单，canvas 本身可拖拽 | `pet/index.html`, `pet/style.css`, `pet/pet.js` | ⬜ |
-| 3 | **Toggle 切换** — 「迷你」→「宠物」按钮，`toggle-pet-window` IPC | `src/main.js`, `electron/pet.cjs`, `electron/preload.cjs`, `electron/pet-preload.cjs` | ⬜ |
-| 4 | **气泡展开** — 默认 3 行截断，悬停展开全文换行 | `pet/pet.js`, `pet/style.css` | ⬜ |
+| 1 | **动画修复** — `transitionTo` clearTimeout，避免状态覆盖 | `pet/pet.js` | ⬜ |
+| 2 | **拖拽算法重写** — 前端算窗口偏移，后端直接 `setPosition` | `pet/pet.js`, `electron/pet.cjs` | ⬜ |
+| 3 | **按钮文字** — HTML 硬编码 `迷你`→`宠物` | `index.html` | ⬜ |
+| 4 | **开发者调试** — Ctrl+Shift+D 面板增加触发按钮（事件/升级/成就/时长） | `src/main.js`, `electron/main.cjs`, `electron/preload.cjs` | ⬜ |
 
 ---
 
