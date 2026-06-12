@@ -16,7 +16,7 @@ const LANG = {
     systemEnterFail: '进入副本失败', systemDrawFail: '抽取失败', systemBackFail: '返回失败',
     systemLevelUp: '等级 {0}！{1}',
     systemEntered: '进入: {0}', systemDrew: '抽到并进入: {0}', systemBack: '返回大厅 — 大厅 Lv.{0}',
-    logStartHub: 'Idel-DreamMaker v0.3.5 启动完成',
+    logStartHub: '启动完成',
     logStartScenario: '已挂机 {0}，等级 {1}',
     scenarioEvent: '事件', scenarioAchievement: '成就', statusHub: '（大厅）', statusNone: '-',
     aliasTitle: '进入副本', aliasPlaceholder: '输入名称（留空用默认）',
@@ -38,7 +38,7 @@ const LANG = {
     systemEnterFail: 'Failed to enter', systemDrawFail: 'Draw failed', systemBackFail: 'Failed to return',
     systemLevelUp: 'Level {0}! {1}',
     systemEntered: 'Entered: {0}', systemDrew: 'Drew & entered: {0}', systemBack: 'Back to Hub — Hub Lv.{0}',
-    logStartHub: 'Idel-DreamMaker v0.3.5 ready',
+    logStartHub: 'Ready',
     logStartScenario: 'Running {0}, level {1}',
     scenarioEvent: 'Events', scenarioAchievement: 'Achievements', statusHub: '(Hub)', statusNone: '-',
     aliasTitle: 'Enter Scenario', aliasPlaceholder: 'Enter a name (leave empty for default)',
@@ -50,7 +50,7 @@ const LANG = {
 function t(key) { const l = gameState?.language || 'zh'; return LANG[l]?.[key] ?? LANG.zh[key] ?? key; }
 function tf(key, ...args) { let s = t(key); args.forEach((a, i) => { s = s.replace(`{${i}}`, String(a)); }); return s; }
 
-let gameState = null, scenarioList = [], currentScenario = null, currentTitle = null, hubLevel = 1;
+let gameState = null, scenarioList = [], currentScenario = null, currentTitle = null, hubLevel = 1, appVersion = '1.0.0';
 let eventDismissTimer = null, achievementDismissTimer = null;
 let isMiniMode = false;
 let lastRuntime = 0;
@@ -166,7 +166,7 @@ async function init() {
   try {
     const full = await window.electron.invoke('get-full-state');
     gameState = full.game; currentScenario = full.scenario; currentTitle = full.currentTitle;
-    hubLevel = full.hubLevel || 1; scenarioList = await window.electron.invoke('get-scenario-list');
+    hubLevel = full.hubLevel || 1; appVersion = full.appVersion || '1.0.0'; scenarioList = await window.electron.invoke('get-scenario-list');
   } catch (e) { addLog('system', `${t('systemInitFail')}: ${e}`); }
   updateUI(); renderHubView(); switchView(gameState?.is_in_hub !== false);
   window.electron.on('game-tick', (event) => {
@@ -244,7 +244,7 @@ function updatePermaStatus() {
   const ach = gameState.unlockedAchievements?.length || 0;
   const dl = gameState.is_in_hub ? `Hub Lv.${hubLevel}` : `Lv.${gameState.level}`;
   const sc = currentScenario?.nameCN || 'Hub';
-  permaStatus.innerHTML = `v0.3.6 | ${gameState.player_name} | ${sc}<br>${dl} | ${currentTitle?.name || '?'} | ${rt} | 成就:${ach}`;
+  permaStatus.innerHTML = `${appVersion} | ${gameState.player_name} | ${sc}<br>${dl} | ${currentTitle?.name || '?'} | ${rt} | 成就:${ach}`;
 }
 
 function addLog(type, message) {
@@ -331,8 +331,8 @@ document.addEventListener('keydown', (e) => {
 });
 
 init().then(() => {
-  document.title = 'Idel-DreamMaker'; applyTheme(gameState?.selected_font_theme || 'green');
-  if (gameState?.is_in_hub) addLog('system', t('logStartHub'));
+  document.title = `Idel-DreamMaker v${appVersion}`; applyTheme(gameState?.selected_font_theme || 'green');
+  if (gameState?.is_in_hub) addLog('system', `Idel-DreamMaker v${appVersion} ${t('logStartHub')}`);
   else if (gameState) { switchView(false); addLog('info', tf('logStartScenario', formatRuntime(gameState.total_runtime_ms), gameState.level)); }
   updateUI(); updateTooltip(); setInterval(updateTooltip, 5000);
 });
