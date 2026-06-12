@@ -1,25 +1,16 @@
-const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage } = require('electron');
+const { app, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
+
+const { createMainWindow, getMainWindow } = require('./windows.cjs');
+const { createTray, setToolTip, getTray } = require('./tray.cjs');
 
 let mainWindow = null;
 let tray = null;
 let isQuitting = false;
 
 function createWindow() {
-  mainWindow = new BrowserWindow({
-    width: 320,
-    height: 840,
-    minWidth: 280,
-    minHeight: 400,
-    frame: false,
-    show: false,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      contextIsolation: true,
-      nodeIntegration: false,
-    },
-  });
+  mainWindow = createMainWindow(path.join(__dirname, 'preload.cjs'));
 
   if (app.isPackaged) {
     mainWindow.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
@@ -27,52 +18,17 @@ function createWindow() {
     mainWindow.loadURL('http://localhost:1420');
   }
 
+  mainWindow._isQuitting = false;
   mainWindow.on('close', (e) => {
-    if (!isQuitting) {
+    if (!isQuitting && !mainWindow._isQuitting) {
       e.preventDefault();
       mainWindow.hide();
     }
   });
-}
+} 
 
-function createTray() {
-  const iconPath = path.join(__dirname, '..', 'src-tauri', 'icons', '32x32.png');
-  const icon = nativeImage.createFromPath(iconPath);
-  tray = new Tray(icon);
-
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: 'Show/Hide',
-      click: () => {
-        if (mainWindow.isVisible()) {
-          mainWindow.hide();
-        } else {
-          mainWindow.show();
-          mainWindow.focus();
-        }
-      },
-    },
-    { type: 'separator' },
-    {
-      label: 'Quit',
-      click: () => {
-        isQuitting = true;
-        app.quit();
-      },
-    },
-  ]);
-
-  tray.setToolTip('Idel-DreamMaker');
-  tray.setContextMenu(contextMenu);
-
-  tray.on('click', () => {
-    if (mainWindow.isVisible()) {
-      mainWindow.hide();
-    } else {
-      mainWindow.show();
-      mainWindow.focus();
-    }
-  });
+function setupTray() {
+  tray = createTray(mainWindow);
 }
 
 function getAppDataPath() {
@@ -540,7 +496,7 @@ function registerIpcHandlers() {
   });
 
   ipcMain.handle('update-tooltip', (_, { text }) => {
-    if (tray) tray.setToolTip(text);
+    setToolTip(text);
     return true;
   });
 
@@ -610,7 +566,7 @@ app.whenReady().then(() => {
   hubLevel = calcLevel(gameState.hubTotalExp);
 
   createWindow();
-  createTray();
+  setupTray();
   registerIpcHandlers();
   startGameLoop();
 
@@ -626,7 +582,7 @@ app.whenReady().then(() => {
     const title = currentTitle ? currentTitle.name : '?';
     const lv = gameState.isInHub ? `大厅 Lv.${hubLevel}` : `Lv.${gameState.level}`;
     const sc = currentScenario ? (currentScenario.name_cn || currentScenario.nameCN || currentScenario.name) : (gameState.isInHub ? '大厅' : '?');
-    tray.setToolTip(`${gameState.playerName} | ${sc}\n${lv} | ${title} | ${rtStr}`);
+    setToolTip(`${gameState.playerName} | ${sc}\n${lv} | ${title} | ${rtStr}`);
   }, 5000);
 });
 
