@@ -6,9 +6,28 @@ let petWindow = null;
 let currentPetList = [];
 let selectedPetIndex = 0;
 
+function getAppDir(app) {
+  return path.join(app.getPath('appData'), 'Idel-DreamMaker');
+}
+
 function getPetsDir(app) {
-  const base = app.getPath('appData');
-  return path.join(base, 'Idel-DreamMaker', 'pets');
+  return path.join(getAppDir(app), 'pets');
+}
+
+function getPetPos(app) {
+  try {
+    const p = path.join(getAppDir(app), 'pet_position.json');
+    if (!fs.existsSync(p)) return null;
+    return JSON.parse(fs.readFileSync(p, 'utf-8'));
+  } catch { return null; }
+}
+
+function savePetPos(x, y, app) {
+  try {
+    const dir = getAppDir(app);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'pet_position.json'), JSON.stringify({ x, y }), 'utf-8');
+  } catch {}
 }
 
 function scanPets(app) {
@@ -89,6 +108,12 @@ function createPetWindow(app) {
 
   petWindow.loadFile(path.join(__dirname, '..', 'pet', 'index.html'));
 
+  // Restore position
+  const pos = getPetPos(app);
+  if (pos && typeof pos.x === 'number') {
+    petWindow.setPosition(pos.x, pos.y);
+  }
+
   petWindow.on('closed', () => { petWindow = null; });
   return petWindow;
 }
@@ -139,6 +164,7 @@ function registerPetIpcHandlers(mainWindow, app) {
   ipcMain.handle('pet-drag-move', (_, { x, y }) => {
     if (petWindow && !petWindow.isDestroyed()) {
       petWindow.setPosition(x, y);
+      savePetPos(x, y, app);
     }
     return true;
   });

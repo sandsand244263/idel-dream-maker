@@ -57,7 +57,7 @@ class NotificationQueue{
     this.timer=setTimeout(()=>{
       this.timer=null;dotEl.className='dot-none';dotSymbol.textContent='○';
       bubbleZone.className='zone-hide';
-      expWrap.style.display='flex';
+      if(expWrap)expWrap.style.display='flex';
       setTimeout(()=>{this.next();},200);
     },6000);
   }
@@ -66,16 +66,16 @@ class NotificationQueue{
     bubbleText.textContent=this.current.text;
     bubbleZone.className='zone-show';
     bubbleZone.style.borderLeftColor=this.current.type==='achievement'?'#FFD700':this.current.type==='levelup'?'#00FF00':'#00BFFF';
-    expWrap.style.display='none';
+    if(expWrap)expWrap.style.display='none';
   }
   hideBubble(){
     bubbleZone.className='zone-hide';
-    expWrap.style.display='flex';
+    if(expWrap)expWrap.style.display='flex';
   }
   close(){
     if(this.timer){clearTimeout(this.timer);this.timer=null;}
     bubbleZone.className='zone-hide';
-    expWrap.style.display='flex';
+    if(expWrap)expWrap.style.display='flex';
     setTimeout(()=>{dotEl.className='dot-none';dotSymbol.textContent='○';this.next();},200);
   }
 }
