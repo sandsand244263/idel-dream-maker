@@ -116,8 +116,11 @@ function animToIdle(){if(curState!=='idle')play('idle');}
 function calcExpForLevel(lv){if(lv<=1)return 0;return 100*(lv-1)*(lv-1);}
 
 function loadSpritesheet(b64,ext,cfg){
+  if(!b64||b64.length<100){d('nodata');return;}
+  d('loading');
   const img=new Image();
   img.onload=()=>{
+    d('onload:'+img.naturalWidth+'x'+img.naturalHeight);
     spritesheet=img;
     const iw=img.naturalWidth,ih=img.naturalHeight;
     if(iw%192===0&&ih%208===0){FW=192;FH=208;}
@@ -127,13 +130,7 @@ function loadSpritesheet(b64,ext,cfg){
     cols=Math.floor(iw/FW);rows=Math.floor(ih/FH);
     stateConfig=cfg||null;play('idle');
   };
-  img.onerror=()=>{
-    spritesheet=null;ctx.clearRect(0,0,120,140);
-    ctx.fillStyle='rgba(255,0,0,0.3)';ctx.fillRect(0,0,120,140);
-    ctx.fillStyle='#FF0000';ctx.font='10px monospace';ctx.textAlign='center';
-    ctx.fillText('img error',60,70);
-  };
-  if(!b64||b64.length<100){ctx.fillStyle='#FF0000';ctx.font='10px monospace';ctx.textAlign='center';ctx.fillText('no data',60,70);return;}
+  img.onerror=()=>{d('imgerr');spritesheet=null;};
   img.src=`data:image/${ext==='.png'?'png':'webp'};base64,${b64}`;
 }
 function loadPet(idx){
