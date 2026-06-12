@@ -432,9 +432,7 @@ npx electron-builder   # 打包验证
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **shimmer 光效** — `background-position` 渐变位移，3s `ease-in-out`，用 `var(--fg)` | `pet/style.css` | ⬜ |
-| 2 | **位置错乱** — `#container padding-top` 去掉，`#info-bar top:0` | `pet/style.css` | ⬜ |
-| 3 | **双击修复** — click 不触发动画，dblclick 统一处理 | `pet/pet.js` | ⬜ |
+| 1 | **纯 flex 布局** — 去掉所有 `position:absolute`，info-bar/canvas/exp-wrap 全用 flex 自然堆叠 | `pet/style.css`, `electron/pet.cjs` | ⬜ |
 
 ---
 
