@@ -65,7 +65,8 @@ class NotificationQueue{
   close(){
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
-    setTimeout(()=>{dotEl.className='dot-none';dotSymbol.textContent='○';this.next();},200);
+    dotEl.className='dot-none';dotSymbol.textContent='○';
+    this.next();
   }
   clearQueue(){
     this.q=[];
@@ -169,7 +170,7 @@ bubbleZone.addEventListener('click',(e)=>{
   e.stopPropagation();
   nq.close();
 });
-document.addEventListener('click',()=>{nq.hideBubble();});
+document.addEventListener('click',()=>{if(bubbleZone.className==='zone-show')nq.close();});
 
 // ── Context menu ──
 document.getElementById('ctx-close').addEventListener('click',()=>{ctxMenu.classList.add('hidden');window.pet.invoke('hide-pet-window').catch(()=>{});});
