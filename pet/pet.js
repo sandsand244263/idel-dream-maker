@@ -50,9 +50,14 @@ class NotificationQueue{
     else{dotSymbol.textContent='!';dotEl.className='dot-event';}
     bubbleText.textContent=item.text;
     bubbleZone.className='zone-show';
-    bubbleZone.style.borderLeftColor=item.type==='achievement'?'#FFD700':item.type==='levelup'?'#00FF00':'#00BFFF';
-    bubbleZone.style.right='0';
+    bubbleZone.style.borderColor=item.type==='achievement'?'#FFD700':item.type==='levelup'?'#00FF00':'#00BFFF';
+    this.positionZone();
     this.startTimer();
+  }
+  positionZone(){
+    const isLeft=(window.screenLeft||0) < (window.screen.availWidth||1920)/2;
+    bubbleZone.style.left=isLeft?'auto':'2px';
+    bubbleZone.style.right=isLeft?'2px':'auto';
   }
   startTimer(){
     if(this.timer)clearTimeout(this.timer);
