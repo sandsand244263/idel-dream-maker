@@ -442,7 +442,7 @@ npx electron-builder   # 打包验证
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **气泡自适应高度** — showBubble 动态计算高度、IPC resize 窗口 | `pet/pet.js`, `electron/pet-preload.cjs`, `electron/pet.cjs` | ⬜ |
+| 1 | **标题居中 + scrollHeight 延迟测量** — innerHTML + rAF | `pet/pet.js` | ⬜ |
 
 ---
 
