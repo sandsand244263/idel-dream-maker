@@ -51,7 +51,7 @@ function positionAndShowSelector() {
 }
 
 function doShowSelector() {
-  if (!selectorWindow || !selectorWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) return;
+  if (!selectorWindow || selectorWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) return;
   const petBounds = petWindowRef.getBounds();
   const selWidth = 180;
   const selHeight = Math.min(240, Math.max(120, (currentPetList.length || 1) * 32 + 60));

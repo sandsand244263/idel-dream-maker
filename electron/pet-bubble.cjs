@@ -50,7 +50,7 @@ function positionAndShowBubble(data) {
 }
 
 function doShowBubble(data) {
-  if (!bubbleWindow || !bubbleWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) return;
+  if (!bubbleWindow || bubbleWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) return;
   const petBounds = petWindowRef.getBounds();
   const bw = 260, bh = 120;
   const screen = require('electron').screen.getPrimaryDisplay().workAreaSize;
