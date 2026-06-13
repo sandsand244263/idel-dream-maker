@@ -215,8 +215,12 @@ function renderPetList() {
 let petListTimer = null;
 document.getElementById('ctx-select-pet').addEventListener('mouseenter', () => {
   if (petListTimer) clearTimeout(petListTimer);
+  const el = document.getElementById('ctx-pet-list');
+  const menuRect = ctxMenu.getBoundingClientRect();
+  el.style.left = menuRect.right + 'px';
+  el.style.top = menuRect.top + 'px';
   renderPetList();
-  document.getElementById('ctx-pet-list').classList.add('show');
+  el.classList.add('show');
 });
 document.getElementById('ctx-select-pet').addEventListener('mouseleave', () => {
   petListTimer = setTimeout(() => {
