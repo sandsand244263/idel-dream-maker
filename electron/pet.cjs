@@ -4,6 +4,7 @@ const fs = require('fs');
 
 const { registerSelectorIpcHandlers, initSelector } = require('./pet-selector.cjs');
 const { registerBubbleIpcHandlers, initBubble } = require('./pet-bubble.cjs');
+const { initContextMenu, registerContextMenuIpcHandlers, showContextMenu } = require('./pet-context-menu.cjs');
 
 let petWindow = null;
 let currentPetList = [];
@@ -205,8 +206,14 @@ function registerPetIpcHandlers(mainWindow, app) {
     return true;
   });
 
+  ipcMain.handle('show-context-menu', () => {
+    showContextMenu();
+    return true;
+  });
+
   registerSelectorIpcHandlers(app);
   registerBubbleIpcHandlers(app);
+  registerContextMenuIpcHandlers();
 }
 
 function forwardToPet(channel, payload) {
@@ -229,6 +236,7 @@ function initPet(app) {
   const win = createPetWindow(app);
   initSelector(app, win);
   initBubble(app, win);
+  initContextMenu(app, win);
   sendToPet('pet-list', { pets: currentPetList, selected: selectedPetIndex });
   return win;
 }

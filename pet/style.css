@@ -37,17 +37,6 @@ body { font-family:var(--font); color:var(--fg); }
 #bubble-zone.zone-hide { display:none; }
 #bubble-zone.zone-hidden { display:none; }
 
-/* Context menu */
-#ctx-overlay { position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;pointer-events:none; }
-#ctx-overlay.hidden { display:none; }
-#ctx-menu { position:absolute;pointer-events:auto;background:color-mix(in srgb,var(--bg) 95%,transparent);border:1px solid var(--border-color);border-radius:4px;padding:4px 0;min-width:150px;z-index:20;font-size:11px; }
-#ctx-menu .ctx-item { padding:5px 14px;cursor:pointer;color:color-mix(in srgb,var(--fg) 70%,transparent); }
-#ctx-menu .ctx-item:hover { background:color-mix(in srgb,var(--fg) 10%,transparent); color:var(--fg); }
-#ctx-menu .ctx-item.ctx-on { color:var(--fg); }
-#ctx-menu .ctx-item.ctx-off { color:color-mix(in srgb,var(--fg) 35%,transparent); }
-.ctx-sep { height:1px;background:color-mix(in srgb,var(--fg) 10%,transparent);margin:3px 10px;padding:0!important;cursor:default!important; }
-#ctx-select-pet { position:relative; }
-
 /* EXP progress bar */
 #exp-wrap { display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0; }
 #exp-track { width:70%;height:8px;background:color-mix(in srgb,var(--fg) 6%,transparent);border-radius:4px;overflow:hidden; }

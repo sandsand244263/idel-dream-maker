@@ -1,0 +1,10 @@
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html,body { width:100%;background:transparent;user-select:none;font-family:'MapleMonoNFCN','Courier New',monospace; }
+:root { --fg:#00FF00; --dim:#00AA00; --bg:rgba(10,10,10,0.85); --border:rgba(0,255,0,0.2); }
+#container { background:var(--bg);border:1px solid var(--border);border-radius:6px;overflow:hidden; }
+.ctx-item { padding:5px 14px;cursor:pointer;color:color-mix(in srgb,var(--fg) 70%,transparent);font-size:11px;white-space:nowrap; }
+.ctx-item:hover { background:color-mix(in srgb,var(--fg) 10%,transparent);color:var(--fg); }
+.ctx-item.ctx-on { color:var(--fg); }
+.ctx-item.ctx-off { color:color-mix(in srgb,var(--fg) 35%,transparent); }
+.ctx-arrow { float:right; }
+.ctx-sep { height:1px;background:color-mix(in srgb,var(--fg) 10%,transparent);margin:3px 10px; }

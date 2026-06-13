@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>菜单</title>
+  <style>
+    @font-face { font-family:'MapleMonoNFCN'; src:url('../public/fonts/MapleMono-NF-CN-Regular.ttf') format('truetype'); font-weight:normal; font-style:normal; }
+    @font-face { font-family:'MapleMonoNFCN'; src:url('../public/fonts/MapleMono-NF-CN-Bold.ttf') format('truetype'); font-weight:bold; font-style:normal; }
+  </style>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="container">
+    <div class="ctx-item" id="ctx-select-pet">选择宠物 <span class="ctx-arrow">&#9654;</span></div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item ctx-toggle" id="ctx-toggle-border">&#10003; 显示边框</div>
+    <div class="ctx-item ctx-toggle" id="ctx-toggle-infobar">&#10003; 信息栏</div>
+    <div class="ctx-item ctx-toggle" id="ctx-toggle-expbar">&#10003; 进度条</div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item" id="ctx-open-folder">打开宠物文件夹</div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item" id="ctx-close">&#10005; 隐藏</div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -2,10 +2,6 @@ const canvas = document.getElementById('pet-canvas');
 const ctx = canvas.getContext('2d');
 const dotEl = document.getElementById('bubble-dot');
 const dotSymbol = document.getElementById('dot-symbol');
-const bubbleZone = document.getElementById('bubble-zone');
-const bubbleText = document.getElementById('bubble-text');
-const ctxMenu = document.getElementById('ctx-menu');
-const ctxOverlay = document.getElementById('ctx-overlay');
 const infoText = document.getElementById('info-text');
 const expFill = document.getElementById('exp-fill');
 const expWrap = document.getElementById('exp-wrap');
@@ -165,8 +161,7 @@ document.addEventListener('mouseup',()=>{if(dragging){dragging=false;window.pet.
 // ── Interactions ──
 canvas.addEventListener('click',()=>{if(!dragMoved)transitionTo('wave');});
 canvas.addEventListener('dblclick',e=>{e.preventDefault();if(!dragMoved){transitionTo('jump');window.pet.invoke('toggle-main-window').catch(()=>{});}});
-canvas.addEventListener('contextmenu',e=>{e.preventDefault();ctxMenu.style.left=e.clientX+'px';ctxMenu.style.top=e.clientY+'px';ctxOverlay.classList.remove('hidden');});
-document.addEventListener('click',e=>{if(!ctxOverlay.contains(e.target)){ctxOverlay.classList.add('hidden');}});
+canvas.addEventListener('contextmenu',e=>{e.preventDefault();window.pet.invoke('show-context-menu').catch(()=>{});});
 
 // ── Dot click toggle ──
 dotEl.addEventListener('click',(e)=>{
@@ -174,53 +169,23 @@ dotEl.addEventListener('click',(e)=>{
   if(nq.current && dotEl.className !== 'dot-none') nq.showBubble();
 });
 
-// ── Context menu ──
-// Toggle helpers
+// ── Toggle helpers (respond to context menu commands) ──
 function getToggle(key, def) { const v = localStorage.getItem('pet_' + key); return v !== null ? v === 'true' : def; }
 function setToggle(key, val) { localStorage.setItem('pet_' + key, val); }
 function applyPetSettings() {
-  const showBorder = getToggle('showBorder', true);
-  const showInfoBar = getToggle('showInfoBar', true);
-  const showExpBar = getToggle('showExpBar', true);
-  document.getElementById('container').classList.toggle('border-hidden', !showBorder);
-  document.getElementById('info-bar').style.display = showInfoBar ? '' : 'none';
-  document.getElementById('exp-wrap').style.display = showExpBar ? '' : 'none';
-  document.getElementById('ctx-toggle-border').textContent = (showBorder ? '\u2713 ' : '\u2717 ') + '显示边框';
-  document.getElementById('ctx-toggle-border').className = 'ctx-item' + (showBorder ? ' ctx-on' : ' ctx-off');
-  document.getElementById('ctx-toggle-infobar').textContent = (showInfoBar ? '\u2713 ' : '\u2717 ') + '信息栏';
-  document.getElementById('ctx-toggle-infobar').className = 'ctx-item' + (showInfoBar ? ' ctx-on' : ' ctx-off');
-  document.getElementById('ctx-toggle-expbar').textContent = (showExpBar ? '\u2713 ' : '\u2717 ') + '进度条';
-  document.getElementById('ctx-toggle-expbar').className = 'ctx-item' + (showExpBar ? ' ctx-on' : ' ctx-off');
+  document.getElementById('container').classList.toggle('border-hidden', !getToggle('showBorder', true));
+  document.getElementById('info-bar').style.display = getToggle('showInfoBar', true) ? '' : 'none';
+  document.getElementById('exp-wrap').style.display = getToggle('showExpBar', true) ? '' : 'none';
 }
-
-document.getElementById('ctx-select-pet').addEventListener('click', () => {
-  ctxOverlay.classList.add('hidden');
-  window.pet.invoke('show-pet-selector').catch(() => {});
-});
-document.getElementById('ctx-toggle-border').addEventListener('click', () => {
-  const v = !getToggle('showBorder', true);
-  setToggle('showBorder', v);
-  applyPetSettings();
-});
-document.getElementById('ctx-toggle-infobar').addEventListener('click', () => {
-  const v = !getToggle('showInfoBar', true);
-  setToggle('showInfoBar', v);
-  applyPetSettings();
-});
-document.getElementById('ctx-toggle-expbar').addEventListener('click', () => {
-  const v = !getToggle('showExpBar', true);
-  setToggle('showExpBar', v);
-  applyPetSettings();
-});
-document.getElementById('ctx-open-folder').addEventListener('click', () => {
-  ctxOverlay.classList.add('hidden');
-  window.pet.invoke('open-pets-folder').catch(() => {});
-});
-document.getElementById('ctx-close').addEventListener('click',()=>{ctxOverlay.classList.add('hidden');window.pet.invoke('hide-pet-window').catch(()=>{});});
 
 // ── IPC ──
 window.pet.on('pet-list',d=>{pets=d.pets||[];selIdx=d.selected||0;loadPet(selIdx);applyPetSettings();});
 window.pet.on('pet-selected',d=>{selIdx=d.index;loadPet(selIdx);});
+window.pet.on('toggle-feature', d => {
+  const key = 'show' + d.feature.charAt(0).toUpperCase() + d.feature.slice(1);
+  setToggle(key, d.value);
+  applyPetSettings();
+});
 window.pet.on('game-tick',d=>{
   gameInfo.level=d.level||1;gameInfo.exp=d.total_exp_earned||0;
   if(d.currentTitle)gameInfo.title=d.currentTitle;
