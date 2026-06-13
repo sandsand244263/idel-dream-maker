@@ -134,8 +134,7 @@ function registerPetIpcHandlers(mainWindow, app) {
 
   ipcMain.handle('pet-resize', (_, { height }) => {
     if (petWindow && !petWindow.isDestroyed()) {
-      const [w] = petWindow.getSize();
-      petWindow.setSize(w, Math.min(Math.max(height, 200), 500));
+      petWindow.setContentSize(192, Math.min(Math.max(height, 200), 500));
     }
     return true;
   });
