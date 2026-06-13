@@ -442,9 +442,9 @@ npx electron-builder   # 打包验证
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **节日数据 + 加载模块** — `holidays.json` + `electron/holiday.cjs` | `public/holidays.json` (新建), `electron/holiday.cjs` (新建) | ⬜ |
-| 2 | **游戏循环集成** — 节日检测、虚构节日日期分配、事件触发权重 | `electron/main.cjs` (改) | ⬜ |
-| 3 | **调试按钮** — 调试面板加「节日事件」按钮 | `electron/preload.cjs` (改), `src/main.js` (改) | ⬜ |
+| 1 | **HolidayEvents 嵌入 .md** — `## HolidayEvents` 格式定义 + wasteland.md 填充 + build.js 解析 | `副本MD格式模板.md`, `scenarios/wasteland.md`, `build.js` | ⬜ |
+| 2 | **holiday.cjs 改为从 scenario 读取** — 移除 holidays.json 依赖 | `electron/holiday.cjs`, `electron/main.cjs`, `public/holidays.json` (删) | ⬜ |
+| 3 | **气泡显示节日标题** — pet.js 事件通知带 title | `pet/pet.js` | ⬜ |
 
 ---
 
