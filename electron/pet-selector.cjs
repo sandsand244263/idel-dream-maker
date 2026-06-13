@@ -84,15 +84,6 @@ function registerSelectorIpcHandlers(petWindow, app) {
     if (selectorWindow && !selectorWindow.isDestroyed()) selectorWindow.close();
     return true;
   });
-
-  ipcMain.handle('open-pets-folder', () => {
-    const { shell } = require('electron');
-    const dir = path.join(app.getPath('appData'), 'Idel-DreamMaker', 'pets');
-    const fs = require('fs');
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    shell.openPath(dir);
-    return true;
-  });
 }
 
 function getPetWindowRef() { return petWindowRef; }
