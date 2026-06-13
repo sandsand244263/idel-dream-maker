@@ -55,12 +55,10 @@ class NotificationQueue{
   showBubble(){
     if(!this.current||bubbleZone.className==='zone-show')return;
     const t=this.current.title||'';
+    bubbleText.textContent=t?'━━━ '+t+' ━━━\n'+this.current.text:this.current.text;
     bubbleZone.className='zone-show';
     bubbleZone.style.borderLeftColor=this.current.type==='achievement'?'#FFD700':this.current.type==='levelup'?'#00FF00':'#00BFFF';
     if(expWrap)expWrap.style.display='none';
-    requestAnimationFrame(()=>{
-      bubbleText.innerHTML=(t?'<div style="text-align:center;font-weight:bold">'+t+'</div><div>'+this.current.text+'</div>':'<div>'+this.current.text+'</div>');
-    });
   }
   hideBubble(){
     bubbleZone.className='zone-hide';
@@ -78,7 +76,6 @@ class NotificationQueue{
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
     dotEl.className='dot-none';dotSymbol.textContent='○';
-  }
   }
 }
 const nq=new NotificationQueue();

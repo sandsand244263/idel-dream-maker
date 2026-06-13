@@ -92,7 +92,7 @@ function createPetWindow(app) {
 
   petWindow = new BrowserWindow({
     width: 192,
-    height: 330,
+    height: 340,
     frame: false,
     transparent: true,
     alwaysOnTop: true,
@@ -128,13 +128,6 @@ function registerPetIpcHandlers(mainWindow, app) {
     if (petWindow && !petWindow.isDestroyed()) {
       if (petWindow.isVisible()) { petWindow.hide(); }
       else { petWindow.show(); petWindow.focus(); }
-    }
-    return true;
-  });
-
-  ipcMain.handle('pet-resize', (_, { height }) => {
-    if (petWindow && !petWindow.isDestroyed()) {
-      petWindow.setContentSize(192, Math.min(Math.max(height, 200), 500));
     }
     return true;
   });
