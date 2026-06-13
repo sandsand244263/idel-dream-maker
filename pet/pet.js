@@ -66,19 +66,19 @@ class NotificationQueue{
       // Copy to clipboard
       const ta=document.createElement('textarea');ta.value=diag;ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);
       bubbleText.innerHTML=(t?'<div style="text-align:center;font-weight:bold;margin-bottom:4px">'+t+'</div><div>'+this.current.text+'</div>':'<div>'+this.current.text+'</div>');
-      window.pet.invoke('pet-resize',{height:Math.max(210,bh+6)}).catch(()=>{});
+      window.pet.invoke('pet-resize',{height:Math.max(210,bh+3)}).catch(()=>{});
     });
   }
   hideBubble(){
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
-    window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+6)}).catch(()=>{});
+    setTimeout(()=>{window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+3)}).catch(()=>{});},0);
   }
   close(){
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
     dotEl.className='dot-none';dotSymbol.textContent='○';
-    window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+6)}).catch(()=>{});
+    setTimeout(()=>{window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+3)}).catch(()=>{});},0);
     this.next();
   }
   clearQueue(){
@@ -87,7 +87,7 @@ class NotificationQueue{
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
     dotEl.className='dot-none';dotSymbol.textContent='○';
-    window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+6)}).catch(()=>{});
+    setTimeout(()=>{window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+3)}).catch(()=>{});},0);
   }
 }
 const nq=new NotificationQueue();
