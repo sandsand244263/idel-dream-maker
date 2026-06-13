@@ -9,7 +9,7 @@ html,body { width:100%;height:100%;overflow:hidden;background:transparent;user-s
 
 body { font-family:var(--font); color:var(--fg); }
 
-#container { width:100%;height:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 0;position:relative; }
+#container { width:100%;height:100%;display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 0;position:relative; }
 
 /* Info bar */
 #info-bar { text-align:center;height:18px;display:flex;align-items:center;justify-content:center;pointer-events:none;flex-shrink:0; }

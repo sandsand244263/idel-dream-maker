@@ -25,7 +25,7 @@ const DEFAULT_STATES = {
   extra1:{row:6,frames:6,dur:140,firstMult:1.5,lastMult:1.8}, extra2:{row:7,frames:6,dur:140,firstMult:1.5,lastMult:1.8},
 };
 
-let pets=[],selIdx=0,spritesheet=null,cols=8,rows=9,stateConfig=null,PET_BASE=210;
+let pets=[],selIdx=0,spritesheet=null,cols=8,rows=9,stateConfig=null;
 let curState='idle',frameIdx=0,frameList=[],animTimer=null,returnTimer=null,debounceTimer=null;
 let gameInfo={level:1,title:'—',exp:0,scenario:'大厅',runtime:'0h0m0s',ach:0,theme:'green'};
 let displayExp=0,dragMoved=false;
@@ -59,19 +59,22 @@ class NotificationQueue{
     bubbleZone.className='zone-show';
     bubbleZone.style.borderLeftColor=this.current.type==='achievement'?'#FFD700':this.current.type==='levelup'?'#00FF00':'#00BFFF';
     if(expWrap)expWrap.style.display='none';
-    const h=PET_BASE+(bubbleZone.scrollHeight||60);
+    const container=document.getElementById('container');
+    const h=Math.max(210,(container?container.scrollHeight:0)+6);
     window.pet.invoke('pet-resize',{height:h}).catch(()=>{});
   }
   hideBubble(){
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
-    window.pet.invoke('pet-resize',{height:PET_BASE}).catch(()=>{});
+    const container=document.getElementById('container');
+    window.pet.invoke('pet-resize',{height:Math.max(210,container?container.scrollHeight+6:210)}).catch(()=>{});
   }
   close(){
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
     dotEl.className='dot-none';dotSymbol.textContent='○';
-    window.pet.invoke('pet-resize',{height:PET_BASE}).catch(()=>{});
+    const container=document.getElementById('container');
+    window.pet.invoke('pet-resize',{height:Math.max(210,container?container.scrollHeight+6:210)}).catch(()=>{});
     this.next();
   }
   clearQueue(){
@@ -80,7 +83,8 @@ class NotificationQueue{
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
     dotEl.className='dot-none';dotSymbol.textContent='○';
-    window.pet.invoke('pet-resize',{height:PET_BASE}).catch(()=>{});
+    const container=document.getElementById('container');
+    window.pet.invoke('pet-resize',{height:Math.max(210,container?container.scrollHeight+6:210)}).catch(()=>{});
   }
 }
 const nq=new NotificationQueue();
