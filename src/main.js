@@ -159,7 +159,7 @@ async function init() {
   window.electron.on('event-triggered', (event) => { addLog('event', event.text); showEventOverlay(event.title, event.color, event.text); });
   window.electron.on('level-up', (event) => { currentTitle = { name: event.title, color: event.titleColor, desc: event.titleDesc }; addLog('levelup', tf('systemLevelUp', event.level, event.title)); updateUI(); });
   window.electron.on('achievement-unlocked', (event) => { const { name, desc, icon } = event; addLog('achievement', `${name}: ${desc}`); showAchievementOverlay(icon, name, desc); gameState?.unlockedAchievements.push(event.id); updateUI(); });
-  window.electron.on('scenario-changed', (event) => { gameState = event.game; currentScenario = event.scenario; currentTitle = { name: event.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); });
+  window.electron.on('scenario-changed', (event) => { gameState = event.game; currentScenario = event.scenario; currentTitle = { name: event.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); });
   window.electron.on('auto-save', () => { flashSaveDot(); });
 }
 
@@ -230,7 +230,7 @@ function updateExpBar() {
   const lv = gameState.level || 1;
   const currReq = calcExpForLevel(lv);
   const nextReq = calcExpForLevel(lv + 1);
-  const pct = nextReq > currReq ? Math.min(100, ((exp - currReq) / (nextReq - currReq)) * 100) : 0;
+  const pct = nextReq > currReq ? Math.max(0, Math.min(100, ((exp - currReq) / (nextReq - currReq)) * 100)) : 0;
   expBarFill.style.width = `${Math.round(pct)}%`;
   expBarText.textContent = `EXP: ${Math.floor(exp)} / ${nextReq} (${Math.round(pct)}%)`;
 }
