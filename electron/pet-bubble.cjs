@@ -3,6 +3,7 @@ const path = require('path');
 
 let bubbleWindow = null;
 let petWindowRef = null;
+let appRef = null;
 let currentData = null;
 
 function sendToBubble(channel, data) {
@@ -12,6 +13,7 @@ function sendToBubble(channel, data) {
 }
 
 function initBubble(app, petWin) {
+  appRef = app;
   petWindowRef = petWin;
 
   bubbleWindow = new BrowserWindow({
@@ -31,26 +33,25 @@ function initBubble(app, petWin) {
   });
 
   bubbleWindow.loadFile(path.join(__dirname, '..', 'pet-bubble', 'index.html'));
-
-  bubbleWindow.on('blur', () => {
-    console.log('[bubble] blur fired');
-    if (bubbleWindow && !bubbleWindow.isDestroyed()) bubbleWindow.hide();
-  });
-
-  bubbleWindow.on('closed', () => {
-    console.log('[bubble] window closed');
-    bubbleWindow = null; currentData = null;
-  });
+  bubbleWindow.on('closed', () => { bubbleWindow = null; currentData = null; });
 }
 
 function positionAndShowBubble(data) {
-  console.log('[bubble] positionAndShowBubble called, petWindowRef:', !!petWindowRef, 'bubbleWindow:', !!bubbleWindow);
-  if (!bubbleWindow || bubbleWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) {
-    console.log('[bubble] bail - ref invalid');
+  console.log('[bubble] show called, win:', !!bubbleWindow, 'destroyed:', bubbleWindow ? bubbleWindow.isDestroyed() : 'N/A');
+  if (!bubbleWindow || bubbleWindow.isDestroyed()) {
+    console.log('[bubble] recreating window');
+    initBubble(appRef, petWindowRef);
+    bubbleWindow.webContents.once('did-finish-load', () => {
+      doShowBubble(data);
+    });
     return;
   }
+  doShowBubble(data);
+}
+
+function doShowBubble(data) {
+  if (!bubbleWindow || !bubbleWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) return;
   const petBounds = petWindowRef.getBounds();
-  console.log('[bubble] petBounds:', JSON.stringify(petBounds));
   const bw = 260, bh = 120;
   const screen = require('electron').screen.getPrimaryDisplay().workAreaSize;
 
@@ -78,7 +79,7 @@ function registerBubbleIpcHandlers(app) {
   });
 
   ipcMain.handle('close-bubble', () => {
-    if (bubbleWindow && !bubbleWindow.isDestroyed()) bubbleWindow.close();
+    if (bubbleWindow && !bubbleWindow.isDestroyed()) bubbleWindow.hide();
     return true;
   });
 }

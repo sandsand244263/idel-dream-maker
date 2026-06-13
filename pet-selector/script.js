@@ -23,6 +23,11 @@ document.getElementById('btn-open-folder').addEventListener('click', () => {
   window.petSelector.invoke('open-pets-folder').catch(() => {});
 });
 
+document.getElementById('btn-back').addEventListener('click', () => {
+  window.petSelector.invoke('close-selector').catch(() => {});
+  window.petSelector.invoke('show-context-menu').catch(() => {});
+});
+
 window.petSelector.on('pet-list', (d) => {
   pets = d.pets || [];
   selIdx = d.selected || 0;

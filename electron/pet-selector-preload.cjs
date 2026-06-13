@@ -2,7 +2,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('petSelector', {
   invoke: (channel, ...args) => {
-    const valid = ['select-pet', 'close-selector', 'open-pets-folder', 'get-initial-state'];
+    const valid = ['select-pet', 'close-selector', 'open-pets-folder', 'get-initial-state', 'show-context-menu'];
     if (valid.includes(channel)) return ipcRenderer.invoke(channel, ...args);
     return Promise.reject(new Error('Invalid selector channel: ' + channel));
   },

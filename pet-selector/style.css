@@ -2,7 +2,9 @@
 html,body { width:100%;background:transparent;user-select:none;font-family:'MapleMonoNFCN','Courier New',monospace;color:#00FF00; }
 :root { --fg:#00FF00; --dim:#00AA00; --bg:rgba(10,10,10,0.85); --border:rgba(0,255,0,0.2); }
 #container { padding:6px 0;background:var(--bg);border:1px solid var(--border);border-radius:6px;overflow:hidden; }
-#header { font-size:13px;font-weight:bold;padding:4px 12px;border-bottom:1px solid var(--border);color:var(--fg); }
+#header { font-size:13px;font-weight:bold;padding:4px 12px;border-bottom:1px solid var(--border);color:var(--fg);display:flex;align-items:center;gap:8px; }
+#btn-back { cursor:pointer;color:var(--dim);font-size:11px; }
+#btn-back:hover { color:var(--fg); }
 #pet-list { max-height:180px;overflow-y:auto; }
 #pet-list::-webkit-scrollbar { width:3px; }
 #pet-list::-webkit-scrollbar-track { background:transparent; }

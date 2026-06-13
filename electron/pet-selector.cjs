@@ -3,6 +3,7 @@ const path = require('path');
 
 let selectorWindow = null;
 let petWindowRef = null;
+let appRef = null;
 let currentPetList = [];
 let selectedPetIndex = 0;
 
@@ -13,6 +14,7 @@ function sendToSelector(channel, data) {
 }
 
 function initSelector(app, petWin) {
+  appRef = app;
   petWindowRef = petWin;
 
   selectorWindow = new BrowserWindow({
@@ -32,26 +34,25 @@ function initSelector(app, petWin) {
   });
 
   selectorWindow.loadFile(path.join(__dirname, '..', 'pet-selector', 'index.html'));
-
-  selectorWindow.on('blur', () => {
-    console.log('[sel] blur fired');
-    if (selectorWindow && !selectorWindow.isDestroyed()) selectorWindow.hide();
-  });
-
-  selectorWindow.on('closed', () => {
-    console.log('[sel] closed');
-    selectorWindow = null;
-  });
+  selectorWindow.on('closed', () => { selectorWindow = null; });
 }
 
 function positionAndShowSelector() {
-  console.log('[sel] positionAndShowSelector, selWin:', !!selectorWindow, 'petWinRef:', !!petWindowRef);
-  if (!selectorWindow || selectorWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) {
-    console.log('[sel] bail - ref invalid');
+  console.log('[sel] show called, win:', !!selectorWindow, 'destroyed:', selectorWindow ? selectorWindow.isDestroyed() : 'N/A');
+  if (!selectorWindow || selectorWindow.isDestroyed()) {
+    console.log('[sel] recreating window');
+    initSelector(appRef, petWindowRef);
+    selectorWindow.webContents.once('did-finish-load', () => {
+      doShowSelector();
+    });
     return;
   }
+  doShowSelector();
+}
+
+function doShowSelector() {
+  if (!selectorWindow || !selectorWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) return;
   const petBounds = petWindowRef.getBounds();
-  console.log('[sel] petBounds:', JSON.stringify(petBounds));
   const selWidth = 180;
   const selHeight = Math.min(240, Math.max(120, (currentPetList.length || 1) * 32 + 60));
 
@@ -84,7 +85,7 @@ function registerSelectorIpcHandlers(app) {
   });
 
   ipcMain.handle('close-selector', () => {
-    if (selectorWindow && !selectorWindow.isDestroyed()) selectorWindow.close();
+    if (selectorWindow && !selectorWindow.isDestroyed()) selectorWindow.hide();
     return true;
   });
 }

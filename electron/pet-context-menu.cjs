@@ -3,8 +3,10 @@ const path = require('path');
 
 let contextWindow = null;
 let petWindowRef = null;
+let appRef = null;
 
 function initContextMenu(app, petWin) {
+  appRef = app;
   petWindowRef = petWin;
 
   contextWindow = new BrowserWindow({
@@ -24,26 +26,25 @@ function initContextMenu(app, petWin) {
   });
 
   contextWindow.loadFile(path.join(__dirname, '..', 'pet-context-menu', 'index.html'));
-
-  contextWindow.on('blur', () => {
-    console.log('[ctx] blur fired');
-    if (contextWindow && !contextWindow.isDestroyed()) contextWindow.hide();
-  });
-
-  contextWindow.on('closed', () => {
-    console.log('[ctx] window closed');
-    contextWindow = null;
-  });
+  contextWindow.on('closed', () => { contextWindow = null; });
 }
 
 function showContextMenu() {
-  console.log('[ctx] showContextMenu called, contextWindow:', !!contextWindow, 'petWindowRef:', !!petWindowRef);
-  if (!contextWindow || contextWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) {
-    console.log('[ctx] bail - window or ref invalid');
+  console.log('[ctx] show called, win:', !!contextWindow, 'destroyed:', contextWindow ? contextWindow.isDestroyed() : 'N/A');
+  if (!contextWindow || contextWindow.isDestroyed()) {
+    console.log('[ctx] recreating window');
+    initContextMenu(appRef, petWindowRef);
+    contextWindow.webContents.once('did-finish-load', () => {
+      doShow();
+    });
     return;
   }
+  doShow();
+}
+
+function doShow() {
+  if (!contextWindow || contextWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) return;
   const petBounds = petWindowRef.getBounds();
-  console.log('[ctx] petBounds:', JSON.stringify(petBounds));
   const cw = 170, ch = 220;
   let x = petBounds.x + petBounds.width + 5;
   const screen = require('electron').screen.getPrimaryDisplay().workAreaSize;
@@ -53,7 +54,7 @@ function showContextMenu() {
   contextWindow.setBounds({ x, y, width: cw, height: ch });
   contextWindow.show();
   contextWindow.focus();
-  console.log('[ctx] show+focus called');
+  console.log('[ctx] show+focus done');
 }
 
 function registerContextMenuIpcHandlers() {
@@ -65,12 +66,11 @@ function registerContextMenuIpcHandlers() {
   });
 
   ipcMain.handle('close-menu', () => {
-    if (contextWindow && !contextWindow.isDestroyed()) contextWindow.close();
+    if (contextWindow && !contextWindow.isDestroyed()) contextWindow.hide();
     return true;
   });
 
   ipcMain.handle('get-toggle-state', () => {
-    // Let the context menu script use localStorage defaults
     return {};
   });
 }
