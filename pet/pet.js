@@ -49,11 +49,13 @@ class NotificationQueue{
     else if(this.current.type==='levelup'){dotSymbol.textContent='↑';dotEl.className='dot-levelup';}
     else{dotSymbol.textContent='!';dotEl.className='dot-event';}
     dotEl.dataset.text=this.current.text;
+    dotEl.dataset.title=this.current.title||'';
     dotEl.dataset.type=this.current.type;
   }
   showBubble(){
     if(!this.current||bubbleZone.className==='zone-show')return;
-    bubbleText.textContent=this.current.text;
+    const t=this.current.title||'';
+    bubbleText.textContent=t?t+'\n'+this.current.text:this.current.text;
     bubbleZone.className='zone-show';
     bubbleZone.style.borderLeftColor=this.current.type==='achievement'?'#FFD700':this.current.type==='levelup'?'#00FF00':'#00BFFF';
     if(expWrap)expWrap.style.display='none';
@@ -190,7 +192,7 @@ window.pet.on('game-tick',d=>{
   if(d.theme&&d.theme!==gameInfo.theme){gameInfo.theme=d.theme;applyTheme(d.theme);}
   updateInfoBar();
 });
-window.pet.on('event-triggered',d=>{transitionTo('wave');nq.enqueue({text:d.text,type:'event'},1);});
+window.pet.on('event-triggered',d=>{transitionTo('wave');nq.enqueue({text:d.text,title:d.title,type:'event'},1);});
 window.pet.on('level-up',d=>{gameInfo.title=d.title||gameInfo.title;transitionTo('jump');nq.enqueue({text:`升级! Lv.${d.level}`,type:'levelup'},2);});
 window.pet.on('achievement-unlocked',d=>{transitionTo('extra1');nq.enqueue({text:`${d.icon||'★'} ${d.name}`,type:'achievement'},3);});
 window.pet.on('main-shown',()=>{nq.clearQueue();});

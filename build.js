@@ -22,6 +22,7 @@ const COL_NORM = {
   'icon': 'icon', '图标': 'icon',
   'conditiontype': 'conditiontype', '条件类型': 'conditiontype', 'condition_type': 'conditiontype', 'conditionType': 'conditiontype',
   'conditionvalue': 'conditionvalue', '条件值': 'conditionvalue', 'condition_value': 'conditionvalue', 'conditionValue': 'conditionvalue',
+  'holidayid': 'holidayid', 'holiday_id': 'holidayid', 'holidayId': 'holidayid', '节日id': 'holidayid',
 };
 
 function normCol(name) {
@@ -155,6 +156,39 @@ function parseEvents(bodyLines) {
   return events;
 }
 
+function parseHolidayEvents(bodyLines) {
+  const secStart = findSection(bodyLines, 'HolidayEvents');
+  if (secStart === -1) return [];
+  const secEnd = nextSectionOrEnd(bodyLines, secStart);
+  const rows = parseTable(bodyLines, secStart, secEnd);
+  if (rows.length < 2) return [];
+
+  const headers = rows[0].map(h => normCol(h).toLowerCase());
+  const holidayIdIdx = headers.indexOf('holidayid');
+  const textIdx = headers.indexOf('text');
+  if (holidayIdIdx === -1) throw new Error("HolidayEvents table missing 'HolidayID' column");
+  if (textIdx === -1) throw new Error("HolidayEvents table missing 'Text' column");
+
+  const minlevelIdx = headers.indexOf('minlevel');
+  const minhoursIdx = headers.indexOf('minhours');
+  const weightIdx = headers.indexOf('weight');
+  const onceIdx = headers.indexOf('once');
+
+  const events = [];
+  for (const row of rows.slice(1)) {
+    if (row.length <= holidayIdIdx || row.length <= textIdx) continue;
+    events.push({
+      holidayId: row[holidayIdIdx].trim(),
+      minLevel: minlevelIdx !== -1 ? parseInt(row[minlevelIdx], 10) || 1 : 1,
+      minHours: minhoursIdx !== -1 ? parseInt(row[minhoursIdx], 10) || 0 : 0,
+      weight: weightIdx !== -1 ? parseInt(row[weightIdx], 10) || 5 : 5,
+      once: onceIdx !== -1 ? parseBool(row[onceIdx]) : false,
+      text: row[textIdx],
+    });
+  }
+  return events;
+}
+
 function parseAchievements(bodyLines) {
   const secStart = findSection(bodyLines, 'Achievements');
   if (secStart === -1) return [];
@@ -242,6 +276,7 @@ function parseScenarioMd(content) {
   const bodyLines = lines.slice(bodyStart);
   const titles = parseTitles(bodyLines);
   const events = parseEvents(bodyLines);
+  const holidayEvents = parseHolidayEvents(bodyLines);
   const achievements = parseAchievements(bodyLines);
 
   if (titles.length === 0) throw new Error('Titles section is empty');
@@ -255,6 +290,7 @@ function parseScenarioMd(content) {
     player_title: meta.player_title,
     titles,
     events,
+    holidayEvents,
     achievements,
   };
 

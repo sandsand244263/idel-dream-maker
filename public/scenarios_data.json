@@ -4129,6 +4129,72 @@
         "text": "那棵树的种子在宇宙中漂流了很久。终于落在一颗陌生的星球上。雨落下来，阳光洒下来。它开始发芽了。"
       }
     ],
+    "holidayEvents": [
+      {
+        "holidayId": "new_year",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": false,
+        "text": "����ĵ�һ������͸�������������˷�����������־��д�£��µ�һ�꣬��������ȥ��"
+      },
+      {
+        "holidayId": "valentine",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": false,
+        "text": "�������ر�������һ����Χ������������û��ֵ���ͻ����ˡ����ҵ���һ�����õ�塣"
+      },
+      {
+        "holidayId": "april_fools",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": false,
+        "text": "��ĸǸ������ͻȻ�����ˡ��㾪��ʧ��ؼ���˰��죬�ŷ��ֱ�������һ�Ŷ�������ֽ��"
+      },
+      {
+        "holidayId": "halloween",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": false,
+        "text": "�����ķ������ⰲ�������ܾ�����ʲô�����ڰ��������㡣һȺ�������ö�����˴�����ǰ�߹���"
+      },
+      {
+        "holidayId": "christmas",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": false,
+        "text": "����һ���������̵����ҵ���һ������ʥ���������������˱������������˼�������Ƭ����װ�Ρ�"
+      },
+      {
+        "holidayId": "mid_autumn",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": false,
+        "text": "��������������󡣷����Ƶ���ס������ֵ���һ��ѹ��������Ϊ�±���"
+      },
+      {
+        "holidayId": "lantern_festival",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": false,
+        "text": "���ڷ����з�����һյ����õĵ�����������������ڷ���������һȦ��"
+      },
+      {
+        "holidayId": "childrens_day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": false,
+        "text": "�۾ӵ�ĺ�����������Ϸ�����÷���Ƭ������ӡ��㿴�˺ܾá�"
+      }
+    ],
     "achievements": [
       {
         "id": "wa_first_step",
