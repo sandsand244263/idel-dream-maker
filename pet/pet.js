@@ -5,6 +5,7 @@ const dotSymbol = document.getElementById('dot-symbol');
 const bubbleZone = document.getElementById('bubble-zone');
 const bubbleText = document.getElementById('bubble-text');
 const ctxMenu = document.getElementById('ctx-menu');
+const ctxOverlay = document.getElementById('ctx-overlay');
 const infoText = document.getElementById('info-text');
 const expFill = document.getElementById('exp-fill');
 const expWrap = document.getElementById('exp-wrap');
@@ -161,8 +162,8 @@ document.addEventListener('mouseup',()=>{if(dragging){dragging=false;window.pet.
 // ── Interactions ──
 canvas.addEventListener('click',()=>{if(!dragMoved)transitionTo('wave');});
 canvas.addEventListener('dblclick',e=>{e.preventDefault();if(!dragMoved){transitionTo('jump');window.pet.invoke('toggle-main-window').catch(()=>{});}});
-canvas.addEventListener('contextmenu',e=>{e.preventDefault();ctxMenu.classList.remove('hidden');ctxMenu.style.left=e.clientX+'px';ctxMenu.style.top=e.clientY+'px';});
-document.addEventListener('click',e=>{if(!ctxMenu.contains(e.target)){ctxMenu.classList.add('hidden');document.getElementById('ctx-pet-list').classList.remove('show');}});
+canvas.addEventListener('contextmenu',e=>{e.preventDefault();ctxMenu.style.left=e.clientX+'px';ctxMenu.style.top=e.clientY+'px';ctxOverlay.classList.remove('hidden');});
+document.addEventListener('click',e=>{if(!ctxOverlay.contains(e.target)){ctxOverlay.classList.add('hidden');document.getElementById('ctx-pet-list').classList.remove('show');}});
 
 // ── Dot click toggle ──
 dotEl.addEventListener('click',(e)=>{
@@ -203,7 +204,7 @@ function renderPetList() {
     item.className = 'ctx-pet-item' + (i === selIdx ? ' ctx-pet-active' : '');
     item.textContent = p.name || ('宠物 ' + (i + 1));
     item.addEventListener('click', () => {
-      ctxMenu.classList.add('hidden');
+      ctxOverlay.classList.add('hidden');
       selIdx = i;
       window.pet.invoke('select-pet', { index: selIdx }).catch(() => {});
     });
@@ -246,10 +247,10 @@ document.getElementById('ctx-toggle-expbar').addEventListener('click', () => {
   applyPetSettings();
 });
 document.getElementById('ctx-open-folder').addEventListener('click', () => {
-  ctxMenu.classList.add('hidden');
+  ctxOverlay.classList.add('hidden');
   window.pet.invoke('open-pets-folder').catch(() => {});
 });
-document.getElementById('ctx-close').addEventListener('click',()=>{ctxMenu.classList.add('hidden');window.pet.invoke('hide-pet-window').catch(()=>{});});
+document.getElementById('ctx-close').addEventListener('click',()=>{ctxOverlay.classList.add('hidden');window.pet.invoke('hide-pet-window').catch(()=>{});});
 
 // ── IPC ──
 window.pet.on('pet-list',d=>{pets=d.pets||[];selIdx=d.selected||0;loadPet(selIdx);renderPetList();applyPetSettings();});

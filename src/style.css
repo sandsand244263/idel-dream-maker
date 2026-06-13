@@ -1,10 +1,10 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 :root { --fg: #00FF00; --bg: #0A0A0A; --dim: #00AA00; --font: 'MapleMonoNFCN', 'Courier New', monospace; --border: #00FF00; }
 html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 14px; line-height: 1.4; }
-#app { display: flex; flex-direction: column; height: 100vh; border: 1px solid var(--dim); border-radius: 6px; overflow: hidden; background:var(--bg); clip-path:inset(0 round 6px); }
+#app { display: flex; flex-direction: column; height: 100vh; border: 1px solid var(--dim); border-radius: 6px; overflow: hidden; background:var(--bg); }
 
 /* ── Titlebar ── */
-#titlebar { display: flex; align-items: center; height: 28px; flex-shrink: 0; background: rgba(0,255,0,0.04); border-bottom: 1px solid var(--dim); user-select: none; }
+#titlebar { display: flex; align-items: center; height: 28px; flex-shrink: 0; background: rgba(0,255,0,0.04); border-bottom: 1px solid var(--dim); user-select: none; border-radius: 6px 6px 0 0; }
 #titlebar-drag { flex: 1; display: flex; align-items: center; gap: 6px; padding: 0 8px; height: 100%; cursor: default; font-size: 12px; -webkit-app-region: drag; }
 #titlebar-id { color: var(--fg); font-weight: bold; }
 .titlebar-sep { color: var(--dim); font-size: 10px; }
@@ -74,7 +74,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 @keyframes savePulse { 0%,100% { opacity:0.3; } 50% { opacity:1; } }
 
 /* ── Button Bar ── */
-#button-bar { display: flex; flex-shrink: 0; border-top: 1px solid var(--dim); background: rgba(0,255,0,0.03); }
+#button-bar { display: flex; flex-shrink: 0; border-top: 1px solid var(--dim); background: rgba(0,255,0,0.03); border-radius: 0 0 6px 6px; }
 .bar-btn { flex: 1; background: transparent; border: none; color: var(--dim); font-family: var(--font); font-size: 12px; padding: 6px 0; cursor: pointer; letter-spacing: 1px; transition: color 0.15s, background 0.15s; border-right: 1px solid rgba(10,90,10,0.3); }
 .bar-btn:last-child { border-right: none; }
 .bar-btn:hover { color: var(--fg); background: rgba(0,255,0,0.06); }
