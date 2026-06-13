@@ -27,11 +27,6 @@ document.getElementById('ctx-select-pet').addEventListener('click', () => {
   });
 });
 
-document.getElementById('ctx-open-folder').addEventListener('click', () => {
-  window.ctxMenu.invoke('open-pets-folder').catch(() => {});
-  window.ctxMenu.invoke('close-menu').catch(() => {});
-});
-
 document.getElementById('ctx-close').addEventListener('click', () => {
   window.ctxMenu.invoke('hide-pet-window').catch(() => {});
   window.ctxMenu.invoke('close-menu').catch(() => {});
