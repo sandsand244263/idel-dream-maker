@@ -59,7 +59,7 @@ class NotificationQueue{
     bubbleZone.style.borderLeftColor=this.current.type==='achievement'?'#FFD700':this.current.type==='levelup'?'#00FF00':'#00BFFF';
     if(expWrap)expWrap.style.display='none';
     requestAnimationFrame(()=>{
-      bubbleText.innerHTML=(t?'<div style="text-align:center;font-weight:bold;margin-bottom:4px">'+t+'</div><div>'+this.current.text+'</div>':'<div>'+this.current.text+'</div>');
+      bubbleText.innerHTML=(t?'<div style="text-align:center;font-weight:bold">'+t+'</div><div>'+this.current.text+'</div>':'<div>'+this.current.text+'</div>');
       const c=document.getElementById('container');
       const rectH=c?Math.ceil(c.getBoundingClientRect().height):0;
       const bodyH=document.body.scrollHeight;
