@@ -442,9 +442,7 @@ npx electron-builder   # 打包验证
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **字体修复** — pet/index.html 加 @font-face | `pet/index.html` | ⬜ |
-| 2 | **气泡自适应 + 标题居中** — white-space:pre-wrap + 居中样式 | `pet/style.css`, `pet/pet.js` | ⬜ |
-| 3 | **乱码修复** — Node.js UTF-8 重写 wasteland.md HolidayEvents | `scenarios/wasteland.md` | ⬜ |
+| 1 | **气泡自适应高度** — showBubble 动态计算高度、IPC resize 窗口 | `pet/pet.js`, `electron/pet-preload.cjs`, `electron/pet.cjs` | ⬜ |
 
 ---
 
