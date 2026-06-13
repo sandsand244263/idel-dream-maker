@@ -62,10 +62,10 @@ class NotificationQueue{
       const b=document.body,c=document.getElementById('container'),bz=bubbleZone;
       const bh=b?b.scrollHeight:0,ch=c?c.scrollHeight:0,bzh=bz?bz.scrollHeight:0;
       const bw=b?window.innerWidth||192:0;
-      bubbleText.innerHTML=(t?'<div style="text-align:center;font-weight:bold;margin-bottom:4px">'+t+'</div><div>'+this.current.text+'</div>':'<div>'+this.current.text+'</div>')+
-        '<div style="font-size:9px;color:#888;border-top:1px solid #444;margin-top:6px;padding-top:4px;user-select:text">'+
-        'body:'+bh+' con:'+ch+' bbl:'+bzh+' winH:'+bw+' set:'+Math.max(210,bh+6)+
-        '</div>';
+      const diag='body:'+bh+' con:'+ch+' bbl:'+bzh+' winH:'+bw+' set:'+Math.max(210,bh+6);
+      // Copy to clipboard
+      const ta=document.createElement('textarea');ta.value=diag;ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);
+      bubbleText.innerHTML=(t?'<div style="text-align:center;font-weight:bold;margin-bottom:4px">'+t+'</div><div>'+this.current.text+'</div>':'<div>'+this.current.text+'</div>');
       window.pet.invoke('pet-resize',{height:Math.max(210,bh+6)}).catch(()=>{});
     });
   }
