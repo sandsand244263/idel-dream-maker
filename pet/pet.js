@@ -54,30 +54,33 @@ class NotificationQueue{
     dotEl.dataset.type=this.current.type;
   }
   showBubble(){
-    if(!this.current||bubbleZone.className==='zone-show')return;
-    const t=this.current.title||'';
-    bubbleText.innerHTML=t?'<span style="text-align:center;font-weight:bold;display:inline">'+t+'</span> '+this.current.text:this.current.text;
-    bubbleZone.className='zone-show';
-    bubbleZone.style.borderLeftColor=this.current.type==='achievement'?'#FFD700':this.current.type==='levelup'?'#00FF00':'#00BFFF';
-    if(expWrap)expWrap.style.display='none';
-    requestAnimationFrame(()=>{});
+    if(!this.current)return;
+    window.pet.invoke('show-bubble', {
+      title: this.current.title || '事件',
+      text: this.current.text,
+      color: this.current.type === 'achievement' ? '#FFD700' : this.current.type === 'levelup' ? '#00FF00' : '#00BFFF',
+      type: this.current.type,
+    }).catch(() => {});
+    dotEl.className = 'dot-none';
+    dotSymbol.textContent = '○';
   }
   hideBubble(){
-    bubbleZone.className='zone-hide';
-    if(expWrap)expWrap.style.display='flex';
+    window.pet.invoke('close-bubble').catch(() => {});
+    dotEl.className = 'dot-none';
+    dotSymbol.textContent = '○';
   }
   close(){
-    bubbleZone.className='zone-hide';
-    if(expWrap)expWrap.style.display='flex';
-    dotEl.className='dot-none';dotSymbol.textContent='○';
+    window.pet.invoke('close-bubble').catch(() => {});
+    dotEl.className = 'dot-none';
+    dotSymbol.textContent = '○';
     this.next();
   }
   clearQueue(){
+    window.pet.invoke('close-bubble').catch(() => {});
     this.q=[];
     this.current=null;
-    bubbleZone.className='zone-hide';
-    if(expWrap)expWrap.style.display='flex';
-    dotEl.className='dot-none';dotSymbol.textContent='○';
+    dotEl.className = 'dot-none';
+    dotSymbol.textContent = '○';
   }
 }
 const nq=new NotificationQueue();
@@ -168,14 +171,8 @@ document.addEventListener('click',e=>{if(!ctxOverlay.contains(e.target)){ctxOver
 // ── Dot click toggle ──
 dotEl.addEventListener('click',(e)=>{
   e.stopPropagation();
-  if(bubbleZone.className==='zone-show'){nq.hideBubble();}
-  else{nq.showBubble();}
+  if(nq.current && dotEl.className !== 'dot-none') nq.showBubble();
 });
-bubbleZone.addEventListener('click',(e)=>{
-  e.stopPropagation();
-  nq.close();
-});
-document.addEventListener('click',()=>{if(dragMoved)return;if(bubbleZone.className==='zone-show')nq.close();});
 
 // ── Context menu ──
 // Toggle helpers
@@ -196,44 +193,9 @@ function applyPetSettings() {
   document.getElementById('ctx-toggle-expbar').className = 'ctx-item' + (showExpBar ? ' ctx-on' : ' ctx-off');
 }
 
-function renderPetList() {
-  const el = document.getElementById('ctx-pet-list');
-  el.innerHTML = '';
-  pets.forEach((p, i) => {
-    const item = document.createElement('div');
-    item.className = 'ctx-pet-item' + (i === selIdx ? ' ctx-pet-active' : '');
-    item.textContent = p.name || ('宠物 ' + (i + 1));
-    item.addEventListener('click', () => {
-      ctxOverlay.classList.add('hidden');
-      selIdx = i;
-      window.pet.invoke('select-pet', { index: selIdx }).catch(() => {});
-    });
-    el.appendChild(item);
-  });
-}
-
-let petListTimer = null;
-document.getElementById('ctx-select-pet').addEventListener('mouseenter', () => {
-  if (petListTimer) clearTimeout(petListTimer);
-  const el = document.getElementById('ctx-pet-list');
-  const menuRect = ctxMenu.getBoundingClientRect();
-  el.style.left = menuRect.right + 'px';
-  el.style.top = menuRect.top + 'px';
-  renderPetList();
-  el.classList.add('show');
-});
-document.getElementById('ctx-select-pet').addEventListener('mouseleave', () => {
-  petListTimer = setTimeout(() => {
-    if (!document.getElementById('ctx-pet-list').matches(':hover')) {
-      document.getElementById('ctx-pet-list').classList.remove('show');
-    }
-  }, 200);
-});
-document.getElementById('ctx-pet-list').addEventListener('mouseenter', () => {
-  if (petListTimer) clearTimeout(petListTimer);
-});
-document.getElementById('ctx-pet-list').addEventListener('mouseleave', () => {
-  document.getElementById('ctx-pet-list').classList.remove('show');
+document.getElementById('ctx-select-pet').addEventListener('click', () => {
+  ctxOverlay.classList.add('hidden');
+  window.pet.invoke('show-pet-selector').catch(() => {});
 });
 document.getElementById('ctx-toggle-border').addEventListener('click', () => {
   const v = !getToggle('showBorder', true);
@@ -257,8 +219,8 @@ document.getElementById('ctx-open-folder').addEventListener('click', () => {
 document.getElementById('ctx-close').addEventListener('click',()=>{ctxOverlay.classList.add('hidden');window.pet.invoke('hide-pet-window').catch(()=>{});});
 
 // ── IPC ──
-window.pet.on('pet-list',d=>{pets=d.pets||[];selIdx=d.selected||0;loadPet(selIdx);renderPetList();applyPetSettings();});
-window.pet.on('pet-selected',d=>{selIdx=d.index;loadPet(selIdx);renderPetList();});
+window.pet.on('pet-list',d=>{pets=d.pets||[];selIdx=d.selected||0;loadPet(selIdx);applyPetSettings();});
+window.pet.on('pet-selected',d=>{selIdx=d.index;loadPet(selIdx);});
 window.pet.on('game-tick',d=>{
   gameInfo.level=d.level||1;gameInfo.exp=d.total_exp_earned||0;
   if(d.currentTitle)gameInfo.title=d.currentTitle;

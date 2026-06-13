@@ -2,6 +2,9 @@ const { BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
+const { registerSelectorIpcHandlers } = require('./pet-selector.cjs');
+const { registerBubbleIpcHandlers } = require('./pet-bubble.cjs');
+
 let petWindow = null;
 let currentPetList = [];
 let selectedPetIndex = 0;
@@ -201,6 +204,9 @@ function registerPetIpcHandlers(mainWindow, app) {
     shell.openPath(dir);
     return true;
   });
+
+  registerSelectorIpcHandlers(mainWindow, app);
+  registerBubbleIpcHandlers(mainWindow, app);
 }
 
 function forwardToPet(channel, payload) {
