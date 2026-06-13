@@ -166,7 +166,7 @@ document.addEventListener('mouseup',()=>{if(dragging){dragging=false;window.pet.
 canvas.addEventListener('click',()=>{if(!dragMoved)transitionTo('wave');});
 canvas.addEventListener('dblclick',e=>{e.preventDefault();if(!dragMoved){transitionTo('jump');window.pet.invoke('toggle-main-window').catch(()=>{});}});
 canvas.addEventListener('contextmenu',e=>{e.preventDefault();ctxMenu.style.left=e.clientX+'px';ctxMenu.style.top=e.clientY+'px';ctxOverlay.classList.remove('hidden');});
-document.addEventListener('click',e=>{if(!ctxOverlay.contains(e.target)){ctxOverlay.classList.add('hidden');document.getElementById('ctx-pet-list').classList.remove('show');}});
+document.addEventListener('click',e=>{if(!ctxOverlay.contains(e.target)){ctxOverlay.classList.add('hidden');}});
 
 // ── Dot click toggle ──
 dotEl.addEventListener('click',(e)=>{
