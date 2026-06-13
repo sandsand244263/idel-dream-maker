@@ -16,6 +16,13 @@ function createTray(mainWindow) {
         else { mainWindow.show(); mainWindow.focus(); }
       },
     },
+    {
+      label: 'Show Pet',
+      click: () => {
+        const { togglePetWindow } = require('./pet.cjs');
+        togglePetWindow();
+      },
+    },
     { type: 'separator' },
     {
       label: 'Quit',

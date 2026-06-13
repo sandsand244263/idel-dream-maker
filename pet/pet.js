@@ -164,6 +164,7 @@ document.addEventListener('mousemove',e=>{if(!dragging)return;const dx=Math.abs(
 document.addEventListener('mouseup',()=>{if(dragging){dragging=false;window.pet.invoke('pet-drag-end').catch(()=>{});}});
 
 // ── Interactions ──
+canvas.addEventListener('click',()=>{if(!dragMoved)transitionTo('wave');});
 canvas.addEventListener('dblclick',e=>{e.preventDefault();if(!dragMoved){transitionTo('jump');window.pet.invoke('toggle-main-window').catch(()=>{});}});
 canvas.addEventListener('contextmenu',e=>{e.preventDefault();ctxMenu.classList.remove('hidden');const r=canvas.getBoundingClientRect();ctxMenu.style.left=(e.clientX-r.left)+'px';ctxMenu.style.top=(e.clientY-r.top)+'px';});
 document.addEventListener('click',e=>{if(!ctxMenu.contains(e.target))ctxMenu.classList.add('hidden');});
@@ -178,7 +179,7 @@ bubbleZone.addEventListener('click',(e)=>{
   e.stopPropagation();
   nq.close();
 });
-document.addEventListener('click',()=>{if(bubbleZone.className==='zone-show')nq.close();});
+document.addEventListener('click',()=>{if(dragMoved)return;if(bubbleZone.className==='zone-show')nq.close();});
 
 // ── Context menu ──
 document.getElementById('ctx-close').addEventListener('click',()=>{ctxMenu.classList.add('hidden');window.pet.invoke('hide-pet-window').catch(()=>{});});

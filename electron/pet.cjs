@@ -204,6 +204,13 @@ function showPetWindow() {
   if (petWindow && !petWindow.isDestroyed()) petWindow.show();
 }
 
+function togglePetWindow() {
+  if (petWindow && !petWindow.isDestroyed()) {
+    if (petWindow.isVisible()) { petWindow.hide(); }
+    else { petWindow.show(); petWindow.focus(); }
+  }
+}
+
 function initPet(app) {
   scanPets(app);
   const win = createPetWindow(app);
@@ -211,4 +218,4 @@ function initPet(app) {
   return win;
 }
 
-module.exports = { scanPets, registerPetIpcHandlers, forwardToPet, showPetWindow, initPet };
+module.exports = { scanPets, registerPetIpcHandlers, forwardToPet, showPetWindow, togglePetWindow, initPet };
