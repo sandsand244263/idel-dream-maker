@@ -9,7 +9,7 @@ html,body { width:100%;background:transparent;user-select:none; }
 
 body { font-family:var(--font); color:var(--fg); }
 
-#container { width:100%;display:flex;flex-direction:column;align-items:center;gap:2px;padding:2px 0;position:relative; }
+#container { width:100%;display:flex;flex-direction:column;align-items:center;gap:2px;padding:2px 0;position:relative;background:rgba(10,10,10,0.85);border:1px solid rgba(0,255,0,0.12);border-radius:6px;overflow:hidden; }
 
 /* Info bar */
 #info-bar { text-align:center;height:18px;display:flex;align-items:center;justify-content:center;pointer-events:none;flex-shrink:0; }
