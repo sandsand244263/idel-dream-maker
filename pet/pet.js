@@ -60,19 +60,20 @@ class NotificationQueue{
     if(expWrap)expWrap.style.display='none';
     requestAnimationFrame(()=>{
       bubbleText.innerHTML=(t?'<div style="text-align:center;font-weight:bold;margin-bottom:4px">'+t+'</div><div>'+this.current.text+'</div>':'<div>'+this.current.text+'</div>');
-      window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+2)}).catch(()=>{});
+      const c=document.getElementById('container');const h=c?Math.ceil(c.getBoundingClientRect().height):210;
+      window.pet.invoke('pet-resize',{height:Math.max(210,h)}).catch(()=>{});
     });
   }
   hideBubble(){
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
-    setTimeout(()=>{window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+2)}).catch(()=>{});},0);
+    setTimeout(()=>{const c=document.getElementById('container');const h=c?Math.ceil(c.getBoundingClientRect().height):210;window.pet.invoke('pet-resize',{height:Math.max(210,h)}).catch(()=>{});},0);
   }
   close(){
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
     dotEl.className='dot-none';dotSymbol.textContent='○';
-    setTimeout(()=>{window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+2)}).catch(()=>{});},0);
+    setTimeout(()=>{const c=document.getElementById('container');const h=c?Math.ceil(c.getBoundingClientRect().height):210;window.pet.invoke('pet-resize',{height:Math.max(210,h)}).catch(()=>{});},0);
     this.next();
   }
   clearQueue(){
@@ -81,7 +82,7 @@ class NotificationQueue{
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
     dotEl.className='dot-none';dotSymbol.textContent='○';
-    setTimeout(()=>{window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+2)}).catch(()=>{});},0);
+    setTimeout(()=>{const c=document.getElementById('container');const h=c?Math.ceil(c.getBoundingClientRect().height):210;window.pet.invoke('pet-resize',{height:Math.max(210,h)}).catch(()=>{});},0);
   }
 }
 const nq=new NotificationQueue();
