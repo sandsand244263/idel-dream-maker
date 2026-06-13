@@ -118,13 +118,24 @@ function findScenarioById(id) {
 
 function resetGameForScenario(scenario, alias) {
   gameState.scenarioId = scenario.id;
-  gameState.level = 1;
-  gameState.exp = 0;
-  gameState.totalExpEarned = 0;
-  gameState.totalRuntimeMs = 0;
-  gameState.triggeredEvents = [];
-  gameState.unlockedAchievements = [];
-  gameState.equippedTitleIndex = 0;
+  const p = gameState.scenarioProgress && gameState.scenarioProgress[scenario.id];
+  if (p) {
+    gameState.totalExpEarned = p.totalExpEarned || 0;
+    gameState.level = calcLevel(gameState.totalExpEarned);
+    gameState.exp = gameState.totalExpEarned;
+    gameState.totalRuntimeMs = p.totalRuntimeMs || 0;
+    gameState.triggeredEvents = p.triggeredEvents ? [...p.triggeredEvents] : [];
+    gameState.unlockedAchievements = p.unlockedAchievements ? [...p.unlockedAchievements] : [];
+    gameState.equippedTitleIndex = p.equippedTitleIndex || 0;
+  } else {
+    gameState.level = 1;
+    gameState.exp = 0;
+    gameState.totalExpEarned = 0;
+    gameState.totalRuntimeMs = 0;
+    gameState.triggeredEvents = [];
+    gameState.unlockedAchievements = [];
+    gameState.equippedTitleIndex = 0;
+  }
   gameState.isInHub = false;
   gameState.scenarioAlias = alias || '';
   currentScenario = scenario;
@@ -136,17 +147,23 @@ function exitToHub() {
   if (sid) {
     if (!gameState.unlockedTitleSets) gameState.unlockedTitleSets = {};
     gameState.unlockedTitleSets[sid] = unlocked;
+
+    // Save progress: only add delta exp to hub to avoid double counting
+    const prevProgress = gameState.scenarioProgress && gameState.scenarioProgress[sid];
+    const prevExp = prevProgress ? prevProgress.totalExpEarned : 0;
+    const delta = gameState.totalExpEarned - prevExp;
+    gameState.hubTotalExp += Math.max(0, delta);
+
+    gameState.scenarioProgress[sid] = {
+      totalExpEarned: gameState.totalExpEarned,
+      totalRuntimeMs: gameState.totalRuntimeMs,
+      triggeredEvents: [...gameState.triggeredEvents],
+      unlockedAchievements: [...gameState.unlockedAchievements],
+      equippedTitleIndex: gameState.equippedTitleIndex,
+    };
   }
 
-  gameState.hubTotalExp += gameState.totalExpEarned;
-
   gameState.scenarioId = '';
-  gameState.level = 1;
-  gameState.exp = 0;
-  gameState.totalExpEarned = 0;
-  gameState.totalRuntimeMs = 0;
-  gameState.triggeredEvents = [];
-  gameState.unlockedAchievements = [];
   gameState.isInHub = true;
   hubLevel = calcLevel(gameState.hubTotalExp);
 }

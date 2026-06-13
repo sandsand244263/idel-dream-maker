@@ -60,7 +60,7 @@
       <button id="btn-titles" class="bar-btn">称号</button>
 
       <button id="btn-settings" class="bar-btn">设置</button>
-      <button id="btn-hide" class="bar-btn">隐藏</button>
+      <button id="btn-tutorial" class="bar-btn">教程</button>
     </footer>
   </div>
 
@@ -68,7 +68,7 @@
     <div id="confirm-overlay"></div>
     <div id="confirm-box">
       <div id="confirm-title">返回大厅</div>
-      <div id="confirm-desc">确定返回大厅吗？副本等级将重置，经验累入全局等级。</div>
+      <div id="confirm-desc">确定返回大厅吗？副本进度将保留，经验累入全局等级。</div>
       <div id="confirm-buttons">
         <button id="confirm-cancel">取消</button>
         <button id="confirm-ok">确定</button>
@@ -137,14 +137,15 @@
       <div id="onboarding-title">欢迎来到 Idel-DreamMaker</div>
       <div id="onboarding-body">
         <p>这是一款藏在系统托盘里的挂机叙事应用。</p>
+        <div id="onboarding-name-row"><label>你的名称：</label><input type="text" id="onboarding-name" placeholder="输入名称" spellcheck="false" /></div>
         <p><b>如何开始：</b></p>
         <p>1. 点击 <b>[副本]</b> 或 <b>[+ 抽取副本]</b> 选择一个故事世界</p>
         <p>2. 进入后自动挂机，经验随时间增长</p>
         <p>3. 升级解锁称号，随机弹出故事事件</p>
-        <p>4. 随时点击 <b>[返回大厅]</b> 退出，经验累入全局等级</p>
+        <p>4. 随时点击 <b>[大厅]</b> 退出，经验累入全局等级</p>
         <p style="margin-top:8px;color:var(--dim);font-size:11px">提示：宠物窗口常驻桌面，点击宠物可交互</p>
       </div>
-      <button id="onboarding-ok">知道了</button>
+      <button id="onboarding-ok">开始冒险</button>
     </div>
   </div>
   <div id="debug-panel" class="hidden">

@@ -204,7 +204,7 @@ function renderHubView() {
   hubLevelDisplay.textContent = `${t('hubLevel')}${hubLevel}`; hubDrawBtn.textContent = t('drawBtn');
   hubScenarioList.innerHTML = '';
   if (!scenarioList || scenarioList.length === 0) {
-    hubScenarioList.innerHTML = `<div class="hub-empty"><div class="hub-empty-icon">[ ~ ~ ]</div><div class="hub-empty-text">${t('noScenarios')}</div><div class="hub-empty-hint">点击下方 [副本] 或 [+ 抽取副本] 开始</div></div>`;
+    hubScenarioList.innerHTML = `<div class="hub-empty"><div class="hub-empty-icon">[ ~ ~ ]</div><div class="hub-empty-text">${t('noScenarios')}</div><div class="hub-empty-hint">点击下方 [副本] 或 [+ 抽取副本] 开始，点击 [教程] 查看操作说明</div></div>`;
     return;
   }
   scenarioList.forEach(s => {
@@ -303,7 +303,10 @@ settingsNameSave.addEventListener('click', async () => { const n = settingsName.
 settingsTheme.addEventListener('change', async () => { const v = settingsTheme.value; try { await window.electron.invoke('set-font-theme', { theme: v }); if (gameState) gameState.selected_font_theme = v; applyTheme(v); } catch (e) { showToast('切换主题失败', 'error'); } });
 settingsLanguage.addEventListener('change', async () => { const v = settingsLanguage.value; try { await window.electron.invoke('set-language', { lang: v }); if (gameState) gameState.language = v; applyLanguage(); renderHubView(); } catch (e) { showToast('切换语言失败', 'error'); } });
 settingsAILanguage.addEventListener('change', async () => { const v = settingsAILanguage.value; try { await window.electron.invoke('set-ai-output-language', { lang: v }); if (gameState) gameState.ai_output_language = v; } catch (e) { showToast('切换 AI 语言失败', 'error'); } });
-btnHide.addEventListener('click', () => { window.electron.invoke('hide-window').catch(() => {}); });
+document.getElementById('btn-tutorial').addEventListener('click', async () => {
+  if (onboardingInput) onboardingInput.value = gameState?.player_name || '';
+  if (onboardingModal) onboardingModal.classList.remove('hidden');
+});
 
 function applyTheme(id) { document.documentElement.className = `theme-${id}`; }
 function applyLanguage() { document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); }); }
@@ -339,10 +342,14 @@ async function updateTooltip() {
 
 // ── Debug ──
 const onboardingModal = document.getElementById('onboarding-modal');
+const onboardingInput = document.getElementById('onboarding-name');
 const onboardingOk = document.getElementById('onboarding-ok');
-onboardingOk.addEventListener('click', () => {
+onboardingOk.addEventListener('click', async () => {
+  const n = onboardingInput.value.trim();
+  if (n) { try { await window.electron.invoke('set-player-name', { name: n }); if (gameState) gameState.player_name = n; } catch {} }
   onboardingModal.classList.add('hidden');
   window.electron.invoke('set-onboarding-seen').catch(() => {});
+  renderHubView(); updateUI();
 });
 
 const debugPanel = document.getElementById('debug-panel'), debugContent = document.getElementById('debug-content'), debugClose = document.getElementById('debug-close');
@@ -382,6 +389,5 @@ init().then(() => {
   document.title = `Idel-DreamMaker v${appVersion}`; applyTheme(gameState?.selected_font_theme || 'green');
   if (gameState?.is_in_hub) addLog('system', `Idel-DreamMaker v${appVersion} ${t('logStartHub')}`);
   else if (gameState) { switchView(false); addLog('info', tf('logStartScenario', formatRuntime(gameState.total_runtime_ms), gameState.level)); }
-  if (!gameState?.has_seen_onboarding && onboardingModal) { onboardingModal.classList.remove('hidden'); }
   updateUI(); updateTooltip(); setInterval(updateTooltip, 5000);
 });
