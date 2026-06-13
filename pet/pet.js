@@ -182,7 +182,8 @@ function applyPetSettings() {
 window.pet.on('pet-list',d=>{pets=d.pets||[];selIdx=d.selected||0;loadPet(selIdx);applyPetSettings();});
 window.pet.on('pet-selected',d=>{selIdx=d.index;loadPet(selIdx);});
 window.pet.on('toggle-feature', d => {
-  const key = 'show' + d.feature.charAt(0).toUpperCase() + d.feature.slice(1);
+  const keyMap = { border:'showBorder', infobar:'showInfoBar', expbar:'showExpBar' };
+  const key = keyMap[d.feature] || d.feature;
   setToggle(key, d.value);
   applyPetSettings();
 });
