@@ -47,7 +47,7 @@ body { font-family:var(--font); color:var(--fg); }
 #ctx-menu .ctx-item.ctx-off { color:color-mix(in srgb,var(--fg) 35%,transparent); }
 .ctx-sep { height:1px;background:color-mix(in srgb,var(--fg) 10%,transparent);margin:3px 10px;padding:0!important;cursor:default!important; }
 #ctx-select-pet { position:relative; }
-#ctx-pet-list { display:none; position:absolute; min-width:130px; background:color-mix(in srgb,var(--bg) 95%,transparent); border:1px solid var(--border-color); border-radius:4px; padding:4px 0; z-index:21; }
+#ctx-pet-list { display:none; position:absolute; left:0; top:0; min-width:130px; background:color-mix(in srgb,var(--bg) 95%,transparent); border:1px solid var(--border-color); border-radius:4px; padding:4px 0; z-index:21; }
 #ctx-pet-list.show { display:block; }
 #ctx-pet-list .ctx-pet-item { padding:4px 12px;cursor:pointer;font-size:10px;color:color-mix(in srgb,var(--fg) 60%,transparent);white-space:nowrap; }
 #ctx-pet-list .ctx-pet-item:hover { background:color-mix(in srgb,var(--fg) 10%,transparent);color:var(--fg); }
