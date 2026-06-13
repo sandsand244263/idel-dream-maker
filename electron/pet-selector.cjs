@@ -2,6 +2,7 @@ const { BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
 let selectorWindow = null;
+let petWindowRef = null;
 let currentPetList = [];
 let selectedPetIndex = 0;
 
@@ -11,11 +12,8 @@ function sendToSelector(channel, data) {
   }
 }
 
-function createSelectorWindow(app) {
-  if (selectorWindow && !selectorWindow.isDestroyed()) {
-    selectorWindow.focus();
-    return selectorWindow;
-  }
+function initSelector(app, petWin) {
+  petWindowRef = petWin;
 
   selectorWindow = new BrowserWindow({
     width: 180,
@@ -40,21 +38,17 @@ function createSelectorWindow(app) {
   });
 
   selectorWindow.on('closed', () => { selectorWindow = null; });
-
-  return selectorWindow;
 }
 
-function positionSelectorWindow() {
-  if (!selectorWindow || !selectorWindow.isDestroyed()) return;
-  const wins = BrowserWindow.getAllWindows();
-  const petWin = wins.find(w => !w.isDestroyed() && w !== selectorWindow && w.getBounds().width === 192);
-  if (!petWin) return;
-  const petBounds = petWin.getBounds();
+function positionAndShowSelector() {
+  if (!selectorWindow || !selectorWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) return;
+  const petBounds = petWindowRef.getBounds();
   const selWidth = 180;
   const selHeight = Math.min(240, Math.max(120, (currentPetList.length || 1) * 32 + 60));
 
   let x, y = petBounds.y;
-  if (petBounds.x + petBounds.width + selWidth + 10 < require('electron').screen.getPrimaryDisplay().workAreaSize.width) {
+  const screen = require('electron').screen.getPrimaryDisplay().workAreaSize;
+  if (petBounds.x + petBounds.width + selWidth + 10 < screen.width) {
     x = petBounds.x + petBounds.width + 5;
   } else {
     x = Math.max(0, petBounds.x - selWidth - 5);
@@ -66,14 +60,12 @@ function positionSelectorWindow() {
 }
 
 function registerSelectorIpcHandlers(app) {
-
   ipcMain.handle('show-pet-selector', () => {
     const { scanPets } = require('./pet.cjs');
     currentPetList = scanPets(app);
     selectedPetIndex = 0;
-    createSelectorWindow(app);
-    positionSelectorWindow();
     sendToSelector('pet-list', { pets: currentPetList, selected: selectedPetIndex });
+    positionAndShowSelector();
     return true;
   });
 
@@ -87,4 +79,4 @@ function registerSelectorIpcHandlers(app) {
   });
 }
 
-module.exports = { registerSelectorIpcHandlers, sendToSelector };
+module.exports = { registerSelectorIpcHandlers, initSelector };

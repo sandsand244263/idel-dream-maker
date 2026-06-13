@@ -2,8 +2,8 @@ const { BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
-const { registerSelectorIpcHandlers } = require('./pet-selector.cjs');
-const { registerBubbleIpcHandlers } = require('./pet-bubble.cjs');
+const { registerSelectorIpcHandlers, initSelector } = require('./pet-selector.cjs');
+const { registerBubbleIpcHandlers, initBubble } = require('./pet-bubble.cjs');
 
 let petWindow = null;
 let currentPetList = [];
@@ -227,6 +227,8 @@ function togglePetWindow() {
 function initPet(app) {
   scanPets(app);
   const win = createPetWindow(app);
+  initSelector(app, win);
+  initBubble(app, win);
   sendToPet('pet-list', { pets: currentPetList, selected: selectedPetIndex });
   return win;
 }

@@ -2,6 +2,7 @@ const { BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
 let bubbleWindow = null;
+let petWindowRef = null;
 let currentData = null;
 
 function sendToBubble(channel, data) {
@@ -10,12 +11,8 @@ function sendToBubble(channel, data) {
   }
 }
 
-function createBubbleWindow(app) {
-  if (bubbleWindow && !bubbleWindow.isDestroyed()) {
-    if (currentData) sendToBubble('show-bubble', currentData);
-    bubbleWindow.focus();
-    return bubbleWindow;
-  }
+function initBubble(app, petWin) {
+  petWindowRef = petWin;
 
   bubbleWindow = new BrowserWindow({
     width: 260,
@@ -40,16 +37,11 @@ function createBubbleWindow(app) {
   });
 
   bubbleWindow.on('closed', () => { bubbleWindow = null; currentData = null; });
-
-  return bubbleWindow;
 }
 
-function positionBubbleWindow(data) {
-  if (!bubbleWindow || !bubbleWindow.isDestroyed()) return;
-  const wins = BrowserWindow.getAllWindows();
-  const petWin = wins.find(w => !w.isDestroyed() && w !== bubbleWindow && w.getBounds().width === 192);
-  if (!petWin) return;
-  const petBounds = petWin.getBounds();
+function positionAndShowBubble(data) {
+  if (!bubbleWindow || !bubbleWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) return;
+  const petBounds = petWindowRef.getBounds();
   const bw = 260, bh = 120;
   const screen = require('electron').screen.getPrimaryDisplay().workAreaSize;
 
@@ -70,14 +62,8 @@ function positionBubbleWindow(data) {
 }
 
 function registerBubbleIpcHandlers(app) {
-
   ipcMain.handle('show-bubble', (_, data) => {
-    createBubbleWindow(app);
-    if (bubbleWindow && !bubbleWindow.isDestroyed()) {
-      const finish = () => positionBubbleWindow(data);
-      bubbleWindow.webContents.once('did-finish-load', finish);
-      if (!bubbleWindow.webContents.isLoading()) finish();
-    }
+    positionAndShowBubble(data);
     return true;
   });
 
@@ -87,4 +73,4 @@ function registerBubbleIpcHandlers(app) {
   });
 }
 
-module.exports = { registerBubbleIpcHandlers };
+module.exports = { registerBubbleIpcHandlers, initBubble };
