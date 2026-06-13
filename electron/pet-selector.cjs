@@ -35,7 +35,7 @@ function initSelector(app, petWin) {
 
   selectorWindow.on('blur', () => {
     console.log('[sel] blur fired');
-    if (selectorWindow && !selectorWindow.isDestroyed()) selectorWindow.close();
+    if (selectorWindow && !selectorWindow.isDestroyed()) selectorWindow.hide();
   });
 
   selectorWindow.on('closed', () => {
@@ -46,7 +46,7 @@ function initSelector(app, petWin) {
 
 function positionAndShowSelector() {
   console.log('[sel] positionAndShowSelector, selWin:', !!selectorWindow, 'petWinRef:', !!petWindowRef);
-  if (!selectorWindow || !selectorWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) {
+  if (!selectorWindow || selectorWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) {
     console.log('[sel] bail - ref invalid');
     return;
   }

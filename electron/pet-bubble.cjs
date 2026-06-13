@@ -34,7 +34,7 @@ function initBubble(app, petWin) {
 
   bubbleWindow.on('blur', () => {
     console.log('[bubble] blur fired');
-    if (bubbleWindow && !bubbleWindow.isDestroyed()) bubbleWindow.close();
+    if (bubbleWindow && !bubbleWindow.isDestroyed()) bubbleWindow.hide();
   });
 
   bubbleWindow.on('closed', () => {
@@ -45,7 +45,7 @@ function initBubble(app, petWin) {
 
 function positionAndShowBubble(data) {
   console.log('[bubble] positionAndShowBubble called, petWindowRef:', !!petWindowRef, 'bubbleWindow:', !!bubbleWindow);
-  if (!bubbleWindow || !bubbleWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) {
+  if (!bubbleWindow || bubbleWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) {
     console.log('[bubble] bail - ref invalid');
     return;
   }

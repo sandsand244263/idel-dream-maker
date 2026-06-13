@@ -27,7 +27,7 @@ function initContextMenu(app, petWin) {
 
   contextWindow.on('blur', () => {
     console.log('[ctx] blur fired');
-    if (contextWindow && !contextWindow.isDestroyed()) contextWindow.close();
+    if (contextWindow && !contextWindow.isDestroyed()) contextWindow.hide();
   });
 
   contextWindow.on('closed', () => {
@@ -38,7 +38,7 @@ function initContextMenu(app, petWin) {
 
 function showContextMenu() {
   console.log('[ctx] showContextMenu called, contextWindow:', !!contextWindow, 'petWindowRef:', !!petWindowRef);
-  if (!contextWindow || !contextWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) {
+  if (!contextWindow || contextWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) {
     console.log('[ctx] bail - window or ref invalid');
     return;
   }
