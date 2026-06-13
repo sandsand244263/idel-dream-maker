@@ -26,23 +26,34 @@ function initContextMenu(app, petWin) {
   contextWindow.loadFile(path.join(__dirname, '..', 'pet-context-menu', 'index.html'));
 
   contextWindow.on('blur', () => {
+    console.log('[ctx] blur fired');
     if (contextWindow && !contextWindow.isDestroyed()) contextWindow.close();
   });
 
-  contextWindow.on('closed', () => { contextWindow = null; });
+  contextWindow.on('closed', () => {
+    console.log('[ctx] window closed');
+    contextWindow = null;
+  });
 }
 
 function showContextMenu() {
-  if (!contextWindow || !contextWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) return;
+  console.log('[ctx] showContextMenu called, contextWindow:', !!contextWindow, 'petWindowRef:', !!petWindowRef);
+  if (!contextWindow || !contextWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) {
+    console.log('[ctx] bail - window or ref invalid');
+    return;
+  }
   const petBounds = petWindowRef.getBounds();
+  console.log('[ctx] petBounds:', JSON.stringify(petBounds));
   const cw = 170, ch = 220;
   let x = petBounds.x + petBounds.width + 5;
   const screen = require('electron').screen.getPrimaryDisplay().workAreaSize;
   if (x + cw > screen.width) x = Math.max(0, petBounds.x - cw - 5);
   const y = Math.max(0, petBounds.y);
+  console.log('[ctx] setBounds:', { x, y, width: cw, height: ch });
   contextWindow.setBounds({ x, y, width: cw, height: ch });
   contextWindow.show();
   contextWindow.focus();
+  console.log('[ctx] show+focus called');
 }
 
 function registerContextMenuIpcHandlers() {

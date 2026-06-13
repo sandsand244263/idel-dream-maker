@@ -33,15 +33,24 @@ function initBubble(app, petWin) {
   bubbleWindow.loadFile(path.join(__dirname, '..', 'pet-bubble', 'index.html'));
 
   bubbleWindow.on('blur', () => {
+    console.log('[bubble] blur fired');
     if (bubbleWindow && !bubbleWindow.isDestroyed()) bubbleWindow.close();
   });
 
-  bubbleWindow.on('closed', () => { bubbleWindow = null; currentData = null; });
+  bubbleWindow.on('closed', () => {
+    console.log('[bubble] window closed');
+    bubbleWindow = null; currentData = null;
+  });
 }
 
 function positionAndShowBubble(data) {
-  if (!bubbleWindow || !bubbleWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) return;
+  console.log('[bubble] positionAndShowBubble called, petWindowRef:', !!petWindowRef, 'bubbleWindow:', !!bubbleWindow);
+  if (!bubbleWindow || !bubbleWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) {
+    console.log('[bubble] bail - ref invalid');
+    return;
+  }
   const petBounds = petWindowRef.getBounds();
+  console.log('[bubble] petBounds:', JSON.stringify(petBounds));
   const bw = 260, bh = 120;
   const screen = require('electron').screen.getPrimaryDisplay().workAreaSize;
 
@@ -56,6 +65,7 @@ function positionAndShowBubble(data) {
   }
 
   bubbleWindow.setBounds({ x, y, width: bw, height: bh });
+  console.log('[bubble] setBounds+show:', { x, y, width: bw, height: bh });
   bubbleWindow.show();
   bubbleWindow.focus();
   if (data) { currentData = data; sendToBubble('show-bubble', data); }

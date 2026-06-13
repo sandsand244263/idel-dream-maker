@@ -34,15 +34,24 @@ function initSelector(app, petWin) {
   selectorWindow.loadFile(path.join(__dirname, '..', 'pet-selector', 'index.html'));
 
   selectorWindow.on('blur', () => {
+    console.log('[sel] blur fired');
     if (selectorWindow && !selectorWindow.isDestroyed()) selectorWindow.close();
   });
 
-  selectorWindow.on('closed', () => { selectorWindow = null; });
+  selectorWindow.on('closed', () => {
+    console.log('[sel] closed');
+    selectorWindow = null;
+  });
 }
 
 function positionAndShowSelector() {
-  if (!selectorWindow || !selectorWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) return;
+  console.log('[sel] positionAndShowSelector, selWin:', !!selectorWindow, 'petWinRef:', !!petWindowRef);
+  if (!selectorWindow || !selectorWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) {
+    console.log('[sel] bail - ref invalid');
+    return;
+  }
   const petBounds = petWindowRef.getBounds();
+  console.log('[sel] petBounds:', JSON.stringify(petBounds));
   const selWidth = 180;
   const selHeight = Math.min(240, Math.max(120, (currentPetList.length || 1) * 32 + 60));
 
@@ -55,6 +64,7 @@ function positionAndShowSelector() {
   }
 
   selectorWindow.setBounds({ x, y, width: selWidth, height: selHeight });
+  console.log('[sel] setBounds+show:', { x, y, width: selWidth, height: selHeight });
   selectorWindow.show();
   selectorWindow.focus();
 }

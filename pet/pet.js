@@ -161,7 +161,7 @@ document.addEventListener('mouseup',()=>{if(dragging){dragging=false;window.pet.
 // ── Interactions ──
 canvas.addEventListener('click',()=>{if(!dragMoved)transitionTo('wave');});
 canvas.addEventListener('dblclick',e=>{e.preventDefault();if(!dragMoved){transitionTo('jump');window.pet.invoke('toggle-main-window').catch(()=>{});}});
-canvas.addEventListener('contextmenu',e=>{e.preventDefault();window.pet.invoke('show-context-menu').catch(()=>{});});
+canvas.addEventListener('contextmenu',e=>{e.preventDefault();console.log('[pet] contextmenu fired');window.pet.invoke('show-context-menu').catch(()=>{});});
 
 // ── Dot click toggle ──
 dotEl.addEventListener('click',(e)=>{
