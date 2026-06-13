@@ -440,14 +440,34 @@ npx electron-builder   # 打包验证
 
 ---
 
+## v2.2 — UI 打磨 Phase 1
+
+> **当前阶段：v2.2（已完成）**
+>
+> 细节优化 9 项全部完成。涵盖：去 Debug 自动弹出、标题栏/状态栏去重、对比度修正、EXP 进度条、Toast 提示、按钮反馈、保存指示器、空状态+引导、主窗口边框/圆角。
+
+| # | 内容 | 涉及文件 | 状态 |
+|--:|------|---------|:----:|
+| 1 | **去掉 Debug 面板自动弹出** | `src/main.js` | ✅ |
+| 2 | **标题栏/状态栏去重** | `src/main.js` | ✅ |
+| 3 | **修正默认主题对比度** | `src/style.css`, `pet/style.css` | ✅ |
+| 4 | **EXP 进度条** | `index.html`, `src/style.css`, `src/main.js` | ✅ |
+| 5 | **错误操作 Toast 提示** | `index.html`, `src/style.css`, `src/main.js` | ✅ |
+| 6 | **按钮 `:active` 反馈** | `src/style.css` | ✅ |
+| 7 | **保存指示器（闪烁绿点）** | `index.html`, `src/style.css`, `src/main.js`, `electron/main.cjs` | ✅ |
+| 8 | **大厅空状态 + 首次引导** | `index.html`, `src/style.css`, `src/main.js`, `electron/main.cjs` | ✅ |
+| 9 | **主窗口黑色边框/圆角** | `src/style.css` | ✅ |
+
+---
+
 ## 规划（待定）
 
-以下内容在 v2.1 完成后考虑：
+以下内容在 v2.2 完成后考虑：
 
 | 内容 | 说明 |
 |------|------|
+| Frutiger Aero 主题（Phase 2） | 新增一套 Frutiger Aero 风格主题 |
 | 新副本（中世纪/赛博/修仙/克苏鲁） | 延后 |
-| UI 动效 + 错误提示 + 首次引导 | 延后 |
 | Mac 适配 | Electron 天然支持，待测试并修复 |
 | Steam 上架 | Electron 版本打包后上架 |
 
