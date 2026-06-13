@@ -9,7 +9,8 @@ html,body { width:100%;background:transparent;user-select:none; }
 
 body { font-family:var(--font); color:var(--fg); }
 
-#container { width:100%;display:flex;flex-direction:column;align-items:center;gap:2px;padding:2px 0;position:relative;background:rgba(10,10,10,0.85);border:1px solid rgba(0,255,0,0.12);border-radius:6px;overflow:hidden; }
+#container { width:100%;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;position:relative;background:rgba(10,10,10,0.85);border:1px solid rgba(0,255,0,0.12);border-radius:6px;overflow:hidden; }
+#container.border-hidden { border:none; }
 
 /* Info bar */
 #info-bar { text-align:center;height:18px;display:flex;align-items:center;justify-content:center;pointer-events:none;flex-shrink:0; }
@@ -35,10 +36,17 @@ body { font-family:var(--font); color:var(--fg); }
 #bubble-zone.zone-hidden { display:none; }
 
 /* Context menu */
-#ctx-menu { position:absolute;background:color-mix(in srgb,var(--bg) 95%,transparent);border:1px solid var(--border-color);border-radius:4px;padding:4px 0;min-width:130px;z-index:20;font-size:11px; }
-#ctx-menu div { padding:5px 14px;cursor:pointer;color:color-mix(in srgb,var(--fg) 70%,transparent); }
-#ctx-menu div:hover { background:color-mix(in srgb,var(--fg) 10%,transparent); color:var(--fg); }
+#ctx-menu { position:absolute;background:color-mix(in srgb,var(--bg) 95%,transparent);border:1px solid var(--border-color);border-radius:4px;padding:4px 0;min-width:150px;z-index:20;font-size:11px; }
+#ctx-menu .ctx-item { padding:5px 14px;cursor:pointer;color:color-mix(in srgb,var(--fg) 70%,transparent); }
+#ctx-menu .ctx-item:hover { background:color-mix(in srgb,var(--fg) 10%,transparent); color:var(--fg); }
+#ctx-menu .ctx-item.ctx-on { color:var(--fg); }
+#ctx-menu .ctx-item.ctx-off { color:color-mix(in srgb,var(--fg) 35%,transparent); }
 .ctx-sep { height:1px;background:color-mix(in srgb,var(--fg) 10%,transparent);margin:3px 10px;padding:0!important;cursor:default!important; }
+#ctx-pet-list { margin:0 8px;border:1px solid var(--border-color);border-radius:3px;max-height:120px;overflow-y:auto;background:color-mix(in srgb,var(--bg) 90%,transparent); }
+#ctx-pet-list.hidden { display:none; }
+#ctx-pet-list .ctx-pet-item { padding:3px 10px;cursor:pointer;font-size:10px;color:color-mix(in srgb,var(--fg) 60%,transparent); }
+#ctx-pet-list .ctx-pet-item:hover { background:color-mix(in srgb,var(--fg) 10%,transparent);color:var(--fg); }
+#ctx-pet-list .ctx-pet-item.ctx-pet-active { color:var(--fg);font-weight:bold; }
 
 /* EXP progress bar */
 #exp-wrap { display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0; }

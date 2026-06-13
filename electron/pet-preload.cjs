@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld('pet', {
       'scan-pets', 'select-pet', 'pet-get-state',
       'pet-drag-start', 'pet-drag-move', 'pet-drag-end',
       'get-pet-spritesheet', 'hide-pet-window', 'toggle-pet-window', 'toggle-main-window',
+      'open-pets-folder',
     ];
     if (validChannels.includes(channel)) {
       return ipcRenderer.invoke(channel, ...args);

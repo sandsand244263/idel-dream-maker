@@ -1,4 +1,4 @@
-const { BrowserWindow, ipcMain } = require('electron');
+const { BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -193,6 +193,13 @@ function registerPetIpcHandlers(mainWindow, app) {
       } catch {}
     }
     return null;
+  });
+
+  ipcMain.handle('open-pets-folder', () => {
+    const dir = getPetsDir(require('electron').app);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    shell.openPath(dir);
+    return true;
   });
 }
 

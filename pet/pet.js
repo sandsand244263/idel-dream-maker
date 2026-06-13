@@ -177,13 +177,69 @@ bubbleZone.addEventListener('click',(e)=>{
 document.addEventListener('click',()=>{if(dragMoved)return;if(bubbleZone.className==='zone-show')nq.close();});
 
 // ── Context menu ──
+// Toggle helpers
+function getToggle(key, def) { const v = localStorage.getItem('pet_' + key); return v !== null ? v === 'true' : def; }
+function setToggle(key, val) { localStorage.setItem('pet_' + key, val); }
+function applyPetSettings() {
+  const showBorder = getToggle('showBorder', true);
+  const showInfoBar = getToggle('showInfoBar', true);
+  const showExpBar = getToggle('showExpBar', true);
+  document.getElementById('container').classList.toggle('border-hidden', !showBorder);
+  document.getElementById('info-bar').style.display = showInfoBar ? '' : 'none';
+  document.getElementById('exp-wrap').style.display = showExpBar ? '' : 'none';
+  document.getElementById('ctx-toggle-border').textContent = (showBorder ? '\u2713 ' : '\u2717 ') + '显示边框';
+  document.getElementById('ctx-toggle-border').className = 'ctx-item' + (showBorder ? ' ctx-on' : ' ctx-off');
+  document.getElementById('ctx-toggle-infobar').textContent = (showInfoBar ? '\u2713 ' : '\u2717 ') + '信息栏';
+  document.getElementById('ctx-toggle-infobar').className = 'ctx-item' + (showInfoBar ? ' ctx-on' : ' ctx-off');
+  document.getElementById('ctx-toggle-expbar').textContent = (showExpBar ? '\u2713 ' : '\u2717 ') + '进度条';
+  document.getElementById('ctx-toggle-expbar').className = 'ctx-item' + (showExpBar ? ' ctx-on' : ' ctx-off');
+}
+
+function renderPetList() {
+  const el = document.getElementById('ctx-pet-list');
+  el.innerHTML = '';
+  pets.forEach((p, i) => {
+    const item = document.createElement('div');
+    item.className = 'ctx-pet-item' + (i === selIdx ? ' ctx-pet-active' : '');
+    item.textContent = p.name || ('宠物 ' + (i + 1));
+    item.addEventListener('click', () => {
+      ctxMenu.classList.add('hidden');
+      selIdx = i;
+      window.pet.invoke('select-pet', { index: selIdx }).catch(() => {});
+    });
+    el.appendChild(item);
+  });
+}
+
+document.getElementById('ctx-select-pet').addEventListener('click', (e) => {
+  e.stopPropagation();
+  const list = document.getElementById('ctx-pet-list');
+  list.classList.toggle('hidden');
+});
+document.getElementById('ctx-toggle-border').addEventListener('click', () => {
+  const v = !getToggle('showBorder', true);
+  setToggle('showBorder', v);
+  applyPetSettings();
+});
+document.getElementById('ctx-toggle-infobar').addEventListener('click', () => {
+  const v = !getToggle('showInfoBar', true);
+  setToggle('showInfoBar', v);
+  applyPetSettings();
+});
+document.getElementById('ctx-toggle-expbar').addEventListener('click', () => {
+  const v = !getToggle('showExpBar', true);
+  setToggle('showExpBar', v);
+  applyPetSettings();
+});
+document.getElementById('ctx-open-folder').addEventListener('click', () => {
+  ctxMenu.classList.add('hidden');
+  window.pet.invoke('open-pets-folder').catch(() => {});
+});
 document.getElementById('ctx-close').addEventListener('click',()=>{ctxMenu.classList.add('hidden');window.pet.invoke('hide-pet-window').catch(()=>{});});
-document.getElementById('ctx-prev').addEventListener('click',()=>{ctxMenu.classList.add('hidden');if(pets.length===0)return;selIdx=(selIdx-1+pets.length)%pets.length;window.pet.invoke('select-pet',{index:selIdx}).catch(()=>{});});
-document.getElementById('ctx-next').addEventListener('click',()=>{ctxMenu.classList.add('hidden');if(pets.length===0)return;selIdx=(selIdx+1)%pets.length;window.pet.invoke('select-pet',{index:selIdx}).catch(()=>{});});
 
 // ── IPC ──
-window.pet.on('pet-list',d=>{pets=d.pets||[];selIdx=d.selected||0;loadPet(selIdx);});
-window.pet.on('pet-selected',d=>{selIdx=d.index;loadPet(selIdx);});
+window.pet.on('pet-list',d=>{pets=d.pets||[];selIdx=d.selected||0;loadPet(selIdx);renderPetList();applyPetSettings();});
+window.pet.on('pet-selected',d=>{selIdx=d.index;loadPet(selIdx);renderPetList();});
 window.pet.on('game-tick',d=>{
   gameInfo.level=d.level||1;gameInfo.exp=d.total_exp_earned||0;
   if(d.currentTitle)gameInfo.title=d.currentTitle;
@@ -199,7 +255,7 @@ window.pet.on('level-up',d=>{gameInfo.title=d.title||gameInfo.title;transitionTo
 window.pet.on('achievement-unlocked',d=>{transitionTo('extra1');nq.enqueue({text:`${d.icon||'★'} ${d.name}`,title:'成就解锁',type:'achievement'},3);});
 window.pet.on('main-shown',()=>{nq.clearQueue();});
 
-window.pet.invoke('scan-pets').then(r=>{pets=r.pets||[];selIdx=r.selected||0;loadPet(selIdx);}).catch(()=>{});
+window.pet.invoke('scan-pets').then(r=>{pets=r.pets||[];selIdx=r.selected||0;loadPet(selIdx);applyPetSettings();}).catch(()=>{});
 window.pet.invoke('pet-get-state').then(()=>updateInfoBar()).catch(()=>{});
 
 setInterval(updateExpBar,50);
