@@ -91,6 +91,8 @@ const btnTitles = document.getElementById('btn-titles');
 const btnSettings = document.getElementById('btn-settings');
 const btnHide = document.getElementById('btn-hide');
 const permaStatus = document.getElementById('perma-status');
+const expBarFill = document.getElementById('exp-bar-fill');
+const expBarText = document.getElementById('exp-bar-text');
 
 const aliasModal = document.getElementById('alias-modal');
 const aliasTitle = document.getElementById('alias-title');
@@ -205,6 +207,18 @@ function updateUI() {
   titlebarId.textContent = `ID:${gameState.player_name}`; titlebarLv.textContent = `LV:${dl}`;
   if (ct) { titlebarTitle.textContent = ct.name; titlebarTitle.style.color = ct.color || '#888'; }
   updatePermaStatus();
+  updateExpBar();
+}
+
+function updateExpBar() {
+  if (!gameState || !expBarFill || !expBarText) return;
+  const exp = gameState.total_exp_earned || 0;
+  const lv = gameState.level || 1;
+  const currReq = calcExpForLevel(lv);
+  const nextReq = calcExpForLevel(lv + 1);
+  const pct = nextReq > currReq ? Math.min(100, ((exp - currReq) / (nextReq - currReq)) * 100) : 0;
+  expBarFill.style.width = `${Math.round(pct)}%`;
+  expBarText.textContent = `EXP: ${Math.floor(exp)} / ${nextReq} (${Math.round(pct)}%)`;
 }
 
 function updatePermaStatus() {
