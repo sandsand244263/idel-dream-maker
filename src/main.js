@@ -304,6 +304,10 @@ document.getElementById('dbg-runtime').addEventListener('click', async () => {
   await window.electron.invoke('dev-runtime', { hours: 1 }).catch(()=>{});
   addLog('system', '[DEV] +1h 运行时长');
 });
+document.getElementById('dbg-holiday').addEventListener('click', async () => {
+  const r = await window.electron.invoke('dev-force-holiday-event').catch(()=>null);
+  if (r) addLog('event', `[节日] ${r.holiday}: ${r.text}`);
+});
 document.addEventListener('keydown', (e) => {
   if (e.ctrlKey && e.shiftKey && e.key === 'D') {
     e.preventDefault();

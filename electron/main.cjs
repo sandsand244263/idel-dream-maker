@@ -5,6 +5,7 @@ const fs = require('fs');
 const { createMainWindow, getMainWindow } = require('./windows.cjs');
 const { createTray, setToolTip, getTray } = require('./tray.cjs');
 const { registerPetIpcHandlers, forwardToPet, initPet } = require('./pet.cjs');
+const { loadHolidays, getTodaysHoliday, getHolidayEventForScenario, getHolidayEventById } = require('./holiday.cjs');
 
 let mainWindow = null;
 let tray = null;
@@ -160,6 +161,13 @@ function checkAndTriggerEvent() {
   else prob = 0.15;
 
   if (Math.random() < prob) {
+    // Check holiday events first (50% weight when holiday active)
+    const holiday = getTodaysHoliday();
+    if (holiday && Math.random() < 0.5) {
+      const he = getHolidayEventForScenario(holiday, currentScenario.id);
+      if (he) return { id: 'holiday_' + holiday.id, title: holiday.name, color: '#FFD700', text: he.text, isHoliday: true };
+    }
+
     const pool = currentScenario.events.filter(e => {
       if (e.minLevel && e.minLevel > gameState.level) return false;
       if (e.minHours && e.minHours > runtimeHours) return false;
@@ -604,12 +612,27 @@ function registerIpcHandlers() {
     gameState.totalRuntimeMs += (hours || 1) * 3600000;
     return { runtime: gameState.totalRuntimeMs };
   });
+
+  ipcMain.handle('dev-force-holiday-event', () => {
+    if (!currentScenario || gameState.isInHub) return { info: '需要在副本内' };
+    const holidays = require('./holiday.cjs');
+    const all = holidays.getAllHolidays();
+    if (all.length === 0) return { info: '无节日数据' };
+    const h = all[Math.floor(Math.random() * all.length)];
+    const he = holidays.getHolidayEventForScenario(h, currentScenario.id);
+    if (!he) return { info: '节日无事件' };
+    const evPayload = { id: 'holiday_' + h.id, title: h.name, color: '#FFD700', text: he.text, isHoliday: true };
+    try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
+    forwardToPet('event-triggered', evPayload);
+    return { text: he.text, holiday: h.name };
+  });
 }
 
 // ── App Lifecycle ──
 
 app.whenReady().then(() => {
   allScenarios = loadScenarios();
+  loadHolidays();
 
   // Load save or create default
   gameState = readSave();
