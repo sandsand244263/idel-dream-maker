@@ -68,6 +68,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 /* ── Perma Status ── */
 #perma-status { flex-shrink: 0; padding: 3px 10px; font-size: 12px; color: var(--dim); border-top: 1px solid var(--dim); background: rgba(0,255,0,0.03); line-height: 1.5; display:flex; align-items:center; gap:4px; flex-wrap:wrap; }
 #perma-status > :first-child { flex:1; }
+#perma-text { text-align:center; }
 #save-dot { font-size:8px; color:var(--fg); animation:savePulse 0.6s ease-in-out 3; flex-shrink:0; }
 #save-dot.hidden { display:none; }
 @keyframes savePulse { 0%,100% { opacity:0.3; } 50% { opacity:1; } }
@@ -182,11 +183,12 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #onboarding-modal.hidden { display:none; }
 #onboarding-overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); }
 #onboarding-box { position:relative; background:var(--bg); border:1px solid var(--fg); border-radius:6px; padding:20px; width:280px; box-shadow:0 0 40px rgba(0,255,0,0.2); }
-#onboarding-title { font-weight:bold; font-size:16px; margin-bottom:12px; letter-spacing:1px; }
+#onboarding-title { font-weight:bold; font-size:16px; letter-spacing:1px; }
+#onboarding-subtitle { font-weight:bold; font-size:14px; margin-bottom:10px; letter-spacing:1px; }
 #onboarding-body p { font-size:12px; line-height:1.6; margin-bottom:4px; color:var(--dim); }
 #onboarding-name-row { margin:8px 0; display:flex; align-items:center; gap:6px; }
-#onboarding-name-row label { font-size:12px; color:var(--fg); white-space:nowrap; }
-#onboarding-name { flex:1; background:rgba(0,255,0,0.05); border:1px solid var(--dim); color:var(--fg); padding:5px 8px; font-family:var(--font); font-size:12px; outline:none; }
+#onboarding-name-row label { font-size:12px; color:var(--fg); white-space:nowrap; flex-shrink:0; }
+#onboarding-name { flex:1; min-width:0; background:rgba(0,255,0,0.05); border:1px solid var(--dim); color:var(--fg); padding:5px 8px; font-family:var(--font); font-size:12px; outline:none; }
 #onboarding-name:focus { border-color:var(--fg); }
 #onboarding-body b { color:var(--fg); }
 #onboarding-ok { display:block; margin:14px auto 0; background:transparent; border:1px solid var(--fg); color:var(--fg); padding:6px 24px; font-family:var(--font); font-size:13px; cursor:pointer; letter-spacing:1px; }
