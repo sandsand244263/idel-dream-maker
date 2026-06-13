@@ -5,7 +5,7 @@ const LANG = {
     hubWelcome: '欢迎回来', hubLevel: '大厅 Lv.', drawBtn: '+ 抽取副本',
     drawPrompt: '抽到「{0}」— 输入该副本内的名称（留空用默认）',
     enterPrompt: '进入「{0}」— 输入该副本内的名称（留空用默认）',
-    btnMini: '宠物', btnBack: '返回大厅', btnScenario: '副本', btnTitles: '称号',
+    btnMini: '宠物', btnBack: '大厅', btnScenario: '副本', btnTitles: '称号',
     btnStatus: '状态', btnSettings: '设置', btnHide: '隐藏',
     panelScenario: '副本选择', panelTitles: '称号一览', panelSettings: '设置', panelAbout: '状态',
     labelVersion: '版本', labelPlayer: '玩家', labelScenario: '副本', labelLevel: '等级',
@@ -27,7 +27,7 @@ const LANG = {
     hubWelcome: 'Welcome back', hubLevel: 'Hub Lv.', drawBtn: '+ Draw Scenario',
     drawPrompt: 'Drew "{0}" — Enter a name (leave empty for default)',
     enterPrompt: 'Enter "{0}" — Enter a name (leave empty for default)',
-    btnMini: 'Pet', btnBack: 'Back to Hub', btnScenario: 'Scenarios', btnTitles: 'Titles',
+    btnMini: 'Pet', btnBack: 'Hub', btnScenario: 'Scenarios', btnTitles: 'Titles',
     btnStatus: 'Status', btnSettings: 'Settings', btnHide: 'Hide',
     panelScenario: 'Scenarios', panelTitles: 'Titles', panelSettings: 'Settings', panelAbout: 'Status',
     labelVersion: 'Version', labelPlayer: 'Player', labelScenario: 'Scenario', labelLevel: 'Level',
@@ -95,6 +95,19 @@ const permaText = document.getElementById('perma-text');
 const saveDot = document.getElementById('save-dot');
 const expBarFill = document.getElementById('exp-bar-fill');
 const expBarText = document.getElementById('exp-bar-text');
+
+const confirmModal = document.getElementById('confirm-modal');
+const confirmOk = document.getElementById('confirm-ok');
+const confirmCancel = document.getElementById('confirm-cancel');
+let confirmResolver = null;
+function showConfirmModal(desc) {
+  return new Promise((resolve) => {
+    document.getElementById('confirm-desc').textContent = desc;
+    confirmModal.classList.remove('hidden'); confirmResolver = resolve;
+  });
+}
+confirmOk.addEventListener('click', () => { confirmModal.classList.add('hidden'); if (confirmResolver) { confirmResolver(true); confirmResolver = null; } });
+confirmCancel.addEventListener('click', () => { confirmModal.classList.add('hidden'); if (confirmResolver) { confirmResolver(false); confirmResolver = null; } });
 
 const aliasModal = document.getElementById('alias-modal');
 const aliasTitle = document.getElementById('alias-title');
@@ -210,6 +223,8 @@ hubDrawBtn.addEventListener('click', async () => {
 });
 
 btnBackHub.addEventListener('click', async () => {
+  const ok = await showConfirmModal('确定返回大厅吗？副本等级将重置，经验累入全局等级。');
+  if (!ok) return;
   try { const r = await window.electron.invoke('exit-to-hub'); gameState.hub_total_exp = r.hubTotalExp; hubLevel = r.hubLevel; gameState.is_in_hub = true; switchView(true); renderHubView(); addLog('info', tf('systemBack', hubLevel)); updateUI(); lastRuntime = 0; } catch (e) { showToast(t('systemBackFail'), 'error'); }
 });
 
