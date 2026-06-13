@@ -55,17 +55,15 @@ class NotificationQueue{
   showBubble(){
     if(!this.current||bubbleZone.className==='zone-show')return;
     const t=this.current.title||'';
-    bubbleText.textContent=t?'━━━ '+t+' ━━━\n'+this.current.text:this.current.text;
+    bubbleText.innerHTML=t?'<div style="text-align:center;font-weight:bold;margin-bottom:4px">'+t+'</div><div>'+this.current.text+'</div>':'<div>'+this.current.text+'</div>';
     bubbleZone.className='zone-show';
     bubbleZone.style.borderLeftColor=this.current.type==='achievement'?'#FFD700':this.current.type==='levelup'?'#00FF00':'#00BFFF';
     if(expWrap)expWrap.style.display='none';
     requestAnimationFrame(()=>{
-      const c=document.getElementById('container'),ib=document.getElementById('info-bar'),cw=document.getElementById('canvas-wrap'),ew=document.getElementById('exp-wrap');
-      const ibH=ib?ib.offsetHeight:0,cwH=cw?cw.offsetHeight:0,bblSH=bubbleZone.scrollHeight||0,bblOH=bubbleZone.offsetHeight||0,ewH=ew&&ew.style.display!=='none'?ew.offsetHeight:0;
-      const conH=c?c.scrollHeight:0,conRect=c?c.offsetHeight:0,winH=window.innerHeight;
+      const c=document.getElementById('container'),ib=document.getElementById('info-bar'),cw=document.getElementById('canvas-wrap'),diag=document.getElementById('diag-bar');
+      const ibH=ib?ib.offsetHeight:0,cwH=cw?cw.offsetHeight:0,bblSH=bubbleZone.scrollHeight||0,winH=window.innerHeight,conH=c?c.scrollHeight:0;
       const gap=2,pad=4;
-      const d='wi:'+winH+' coS:'+conH+' coO:'+conRect+' ib:'+ibH+' cw:'+cwH+' bblS:'+bblSH+' bblO:'+bblOH+' ew:'+ewH+' gap:'+gap+' pad:'+pad+' sum:'+(ibH+gap+cwH+gap+bblSH+pad);
-      const ta=document.createElement('textarea');ta.value=d;ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);
+      if(diag)diag.textContent='wi:'+winH+' co:'+conH+' ib:'+ibH+' cw:'+cwH+' bbl:'+bblSH+' gap:'+gap+' pad:'+pad+' sum:'+(ibH+gap+cwH+gap+bblSH+pad)+' fw:'+window.innerWidth;diag.classList.remove('hidden');
     });
   }
   hideBubble(){
@@ -200,9 +198,9 @@ window.pet.on('game-tick',d=>{
   if(d.theme&&d.theme!==gameInfo.theme){gameInfo.theme=d.theme;applyTheme(d.theme);}
   updateInfoBar();
 });
-window.pet.on('event-triggered',d=>{transitionTo('wave');nq.enqueue({text:d.text,title:d.title,type:'event'},1);});
-window.pet.on('level-up',d=>{gameInfo.title=d.title||gameInfo.title;transitionTo('jump');nq.enqueue({text:`升级! Lv.${d.level}`,type:'levelup'},2);});
-window.pet.on('achievement-unlocked',d=>{transitionTo('extra1');nq.enqueue({text:`${d.icon||'★'} ${d.name}`,type:'achievement'},3);});
+window.pet.on('event-triggered',d=>{transitionTo('wave');nq.enqueue({text:d.text,title:d.title||'事件',type:'event'},1);});
+window.pet.on('level-up',d=>{gameInfo.title=d.title||gameInfo.title;transitionTo('jump');nq.enqueue({text:`升级! Lv.${d.level}`,title:'等级提升',type:'levelup'},2);});
+window.pet.on('achievement-unlocked',d=>{transitionTo('extra1');nq.enqueue({text:`${d.icon||'★'} ${d.name}`,title:'成就解锁',type:'achievement'},3);});
 window.pet.on('main-shown',()=>{nq.clearQueue();});
 
 window.pet.invoke('scan-pets').then(r=>{pets=r.pets||[];selIdx=r.selected||0;loadPet(selIdx);}).catch(()=>{});

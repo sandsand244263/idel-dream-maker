@@ -1,4 +1,4 @@
-const { BrowserWindow, ipcMain, clipboard } = require('electron');
+const { BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -112,8 +112,6 @@ function createPetWindow(app) {
   // Auto-resize to content (preferred-size-changed = Chromium built-in)
   petWindow.webContents.on('preferred-size-changed', (_, { width, height }) => {
     if (!petWindow || petWindow.isDestroyed()) return;
-    const actual = petWindow.getContentSize();
-    clipboard.writeText('pfw:'+width+' pfh:'+height+' actW:'+actual[0]+' actH:'+actual[1]);
     petWindow.setContentSize(width, Math.min(Math.max(height + 4, 200), 500));
   });
   // Prevent manual resize while allowing programmatic setContentSize
