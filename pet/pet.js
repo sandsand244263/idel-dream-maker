@@ -55,13 +55,14 @@ class NotificationQueue{
   showBubble(){
     if(!this.current||bubbleZone.className==='zone-show')return;
     const t=this.current.title||'';
-    bubbleText.textContent=t?'━━━ '+t+' ━━━\n'+this.current.text:this.current.text;
+    bubbleText.innerHTML=t?'<div style="text-align:center;font-weight:bold;margin-bottom:4px">'+t+'</div><div>'+this.current.text+'</div>':this.current.text;
     bubbleZone.className='zone-show';
     bubbleZone.style.borderLeftColor=this.current.type==='achievement'?'#FFD700':this.current.type==='levelup'?'#00FF00':'#00BFFF';
     if(expWrap)expWrap.style.display='none';
-    const container=document.getElementById('container');
-    const h=Math.max(210,(container?container.scrollHeight:0)+6);
-    window.pet.invoke('pet-resize',{height:h}).catch(()=>{});
+    requestAnimationFrame(()=>{
+      const c=document.getElementById('container');
+      window.pet.invoke('pet-resize',{height:Math.max(210,c?c.scrollHeight+6:210)}).catch(()=>{});
+    });
   }
   hideBubble(){
     bubbleZone.className='zone-hide';
