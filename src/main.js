@@ -240,7 +240,9 @@ function updatePermaStatus() {
   const rt = gameState.is_in_hub ? '—' : formatRuntime(gameState.total_runtime_ms || 0);
   const ach = gameState.unlockedAchievements?.length || 0;
   const sc = currentScenario?.nameCN || 'Hub';
-  if (permaText) permaText.innerHTML = `${appVersion} | ${sc}<br>${rt} | 成就:${ach}`;
+  const dl = gameState.is_in_hub ? `Hub Lv.${hubLevel}` : `Lv.${gameState.level}`;
+  const title = currentTitle?.name || '?';
+  if (permaText) permaText.innerHTML = `${appVersion} | ${sc}<br>${dl} | ${title} | ${rt} | 成就:${ach}`;
 }
 
 let saveDotTimer = null;
