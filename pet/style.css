@@ -1,5 +1,5 @@
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html,body { width:100%;background:transparent;user-select:none; }
+html,body { width:100%;height:100%;overflow:hidden;background:transparent;user-select:none; }
 
 :root { --fg:#00FF00; --dim:#0A5A0A; --bg:#0A0A0A; --font:'MapleMonoNFCN','Courier New',monospace; --border-color:rgba(0,255,0,0.2); }
 .theme-amber { --fg:#FFB000; --dim:#6B4A00; --bg:#0A0A0A; --border-color:rgba(255,176,0,0.2); }
