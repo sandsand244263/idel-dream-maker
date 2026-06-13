@@ -207,7 +207,6 @@ function registerPetIpcHandlers(mainWindow, app) {
   });
 
   ipcMain.handle('show-context-menu', () => {
-    console.log('[pet] show-context-menu IPC received');
     showContextMenu();
     return true;
   });

@@ -28,16 +28,13 @@ function initContextMenu(app, petWin) {
   contextWindow.loadFile(path.join(__dirname, '..', 'pet-context-menu', 'index.html'));
 
   contextWindow.on('blur', () => {
-    console.log('[ctx] blur → hide');
     if (contextWindow && !contextWindow.isDestroyed()) contextWindow.hide();
   });
   contextWindow.on('closed', () => { contextWindow = null; });
 }
 
 function showContextMenu() {
-  console.log('[ctx] show called, win:', !!contextWindow, 'destroyed:', contextWindow ? contextWindow.isDestroyed() : 'N/A');
   if (!contextWindow || contextWindow.isDestroyed()) {
-    console.log('[ctx] recreating window');
     initContextMenu(appRef, petWindowRef);
     contextWindow.webContents.once('did-finish-load', () => {
       doShow();
@@ -55,11 +52,9 @@ function doShow() {
   const screen = require('electron').screen.getPrimaryDisplay().workAreaSize;
   if (x + cw > screen.width) x = Math.max(0, petBounds.x - cw - 5);
   const y = Math.max(0, petBounds.y);
-  console.log('[ctx] setBounds:', { x, y, width: cw, height: ch });
   contextWindow.setBounds({ x, y, width: cw, height: ch });
   contextWindow.show();
   contextWindow.focus();
-  console.log('[ctx] show+focus done');
 }
 
 function registerContextMenuIpcHandlers() {

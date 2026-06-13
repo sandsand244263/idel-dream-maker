@@ -35,16 +35,13 @@ function initBubble(app, petWin) {
   bubbleWindow.loadFile(path.join(__dirname, '..', 'pet-bubble', 'index.html'));
 
   bubbleWindow.on('blur', () => {
-    console.log('[bubble] blur → hide');
     if (bubbleWindow && !bubbleWindow.isDestroyed()) bubbleWindow.hide();
   });
   bubbleWindow.on('closed', () => { bubbleWindow = null; currentData = null; });
 }
 
 function positionAndShowBubble(data) {
-  console.log('[bubble] show called, win:', !!bubbleWindow, 'destroyed:', bubbleWindow ? bubbleWindow.isDestroyed() : 'N/A');
   if (!bubbleWindow || bubbleWindow.isDestroyed()) {
-    console.log('[bubble] recreating window');
     initBubble(appRef, petWindowRef);
     bubbleWindow.webContents.once('did-finish-load', () => {
       doShowBubble(data);
@@ -65,7 +62,6 @@ function doShowBubble(data) {
   if (y + bh > screen.height) y = Math.max(0, petBounds.y - bh - 5);
 
   bubbleWindow.setBounds({ x, y, width: bw, height: bh });
-  console.log('[bubble] setBounds+show:', { x, y, width: bw, height: bh });
   bubbleWindow.show();
   bubbleWindow.focus();
   if (data) { currentData = data; sendToBubble('show-bubble', data); }

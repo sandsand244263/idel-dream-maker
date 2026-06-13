@@ -36,16 +36,13 @@ function initSelector(app, petWin) {
   selectorWindow.loadFile(path.join(__dirname, '..', 'pet-selector', 'index.html'));
 
   selectorWindow.on('blur', () => {
-    console.log('[sel] blur → hide');
     if (selectorWindow && !selectorWindow.isDestroyed()) selectorWindow.hide();
   });
   selectorWindow.on('closed', () => { selectorWindow = null; });
 }
 
 function positionAndShowSelector() {
-  console.log('[sel] show called, win:', !!selectorWindow, 'destroyed:', selectorWindow ? selectorWindow.isDestroyed() : 'N/A');
   if (!selectorWindow || selectorWindow.isDestroyed()) {
-    console.log('[sel] recreating window');
     initSelector(appRef, petWindowRef);
     selectorWindow.webContents.once('did-finish-load', () => {
       doShowSelector();
@@ -70,7 +67,6 @@ function doShowSelector() {
   }
 
   selectorWindow.setBounds({ x, y, width: selWidth, height: selHeight });
-  console.log('[sel] setBounds+show:', { x, y, width: selWidth, height: selHeight });
   selectorWindow.show();
   selectorWindow.focus();
 }
