@@ -211,9 +211,8 @@ function updatePermaStatus() {
   if (!gameState) { permaStatus.innerHTML = ''; return; }
   const rt = gameState.is_in_hub ? '—' : formatRuntime(gameState.total_runtime_ms || 0);
   const ach = gameState.unlockedAchievements?.length || 0;
-  const dl = gameState.is_in_hub ? `Hub Lv.${hubLevel}` : `Lv.${gameState.level}`;
   const sc = currentScenario?.nameCN || 'Hub';
-  permaStatus.innerHTML = `${appVersion} | ${gameState.player_name} | ${sc}<br>${dl} | ${currentTitle?.name || '?'} | ${rt} | 成就:${ach}`;
+  permaStatus.innerHTML = `${appVersion} | ${sc}<br>${rt} | 成就:${ach}`;
 }
 
 function addLog(type, message) {
