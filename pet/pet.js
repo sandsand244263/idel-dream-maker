@@ -20,6 +20,7 @@ const DEFAULT_STATES = {
   run:{row:2,frames:8,dur:120,firstMult:1.5,lastMult:1.8}, failed:{row:3,frames:8,dur:140,firstMult:1.5,lastMult:1.7},
   review:{row:4,frames:6,dur:150,firstMult:1.5,lastMult:1.8}, jump:{row:5,frames:5,dur:140,firstMult:2,lastMult:2},
   extra1:{row:6,frames:6,dur:140,firstMult:1.5,lastMult:1.8}, extra2:{row:7,frames:6,dur:140,firstMult:1.5,lastMult:1.8},
+  extra3:{row:8,frames:6,dur:140,firstMult:1.5,lastMult:1.8},
 };
 
 let pets=[],selIdx=0,spritesheet=null,cols=8,rows=9,stateConfig=null;
@@ -197,13 +198,19 @@ window.pet.on('game-tick',d=>{
   if(d.theme&&d.theme!==gameInfo.theme){gameInfo.theme=d.theme;applyTheme(d.theme);}
   updateInfoBar();
 });
-window.pet.on('event-triggered',d=>{transitionTo('wave');nq.enqueue({text:d.text,title:d.title||'事件',type:'event'},1);});
-window.pet.on('level-up',d=>{gameInfo.title=d.title||gameInfo.title;transitionTo('jump');nq.enqueue({text:`升级! Lv.${d.level}`,title:'等级提升',type:'levelup'},2);});
-window.pet.on('achievement-unlocked',d=>{transitionTo('extra1');nq.enqueue({text:`${d.icon||'★'} ${d.name}`,title:'成就解锁',type:'achievement'},3);});
+window.pet.on('event-triggered',d=>{transitionTo('run');nq.enqueue({text:d.text,title:d.title||'事件',type:'event'},1);});
+window.pet.on('level-up',d=>{gameInfo.title=d.title||gameInfo.title;transitionTo(Math.random()<0.5?'jump':'extra3');nq.enqueue({text:`升级! Lv.${d.level}`,title:'等级提升',type:'levelup'},2);});
+window.pet.on('achievement-unlocked',d=>{transitionTo(Math.random()<0.5?'review':'extra1');nq.enqueue({text:`${d.icon||'★'} ${d.name}`,title:'成就解锁',type:'achievement'},3);});
 window.pet.on('main-shown',()=>{nq.clearQueue();});
 
 window.pet.invoke('scan-pets').then(r=>{pets=r.pets||[];selIdx=r.selected||0;loadPet(selIdx);applyPetSettings();}).catch(()=>{});
 window.pet.invoke('pet-get-state').then(()=>updateInfoBar()).catch(()=>{});
 
 setInterval(updateExpBar,50);
+// Random idle animation every 60s (10% chance)
+setInterval(() => {
+  if (curState === 'idle' && Math.random() < 0.1) {
+    transitionTo(Math.random() < 0.5 ? 'failed' : 'extra2');
+  }
+}, 60000);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='h')window.pet.invoke('hide-pet-window').catch(()=>{});});

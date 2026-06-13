@@ -1,6 +1,10 @@
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 html,body { width:100%;background:transparent;user-select:none;font-family:'MapleMonoNFCN','Courier New',monospace; }
 :root { --fg:#00FF00; --dim:#00AA00; --bg:rgba(10,10,10,0.85); --border:rgba(0,255,0,0.2); }
+.theme-amber { --fg:#FFB000; --dim:#AA7700; --bg:rgba(10,10,10,0.85); --border:rgba(255,176,0,0.2); }
+.theme-cold  { --fg:#E0E0E0; --dim:#555577; --bg:rgba(26,26,46,0.9); --border:rgba(224,224,224,0.15); }
+.theme-paper { --fg:#222222; --dim:#7A6F5E; --bg:rgba(245,240,232,0.9); --border:rgba(34,34,34,0.15); }
+.theme-matrix{ --fg:#00FF41; --dim:#008800; --bg:rgba(0,0,0,0.85); --border:rgba(0,255,65,0.2); }
 #container { background:var(--bg);border:1px solid var(--border);border-radius:6px;overflow:hidden; }
 .ctx-item { padding:5px 14px;cursor:pointer;color:color-mix(in srgb,var(--fg) 70%,transparent);font-size:11px;white-space:nowrap; }
 .ctx-item:hover { background:color-mix(in srgb,var(--fg) 10%,transparent);color:var(--fg); }

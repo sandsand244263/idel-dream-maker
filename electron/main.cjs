@@ -580,6 +580,10 @@ function registerIpcHandlers() {
     return true;
   });
 
+  ipcMain.handle('get-current-theme', () => {
+    return gameState?.selectedFontTheme || 'green';
+  });
+
   // ── Dev Tools ──
   ipcMain.handle('dev-trigger-event', () => {
     if (!currentScenario || gameState.isInHub) return null;

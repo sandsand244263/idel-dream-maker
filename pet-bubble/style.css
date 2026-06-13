@@ -1,6 +1,10 @@
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 html,body { width:100%;background:transparent;user-select:none;font-family:'MapleMonoNFCN','Courier New',monospace;color:#E0E0E0; }
 :root { --fg:#E0E0E0; --dim:#00AA00; --bg:rgba(10,10,10,0.9); --border:rgba(0,255,0,0.2); }
+.theme-amber { --fg:#E0E0E0; --dim:#AA7700; --bg:rgba(10,10,10,0.9); --border:rgba(255,176,0,0.2); }
+.theme-cold  { --fg:#E0E0E0; --dim:#555577; --bg:rgba(26,26,46,0.9); --border:rgba(224,224,224,0.15); }
+.theme-paper { --fg:#222222; --dim:#7A6F5E; --bg:rgba(245,240,232,0.9); --border:rgba(34,34,34,0.15); }
+.theme-matrix{ --fg:#E0E0E0; --dim:#008800; --bg:rgba(0,0,0,0.9); --border:rgba(0,255,65,0.2); }
 #bubble { background:var(--bg);border:1px solid var(--border);border-radius:6px;overflow:hidden;border-left:3px solid #00BFFF; }
 #bubble-header { padding:6px 10px;border-bottom:1px solid var(--border);font-size:13px;font-weight:bold;color:#00BFFF;letter-spacing:1px; }
 #bubble-body { padding:8px 10px;font-size:13px;line-height:1.5;word-break:break-word;white-space:pre-wrap;color:#E0E0E0; }

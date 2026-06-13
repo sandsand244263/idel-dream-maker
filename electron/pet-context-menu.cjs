@@ -28,7 +28,7 @@ function initContextMenu(app, petWin) {
   contextWindow.loadFile(path.join(__dirname, '..', 'pet-context-menu', 'index.html'));
 
   contextWindow.on('blur', () => {
-    if (contextWindow && !contextWindow.isDestroyed()) contextWindow.hide();
+    if (contextWindow && !contextWindow.isDestroyed()) contextWindow.close();
   });
   contextWindow.on('closed', () => { contextWindow = null; });
 }

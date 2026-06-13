@@ -1,6 +1,11 @@
 function setToggle(key, val) { localStorage.setItem('pet_' + key, val); }
 function getToggle(key, def) { const v = localStorage.getItem('pet_' + key); return v !== null ? v === 'true' : def; }
 
+function applyTheme(theme) {
+  document.body.className = '';
+  if (theme && theme !== 'green') document.body.classList.add('theme-' + theme);
+}
+
 function updateUI() {
   ['border','infobar','expbar'].forEach(k => {
     const el = document.getElementById('ctx-toggle-' + k);
@@ -47,3 +52,6 @@ window.ctxMenu.invoke('get-toggle-state').then(r => {
 document.addEventListener('click', (e) => {
   if (e.target === document.body) window.ctxMenu.invoke('close-menu').catch(() => {});
 });
+
+// 初始化
+window.ctxMenu.invoke('get-current-theme').then(t => { if (t) applyTheme(t); }).catch(() => {});

@@ -1,6 +1,11 @@
 const petListEl = document.getElementById('pet-list');
 let pets = [], selIdx = 0;
 
+function applyTheme(theme) {
+  document.body.className = '';
+  if (theme && theme !== 'green') document.body.classList.add('theme-' + theme);
+}
+
 function render() {
   petListEl.innerHTML = '';
   if (!pets || pets.length === 0) {
@@ -37,3 +42,5 @@ window.petSelector.on('pet-list', (d) => {
 window.petSelector.invoke('get-initial-state').then((r) => {
   if (r) { pets = r.pets || []; selIdx = r.selected || 0; render(); }
 }).catch(() => {});
+
+window.petSelector.invoke('get-current-theme').then(t => { if (t) applyTheme(t); }).catch(() => {});

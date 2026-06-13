@@ -2,7 +2,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('petBubble', {
   invoke: (channel, ...args) => {
-    if (channel === 'close-bubble') return ipcRenderer.invoke(channel, ...args);
+    if (channel === 'close-bubble' || channel === 'get-current-theme') return ipcRenderer.invoke(channel, ...args);
     return Promise.reject(new Error('Invalid bubble channel: ' + channel));
   },
   on: (channel, callback) => {

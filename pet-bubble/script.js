@@ -1,6 +1,11 @@
 const titleEl = document.getElementById('bubble-title');
 const textEl = document.getElementById('bubble-text');
 
+function applyTheme(theme) {
+  document.body.className = '';
+  if (theme && theme !== 'green') document.body.classList.add('theme-' + theme);
+}
+
 function update(data) {
   titleEl.textContent = data.title || '事件';
   titleEl.style.color = data.color || '#00BFFF';
@@ -23,3 +28,5 @@ window.petBubble.on('hide-bubble', () => { window.petBubble.invoke('close-bubble
 document.getElementById('bubble').addEventListener('click', () => {
   window.petBubble.invoke('close-bubble').catch(() => {});
 });
+
+window.petBubble.invoke('get-current-theme').then(t => { if (t) applyTheme(t); }).catch(() => {});
