@@ -92,21 +92,31 @@ function createPetWindow(app) {
 
   petWindow = new BrowserWindow({
     width: 192,
-    height: 340,
+    height: 210,
     frame: false,
     transparent: true,
     alwaysOnTop: true,
     show: true,
-    resizable: false,
+    resizable: true,
     skipTaskbar: true,
     webPreferences: {
       preload: path.join(__dirname, 'pet-preload.cjs'),
       contextIsolation: true,
       nodeIntegration: false,
+      enablePreferredSizeMode: true,
     },
   });
 
   petWindow.loadFile(path.join(__dirname, '..', 'pet', 'index.html'));
+
+  // Auto-resize to content (preferred-size-changed = Chromium built-in)
+  petWindow.webContents.on('preferred-size-changed', (_, { width, height }) => {
+    if (!petWindow || petWindow.isDestroyed()) return;
+    petWindow.setContentSize(width, Math.min(Math.max(height + 4, 200), 500));
+  });
+  // Prevent manual resize while allowing programmatic setContentSize
+  petWindow.setMinimumSize(192, 200);
+  petWindow.setMaximumSize(192, 500);
 
   // Restore position
   const pos = getPetPos(app);
