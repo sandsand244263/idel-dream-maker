@@ -476,6 +476,14 @@ npx electron-builder   # 打包验证
 | 6 | **选择器加"返回"按钮** | `pet-selector/*`, `electron/pet-selector-preload.cjs` | ✅ |
 | 7 | **气泡定位到宠物下方** | `electron/pet-bubble.cjs` | ✅ |
 
+### v2.2 优化（同上版本）
+
+| # | 内容 | 涉及文件 | 状态 |
+|--:|------|---------|:----:|
+| 1 | **主窗口失焦隐藏** | `electron/windows.cjs` | ✅ |
+| 2 | **三窗口配色同步主题** | `pet-context-menu/*`, `pet-bubble/*`, `pet-selector/*`, `electron/main.cjs` | ✅ |
+| 3 | **精灵图 9 行全调用** | `pet/pet.js` | ✅ |
+
 ---
 
 ## 规划（待定）
