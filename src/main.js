@@ -191,7 +191,7 @@ function renderHubView() {
   hubLevelDisplay.textContent = `${t('hubLevel')}${hubLevel}`; hubDrawBtn.textContent = t('drawBtn');
   hubScenarioList.innerHTML = '';
   if (!scenarioList || scenarioList.length === 0) {
-    hubScenarioList.innerHTML = `<div class="hub-card" style="border-style:dashed;cursor:default"><div class="hub-card-name" style="color:var(--dim)">${t('noScenarios')}</div></div>`;
+    hubScenarioList.innerHTML = `<div class="hub-empty"><div class="hub-empty-icon">[ ~ ~ ]</div><div class="hub-empty-text">${t('noScenarios')}</div><div class="hub-empty-hint">点击下方 [副本] 或 [+ 抽取副本] 开始</div></div>`;
     return;
   }
   scenarioList.forEach(s => {
@@ -321,6 +321,13 @@ async function updateTooltip() {
 }
 
 // ── Debug ──
+const onboardingModal = document.getElementById('onboarding-modal');
+const onboardingOk = document.getElementById('onboarding-ok');
+onboardingOk.addEventListener('click', () => {
+  onboardingModal.classList.add('hidden');
+  window.electron.invoke('set-onboarding-seen').catch(() => {});
+});
+
 const debugPanel = document.getElementById('debug-panel'), debugContent = document.getElementById('debug-content'), debugClose = document.getElementById('debug-close');
 debugClose.addEventListener('click', () => debugPanel.classList.add('hidden'));
 document.getElementById('dbg-event').addEventListener('click', async () => {
@@ -358,5 +365,6 @@ init().then(() => {
   document.title = `Idel-DreamMaker v${appVersion}`; applyTheme(gameState?.selected_font_theme || 'green');
   if (gameState?.is_in_hub) addLog('system', `Idel-DreamMaker v${appVersion} ${t('logStartHub')}`);
   else if (gameState) { switchView(false); addLog('info', tf('logStartScenario', formatRuntime(gameState.total_runtime_ms), gameState.level)); }
+  if (!gameState?.has_seen_onboarding && onboardingModal) { onboardingModal.classList.remove('hidden'); }
   updateUI(); updateTooltip(); setInterval(updateTooltip, 5000);
 });

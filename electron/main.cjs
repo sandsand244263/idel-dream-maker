@@ -330,6 +330,7 @@ function registerIpcHandlers() {
         scenario_progress: gameState.scenarioProgress || {},
         triggered_events: gameState.triggeredEvents || [],
         unlockedAchievements: gameState.unlockedAchievements || [],
+        has_seen_onboarding: gameState.hasSeenOnboarding || false,
       },
       hubLevel: hubLevel,
       scenario: currentScenario ? {
@@ -387,6 +388,7 @@ function registerIpcHandlers() {
         scenario_progress: gameState.scenarioProgress || {},
         triggered_events: gameState.triggeredEvents || [],
         unlockedAchievements: gameState.unlockedAchievements || [],
+        has_seen_onboarding: gameState.hasSeenOnboarding || false,
       },
       scenario: {
         id: scenario.id,
@@ -416,6 +418,7 @@ function registerIpcHandlers() {
         scenario_progress: gameState.scenarioProgress || {},
         triggered_events: gameState.triggeredEvents || [],
         unlockedAchievements: gameState.unlockedAchievements || [],
+        has_seen_onboarding: gameState.hasSeenOnboarding || false,
       },
       scenario: {
         id: scenario.id,
@@ -468,6 +471,12 @@ function registerIpcHandlers() {
     }
     gameState.equippedTitleIndex = index;
     currentTitle = currentScenario.titles[index];
+    return true;
+  });
+
+  ipcMain.handle('set-onboarding-seen', () => {
+    gameState.hasSeenOnboarding = true;
+    writeSave(gameState);
     return true;
   });
 
@@ -653,6 +662,7 @@ app.whenReady().then(() => {
       scenarioProgress: {},
       triggeredEvents: [],
       unlockedAchievements: [],
+      hasSeenOnboarding: false,
     };
   }
 
