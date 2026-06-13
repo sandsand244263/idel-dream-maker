@@ -97,7 +97,7 @@ function createPetWindow(app) {
     transparent: true,
     alwaysOnTop: true,
     show: true,
-    resizable: true,
+    resizable: false,
     skipTaskbar: true,
     webPreferences: {
       preload: path.join(__dirname, 'pet-preload.cjs'),

@@ -130,7 +130,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #achievement-desc { color: var(--dim); font-size: 11px; }
 
 /* ── Scenario / Settings / Titles Panels ── */
-#scenario-panel, #settings-panel, #titles-panel { position: fixed; top: 0; right: 0; width: 280px; height: 100vh; background: var(--bg); border-left: 1px solid var(--dim); z-index: 200; display: flex; flex-direction: column; animation: panelSlideIn 0.15s ease-out; }
+#scenario-panel, #settings-panel, #titles-panel { position: fixed; top: 0; right: 0; width: 280px; height: 100vh; background: var(--bg); border: 1px solid var(--dim); border-right: none; z-index: 200; display: flex; flex-direction: column; animation: panelSlideIn 0.15s ease-out; }
 @keyframes panelSlideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 #scenario-panel.hidden, #settings-panel.hidden, #titles-panel.hidden { display: none; }
 #scenario-panel-header, #settings-header, #titles-panel-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--dim); font-weight: bold; font-size: 13px; letter-spacing: 1px; }

@@ -161,7 +161,7 @@ document.addEventListener('mouseup',()=>{if(dragging){dragging=false;window.pet.
 // ── Interactions ──
 canvas.addEventListener('click',()=>{if(!dragMoved)transitionTo('wave');});
 canvas.addEventListener('dblclick',e=>{e.preventDefault();if(!dragMoved){transitionTo('jump');window.pet.invoke('toggle-main-window').catch(()=>{});}});
-canvas.addEventListener('contextmenu',e=>{e.preventDefault();ctxMenu.classList.remove('hidden');const r=canvas.getBoundingClientRect();ctxMenu.style.left=(e.clientX-r.left)+'px';ctxMenu.style.top=(e.clientY-r.top)+'px';});
+canvas.addEventListener('contextmenu',e=>{e.preventDefault();ctxMenu.classList.remove('hidden');ctxMenu.style.left=e.clientX+'px';ctxMenu.style.top=e.clientY+'px';});
 document.addEventListener('click',e=>{if(!ctxMenu.contains(e.target)){ctxMenu.classList.add('hidden');document.getElementById('ctx-pet-list').classList.remove('show');}});
 
 // ── Dot click toggle ──
