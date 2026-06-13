@@ -70,6 +70,11 @@ function registerContextMenuIpcHandlers() {
     return true;
   });
 
+  ipcMain.handle('close-context-menu', () => {
+    if (contextWindow && !contextWindow.isDestroyed()) contextWindow.hide();
+    return true;
+  });
+
   ipcMain.handle('get-toggle-state', () => {
     return {};
   });

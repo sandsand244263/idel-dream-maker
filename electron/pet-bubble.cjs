@@ -55,15 +55,9 @@ function doShowBubble(data) {
   const bw = 260, bh = 120;
   const screen = require('electron').screen.getPrimaryDisplay().workAreaSize;
 
-  let x, y = petBounds.y + 40;
-  if (petBounds.x + petBounds.width + bw + 10 < screen.width) {
-    x = petBounds.x + petBounds.width + 5;
-  } else if (petBounds.x - bw - 10 >= 0) {
-    x = petBounds.x - bw - 5;
-  } else {
-    x = Math.max(5, Math.floor((screen.width - bw) / 2));
-    y = Math.max(5, Math.floor((screen.height - bh) / 2));
-  }
+  let x = petBounds.x + Math.floor((petBounds.width - bw) / 2);
+  let y = petBounds.y + petBounds.height + 5;
+  if (y + bh > screen.height) y = Math.max(0, petBounds.y - bh - 5);
 
   bubbleWindow.setBounds({ x, y, width: bw, height: bh });
   console.log('[bubble] setBounds+show:', { x, y, width: bw, height: bh });
