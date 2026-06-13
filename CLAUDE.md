@@ -95,10 +95,19 @@
 | `electron/preload.cjs` | IPC 桥接 | contextBridge 暴露 invoke/on 给渲染进程 |
 | `electron/tray.cjs` | 托盘逻辑 | 系统托盘图标、菜单、tooltip |
 | `electron/windows.cjs` | 窗口管理 | 窗口创建、宠物窗口切换、位置控制 |
-| `electron/pet.cjs` | 宠物窗口 | PetDex 精灵加载、Canvas 动画、游戏状态叠加 |
+| `electron/pet.cjs` | 宠物窗口管理 | PetDex 精灵加载、Canvas 动画、游戏状态叠加 |
 | `electron/pet-preload.cjs` | 宠物 IPC | 宠物窗口 IPC 桥接 |
+| `electron/pet-context-menu.cjs` | 右键菜单窗口 | 独立 BrowserWindow，失焦自动隐藏 |
+| `electron/pet-context-menu-preload.cjs` | 菜单 IPC 桥 | 右键菜单 IPC 桥接 |
+| `electron/pet-selector.cjs` | 宠物选择窗口 | 独立 BrowserWindow，选择宠物/返回 |
+| `electron/pet-selector-preload.cjs` | 选择器 IPC 桥 | 选择器 IPC 桥接 |
+| `electron/pet-bubble.cjs` | 事件气泡窗口 | 独立 BrowserWindow，失焦自动隐藏 |
+| `electron/pet-bubble-preload.cjs` | 气泡 IPC 桥 | 气泡 IPC 桥接 |
 | `electron/holiday.cjs` | 节假日模块 | 节日日期检测、事件注入 |
 | `pet/index.html`, `pet/pet.js`, `pet/style.css` | 宠物前端 | 宠物窗口渲染层 |
+| `pet-context-menu/` | 右键菜单前端 | HTML/CSS/JS，独立 BrowserWindow |
+| `pet-selector/` | 选择器前端 | HTML/CSS/JS，独立 BrowserWindow |
+| `pet-bubble/` | 气泡前端 | HTML/CSS/JS，独立 BrowserWindow |
 | `build.js` | 构建脚本 | 构建时解析 .md → scenarios_data.json |
 | `scenarios/` | 副本源文件 | `.md` 格式副本源文件（作者工具） |
 | `public/scenarios_data.json` | 副本数据 | 构建时生成，被游戏引擎加载 |
@@ -245,7 +254,10 @@ function exitToHub() {
 | 最小尺寸 | 280 × 400 |
 | 标题栏 | 自定义（`decorations: false`），自绘 ID/LV/称号 + [×] 按钮 |
 | 贴边自动隐藏 | 已移除（v0.3.2） |
-| Mini Bar | v2.0 已替换为 PetDex 像素宠物窗口（独立透明 BrowserWindow + Canvas 动画） |
+| Pet 宠物窗口 | v2.0 — PetDex 像素宠物窗口（独立透明 BrowserWindow + Canvas 动画） |
+| 右键菜单窗口 | v2.2 — 独立 BrowserWindow，失焦自动隐藏，位于宠物窗口右侧 |
+| 事件气泡窗口 | v2.2 — 独立 BrowserWindow，位于宠物窗口下方，失焦自动隐藏 |
+| 宠物选择窗口 | v2.2 — 独立 BrowserWindow，位于宠物窗口右侧，含"返回"按钮 |
 | 底部状态条 | 常驻显示：`v0.3.x | 玩家名 | 副本名<换行>LV:5 | 称号 | 时长 | 成就:N` |
 
 ### 托盘行为
@@ -366,10 +378,11 @@ function exitToHub() {
 | 10. 节假日系统 | **100%** | v2.1 — 假日事件嵌入 .md + 游戏循环集成 + 调试按钮 |
 | 11. 体验打磨 | **100%** | v2.1 — 气泡点击/消除/居中、单击 wave、托盘显示宠物、拖拽防误触 |
 | 12. UI 打磨 Phase 1 | **100%** | v2.2 — 9 项细节优化（对比度/进度条/Toast/引导/边框等）|
-| 13. Mac 适配 | **0%** | Electron 天然支持，待测试 |
-| 14. Steam+P2P | **0%** | 待定 |
+| 13. 独立窗口系统 | **100%** | v2.2 — 右键菜单/选择器/气泡改为独立 BrowserWindow |
+| 14. Mac 适配 | **0%** | Electron 天然支持，待测试 |
+| 15. Steam+P2P | **0%** | 待定 |
 
-**当前阶段：** v2.2（已完成） — UI 打磨 Phase 1（9 项细节优化）
+**当前阶段：** v2.2（已完成） — UI 打磨 Phase 1 + 独立窗口系统
 
 | 项目 | 值 |
 |------|-----|
@@ -418,6 +431,7 @@ function exitToHub() {
 | **2.0.0** | **2026-06-12** | **像素宠物窗口完成：** Canvas 动画对齐 PetDex、通知队列、气泡侧边自适应、圆点脉冲、主题 CSS 变量、双击 toggle 主窗口、窗口位置记忆、debug 调试面板 |
 | **2.1.0** | **2026-06-13** | **节假日系统 + 体验打磨：** 假日事件嵌入 .md（build.js 解析）；游戏循环集成节日检测；气泡交互优化（点击展开、标题居中、自适应高度）；托盘显示宠物；单击 wave 动画修复；拖拽防误触；空白消除 |
 | **2.2.0** | **2026-06-13** | **UI 打磨 Phase 1：** 9 项细节优化——去 Debug 自动弹出、标题栏/状态栏去重、对比度修正、EXP 进度条、Toast 提示、按钮 :active 反馈、保存指示器、空状态+首次引导、主窗口边框/圆角 |
+| **2.2.0** | **2026-06-13** | **独立窗口系统：** 右键菜单/事件气泡/宠物选择器改为独立 BrowserWindow，失焦自动隐藏；五个窗口同层级独立运行 |
 
 ---
 

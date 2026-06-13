@@ -460,6 +460,24 @@ npx electron-builder   # 打包验证
 
 ---
 
+## v2.2 — 独立窗口系统
+
+> **当前阶段：v2.2（已完成）**
+>
+> 右键菜单/事件气泡/宠物选择器改为独立 BrowserWindow，五个窗口同层级独立运行。失焦自动隐藏（不销毁），窗口重建逻辑兜底。
+
+| # | 内容 | 涉及文件 | 状态 |
+|--:|------|---------|:----:|
+| 1 | **创建右键菜单独立窗口** | `pet-context-menu/*`, `electron/pet-context-menu.cjs`, `electron/pet-context-menu-preload.cjs` | ✅ |
+| 2 | **创建事件气泡独立窗口** | `pet-bubble/*`, `electron/pet-bubble.cjs`, `electron/pet-bubble-preload.cjs` | ✅ |
+| 3 | **创建宠物选择器独立窗口** | `pet-selector/*`, `electron/pet-selector.cjs`, `electron/pet-selector-preload.cjs` | ✅ |
+| 4 | **失焦隐藏 + 窗口重建** | 三个窗口 `blur` → `hide()`，`showXxx` 自动重建 | ✅ |
+| 5 | **宠物窗口移除内嵌菜单** | `pet/index.html`, `pet/pet.js`, `pet/style.css` | ✅ |
+| 6 | **选择器加"返回"按钮** | `pet-selector/*`, `electron/pet-selector-preload.cjs` | ✅ |
+| 7 | **气泡定位到宠物下方** | `electron/pet-bubble.cjs` | ✅ |
+
+---
+
 ## 规划（待定）
 
 以下内容在 v2.2 完成后考虑：
