@@ -33,6 +33,11 @@ function initBubble(app, petWin) {
   });
 
   bubbleWindow.loadFile(path.join(__dirname, '..', 'pet-bubble', 'index.html'));
+
+  bubbleWindow.on('blur', () => {
+    console.log('[bubble] blur → hide');
+    if (bubbleWindow && !bubbleWindow.isDestroyed()) bubbleWindow.hide();
+  });
   bubbleWindow.on('closed', () => { bubbleWindow = null; currentData = null; });
 }
 

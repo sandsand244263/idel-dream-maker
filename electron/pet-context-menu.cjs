@@ -26,6 +26,11 @@ function initContextMenu(app, petWin) {
   });
 
   contextWindow.loadFile(path.join(__dirname, '..', 'pet-context-menu', 'index.html'));
+
+  contextWindow.on('blur', () => {
+    console.log('[ctx] blur → hide');
+    if (contextWindow && !contextWindow.isDestroyed()) contextWindow.hide();
+  });
   contextWindow.on('closed', () => { contextWindow = null; });
 }
 
@@ -66,11 +71,6 @@ function registerContextMenuIpcHandlers() {
   });
 
   ipcMain.handle('close-menu', () => {
-    if (contextWindow && !contextWindow.isDestroyed()) contextWindow.hide();
-    return true;
-  });
-
-  ipcMain.handle('close-context-menu', () => {
     if (contextWindow && !contextWindow.isDestroyed()) contextWindow.hide();
     return true;
   });

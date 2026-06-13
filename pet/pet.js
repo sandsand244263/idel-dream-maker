@@ -159,7 +159,7 @@ document.addEventListener('mousemove',e=>{if(!dragging)return;const dx=Math.abs(
 document.addEventListener('mouseup',()=>{if(dragging){dragging=false;window.pet.invoke('pet-drag-end').catch(()=>{});}});
 
 // ── Interactions ──
-canvas.addEventListener('click',()=>{if(!dragMoved){transitionTo('wave');window.pet.invoke('close-context-menu').catch(()=>{});}});
+canvas.addEventListener('click',()=>{if(!dragMoved)transitionTo('wave');});
 canvas.addEventListener('dblclick',e=>{e.preventDefault();if(!dragMoved){transitionTo('jump');window.pet.invoke('toggle-main-window').catch(()=>{});}});
 canvas.addEventListener('contextmenu',e=>{e.preventDefault();console.log('[pet] contextmenu fired');window.pet.invoke('show-context-menu').catch(()=>{});});
 

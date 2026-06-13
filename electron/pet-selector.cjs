@@ -34,6 +34,11 @@ function initSelector(app, petWin) {
   });
 
   selectorWindow.loadFile(path.join(__dirname, '..', 'pet-selector', 'index.html'));
+
+  selectorWindow.on('blur', () => {
+    console.log('[sel] blur → hide');
+    if (selectorWindow && !selectorWindow.isDestroyed()) selectorWindow.hide();
+  });
   selectorWindow.on('closed', () => { selectorWindow = null; });
 }
 
