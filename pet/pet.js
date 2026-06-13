@@ -55,16 +55,11 @@ class NotificationQueue{
   showBubble(){
     if(!this.current||bubbleZone.className==='zone-show')return;
     const t=this.current.title||'';
-    bubbleText.innerHTML=t?'<div style="text-align:center;font-weight:bold">'+t+'</div><div>'+this.current.text+'</div>':'<div>'+this.current.text+'</div>';
+    bubbleText.innerHTML=t?'<span style="text-align:center;font-weight:bold;display:inline">'+t+'</span> '+this.current.text:this.current.text;
     bubbleZone.className='zone-show';
     bubbleZone.style.borderLeftColor=this.current.type==='achievement'?'#FFD700':this.current.type==='levelup'?'#00FF00':'#00BFFF';
     if(expWrap)expWrap.style.display='none';
-    requestAnimationFrame(()=>{
-      const c=document.getElementById('container'),ib=document.getElementById('info-bar'),cw=document.getElementById('canvas-wrap'),diag=document.getElementById('diag-bar');
-      const ibH=ib?ib.offsetHeight:0,cwH=cw?cw.offsetHeight:0,bblSH=bubbleZone.scrollHeight||0,winH=window.innerHeight,conH=c?c.scrollHeight:0;
-      const gap=2,pad=4;
-      if(diag)diag.textContent='wi:'+winH+' co:'+conH+' ib:'+ibH+' cw:'+cwH+' bbl:'+bblSH+' gap:'+gap+' pad:'+pad+' sum:'+(ibH+gap+cwH+gap+bblSH+pad)+' fw:'+window.innerWidth;diag.classList.remove('hidden');
-    });
+    requestAnimationFrame(()=>{});
   }
   hideBubble(){
     bubbleZone.className='zone-hide';
@@ -109,7 +104,7 @@ function transitionTo(s){
   if(curState===s)return;if(returnTimer){clearTimeout(returnTimer);returnTimer=null;}
   play(s);if(s==='idle')return;
   const totalMs=frameList.reduce((sf,fd)=>sf+fd.d,0);
-  returnTimer=setTimeout(()=>{returnTimer=null;if(curState!=='idle')play('idle');},totalMs*1.15);
+  returnTimer=setTimeout(()=>{returnTimer=null;if(curState!=='idle')play('idle');},totalMs+200);
 }
 function animToIdle(){if(curState!=='idle')play('idle');}
 

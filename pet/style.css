@@ -46,7 +46,6 @@ body { font-family:var(--font); color:var(--fg); }
 #exp-fill { height:100%;width:0%;border-radius:4px;position:relative;background:linear-gradient(90deg,color-mix(in srgb,var(--fg) 25%,transparent),color-mix(in srgb,var(--fg) 80%,transparent),color-mix(in srgb,var(--fg) 25%,transparent));background-size:200% 100%;animation:shimmer 3s ease-in-out infinite; }
 @keyframes shimmer { 0% { background-position:200% 0; } 100% { background-position:-200% 0; } }
 
-#diag-bar { position:fixed;bottom:2px;left:2px;right:2px;font-size:10px;color:color-mix(in srgb,var(--fg) 30%,transparent);pointer-events:auto;user-select:text;z-index:99;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
 #exp-pct { display:none; }
 #exp-detail { font-size:11px;color:color-mix(in srgb,var(--fg) 30%,transparent);line-height:1; }
 
