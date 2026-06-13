@@ -55,33 +55,24 @@ class NotificationQueue{
   showBubble(){
     if(!this.current||bubbleZone.className==='zone-show')return;
     const t=this.current.title||'';
+    bubbleText.innerHTML=t?'<div style="text-align:center;font-weight:bold;margin-bottom:4px">'+t+'</div><div>'+this.current.text+'</div>':'<div>'+this.current.text+'</div>';
     bubbleZone.className='zone-show';
     bubbleZone.style.borderLeftColor=this.current.type==='achievement'?'#FFD700':this.current.type==='levelup'?'#00FF00':'#00BFFF';
     if(expWrap)expWrap.style.display='none';
     requestAnimationFrame(()=>{
-      const c=document.getElementById('container'),b=document.body,ib=document.getElementById('info-bar'),cw=document.getElementById('canvas-wrap'),ew=document.getElementById('exp-wrap');
-      const ch=c?c.scrollHeight:0,bh=b?b.scrollHeight:0,ih=ib?ib.offsetHeight:0,ch2=cw?cw.offsetHeight:0,bz=bubbleZone.scrollHeight||0,eh=ew&&ew.style.display!=='none'?ew.offsetHeight:0;
-      const gap=6,pad=6;
-      bubbleText.innerHTML=(t?'<div style="text-align:center;font-weight:bold;margin-bottom:4px">'+t+'</div><div>'+this.current.text+'</div>':'<div>'+this.current.text+'</div>')+
-        '<div style="font-size:9px;color:#888;border-top:1px solid #444;margin-top:6px;padding-top:4px;user-select:text">'+
-        'body:'+bh+' con:'+ch+' info:'+ih+' cv:'+ch2+' bbl:'+bz+' exp:'+eh+
-        ' gapx3:'+(gap*3)+' pad:'+(pad*2)+' calc:'+(ih+ch2+bz+gap*3+pad*2)+
-        '</div>';
-      window.pet.invoke('pet-resize',{height:Math.max(210,b?b.scrollHeight+pad*2:210)}).catch(()=>{});
+      window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+6)}).catch(()=>{});
     });
   }
   hideBubble(){
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
-    const container=document.getElementById('container');
-    window.pet.invoke('pet-resize',{height:Math.max(210,container?container.scrollHeight+6:210)}).catch(()=>{});
+    window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+6)}).catch(()=>{});
   }
   close(){
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
     dotEl.className='dot-none';dotSymbol.textContent='○';
-    const container=document.getElementById('container');
-    window.pet.invoke('pet-resize',{height:Math.max(210,container?container.scrollHeight+6:210)}).catch(()=>{});
+    window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+6)}).catch(()=>{});
     this.next();
   }
   clearQueue(){
@@ -90,8 +81,7 @@ class NotificationQueue{
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
     dotEl.className='dot-none';dotSymbol.textContent='○';
-    const container=document.getElementById('container');
-    window.pet.invoke('pet-resize',{height:Math.max(210,container?container.scrollHeight+6:210)}).catch(()=>{});
+    window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+6)}).catch(()=>{});
   }
 }
 const nq=new NotificationQueue();
