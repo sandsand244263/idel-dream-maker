@@ -206,7 +206,7 @@ function registerPetIpcHandlers(mainWindow, app) {
   });
 
   registerSelectorIpcHandlers(app);
-  registerBubbleIpcHandlers(mainWindow, app);
+  registerBubbleIpcHandlers(app);
 }
 
 function forwardToPet(channel, payload) {
