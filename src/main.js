@@ -91,6 +91,8 @@ const btnTitles = document.getElementById('btn-titles');
 const btnSettings = document.getElementById('btn-settings');
 const btnHide = document.getElementById('btn-hide');
 const permaStatus = document.getElementById('perma-status');
+const permaText = document.getElementById('perma-text');
+const saveDot = document.getElementById('save-dot');
 const expBarFill = document.getElementById('exp-bar-fill');
 const expBarText = document.getElementById('exp-bar-text');
 
@@ -158,6 +160,7 @@ async function init() {
   window.electron.on('level-up', (event) => { currentTitle = { name: event.title, color: event.titleColor, desc: event.titleDesc }; addLog('levelup', tf('systemLevelUp', event.level, event.title)); updateUI(); });
   window.electron.on('achievement-unlocked', (event) => { const { name, desc, icon } = event; addLog('achievement', `${name}: ${desc}`); showAchievementOverlay(icon, name, desc); gameState?.unlockedAchievements.push(event.id); updateUI(); });
   window.electron.on('scenario-changed', (event) => { gameState = event.game; currentScenario = event.scenario; currentTitle = { name: event.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); });
+  window.electron.on('auto-save', () => { flashSaveDot(); });
 }
 
 function switchView(inHub) {
@@ -233,11 +236,19 @@ function updateExpBar() {
 }
 
 function updatePermaStatus() {
-  if (!gameState) { permaStatus.innerHTML = ''; return; }
+  if (!gameState) { if (permaText) permaText.textContent = ''; return; }
   const rt = gameState.is_in_hub ? '—' : formatRuntime(gameState.total_runtime_ms || 0);
   const ach = gameState.unlockedAchievements?.length || 0;
   const sc = currentScenario?.nameCN || 'Hub';
-  permaStatus.innerHTML = `${appVersion} | ${sc}<br>${rt} | 成就:${ach}`;
+  if (permaText) permaText.innerHTML = `${appVersion} | ${sc}<br>${rt} | 成就:${ach}`;
+}
+
+let saveDotTimer = null;
+function flashSaveDot() {
+  if (!saveDot) return;
+  if (saveDotTimer) clearTimeout(saveDotTimer);
+  saveDot.classList.remove('hidden');
+  saveDotTimer = setTimeout(() => saveDot.classList.add('hidden'), 2000);
 }
 
 function addLog(type, message) {

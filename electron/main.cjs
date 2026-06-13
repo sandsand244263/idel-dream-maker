@@ -293,6 +293,7 @@ function startGameLoop() {
     // Auto-save every 30s
     if (gameState.totalRuntimeMs % 30000 < delta) {
       writeSave(gameState);
+      try { mainWindow.webContents.send('auto-save', {}); } catch {}
     }
   }, 500);
 }
