@@ -64,7 +64,7 @@ class NotificationQueue{
       const rectH=c?Math.ceil(c.getBoundingClientRect().height):0;
       const bodyH=document.body.scrollHeight;
       const setH=Math.max(210,rectH);
-      const ta=document.createElement('textarea');ta.value='rect:'+rectH+' body:'+bodyH;ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);
+      const ta=document.createElement('textarea');ta.value='rect:'+rectH+' body:'+bodyH+' winH:'+window.innerHeight;ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);
     });
   }
   hideBubble(){

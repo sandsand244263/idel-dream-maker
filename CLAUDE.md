@@ -1,4 +1,4 @@
-# CLAUDE.md — Idel-DreamMaker 项目主文档
+# Idel-DreamMaker — 项目主文档
 
 **新 AI 会话请先读此文件。所有游戏规则、架构约定和开发约束在此定义。**
 
@@ -12,6 +12,8 @@
 > AI 在生成代码/内容/文档时需考虑这一前提——输出应自解释、可维护、避免不必要的复杂度。
 > 所有涉及"作者操作"的流程（如写 .md 文件、跑命令等）需给出清晰步骤和预期结果。
 
+原名 IdleWorker，v0.3.0 起改名 Idel-DreamMaker。
+
 ---
 
 ## 工作规范（AI 必须遵守）
@@ -19,17 +21,16 @@
 ### 新对话启动流程
 
 1. 先读本文件（`CLAUDE.md`）→ 了解项目定义、架构、规则、工作规范
-2. 再读 `架构文档.md` → 了解当前架构、版本记录、开发进度
-3. 然后读 `TASKS.md` → 找到当前版本未完成的 Task
-4. 执行 `git log --oneline -5` → 确认最新提交和进度
-5. 如果 TASKS.md 中所有 Task 已完成（全部 ✅），则问用户"下一个版本做什么？"并参考 TASKS.md 的规划章节
-6. 如果 TASKS.md 中有未完成的 Task，则直接开始执行第一个未完成的 Task
+2. 然后读 `TASKS.md` → 找到当前版本未完成的 Task
+3. 执行 `git log --oneline -5` → 确认最新提交和进度
+4. 如果 TASKS.md 中所有 Task 已完成（全部 ✅），则问用户"下一个版本做什么？"并参考 TASKS.md 的规划章节
+5. 如果 TASKS.md 中有未完成的 Task，则直接开始执行第一个未完成的 Task
 
 ### Git 规范
 
 - **每次改动前**：`git add -A && git commit -m "快照: YYYY-MM-DD 改动说明"`
 - **每个 Task 完成后**：`git add -A && git commit -m "vX.Y.Z TaskN: 改动说明"`
-- **版本完成后**：更新 TASKS.md + 架构文档.md，然后 `git add -A && git commit -m "vX.Y.Z: 版本说明"`
+- **版本完成后**：更新 TASKS.md + 本文件，然后 `git add -A && git commit -m "vX.Y.Z: 版本说明"`
 - **禁止**：`amend`、`force push`、跳过 snapshot 直接改代码
 - **推送**：每次 commit 后执行 `git push origin main`，确保远程与本地同步。Tag 在版本完成时一次性推送 `git push origin --tags`
 
@@ -37,8 +38,7 @@
 
 - 代码改动后必须同步更新：
   - `TASKS.md`：标记对应 Task ✅，更新进度
-  - `架构文档.md`：追加版本记录、更新开发进度表
-- `CLAUDE.md`：仅在架构级变更时更新（改名、新系统、里程碑变更）
+  - 本文件：追加版本记录、更新架构信息、更新开发进度表
 - 不允许只改代码不更新文档
 
 ### 任务执行规范
@@ -58,8 +58,8 @@
 
 ## 核心规则（AI 必须遵守）
 
-1. **所有事件文本不在代码里硬编码**，由作者创作后放入副本文件（`.md` 格式，详见`副本MD格式模板.md`），构建时解析为二进制嵌入
-2. **副本数据构建时保护**：.md 文件由 build.rs 解析为 bincode 二进制，存入 `scenarios_data.rs`，编译进 exe，无法 strings 直接提取
+1. **所有事件文本不在代码里硬编码**，由作者创作后放入副本文件（`.md` 格式，详见`副本MD格式模板.md`），构建时解析为 JSON 嵌入
+2. **副本数据构建时保护**：.md 文件由 build.js 解析为 JSON，存入 `public/scenarios_data.json`，编译进 exe
 3. **游戏是零交互的**——进入副本后没有按钮、点击、选择分支。纯挂机 + 偶尔阅读
 4. **Steamworks 集成为可选项**，延后到 1.0，代码里条件编译
 5. **跨平台**——Windows 系统托盘，macOS 菜单栏图标
@@ -68,39 +68,98 @@
 
 ---
 
-## 双层架构
+## 技术栈
 
-### 大厅 (Hub)
+| 类别 | 技术 | 版本 |
+|------|------|------|
+| 桌面框架 | Electron（跨平台：Windows/macOS/Linux） | 34.x |
+| 后端语言 | JavaScript（Node.js） | 22.x |
+| 前端 | HTML + CSS + JS（无框架） | - |
+| 构建工具 | Vite | 6.4.3 |
+| 字体 | Maple Mono NF CN（打包内置） | - |
+| 包管理器 | npm | 10.x |
+| 打包工具 | electron-builder | 25.x |
 
-大厅是整个应用的"家"。玩家在这里管理一切：
+---
 
-| 功能 | 说明 |
-|------|------|
-| 全局玩家名 | 首次创建，大厅中唯一标识 |
-| 副本列表 | 已拥有的副本（卡片列表），可展开查看详情 |
-| 副本选择 | 从列表中直接点击进入 |
-| 副本抽取 | 从所有可用副本中随机选一个 |
-| 删除副本 | 删除副本时同步清理关联存档数据 |
-| 大厅称号 | 各副本已解锁称号的聚合视图，按副本分组可展开/折叠 |
-| 大厅等级 | 各副本累计总经验决定的全局等级，永不重置 |
+## 文件结构
+
+| 文件/目录 | 规模 | 职责 |
+|-----------|------|------|
+| `index.html` | 主 HTML 入口 | 大厅界面 + 副本界面 + 弹窗 + 侧面板 |
+| `src/main.js` | 前端逻辑 | 状态同步、事件监听、按钮操作、面板渲染 |
+| `src/style.css` | 前端样式 | 瘦长窗口 UI、Maple Mono 字体、动画 |
+| `src/game.js` | 游戏引擎模块 | GameState、事件触发、成就检测 |
+| `src/scenario.js` | 数据模型模块 | Scenario 结构体、等级/称号计算 |
+| `electron/main.cjs` | Electron 主进程 | 窗口创建、IPC 注册、游戏循环、存档 |
+| `electron/preload.cjs` | IPC 桥接 | contextBridge 暴露 invoke/on 给渲染进程 |
+| `electron/tray.cjs` | 托盘逻辑 | 系统托盘图标、菜单、tooltip |
+| `electron/windows.cjs` | 窗口管理 | 窗口创建、宠物窗口切换、位置控制 |
+| `electron/pet.cjs` | 宠物窗口 | PetDex 精灵加载、Canvas 动画、游戏状态叠加 |
+| `pet/index.html`, `pet/pet.js`, `pet/style.css` | 宠物前端 | 宠物窗口渲染层 |
+| `build.js` | 构建脚本 | 构建时解析 .md → scenarios_data.json |
+| `scenarios/` | 副本源文件 | `.md` 格式副本源文件（作者工具） |
+| `public/scenarios_data.json` | 副本数据 | 构建时生成，被游戏引擎加载 |
+| `CLAUDE.md` | 项目主规范 | AI 新会话首读 |
+| `TASKS.md` | 工作追踪 | 版本任务清单 + 路线规划 |
+| `副本设定集.md` | 副本设计文档 | 世界观/称号/事件设计模式 |
+| `副本MD格式模板.md` | 副本格式规范 | `.md` 模板 + 字段说明 + 校验规则 |
+| `节假日事件池.md` | 节假日设计 | 全球节假日事件池 |
+
+---
+
+## 体系架构
+
+### 双层结构
+
+```
+┌─────────────────────────────────────────────┐
+│              大厅 (Hub)                      │
+│  ┌───────────────────────────────────────┐  │
+│  │  全局玩家名（唯一）                    │  │
+│  │  副本列表 ─ 选取 / 抽取 / 导入 / AI   │  │
+│  │  大厅等级（跨副本累加，永不重置）      │  │
+│  │  大厅称号（各副本称号聚合视图）        │  │
+│  │  语言设置                             │  │
+│  └───────────────────────────────────────┘  │
+│                     │                        │
+│        选择副本 → 进入（可选别名）           │
+│                     ↓                        │
+│  ┌───────────────────────────────────────┐  │
+│  │              副本内 (Scenario)          │  │
+│  │  副本内别名（独立于全局名）             │  │
+│  │  EXP 1/s → 等级/称号/事件/成就         │  │
+│  │  退出 → 等级重置，EXP 累入大厅         │  │
+│  └───────────────────────────────────────┘  │
+└─────────────────────────────────────────────┘
+```
 
 **大厅内规则：** 不涨 EXP、不触发事件、不检测成就。纯管理界面。
 
-### 副本内 (Scenario)
-
-进入副本后，进入纯挂机模式：
-
-| 功能 | 说明 |
-|------|------|
-| 副本别名 | 每次进入可自定义名称（独立于全局名），仅该副本内使用 |
-| 等级 | 副本内独立等级，退出/切换时重置 |
-| EXP | 1/s 恒定，仅在本副本内累积 |
-| 称号 | 副本专属称号链，等级达标自动解锁 |
-| 事件 | 随机触发副本专属故事事件 |
-| 成就 | 副本专属成就 |
-| 返回大厅 | 随时可退出，退出时副本等级重置，**总经验累加入大厅总经验** |
-
 **副本内规则：** 零交互挂机，只读。
+
+### 核心数据流
+
+```
+启动 → init() → 判断 is_in_hub
+                  ↓
+       Hub = true → 显示大厅界面
+       Hub = false → 显示副本界面 + 游戏循环开始
+                       ↓
+              游戏循环 (electron/main.cjs, setInterval 500ms)
+                       ↓
+           exp += 1/s ─┬→ 等级检测 → IPC emit(level-up)
+                        ├→ 每 1s → IPC emit(game-tick) → 前端 updateUI()
+                        ├→ 每 60s → 概率触发事件 → IPC emit(event-triggered)
+                        ├→ 每 tick → 成就检测 → IPC emit(achievement-unlocked)
+                        └→ 每 30s → save_game()
+
+      退出副本时：
+         hub.total_exp += scenario.exp_earned
+         scenario.exp_earned = 0
+         scenario.level = 1
+         is_in_hub = true → 切换显示大厅界面
+```
 
 ### 大厅与副本切换流程
 
@@ -116,6 +175,90 @@
 │
 └── 删除副本 → 从列表中移除 + 清理该副本存档数据
 ```
+
+---
+
+## 关键模块详解
+
+### 大厅 (Hub)
+
+| 功能 | 实现位置 | 说明 |
+|------|---------|------|
+| 副本列表 | `src/main.js:renderScenarioPanel()` | 卡片列表，显示各副本名称/描述/进度 |
+| 副本选择 | `electron/main.cjs` IPC `select-scenario` | 进入副本，可选别名，重置副本内状态 |
+| 副本抽取 | `electron/main.cjs` IPC `draw-scenario` | 随机选一个副本（免费不限次） |
+| 大厅等级 | `electron/main.cjs` game state | `hub_total_exp` 跨副本累加，公式 `sqrt(exp/100)+1` |
+| 大厅称号 | `src/main.js:renderHubTitles()` | 各副本解锁称号聚合视图，按副本分组展开/折叠 |
+| 副本数据 | `build.js` → `public/scenarios_data.json` | 构建时 .md → JSON |
+
+**大厅内游戏规则：**
+- `is_in_hub = true` → 游戏循环跳过 EXP 增长、事件触发、成就检测
+- 仅更新 UI（计时器继续走）
+- 所有按钮可用：设置、副本选择、称号、隐藏
+
+### 副本内 (Scenario)
+
+| 模块 | 实现位置 | 说明 |
+|------|---------|------|
+| GameState | `electron/main.cjs` + `src/game.js` | 副本内状态：level/exp/称号/事件/成就 |
+| 游戏循环 | `electron/main.cjs` `startGameLoop()` | 500ms tick，仅当 `!isInHub` 时执行 |
+| 事件触发 | `electron/main.cjs` `checkAndTriggerEvent()` | 每 60s 概率触发 |
+| 成就检测 | `electron/main.cjs` `checkAchievements()` | 每 tick 检测 |
+| 存档读写 | `electron/main.cjs` `readSave()/writeSave()` | 单文件 JSON，路径 `%APPDATA%/Idel-DreamMaker/save.json` |
+
+**退出副本逻辑：**
+```js
+function exitToHub() {
+  gameState.hubTotalExp += gameState.totalExpEarned;
+  gameState.scenarioId = '';
+  gameState.level = 1;
+  gameState.exp = 0;
+  gameState.totalExpEarned = 0;
+  gameState.totalRuntimeMs = 0;
+  gameState.triggeredEvents = [];
+  gameState.unlockedAchievements = [];
+  gameState.isInHub = true;
+}
+```
+
+### 语言系统
+
+| 配置项 | 存储位置 | 说明 |
+|--------|---------|------|
+| `language` | `GameState.language` (`electron/main.cjs`) | UI 语言，默认 `zh`，可选 `en` |
+
+前端通过 `const LANG = { zh: {...}, en: {...} }` 映射表实现文本切换（`src/main.js`）。
+
+| 配置项 | 说明 | 默认值 |
+|--------|------|--------|
+| `language` | UI 界面语言（按钮/标签/提示等） | `zh` |
+
+当前支持：`zh`（简体中文）、`en`（English）。
+
+### 窗口行为
+
+| 项目 | 值 |
+|------|-----|
+| 默认尺寸 | 320 × 840（瘦长，类似 QQ 面板风格） |
+| 最小尺寸 | 280 × 400 |
+| 标题栏 | 自定义（`decorations: false`），自绘 ID/LV/称号 + [×] 按钮 |
+| 贴边自动隐藏 | 已移除（v0.3.2） |
+| Mini Bar | v2.0 已替换为 PetDex 像素宠物窗口（独立透明 BrowserWindow + Canvas 动画） |
+| 底部状态条 | 常驻显示：`v0.3.x | 玩家名 | 副本名<换行>LV:5 | 称号 | 时长 | 成就:N` |
+
+### 托盘行为
+
+| 操作 | 行为 |
+|------|------|
+| 左键单击 | 显示/隐藏窗口 |
+| 右键单击 | 弹出菜单（Show/Hide、Quit） |
+| 悬停 tooltip | 每 5 秒更新：`Lv.X 称号 | XhXmXs` 或 `大厅 Lv.X | XhXmXs` |
+
+### 开发者工具
+
+| 快捷键 | 功能 |
+|--------|------|
+| `Ctrl+Shift+D` | 开启/关闭调试面板（显示完整 gameState、日志计数、窗口尺寸等） |
 
 ---
 
@@ -153,27 +296,6 @@
 
 ---
 
-## 副本 `.md` 格式
-
-每个副本一个 `.md` 文件，通过 frontmatter（YAML）定义元数据 + 正文分节定义内容。
-
-详见 `副本MD格式模板.md`。核心结构：
-
-```yaml
----
-id: wasteland
-name: Wasteland
-name_cn: 废土
-language: zh
-description: 核战后的废土世界...
-player_title: 拾荒者
----
-```
-
-正文使用 Markdown 标题分割各区块（`## Titles`、`## Events`、`## Achievements`）。
-
----
-
 ## 事件触发逻辑
 
 ```
@@ -204,89 +326,53 @@ player_title: 拾荒者
 | Fallback 字体 | `'Courier New', monospace` |
 | 多语言覆盖 | Maple Mono NF CN 自带 CN/JP/KR/Latin 字型，一套字体覆盖所有 UI |
 
-无主题切换，统一使用 Maple Mono NF CN。
+无主题切换，统一使用 Maple Mono NF CN。字体文件存放于 `public/fonts/`，随应用打包。
 
 ---
 
-## 语言系统
+## 配置与模板说明
 
-| 配置项 | 说明 | 默认值 |
-|--------|------|--------|
-| `language` | UI 界面语言（按钮/标签/提示等） | `zh` |
+| 文件 | 关键参数 |
+|------|---------|
+| `package.json` | scripts: dev/electron:dev/electron:build; main: `electron/main.cjs` |
+| `vite.config.js` | port: 1420 |
+| `build.js` | 构建时 .md → `public/scenarios_data.json` |
+| `electron-builder` | (通过 `electron:build` script 调用) |
+| `副本MD格式模板.md` | `.md` 副本文件完整格式规范 |
 
-当前支持：`zh`（简体中文）、`en`（English）。
+**存档路径：**
+- Windows: `%APPDATA%/Idel-DreamMaker/save.json`
+- macOS: `~/Library/Application Support/Idel-DreamMaker/save.json`
 
 ---
 
-## 窗口行为
+## 版本与进度
+
+| 里程碑 | 进度 | 说明 |
+|--------|------|------|
+| 1. 引擎核心 | **100%** | 托盘 + 存档 + 挂机循环 + 称号 + UI（Tauri 版）|
+| 2. 事件引擎 | **100%** | 副本 JSON + 随机触发 + 弹窗 + 副本选择 |
+| 3. 成就系统 | **100%** | 条件检测 + 本地弹窗 + 通知 |
+| 4. UI 改造 | **100%** | 按钮操作 + 迷你窗口 + 托盘修复 |
+| 5a. 大厅架构 | **100%** | Hub + 抽选 + 别名 + 等级/称号 |
+| 5b. 瘦长窗口 | **100%** | 320×840 + 自定义标题栏 |
+| 5c. 语言系统 | **100%** | 中英 UI |
+| 6. 副本引擎 | **100%** | .md 解析器 + build.js JSON 输出 + 内容校验 |
+| 7. 废土 500 事件 | **100%** | 500/500 条 |
+| 8. Electron 迁移 | **100%** | Tauri → Electron 完整迁移（v1.0）|
+| 9. 宠物窗口 | **100%** | v2.0 — PetDex 社区精灵 + Canvas 8×9 帧动画 + 通知队列 + 气泡交互 |
+| 10. 节假日系统 | **0%** | 待定 |
+| 11. 体验打磨 | **0%** | 动效 + 错误提示 + 首次引导 |
+| 12. Mac 适配 | **0%** | Electron 天然支持，待测试 |
+| 13. Steam+P2P | **0%** | 待定 |
+
+**当前阶段：** v2.0（执行中） — PetDex 像素宠物窗口替换 Mini Bar
 
 | 项目 | 值 |
 |------|-----|
-| 默认尺寸 | 320 × 840（瘦长，类似 QQ 面板风格） |
-| 最小尺寸 | 280 × 400 |
-| 标题栏 | 自定义（`decorations: false`），自绘 ID/LV/称号 + [─][□][×] 按钮 |
-| 贴边自动隐藏 | 已移除（v0.3.2） |
-| Mini Bar | v2.0 已替换为 PetDex 像素宠物窗口（独立透明 BrowserWindow + Canvas 动画） |
-| 底部状态条 | 常驻显示：`v0.3.x | 玩家名 | 副本名<换行>LV:5 | 称号 | 时长 | 成就:N` |
-
----
-
-## 字体文件
-
-Maple Mono NF CN 字体文件存放于 `public/fonts/`，随应用打包。
-
----
-
-## 语言选择
-
-UI 语言配置：
-- `language`：界面按钮、标签、日志等 UI 文字
-- 当前支持：zh（中文）、en（English）
-
----
-
-## 托盘行为
-
-| 操作 | 行为 |
-|------|------|
-| 左键单击 | 显示/隐藏窗口 |
-| 右键单击 | 弹出菜单（Show/Hide、Quit） |
-| 悬停 tooltip | 每 5 秒更新：`Lv.X 称号 | XhXmXs` 或 `大厅 Lv.X | XhXmXs` |
-
----
-
-## 开发者工具
-
-| 快捷键 | 功能 |
-|--------|------|
-| `Ctrl+Shift+D` | 开启/关闭调试面板（显示完整 gameState、日志计数、窗口尺寸等） |
-
----
-
-
-
-## 开发指引
-
-### 技术栈
-
-| 层 | 技术 |
-|----|------|
-| 桌面框架 | Electron |
-| 后端语言 | JavaScript（Node.js） |
-| 前端 | HTML + CSS + JS（无框架） |
-| 构建工具 | Vite |
-| 字体 | Maple Mono NF CN（打包内置） |
-| 存档 | JSON 文件通过 Node.js fs 读写 |
-| 副本数据 | `.md` 文件构建时（build.js）解析为 JSON |
-| 打包 | electron-builder |
-
-### 跨平台托盘
-
-| 平台 | 实现方式 |
-|------|---------|
-| Windows | `electron.Tray`（已实现） |
-| macOS | `electron.Tray`（Electron 自动适配菜单栏） |
-| Linux (Ubuntu/Debian/Fedora) | `electron.Tray`（打包时配置 linux target） |
+| 当前版本 | 2.0.0 |
+| 版本策略 | 主版本.功能版本.修复版本 |
+| 下一阶段 | v2.0 — PetDex 像素宠物窗口替换 Mini Bar |
 
 ### 版本路线
 
@@ -294,9 +380,63 @@ UI 语言配置：
 |------|------|------|
 | v0.1 ~ v0.2 | 引擎核心 + 事件引擎 + 成就系统 + UI 改造 | ✅ |
 | v0.3.0 ~ v0.3.6 | 大厅架构 + 语言系统 + 托盘/标题栏 + 副本进度保留 | ✅ |
-| v0.3.7 | 副本引擎与废土填充（.md 解析器 + build.rs + 500 事件） | ✅ |
+| v0.3.7 | 副本引擎与废土填充（.md 解析器 + build.js + 500 事件） | ✅ |
 | **v1.0** | **Electron 迁移（替代 Tauri，Rust → JS，保留前端）** | ✅ |
 | **v2.0** | **PetDex 像素宠物窗口（替换 Mini Bar）** | ⬜ |
 | v2.0+ | UI 打磨 / 新副本 / Linux 打包 | 待定 |
 
 > 注：Tauri 版已废弃（WebView2/Edge v149 不兼容，官方 1.5 年未修）。v1.0 迁移到 Electron。
+
+### 版本升级记录
+
+> 每次架构变更或版本更新均在此记录，方便 AI 回溯上下文。
+
+| 版本 | 日期 | 改动内容 |
+|------|------|---------|
+| 0.1.0-beta | 2026-06-11 | 初始版本：项目骨架搭建、引擎核心、事件引擎、成就系统、终端 UI、废土副本 |
+| 0.2.0-beta | 2026-06-11 | UI 改造：去除命令行改为按钮；迷你窗口 400×200；托盘图标修复；关闭→最小化；事件通知；未获得称号 ???；状态面板；版本号统一管理 |
+| 0.2.1 | 2026-06-11 | Hotfix：字号 11→12px；状态面板改为 modal 弹窗；托盘 tooltip 动态更新 |
+| 0.3.0-beta | 2026-06-11 | 项目改名 Idel-DreamMaker；大厅 Hub 双层架构；大厅等级/称号聚合；瘦长窗口 320×840；贴边自动隐藏（已删除）；中英语言系统；Maple Mono NF CN 字体；`.md` 副本格式；TASKS.md 工作清单 |
+| 0.3.1-beta | 2026-06-11 | 字体 12→14px 全组件调大；删除贴边隐藏；别名弹窗 UI 化（替代 window.prompt）；副本→副本；Mini Bar 模式（250×80 半透明 + EXP 进度条 + 置顶 + 可拖拽）；新增"迷你"按钮；托盘 tooltip 修复；`select_scenario` 死锁修复 |
+| 0.3.2 | 2026-06-11 | 通知改为窗口隐藏时托盘 tooltip 提醒；称号面板点击手动佩戴；进入副本/返回大厅后等级/称号立即同步；`select_scenario` 返回中增加 `titles` 字段 |
+| 0.3.3 | 2026-06-11 | 托盘修复：`TrayIconBuilder::with_id("main")` + 前端每 5s `update_tooltip` invoke；副本进度保留；开发者工具（Ctrl+Shift+D）；`[–]` 按钮改为 `hide_window`；状态栏 Hub 模式显示大厅等级 |
+| 0.3.4 | 2026-06-11 | 自定义标题栏（`decorations:false` + `#titlebar` 拖拽/最小化/最大化/关闭）；时长显示含秒；状态栏最左加 `ID:Worker`；副本内隐藏"副本"按钮；左键托盘严格区分；成就计数实时更新；日志上限 500 条；Mini Bar 显示 `ID` |
+| 0.3.5 | 2026-06-11 | 修复 `set_window_mode("full")` 移除 `decorations:true`；新增 `window_minimize`/`window_toggle_maximize` Rust 命令；底部常驻状态条；`game-tick` 监听器保护；空大厅提示；`[–]` 按钮改用 Rust invoke；调试面板修复；CLAUDE.md 重写 |
+| 0.3.6 | 2026-06-11 | 标题栏仅留 `[×]`；底部状态条配色同按钮栏；移除"状态"按钮+`#about-panel`；状态条内容改为完整状态；tooltip 格式优化；`set_window_mode("full")` 加回 `set_size` 和 `center()`；Mini bar 收起按钮去掉；冗余代码删除 |
+| 0.3.6 hotfix | 2026-06-11 | 修复 JS 引用已删除的 `btn-minimize`/`btn-maximize` 导致脚本崩溃；状态条 11px→12px+两行显示；tooltip 双行换行；移除未使用的 `btnAbout` 引用 |
+| 0.3.7-dev | 2026-06-12 | 路线调整：取消 AI 生成/导入导出（闭源制作转向）；保留 .md 格式改为作者工具 + build.js 二进制嵌入保护；版本路线重排 |
+| **0.3.7** | **2026-06-12** | **副本引擎与废土填充完成：** build.js .md 解析器 + JSON 序列化嵌入；9 个核心引擎测试；前端 catch 错误处理；废土副本扩充至 500 条事件；旧 wasteland.json 废弃 |
+| **0.4.0-dev** | **2026-06-12** | 路线调整：像素宠物窗口取代 Mini Bar（v0.4.0）；原体验打磨版本延至 v0.4.5 |
+| **1.0-dev** | **2026-06-12** | 架构迁移计划：Tauri → Electron（WebView2 加载器与 Edge v149 不兼容）|
+| **1.0.0** | **2026-06-12** | **Electron 迁移完成：** Rust 引擎重写为 JS；electron/main.cjs 主进程；electron/tray.cjs/windows.cjs 模块化；build.js 替代 build.rs；删除全部 Tauri 文件 |
+| **2.0.0-dev** | **2026-06-12** | 像素宠物窗口启动：PetDex 社区精灵集成；独立 BrowserWindow 替换 Mini Bar；Canvas 8×9 帧动画渲染 |
+| **2.0.0** | **2026-06-12** | **像素宠物窗口完成：** Canvas 动画对齐 PetDex、通知队列、气泡侧边自适应、圆点脉冲、主题 CSS 变量、双击 toggle 主窗口、窗口位置记忆、debug 调试面板 |
+
+---
+
+## 常用操作
+
+| 场景 | 命令/操作 | 说明 |
+|------|-----------|------|
+| 启动开发 | `npm run dev` | Vite 开发服务器（默认 1420 端口）|
+| 启动应用 | `npm run electron:dev` | Vite + Electron 热重载 |
+| 构建副本数据 | `node build.js` | .md → scenarios_data.json |
+| 生产打包 | `npm run electron:build` | Vite build + electron-builder |
+| 开发模式 | `npm run electron:dev` | Vite + Electron 热重载 |
+| 打包 | `npm run electron:build` | Vite build + electron-builder（Windows 约 150MB） |
+| Linux 打包 | `electron-builder --linux` | 需在 Linux 环境执行，生成 `.deb` / `.AppImage` |
+
+---
+
+## 注意点
+
+- **像素宠物版权声明：** PetDex 社区精灵为玩家自行下载的用户数据（`%APPDATA%/Idel-DreamMaker/pets/`）。应用不捆绑、不分发任何精灵文件。精灵版权归各自创作者或 IP 权利人。应用内显示免责声明。
+- 游戏引擎在 Electron 主进程运行（`electron/main.cjs`），通过 IPC (`contextBridge` + `ipcRenderer`/`ipcMain`) 与渲染进程通信
+- 副本 `.md` 文件为作者内部制作工具，构建时由 `build.js` 解析为 JSON
+- 游戏是零交互的——进入副本后没有按钮/点击，纯挂机
+- Electron 打包安装包约 150MB（含 Chromium）
+- Linux 打包（Ubuntu/Debian/Fedora）需在 Linux 环境下执行 `electron-builder --linux`，生成 `.deb` / `.AppImage`
+- Linux 托盘图标在部分桌面环境（如 GNOME）需要 `libappindicator` 支持
+- Maple Mono NF CN 字体文件存放于 `public/fonts/`，打包时包含
+- 开发模式：`npm run electron:dev`（Vite + Electron 热重载）
+- 生产打包：`npm run electron:build`（Vite build + electron-builder）
