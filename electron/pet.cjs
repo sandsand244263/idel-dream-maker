@@ -132,6 +132,14 @@ function registerPetIpcHandlers(mainWindow, app) {
     return true;
   });
 
+  ipcMain.handle('pet-resize', (_, { height }) => {
+    if (petWindow && !petWindow.isDestroyed()) {
+      const [w] = petWindow.getSize();
+      petWindow.setSize(w, Math.min(Math.max(height, 200), 500));
+    }
+    return true;
+  });
+
   ipcMain.handle('toggle-main-window', () => {
     if (mainWindow) {
       if (mainWindow.isVisible()) { mainWindow.hide(); }
