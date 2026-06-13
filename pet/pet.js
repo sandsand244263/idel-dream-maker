@@ -162,7 +162,7 @@ document.addEventListener('mouseup',()=>{if(dragging){dragging=false;window.pet.
 canvas.addEventListener('click',()=>{if(!dragMoved)transitionTo('wave');});
 canvas.addEventListener('dblclick',e=>{e.preventDefault();if(!dragMoved){transitionTo('jump');window.pet.invoke('toggle-main-window').catch(()=>{});}});
 canvas.addEventListener('contextmenu',e=>{e.preventDefault();ctxMenu.classList.remove('hidden');const r=canvas.getBoundingClientRect();ctxMenu.style.left=(e.clientX-r.left)+'px';ctxMenu.style.top=(e.clientY-r.top)+'px';});
-document.addEventListener('click',e=>{if(!ctxMenu.contains(e.target))ctxMenu.classList.add('hidden');});
+document.addEventListener('click',e=>{if(!ctxMenu.contains(e.target)){ctxMenu.classList.add('hidden');document.getElementById('ctx-pet-list').classList.remove('show');}});
 
 // ── Dot click toggle ──
 dotEl.addEventListener('click',(e)=>{
@@ -211,10 +211,24 @@ function renderPetList() {
   });
 }
 
-document.getElementById('ctx-select-pet').addEventListener('click', (e) => {
-  e.stopPropagation();
-  const list = document.getElementById('ctx-pet-list');
-  list.classList.toggle('hidden');
+let petListTimer = null;
+document.getElementById('ctx-select-pet').addEventListener('mouseenter', () => {
+  if (petListTimer) clearTimeout(petListTimer);
+  renderPetList();
+  document.getElementById('ctx-pet-list').classList.add('show');
+});
+document.getElementById('ctx-select-pet').addEventListener('mouseleave', () => {
+  petListTimer = setTimeout(() => {
+    if (!document.getElementById('ctx-pet-list').matches(':hover')) {
+      document.getElementById('ctx-pet-list').classList.remove('show');
+    }
+  }, 200);
+});
+document.getElementById('ctx-pet-list').addEventListener('mouseenter', () => {
+  if (petListTimer) clearTimeout(petListTimer);
+});
+document.getElementById('ctx-pet-list').addEventListener('mouseleave', () => {
+  document.getElementById('ctx-pet-list').classList.remove('show');
 });
 document.getElementById('ctx-toggle-border').addEventListener('click', () => {
   const v = !getToggle('showBorder', true);
