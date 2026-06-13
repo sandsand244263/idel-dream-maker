@@ -13,7 +13,9 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #titlebar-btns { display: flex; height: 100%; }
 .titlebar-btn { width: 28px; height: 28px; background: transparent; border: none; color: var(--dim); font-family: var(--font); font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; -webkit-app-region: no-drag; }
 .titlebar-btn:hover { background: rgba(0,255,0,0.08); color: var(--fg); }
+.titlebar-btn:active { background: rgba(0,255,0,0.15); transform:scale(0.92); }
 .titlebar-btn-close:hover { background: rgba(244,67,54,0.3); color: #F44336; }
+.titlebar-btn-close:active { background: rgba(244,67,54,0.5); }
 
 /* ── Hub View ── */
 #hub-view { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
@@ -27,11 +29,13 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #hub-scenario-list::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
 .hub-card { border: 1px solid var(--dim); border-radius: 4px; padding: 10px 12px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
 .hub-card:hover { border-color: var(--fg); background: rgba(0,255,0,0.04); }
+.hub-card:active { transform:scale(0.98); }
 .hub-card-name { font-weight: bold; font-size: 14px; margin-bottom: 3px; color: var(--fg); }
 .hub-card-desc { font-size: 12px; color: var(--dim); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .hub-card-meta { font-size: 11px; color: var(--dim); margin-top: 5px; }
 #hub-draw-btn { width: calc(100% - 20px); margin: 4px 10px 10px; padding: 8px 0; background: transparent; border: 1px dashed var(--dim); color: var(--dim); font-family: var(--font); font-size: 13px; cursor: pointer; flex-shrink: 0; transition: all 0.15s; }
 #hub-draw-btn:hover { border-color: var(--fg); color: var(--fg); border-style: solid; }
+#hub-draw-btn:active { background: rgba(0,255,0,0.08); transform:scale(0.97); }
 
 /* ── EXP Progress Bar ── */
 #exp-bar-container { flex-shrink:0; padding:6px 10px 2px; display:flex; align-items:center; gap:8px; }
@@ -65,6 +69,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 .bar-btn { flex: 1; background: transparent; border: none; color: var(--dim); font-family: var(--font); font-size: 12px; padding: 6px 0; cursor: pointer; letter-spacing: 1px; transition: color 0.15s, background 0.15s; border-right: 1px solid rgba(10,90,10,0.3); }
 .bar-btn:last-child { border-right: none; }
 .bar-btn:hover { color: var(--fg); background: rgba(0,255,0,0.06); }
+.bar-btn:active { background: rgba(0,255,0,0.12); transform:scale(0.96); }
 
 /* ── Alias Modal ── */
 #alias-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 300; display: flex; align-items: center; justify-content: center; }
@@ -79,6 +84,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #alias-buttons { display: flex; gap: 8px; justify-content: flex-end; }
 #alias-buttons button { background: transparent; border: 1px solid var(--dim); color: var(--fg); padding: 6px 16px; cursor: pointer; font-family: var(--font); font-size: 12px; }
 #alias-buttons button:hover { background: rgba(0,255,0,0.08); border-color: var(--fg); }
+#alias-buttons button:active { transform:scale(0.96); }
 #alias-cancel { color: var(--dim) !important; }
 #alias-cancel:hover { color: var(--fg) !important; }
 
@@ -107,6 +113,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #scenario-panel-header, #settings-header, #titles-panel-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--dim); font-weight: bold; font-size: 13px; letter-spacing: 1px; }
 #scenario-panel-header button, #settings-header button, #titles-panel-header button { background: transparent; border: none; color: var(--dim); font-size: 16px; cursor: pointer; }
 #scenario-panel-header button:hover, #settings-header button:hover, #titles-panel-header button:hover { color: var(--fg); }
+#scenario-panel-header button:active, #settings-header button:active, #titles-panel-header button:active { transform:scale(0.9); }
 #scenario-list, #titles-list { flex: 1; overflow-y: auto; padding: 6px; }
 .scenario-card { border: 1px solid var(--dim); border-radius: 4px; padding: 8px 10px; margin-bottom: 6px; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
 .scenario-card:hover { border-color: var(--fg); background: rgba(0,255,0,0.04); }
@@ -122,6 +129,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 .setting-row select option { background: var(--bg); color: var(--fg); }
 .setting-row button { background: transparent; border: 1px solid var(--dim); color: var(--fg); padding: 5px 10px; cursor: pointer; font-family: var(--font); font-size: 11px; }
 .setting-row button:hover { background: rgba(0,255,0,0.08); }
+.setting-row button:active { transform:scale(0.96); }
 
 /* ── Hub Titles ── */
 .hub-title-group { border-bottom: 1px solid rgba(255,255,255,0.04); }
