@@ -96,6 +96,8 @@
 | `electron/tray.cjs` | 托盘逻辑 | 系统托盘图标、菜单、tooltip |
 | `electron/windows.cjs` | 窗口管理 | 窗口创建、宠物窗口切换、位置控制 |
 | `electron/pet.cjs` | 宠物窗口 | PetDex 精灵加载、Canvas 动画、游戏状态叠加 |
+| `electron/pet-preload.cjs` | 宠物 IPC | 宠物窗口 IPC 桥接 |
+| `electron/holiday.cjs` | 节假日模块 | 节日日期检测、事件注入 |
 | `pet/index.html`, `pet/pet.js`, `pet/style.css` | 宠物前端 | 宠物窗口渲染层 |
 | `build.js` | 构建脚本 | 构建时解析 .md → scenarios_data.json |
 | `scenarios/` | 副本源文件 | `.md` 格式副本源文件（作者工具） |
@@ -361,18 +363,18 @@ function exitToHub() {
 | 7. 废土 500 事件 | **100%** | 500/500 条 |
 | 8. Electron 迁移 | **100%** | Tauri → Electron 完整迁移（v1.0）|
 | 9. 宠物窗口 | **100%** | v2.0 — PetDex 社区精灵 + Canvas 8×9 帧动画 + 通知队列 + 气泡交互 |
-| 10. 节假日系统 | **0%** | 待定 |
-| 11. 体验打磨 | **0%** | 动效 + 错误提示 + 首次引导 |
+| 10. 节假日系统 | **100%** | v2.1 — 假日事件嵌入 .md + 游戏循环集成 + 调试按钮 |
+| 11. 体验打磨 | **100%** | v2.1 — 气泡点击/消除/居中、单击 wave、托盘显示宠物、拖拽防误触 |
 | 12. Mac 适配 | **0%** | Electron 天然支持，待测试 |
 | 13. Steam+P2P | **0%** | 待定 |
 
-**当前阶段：** v2.0（执行中） — PetDex 像素宠物窗口替换 Mini Bar
+**当前阶段：** v2.1（已完成） — 节假日系统 + 气泡交互优化 + UX 打磨
 
 | 项目 | 值 |
 |------|-----|
 | 当前版本 | 2.0.0 |
 | 版本策略 | 主版本.功能版本.修复版本 |
-| 下一阶段 | v2.0 — PetDex 像素宠物窗口替换 Mini Bar |
+| 下一阶段 | v2.2 — 新副本 / UI 打磨 / Linux 打包 |
 
 ### 版本路线
 
@@ -382,8 +384,9 @@ function exitToHub() {
 | v0.3.0 ~ v0.3.6 | 大厅架构 + 语言系统 + 托盘/标题栏 + 副本进度保留 | ✅ |
 | v0.3.7 | 副本引擎与废土填充（.md 解析器 + build.js + 500 事件） | ✅ |
 | **v1.0** | **Electron 迁移（替代 Tauri，Rust → JS，保留前端）** | ✅ |
-| **v2.0** | **PetDex 像素宠物窗口（替换 Mini Bar）** | ⬜ |
-| v2.0+ | UI 打磨 / 新副本 / Linux 打包 | 待定 |
+| **v2.0** | **PetDex 像素宠物窗口（替换 Mini Bar）** | ✅ |
+| **v2.1** | **节假日系统 + 气泡交互优化 + UX 打磨** | ✅ |
+| v2.2+ | 新副本 / UI 打磨 / Linux 打包 | 待定 |
 
 > 注：Tauri 版已废弃（WebView2/Edge v149 不兼容，官方 1.5 年未修）。v1.0 迁移到 Electron。
 
@@ -411,6 +414,7 @@ function exitToHub() {
 | **1.0.0** | **2026-06-12** | **Electron 迁移完成：** Rust 引擎重写为 JS；electron/main.cjs 主进程；electron/tray.cjs/windows.cjs 模块化；build.js 替代 build.rs；删除全部 Tauri 文件 |
 | **2.0.0-dev** | **2026-06-12** | 像素宠物窗口启动：PetDex 社区精灵集成；独立 BrowserWindow 替换 Mini Bar；Canvas 8×9 帧动画渲染 |
 | **2.0.0** | **2026-06-12** | **像素宠物窗口完成：** Canvas 动画对齐 PetDex、通知队列、气泡侧边自适应、圆点脉冲、主题 CSS 变量、双击 toggle 主窗口、窗口位置记忆、debug 调试面板 |
+| **2.1.0** | **2026-06-13** | **节假日系统 + 体验打磨：** 假日事件嵌入 .md（build.js 解析）；游戏循环集成节日检测；气泡交互优化（点击展开、标题居中、自适应高度）；托盘显示宠物；单击 wave 动画修复；拖拽防误触；空白消除 |
 
 ---
 
