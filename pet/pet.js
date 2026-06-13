@@ -59,26 +59,20 @@ class NotificationQueue{
     bubbleZone.style.borderLeftColor=this.current.type==='achievement'?'#FFD700':this.current.type==='levelup'?'#00FF00':'#00BFFF';
     if(expWrap)expWrap.style.display='none';
     requestAnimationFrame(()=>{
-      const b=document.body,c=document.getElementById('container'),bz=bubbleZone;
-      const bh=b?b.scrollHeight:0,ch=c?c.scrollHeight:0,bzh=bz?bz.scrollHeight:0;
-      const bw=b?window.innerWidth||192:0;
-      const diag='body:'+bh+' con:'+ch+' bbl:'+bzh+' winH:'+bw+' set:'+Math.max(210,bh+6);
-      // Copy to clipboard
-      const ta=document.createElement('textarea');ta.value=diag;ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);
       bubbleText.innerHTML=(t?'<div style="text-align:center;font-weight:bold;margin-bottom:4px">'+t+'</div><div>'+this.current.text+'</div>':'<div>'+this.current.text+'</div>');
-      window.pet.invoke('pet-resize',{height:Math.max(210,bh+3)}).catch(()=>{});
+      window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+2)}).catch(()=>{});
     });
   }
   hideBubble(){
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
-    setTimeout(()=>{window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+3)}).catch(()=>{});},0);
+    setTimeout(()=>{window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+2)}).catch(()=>{});},0);
   }
   close(){
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
     dotEl.className='dot-none';dotSymbol.textContent='○';
-    setTimeout(()=>{window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+3)}).catch(()=>{});},0);
+    setTimeout(()=>{window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+2)}).catch(()=>{});},0);
     this.next();
   }
   clearQueue(){
@@ -87,7 +81,7 @@ class NotificationQueue{
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
     dotEl.className='dot-none';dotSymbol.textContent='○';
-    setTimeout(()=>{window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+3)}).catch(()=>{});},0);
+    setTimeout(()=>{window.pet.invoke('pet-resize',{height:Math.max(210,document.body.scrollHeight+2)}).catch(()=>{});},0);
   }
 }
 const nq=new NotificationQueue();
