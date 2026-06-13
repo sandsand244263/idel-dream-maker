@@ -60,24 +60,16 @@ class NotificationQueue{
     if(expWrap)expWrap.style.display='none';
     requestAnimationFrame(()=>{
       bubbleText.innerHTML=(t?'<div style="text-align:center;font-weight:bold">'+t+'</div><div>'+this.current.text+'</div>':'<div>'+this.current.text+'</div>');
-      const c=document.getElementById('container');
-      const rectH=c?Math.ceil(c.getBoundingClientRect().height):0;
-      const bodyH=document.body.scrollHeight;
-      const setH=Math.max(210,rectH);
-      const ta=document.createElement('textarea');ta.value='rect:'+rectH+' body:'+bodyH+' winH:'+window.innerHeight;ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);
-      window.pet.invoke('pet-resize',{height:bodyH}).catch(()=>{});
     });
   }
   hideBubble(){
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
-    setTimeout(()=>{const c=document.getElementById('container');const h=c?Math.ceil(c.getBoundingClientRect().height):210;window.pet.invoke('pet-resize',{height:Math.max(210,h)}).catch(()=>{});},0);
   }
   close(){
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
     dotEl.className='dot-none';dotSymbol.textContent='○';
-    setTimeout(()=>{const c=document.getElementById('container');const h=c?Math.ceil(c.getBoundingClientRect().height):210;window.pet.invoke('pet-resize',{height:Math.max(210,h)}).catch(()=>{});},0);
     this.next();
   }
   clearQueue(){
@@ -86,7 +78,7 @@ class NotificationQueue{
     bubbleZone.className='zone-hide';
     if(expWrap)expWrap.style.display='flex';
     dotEl.className='dot-none';dotSymbol.textContent='○';
-    setTimeout(()=>{const c=document.getElementById('container');const h=c?Math.ceil(c.getBoundingClientRect().height):210;window.pet.invoke('pet-resize',{height:Math.max(210,h)}).catch(()=>{});},0);
+  }
   }
 }
 const nq=new NotificationQueue();
