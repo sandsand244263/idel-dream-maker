@@ -4135,64 +4135,64 @@
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
-        "once": false,
-        "text": "����ĵ�һ������͸�������������˷�����������־��д�£��µ�һ�꣬��������ȥ��"
+        "once": true,
+        "text": "新年的第一缕阳光透过辐射云照亮了废土。你在日志上写下：新的一年，继续活下去。"
       },
       {
         "holidayId": "valentine",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
-        "once": false,
-        "text": "�������ر�������һ����Χ������������û��ֵ���ͻ����ˡ����ҵ���һ�����õ�塣"
+        "once": true,
+        "text": "今天你特别留意了一下周围——废土上有没有值得送花的人。你找到了一朵变异玫瑰。"
       },
       {
         "holidayId": "april_fools",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
-        "once": false,
-        "text": "��ĸǸ������ͻȻ�����ˡ��㾪��ʧ��ؼ���˰��죬�ŷ��ֱ�������һ�Ŷ�������ֽ��"
+        "once": true,
+        "text": "你的盖革计数器突然爆表了。你惊慌失措地检查了半天，才发现被人贴了一张恶作剧贴纸。"
       },
       {
         "holidayId": "halloween",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
-        "once": false,
-        "text": "�����ķ������ⰲ�������ܾ�����ʲô�����ڰ��������㡣һȺ�������ö�����˴�����ǰ�߹���"
+        "once": true,
+        "text": "今晚的废土格外安静。你总觉得有什么东西在暗处盯着你。一群穿着破烂斗篷的人从你面前走过。"
       },
       {
         "holidayId": "christmas",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
-        "once": false,
-        "text": "����һ���������̵����ҵ���һ������ʥ���������������˱������������˼�������Ƭ����װ�Ρ�"
+        "once": true,
+        "text": "你在一个废弃的商店里找到了一棵塑料圣诞树。你把它搬回了避难所，挂上了几个废铁片做的装饰。"
       },
       {
         "holidayId": "mid_autumn",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
-        "once": false,
-        "text": "��������������󡣷����Ƶ���ס������ֵ���һ��ѹ��������Ϊ�±���"
+        "once": true,
+        "text": "今晚的月亮格外大。辐射云挡不住它。你分到了一块压缩饼干作为月饼。"
       },
       {
         "holidayId": "lantern_festival",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
-        "once": false,
-        "text": "���ڷ����з�����һյ����õĵ�����������������ڷ���������һȦ��"
+        "once": true,
+        "text": "你在废墟中发现了一盏还完好的灯笼。你点亮了它，在废土上走了一圈。"
       },
       {
         "holidayId": "childrens_day",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
-        "once": false,
-        "text": "�۾ӵ�ĺ�����������Ϸ�����÷���Ƭ������ӡ��㿴�˺ܾá�"
+        "once": true,
+        "text": "聚居点的孩子们在玩游戏——用废铁片做的毽子。你看了很久。"
       }
     ],
     "achievements": [

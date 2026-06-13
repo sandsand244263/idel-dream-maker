@@ -55,7 +55,7 @@ class NotificationQueue{
   showBubble(){
     if(!this.current||bubbleZone.className==='zone-show')return;
     const t=this.current.title||'';
-    bubbleText.textContent=t?t+'\n'+this.current.text:this.current.text;
+    bubbleText.textContent=t?'━━━ '+t+' ━━━\n'+this.current.text:this.current.text;
     bubbleZone.className='zone-show';
     bubbleZone.style.borderLeftColor=this.current.type==='achievement'?'#FFD700':this.current.type==='levelup'?'#00FF00':'#00BFFF';
     if(expWrap)expWrap.style.display='none';
