@@ -205,7 +205,7 @@ function registerPetIpcHandlers(mainWindow, app) {
     return true;
   });
 
-  registerSelectorIpcHandlers(mainWindow, app);
+  registerSelectorIpcHandlers(app);
   registerBubbleIpcHandlers(mainWindow, app);
 }
 

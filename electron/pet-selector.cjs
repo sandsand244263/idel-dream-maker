@@ -2,7 +2,6 @@ const { BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
 let selectorWindow = null;
-let petWindowRef = null;
 let currentPetList = [];
 let selectedPetIndex = 0;
 
@@ -46,8 +45,11 @@ function createSelectorWindow(app) {
 }
 
 function positionSelectorWindow() {
-  if (!selectorWindow || !selectorWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) return;
-  const petBounds = petWindowRef.getBounds();
+  if (!selectorWindow || !selectorWindow.isDestroyed()) return;
+  const wins = BrowserWindow.getAllWindows();
+  const petWin = wins.find(w => !w.isDestroyed() && w !== selectorWindow && w.getBounds().width === 192);
+  if (!petWin) return;
+  const petBounds = petWin.getBounds();
   const selWidth = 180;
   const selHeight = Math.min(240, Math.max(120, (currentPetList.length || 1) * 32 + 60));
 
@@ -63,8 +65,7 @@ function positionSelectorWindow() {
   selectorWindow.focus();
 }
 
-function registerSelectorIpcHandlers(petWindow, app) {
-  petWindowRef = petWindow;
+function registerSelectorIpcHandlers(app) {
 
   ipcMain.handle('show-pet-selector', () => {
     const { scanPets } = require('./pet.cjs');
@@ -86,6 +87,4 @@ function registerSelectorIpcHandlers(petWindow, app) {
   });
 }
 
-function getPetWindowRef() { return petWindowRef; }
-
-module.exports = { registerSelectorIpcHandlers, sendToSelector, getPetWindowRef };
+module.exports = { registerSelectorIpcHandlers, sendToSelector };
