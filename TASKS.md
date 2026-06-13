@@ -442,9 +442,9 @@ npx electron-builder   # 打包验证
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **HolidayEvents 嵌入 .md** — `## HolidayEvents` 格式定义 + wasteland.md 填充 + build.js 解析 | `副本MD格式模板.md`, `scenarios/wasteland.md`, `build.js` | ⬜ |
-| 2 | **holiday.cjs 改为从 scenario 读取** — 移除 holidays.json 依赖 | `electron/holiday.cjs`, `electron/main.cjs`, `public/holidays.json` (删) | ⬜ |
-| 3 | **气泡显示节日标题** — pet.js 事件通知带 title | `pet/pet.js` | ⬜ |
+| 1 | **字体修复** — pet/index.html 加 @font-face | `pet/index.html` | ⬜ |
+| 2 | **气泡自适应 + 标题居中** — white-space:pre-wrap + 居中样式 | `pet/style.css`, `pet/pet.js` | ⬜ |
+| 3 | **乱码修复** — Node.js UTF-8 重写 wasteland.md HolidayEvents | `scenarios/wasteland.md` | ⬜ |
 
 ---
 
