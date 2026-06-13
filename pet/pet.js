@@ -59,6 +59,14 @@ class NotificationQueue{
     bubbleZone.className='zone-show';
     bubbleZone.style.borderLeftColor=this.current.type==='achievement'?'#FFD700':this.current.type==='levelup'?'#00FF00':'#00BFFF';
     if(expWrap)expWrap.style.display='none';
+    requestAnimationFrame(()=>{
+      const c=document.getElementById('container'),ib=document.getElementById('info-bar'),cw=document.getElementById('canvas-wrap'),ew=document.getElementById('exp-wrap');
+      const ibH=ib?ib.offsetHeight:0,cwH=cw?cw.offsetHeight:0,bblSH=bubbleZone.scrollHeight||0,bblOH=bubbleZone.offsetHeight||0,ewH=ew&&ew.style.display!=='none'?ew.offsetHeight:0;
+      const conH=c?c.scrollHeight:0,conRect=c?c.offsetHeight:0,winH=window.innerHeight;
+      const gap=2,pad=4;
+      const d='wi:'+winH+' coS:'+conH+' coO:'+conRect+' ib:'+ibH+' cw:'+cwH+' bblS:'+bblSH+' bblO:'+bblOH+' ew:'+ewH+' gap:'+gap+' pad:'+pad+' sum:'+(ibH+gap+cwH+gap+bblSH+pad);
+      const ta=document.createElement('textarea');ta.value=d;ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);
+    });
   }
   hideBubble(){
     bubbleZone.className='zone-hide';
