@@ -68,6 +68,25 @@ h3 { font-size: 12px; color: #aaa; margin: 0 0 6px; border-bottom: 1px solid #33
 .import-box .row button { padding: 4px 14px; font-size: 11px; background: #444; border: 1px solid #666; color: #eee; cursor: pointer; border-radius: 3px; }
 .import-box .row button:hover { background: #555; }
 
+/* ── Scoring ── */
+.scoring { }
+.scoring-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.scoring-header h3 { margin: 0; }
+.scoring-row { display: flex; align-items: center; gap: 4px; margin-bottom: 3px; padding: 2px 4px; border-radius: 3px; transition: background 0.15s; }
+.scoring-row:hover { background: rgba(255,255,255,0.04); }
+.scoring-label { font-size: 11px; color: #ccc; min-width: 60px; flex-shrink: 0; }
+.scoring-btns { display: flex; gap: 2px; }
+.scoring-btns button { padding: 2px 10px; font-size: 10px; background: transparent; border: 1px solid #555; color: #888; cursor: pointer; border-radius: 3px; transition: all 0.12s; line-height: 1.4; }
+.scoring-btns button:hover { border-color: #888; color: #eee; }
+.scoring-btns button.active-good { background: #2e7d32; border-color: #388e3c; color: #fff; }
+.scoring-btns button.active-bad { background: #c62828; border-color: #d32f2f; color: #fff; }
+.scoring-btns button.active-skip { background: #444; border-color: #666; color: #aaa; }
+.scoring-copy { display: block; margin-top: 6px; width: 100%; padding: 4px 0; background: #555; border: none; color: #eee; font-size: 10px; cursor: pointer; border-radius: 3px; letter-spacing: 1px; }
+.scoring-copy:hover { background: #666; }
+.scoring-copy:active { transform: scale(0.98); }
+.scoring-copy.copied { background: #388e3c; }
+.scoring-extra { width: 100%; margin-top: 4px; background: #333; border: 1px solid #555; color: #aaa; font-family: 'Consolas', monospace; font-size: 10px; padding: 3px 5px; border-radius: 3px; resize: vertical; min-height: 28px; }
+
 .note { font-size: 10px; color: #555; line-height: 1.4; }
 
 /* ── Preview ── */
@@ -225,6 +244,17 @@ h3 { font-size: 12px; color: #aaa; margin: 0 0 6px; border-bottom: 1px solid #33
     <h3>导入 CSS（粘贴 AI 给的代码）</h3>
     <textarea id="importArea" placeholder="在此粘贴 AI 给的 CSS 代码..."></textarea>
     <div class="row"><button id="importBtn">加载到预览</button></div>
+  </div>
+
+  <!-- Scoring -->
+  <div class="section scoring">
+    <div class="scoring-header">
+      <h3>部位评分</h3>
+      <span id="scoringStyleName" style="font-size:10px;color:#666">当前: —</span>
+    </div>
+    <div id="scoringList"></div>
+    <textarea class="scoring-extra" id="scoringExtra" placeholder="想补充什么？如：按钮颜色太淡..."></textarea>
+    <button class="scoring-copy" id="scoringCopy">复制评分给 AI</button>
   </div>
 
   <!-- Export -->
@@ -450,9 +480,68 @@ document.querySelectorAll('[data-preset]').forEach(btn => {
     $('chkGlossy').checked = p.glossy;
     document.querySelectorAll('.bar-btn').forEach(b => b.classList.toggle('glossy', p.glossy));
     $('phone').className = 'phone' + (currentStyle !== 'default' ? ' style-' + currentStyle : '') + ($('chkGradient').checked ? ' gradient-bg' : '');
+    $('scoringStyleName').textContent = '当前: ' + (btn.dataset.preset);
     updateExport();
   });
 });
+
+/* ── Scoring ── */
+const SCORE_PARTS = [
+  { id:'titlebar', label:'标题栏' },
+  { id:'welcome', label:'欢迎区' },
+  { id:'card', label:'副本卡片' },
+  { id:'expbar', label:'经验条' },
+  { id:'status', label:'状态栏' },
+  { id:'buttons', label:'按钮栏' },
+  { id:'bg', label:'整体背景' },
+];
+const scoreState = {};
+SCORE_PARTS.forEach(p => scoreState[p.id] = 'skip');
+
+function renderScoring() {
+  const list = $('scoringList');
+  list.innerHTML = '';
+  SCORE_PARTS.forEach(p => {
+    const row = document.createElement('div');
+    row.className = 'scoring-row';
+    row.innerHTML = `<span class="scoring-label">${p.label}</span><div class="scoring-btns">
+      <button data-part="${p.id}" data-vote="good">好</button>
+      <button data-part="${p.id}" data-vote="bad">不好</button>
+      <button data-part="${p.id}" data-vote="skip">跳过</button>
+    </div>`;
+    list.appendChild(row);
+    row.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const part = btn.dataset.part;
+        const vote = btn.dataset.vote;
+        scoreState[part] = vote;
+        const btns = row.querySelectorAll('button');
+        btns.forEach(b => {
+          b.className = '';
+          if (b.dataset.vote === vote) b.classList.add('active-' + vote);
+        });
+      });
+    });
+  });
+}
+
+$('scoringCopy').addEventListener('click', async () => {
+  const styleName = $('scoringStyleName').textContent.replace('当前: ', '');
+  const extra = $('scoringExtra').value.trim();
+  let lines = [`【${styleName} 评分】`];
+  SCORE_PARTS.forEach(p => {
+    const icons = { good: '好', bad: '不好', skip: '—' };
+    lines.push(`${p.label}: ${icons[scoreState[p.id]] || '—'}`);
+  });
+  if (extra) lines.push(`\n补充: ${extra}`);
+  const txt = lines.join('\n');
+  try { await navigator.clipboard.writeText(txt); }
+  catch { const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
+  const btn = $('scoringCopy'); btn.textContent = '已复制!'; btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = '复制评分给 AI'; btn.classList.remove('copied'); }, 1500);
+});
+
+renderScoring();
 
 /* Init */
 $('depGradient').classList.toggle('show', $('chkGradient').checked);
