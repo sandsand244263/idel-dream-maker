@@ -111,6 +111,22 @@ h3 { font-size: 12px; color: #aaa; margin: 0 0 6px; border-bottom: 1px solid #33
 .bar-btn.glossy { background: linear-gradient(180deg, rgba(160,198,228,0.25) 0%, rgba(140,185,220,0.08) 100%); position: relative; overflow: hidden; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(100,150,200,0.1); }
 .bar-btn.glossy::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 55%; background: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.2) 60%, transparent 100%); pointer-events: none; }
 
+/* FA Glossy style */
+.style-fa .bar-btn { border-radius: 8px; }
+.style-fa .bar-btn.glossy { box-shadow: 0 2px 8px rgba(74,144,217,0.3); }
+
+/* Skeuomorphic style */
+.style-skeuo .bar-btn { border-radius: 4px; border: 1px solid rgba(0,0,0,0.15); }
+.style-skeuo .bar-btn.glossy { box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), inset 0 -2px 0 rgba(0,0,0,0.15); }
+
+/* Glassmorphism style */
+.style-glass .card { background: rgba(255,255,255,0.08); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.15); }
+.style-glass .exp-track { background: rgba(255,255,255,0.08); }
+.style-glass .status-bar { background: rgba(255,255,255,0.05); }
+.style-glass .bar-btn { border-radius: 12px; }
+.style-glass .hub-welcome { background: rgba(255,255,255,0.04); border-radius: 12px; margin: 6px 8px; padding: 12px 8px; }
+.style-glass .titlebar { background: rgba(255,255,255,0.06); }
+
 .toast { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); padding: 4px 10px; background: rgba(0,0,0,0.85); border: 1px solid var(--border); border-radius: 4px; color: var(--fg); font-size: 10px; white-space: nowrap; pointer-events: none; }
 </style>
 </head>
@@ -128,6 +144,9 @@ h3 { font-size: 12px; color: #aaa; margin: 0 0 6px; border-bottom: 1px solid #33
   <div class="section">
     <div class="presets">
       <button data-preset="aero">Frutiger Aero</button>
+      <button data-preset="fa">FA Glossy</button>
+      <button data-preset="skeuo">Skeuomorphic</button>
+      <button data-preset="glass">Glassmorphism</button>
       <button data-preset="green">默认绿色</button>
       <button data-preset="amber">琥珀色</button>
       <button data-preset="cold">冷白</button>
@@ -252,7 +271,13 @@ bindGradient('cG1','tG1','--g1');
 bindGradient('cG2','tG2','--g2');
 
 function updateGradientClass() {
-  $('phone').classList.toggle('gradient-bg', $('chkGradient').checked);
+  const ph = $('phone');
+  const hasGrad = $('chkGradient').checked;
+  if (hasGrad) {
+    ph.classList.add('gradient-bg');
+  } else {
+    ph.classList.remove('gradient-bg');
+  }
 }
 $('chkGradient').addEventListener('change', () => {
   $('depGradient').classList.toggle('show', $('chkGradient').checked);
@@ -288,6 +313,13 @@ function updateExport() {
   }
   if ($('chkGlossy').checked) {
     css += `\n\n.theme-${n} .bar-btn {\n  background: linear-gradient(180deg, rgba(160,198,228,0.25) 0%, rgba(140,185,220,0.08) 100%);\n  position: relative;\n  overflow: hidden;\n  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(100,150,200,0.1);\n}\n.theme-${n} .bar-btn::before {\n  content: '';\n  position: absolute;\n  top: 0; left: 0; right: 0;\n  height: 55%;\n  background: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.2) 60%, transparent 100%);\n  pointer-events: none;\n}`;
+  }
+  if (currentStyle === 'fa') {
+    css += `\n\n.theme-${n} .bar-btn {\n  border-radius: 8px;\n  box-shadow: 0 2px 8px rgba(74,144,217,0.3);\n}`;
+  } else if (currentStyle === 'skeuo') {
+    css += `\n\n.theme-${n} .bar-btn {\n  border-radius: 4px;\n  border: 1px solid rgba(0,0,0,0.15);\n  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), inset 0 -2px 0 rgba(0,0,0,0.15);\n}`;
+  } else if (currentStyle === 'glass') {
+    css += `\n\n.theme-${n} .card {\n  background: rgba(255,255,255,0.08);\n  backdrop-filter: blur(15px);\n  -webkit-backdrop-filter: blur(15px);\n  border-radius: 16px;\n  border: 1px solid rgba(255,255,255,0.15);\n}\n.theme-${n} .bar-btn {\n  border-radius: 12px;\n}`;
   }
   $('exportCss').textContent = css;
 }
@@ -345,18 +377,24 @@ $('importBtn').addEventListener('click', () => {
 
 /* Presets */
 const PRESETS = {
-  aero:   { fg:'#1A1A1A', bg:'#CCD8E6', dim:'#4A7A8A', border:'#5A90D0', gradient:true, g1:'#B0C8E0', g2:'#EAF0F8', glass:false, blur:8, glossy:true },
-  green:  { fg:'#00FF00', bg:'#0A0A0A', dim:'#00AA00', border:'#00FF00', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false },
-  amber:  { fg:'#FFB000', bg:'#0A0A0A', dim:'#AA7700', border:'#FFB000', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false },
-  cold:   { fg:'#E0E0E0', bg:'#1A1A2E', dim:'#555577', border:'#E0E0E0', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false },
-  paper:  { fg:'#222222', bg:'#F5F0E8', dim:'#7A6F5E', border:'#222222', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false },
-  matrix: { fg:'#00FF41', bg:'#000000', dim:'#008800', border:'#00FF41', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false },
+  aero:   { fg:'#1A1A1A', bg:'#CCD8E6', dim:'#4A7A8A', border:'#5A90D0', gradient:true, g1:'#B0C8E0', g2:'#EAF0F8', glass:false, blur:8, glossy:true, style:'default' },
+  fa:     { fg:'#1A1A1A', bg:'#F5F8FA', dim:'#6A9AB0', border:'#4A90D9', gradient:true, g1:'#E8F0F8', g2:'#F5F8FA', glass:false, blur:8, glossy:true, style:'fa' },
+  skeuo:  { fg:'#3A2A1A', bg:'#E8DCC8', dim:'#8A6A4A', border:'#6A4A2A', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:true, style:'skeuo' },
+  glass:  { fg:'#E0D0F0', bg:'#1A0A2A', dim:'#7A5A9A', border:'rgba(255,255,255,0.15)', gradient:true, g1:'#1A0A2A', g2:'#2A1A4A', glass:true, blur:15, glossy:true, style:'glass' },
+  green:  { fg:'#00FF00', bg:'#0A0A0A', dim:'#00AA00', border:'#00FF00', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false, style:'default' },
+  amber:  { fg:'#FFB000', bg:'#0A0A0A', dim:'#AA7700', border:'#FFB000', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false, style:'default' },
+  cold:   { fg:'#E0E0E0', bg:'#1A1A2E', dim:'#555577', border:'#E0E0E0', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false, style:'default' },
+  paper:  { fg:'#222222', bg:'#F5F0E8', dim:'#7A6F5E', border:'#222222', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false, style:'default' },
+  matrix: { fg:'#00FF41', bg:'#000000', dim:'#008800', border:'#00FF41', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false, style:'default' },
 };
+
+let currentStyle = 'default';
 
 document.querySelectorAll('[data-preset]').forEach(btn => {
   btn.addEventListener('click', () => {
     const p = PRESETS[btn.dataset.preset];
     if (!p) return;
+    currentStyle = p.style || 'default';
     $('themeName').value = btn.dataset.preset;
     $('cFg').value = p.fg; $('tFg').value = p.fg; setCSSVar('--fg', p.fg);
     $('cBg').value = p.bg; $('tBg').value = p.bg; setCSSVar('--bg', p.bg);
@@ -373,6 +411,7 @@ document.querySelectorAll('[data-preset]').forEach(btn => {
     $('sliderBlur').value = p.blur; $('valBlur').textContent = p.blur + 'px'; setCSSVar('--blur', p.blur + 'px');
     $('chkGlossy').checked = p.glossy;
     document.querySelectorAll('.bar-btn').forEach(b => b.classList.toggle('glossy', p.glossy));
+    $('phone').className = 'phone' + (currentStyle !== 'default' ? ' style-' + currentStyle : '') + ($('chkGradient').checked ? ' gradient-bg' : '');
     updateExport();
   });
 });
