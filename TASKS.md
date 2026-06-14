@@ -486,26 +486,13 @@ npx electron-builder   # 打包验证
 
 ---
 
-## v2.3 — Frutiger Aero 主题 Phase 2
-
-> **当前阶段：v2.3（进行中）**
->
-> Frutiger Aero 风格主题，亮蓝绿渐变 + 毛玻璃质感。首个主题原型已实装。
-
-| # | 内容 | 涉及文件 | 状态 |
-|--:|------|---------|:----:|
-| 1 | **Frutiger Aero 主题原型** | `src/style.css`, `index.html` | ✅ |
-
----
-
 ## 规划（待定）
 
-以下内容在 v2.3 完成后考虑：
+以下内容在 v2.2 完成后考虑：
 
 | 内容 | 说明 |
 |------|------|
-| Frutiger Aero 主题子窗口同步 | 同步 pet/context-menu/bubble/selector 窗口配色 |
-| Frutiger Aero 主题深化 | 更多光泽细节、卡片样式、滚动条 |
+| Frutiger Aero 主题（Phase 2） | 新增一套 Frutiger Aero 风格主题 |
 | 新副本（中世纪/赛博/修仙/克苏鲁） | 延后 |
 | Mac 适配 | Electron 天然支持，待测试并修复 |
 | Steam 上架 | Electron 版本打包后上架 |
