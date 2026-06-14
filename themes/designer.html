@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Idel-DreamMaker 主题设计器</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --fg: #00FF00;
+  --bg: #0A0A0A;
+  --dim: #00AA00;
+  --border: #00FF00;
+  --g1: #0A0A0A;
+  --g2: #1A1A1A;
+  --glass: 0;
+  --blur: 8px;
+  --glossy: 0;
+}
+
+html, body { width: 100%; height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; background: #1a1a1a; color: #e0e0e0; overflow: hidden; }
+
+#app { display: flex; height: 100vh; }
+
+/* ── Left panel ── */
+#controls { width: 400px; min-width: 400px; overflow-y: auto; background: #222; border-right: 1px solid #444; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+#controls::-webkit-scrollbar { width: 4px; }
+#controls::-webkit-scrollbar-track { background: transparent; }
+#controls::-webkit-scrollbar-thumb { background: #555; border-radius: 2px; }
+
+h2 { font-size: 14px; color: #fff; letter-spacing: 1px; }
+h3 { font-size: 12px; color: #aaa; margin: 0 0 6px; border-bottom: 1px solid #333; padding-bottom: 3px; }
+
+.section { background: #2a2a2a; border-radius: 6px; padding: 10px 12px; }
+.section + .section { margin-top: 0; }
+
+.row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.row label { font-size: 11px; color: #ccc; min-width: 72px; flex-shrink: 0; }
+.row input[type="color"] { width: 32px; height: 24px; padding: 0; border: 1px solid #444; border-radius: 3px; background: transparent; cursor: pointer; }
+.row input[type="text"] { flex: 1; min-width: 0; background: #333; border: 1px solid #444; color: #eee; padding: 2px 5px; font-size: 11px; border-radius: 3px; font-family: 'Consolas', monospace; }
+.row input[type="range"] { flex: 1; }
+.row .val { font-size: 11px; color: #888; min-width: 28px; font-family: 'Consolas', monospace; }
+
+.toggle { display: flex; align-items: center; gap: 6px; }
+.toggle input[type="checkbox"] { width: auto; }
+.toggle label { font-size: 12px; cursor: pointer; color: #ddd; min-width: 0; }
+
+.dependent { display: none; padding: 6px 0 2px 12px; border-left: 2px solid #444; margin: 4px 0 2px 16px; }
+.dependent.show { display: block; }
+
+.presets { display: flex; gap: 4px; flex-wrap: wrap; }
+.presets button { padding: 3px 10px; font-size: 11px; background: #333; border: 1px solid #555; color: #ccc; cursor: pointer; border-radius: 3px; }
+.presets button:hover { background: #444; color: #fff; }
+.presets button:active { transform: scale(0.96); }
+
+.export-box { background: #1a1a1a; border: 1px solid #333; border-radius: 4px; padding: 8px; position: relative; }
+.export-box pre { font-family: 'Consolas', monospace; font-size: 10px; color: #ccc; white-space: pre-wrap; word-break: break-all; line-height: 1.4; max-height: 120px; overflow-y: auto; }
+
+.cp-btn { display: block; margin-top: 4px; width: 100%; padding: 5px 0; background: #0078D7; border: none; color: #fff; font-size: 11px; cursor: pointer; border-radius: 3px; letter-spacing: 1px; }
+.cp-btn:hover { background: #1a8ae8; }
+.cp-btn:active { transform: scale(0.98); }
+.cp-btn.copied { background: #388e3c; }
+
+.import-box { margin-top: 0; }
+.import-box textarea { width: 100%; height: 60px; background: #1a1a1a; border: 1px solid #333; color: #aaa; font-family: 'Consolas', monospace; font-size: 10px; padding: 6px; resize: vertical; border-radius: 3px; }
+.import-box .row { margin-top: 4px; }
+.import-box .row button { padding: 4px 14px; font-size: 11px; background: #444; border: 1px solid #666; color: #eee; cursor: pointer; border-radius: 3px; }
+.import-box .row button:hover { background: #555; }
+
+.note { font-size: 10px; color: #555; line-height: 1.4; }
+
+/* ── Preview ── */
+#preview-area { flex: 1; display: flex; align-items: center; justify-content: center; background: #111; }
+
+.phone { width: 320px; height: 720px; border-radius: 12px; overflow: hidden; box-shadow: 0 0 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05); display: flex; flex-direction: column; background: var(--bg); color: var(--fg); font-family: 'Consolas', 'Courier New', monospace; position: relative; transition: background 0.15s, color 0.15s; }
+.phone.gradient-bg { background: linear-gradient(180deg, var(--g1), var(--g2)); }
+
+.titlebar { display: flex; align-items: center; height: 28px; flex-shrink: 0; border-bottom: 1px solid var(--border); user-select: none; position: relative; z-index: 1; transition: background 0.15s; }
+.titlebar-id { color: var(--fg); font-weight: bold; font-size: 12px; padding-left: 8px; white-space: nowrap; }
+.titlebar-sep { color: var(--dim); font-size: 10px; margin: 0 3px; }
+.titlebar-lv { color: var(--fg); font-size: 12px; white-space: nowrap; }
+.titlebar-title { color: var(--fg); font-size: 12px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.titlebar-btns { display: flex; }
+.titlebar-btn { width: 28px; height: 28px; background: transparent; border: none; color: var(--dim); font-size: 12px; cursor: default; display: flex; align-items: center; justify-content: center; }
+
+.hub-view { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.hub-welcome { text-align: center; padding: 14px 10px 8px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.hub-greeting { font-size: 11px; color: var(--dim); letter-spacing: 1px; }
+.hub-player-name { font-size: 18px; font-weight: bold; color: var(--fg); margin: 3px 0; }
+.hub-level { font-size: 12px; color: var(--dim); }
+
+.hub-cards { flex: 1; overflow-y: auto; padding: 6px 10px; }
+.card { border: 1px solid var(--dim); border-radius: 4px; padding: 8px 10px; margin-bottom: 6px; transition: border-color 0.15s; }
+.card:active { transform: scale(0.98); }
+.card-name { font-weight: bold; font-size: 12px; color: var(--fg); margin-bottom: 2px; }
+.card-desc { font-size: 10px; color: var(--dim); line-height: 1.4; }
+.card-meta { font-size: 9px; color: var(--dim); margin-top: 3px; display: flex; gap: 10px; }
+
+.exp-row { flex-shrink: 0; padding: 5px 10px 2px; display: flex; align-items: center; gap: 8px; }
+.exp-track { flex: 1; height: 5px; background: rgba(128,128,128,0.12); border-radius: 3px; overflow: hidden; }
+.exp-fill { height: 100%; width: 67%; background: var(--fg); border-radius: 3px; transition: width 0.3s; }
+.exp-text { font-size: 9px; color: var(--dim); white-space: nowrap; }
+
+.status-bar { flex-shrink: 0; padding: 2px 10px; font-size: 10px; color: var(--dim); border-top: 1px solid var(--border); line-height: 1.4; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+
+.btn-bar { display: flex; flex-shrink: 0; border-top: 1px solid var(--border); }
+.bar-btn { flex: 1; background: transparent; border: none; color: var(--dim); font-family: inherit; font-size: 11px; padding: 5px 0; cursor: pointer; letter-spacing: 1px; border-right: 1px solid rgba(128,128,128,0.12); transition: color 0.15s, background 0.15s; }
+.bar-btn:last-child { border-right: none; }
+.bar-btn:active { transform: scale(0.96); }
+.bar-btn.glossy { background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 100%); }
+
+.toast { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); padding: 4px 10px; background: rgba(0,0,0,0.85); border: 1px solid var(--border); border-radius: 4px; color: var(--fg); font-size: 10px; white-space: nowrap; pointer-events: none; }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+<!-- LEFT: Controls -->
+<div id="controls">
+
+  <h2>主题设计器</h2>
+  <p style="font-size:10px;color:#666;margin-bottom:2px;">调完复制底部CSS发给AI，或把AI给的CSS贴到导入区看效果</p>
+
+  <!-- Presets -->
+  <div class="section">
+    <div class="presets">
+      <button data-preset="aero">Frutiger Aero</button>
+      <button data-preset="green">默认绿色</button>
+      <button data-preset="amber">琥珀色</button>
+      <button data-preset="cold">冷白</button>
+      <button data-preset="paper">纸质</button>
+      <button data-preset="matrix">矩阵</button>
+    </div>
+  </div>
+
+  <!-- Base colors -->
+  <div class="section">
+    <h3>基础配色</h3>
+    <div class="row"><label>主题名</label><input type="text" id="themeName" value="aero" style="max-width:80px"></div>
+    <div class="row"><label>--fg 前景</label><input type="color" id="cFg" value="#00FF00"><input type="text" id="tFg" value="#00FF00"></div>
+    <div class="row"><label>--bg 背景</label><input type="color" id="cBg" value="#0A0A0A"><input type="text" id="tBg" value="#0A0A0A"></div>
+    <div class="row"><label>--dim 次色</label><input type="color" id="cDim" value="#00AA00"><input type="text" id="tDim" value="#00AA00"></div>
+    <div class="row"><label>--border 边框</label><input type="color" id="cBorder" value="#00FF00"><input type="text" id="tBorder" value="#00FF00"></div>
+  </div>
+
+  <!-- Effects -->
+  <div class="section">
+    <h3>效果开关</h3>
+    <div class="row"><span class="toggle"><input type="checkbox" id="chkGradient"><label for="chkGradient">渐变背景</label></span></div>
+    <div class="dependent" id="depGradient">
+      <div class="row"><label>顶部色</label><input type="color" id="cG1" value="#0A0A0A"><input type="text" id="tG1" value="#0A0A0A"></div>
+      <div class="row"><label>底部色</label><input type="color" id="cG2" value="#1A1A1A"><input type="text" id="tG2" value="#1A1A1A"></div>
+    </div>
+
+    <div class="row"><span class="toggle"><input type="checkbox" id="chkGlass"><label for="chkGlass">毛玻璃标题栏</label></span></div>
+    <div class="dependent" id="depGlass">
+      <div class="row"><label>模糊</label><input type="range" id="sliderBlur" min="1" max="20" value="8"><span class="val" id="valBlur">8px</span></div>
+    </div>
+
+    <div class="row"><span class="toggle"><input type="checkbox" id="chkGlossy"><label for="chkGlossy">光泽按钮</label></span></div>
+  </div>
+
+  <!-- Import -->
+  <div class="section import-box">
+    <h3>导入 CSS（粘贴 AI 给的代码）</h3>
+    <textarea id="importArea" placeholder="在此粘贴 AI 给的 CSS 代码..."></textarea>
+    <div class="row"><button id="importBtn">加载到预览</button></div>
+  </div>
+
+  <!-- Export -->
+  <div class="section">
+    <h3>导出 CSS <span style="font-weight:normal;font-size:10px;color:#666">（复制后发给 AI）</span></h3>
+    <div class="export-box"><pre id="exportCss">.theme-aero { }</pre></div>
+    <button class="cp-btn" id="copyBtn">复制 CSS</button>
+  </div>
+
+</div>
+
+<!-- RIGHT: Preview -->
+<div id="preview-area">
+  <div class="phone" id="phone">
+    <div class="titlebar" id="titlebarPreview">
+      <span class="titlebar-id">ID:Worker</span>
+      <span class="titlebar-sep">|</span>
+      <span class="titlebar-lv">LV:5</span>
+      <span class="titlebar-sep">|</span>
+      <span class="titlebar-title">拾荒者</span>
+      <div class="titlebar-btns"><button class="titlebar-btn">&times;</button></div>
+    </div>
+
+    <div class="hub-view">
+      <div class="hub-welcome">
+        <div class="hub-greeting">[ 大 厅 ]</div>
+        <div class="hub-player-name">Worker</div>
+        <div class="hub-level">大厅 Lv.3 | 累计经验 523</div>
+      </div>
+      <div class="hub-cards">
+        <div class="card"><div class="card-name">废土 (Wasteland)</div><div class="card-desc">在荒芜的废土上生存，寻找资源，建立庇护所。</div><div class="card-meta"><span>500 事件</span><span>50 成就</span></div></div>
+        <div class="card"><div class="card-name">示例副本 (Demo)</div><div class="card-desc">用于预览主题效果的示例副本。</div><div class="card-meta"><span>100 事件</span><span>10 成就</span></div></div>
+      </div>
+    </div>
+
+    <div class="exp-row"><div class="exp-track"><div class="exp-fill"></div></div><div class="exp-text">Lv.5 | 67%</div></div>
+    <div class="status-bar">v2.2.0 | Worker | 废土<br>LV:5 | 拾荒者 | 1h23m | 成就:3</div>
+
+    <div class="btn-bar">
+      <button class="bar-btn">宠物</button>
+      <button class="bar-btn">副本</button>
+      <button class="bar-btn">称号</button>
+      <button class="bar-btn">设置</button>
+    </div>
+
+    <div class="toast">提示：这是一个示例消息</div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+function setCSSVar(name, value) {
+  document.documentElement.style.setProperty(name, value);
+}
+
+/* Bind color picker <-> text input */
+function bindColor(pickerId, textId, cssVar) {
+  const p = $(pickerId), t = $(textId);
+  const sync = () => { setCSSVar(cssVar, p.value); t.value = p.value; updateExport(); };
+  p.addEventListener('input', sync);
+  t.addEventListener('input', () => {
+    if (/^#[0-9a-f]{6}$/i.test(t.value)) { p.value = t.value; sync(); }
+  });
+}
+bindColor('cFg','tFg','--fg');
+bindColor('cBg','tBg','--bg');
+bindColor('cDim','tDim','--dim');
+bindColor('cBorder','tBorder','--border');
+
+function bindGradient(pickerId, textId, varName) {
+  const p = $(pickerId), t = $(textId);
+  const sync = () => { setCSSVar(varName, p.value); t.value = p.value; updateGradientClass(); updateExport(); };
+  p.addEventListener('input', sync);
+  t.addEventListener('input', () => {
+    if (/^#[0-9a-f]{6}$/i.test(t.value)) { p.value = t.value; sync(); }
+  });
+}
+bindGradient('cG1','tG1','--g1');
+bindGradient('cG2','tG2','--g2');
+
+function updateGradientClass() {
+  $('phone').classList.toggle('gradient-bg', $('chkGradient').checked);
+}
+$('chkGradient').addEventListener('change', () => {
+  $('depGradient').classList.toggle('show', $('chkGradient').checked);
+  updateGradientClass(); updateExport();
+});
+
+$('chkGlass').addEventListener('change', () => {
+  $('depGlass').classList.toggle('show', $('chkGlass').checked);
+  $('titlebarPreview').classList.toggle('glass', $('chkGlass').checked);
+  updateExport();
+});
+$('sliderBlur').addEventListener('input', () => {
+  $('valBlur').textContent = $('sliderBlur').value + 'px';
+  setCSSVar('--blur', $('sliderBlur').value + 'px');
+  updateExport();
+});
+
+$('chkGlossy').addEventListener('change', () => {
+  document.querySelectorAll('.bar-btn').forEach(b => b.classList.toggle('glossy', $('chkGlossy').checked));
+  updateExport();
+});
+
+$('themeName').addEventListener('input', updateExport);
+
+/* Export */
+function updateExport() {
+  const n = $('themeName').value || 'aero';
+  let css = `.theme-${n} {\n  --fg: ${$('tFg').value};\n  --bg: ${$('tBg').value};\n  --dim: ${$('tDim').value};\n  --border: ${$('tBorder').value};\n}`;
+  if ($('chkGradient').checked) css += `\n\n.theme-${n} #app {\n  background: linear-gradient(180deg, ${$('tG1').value}, ${$('tG2').value});\n}`;
+  if ($('chkGlass').checked) {
+    const b = $('sliderBlur').value;
+    css += `\n\n.theme-${n} #titlebar {\n  background: rgba(255,255,255,0.1);\n  backdrop-filter: blur(${b}px);\n  -webkit-backdrop-filter: blur(${b}px);\n  border-bottom: 1px solid rgba(255,255,255,0.15);\n}`;
+  }
+  if ($('chkGlossy').checked) {
+    css += `\n\n.theme-${n} .bar-btn {\n  background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 100%);\n  border: none;\n}`;
+  }
+  $('exportCss').textContent = css;
+}
+
+/* Copy */
+$('copyBtn').addEventListener('click', async () => {
+  const txt = $('exportCss').textContent;
+  try { await navigator.clipboard.writeText(txt); }
+  catch { const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
+  const btn = $('copyBtn'); btn.textContent = '已复制!'; btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = '复制 CSS'; btn.classList.remove('copied'); }, 1500);
+});
+
+/* Import - parse CSS pasted by AI */
+$('importBtn').addEventListener('click', () => {
+  const css = $('importArea').value;
+  if (!css.trim()) return;
+  /* Extract theme name */
+  const nameMatch = css.match(/\.theme-(\w+)/);
+  if (nameMatch) $('themeName').value = nameMatch[1];
+  /* Extract color variables */
+  const fg = css.match(/--fg:\s*(#[0-9a-fA-F]{6})/);
+  if (fg) { $('cFg').value = fg[1]; $('tFg').value = fg[1]; setCSSVar('--fg', fg[1]); }
+  const bg = css.match(/--bg:\s*(#[0-9a-fA-F]{6})/);
+  if (bg) { $('cBg').value = bg[1]; $('tBg').value = bg[1]; setCSSVar('--bg', bg[1]); }
+  const dim = css.match(/--dim:\s*(#[0-9a-fA-F]{6})/);
+  if (dim) { $('cDim').value = dim[1]; $('tDim').value = dim[1]; setCSSVar('--dim', dim[1]); }
+  const border = css.match(/--border:\s*(#[0-9a-fA-F]{6})/);
+  if (border) { $('cBorder').value = border[1]; $('tBorder').value = border[1]; setCSSVar('--border', border[1]); }
+  /* Gradient */
+  const hasGrad = css.includes('linear-gradient');
+  $('chkGradient').checked = hasGrad;
+  $('depGradient').classList.toggle('show', hasGrad);
+  if (hasGrad) {
+    const colors = css.match(/#[0-9a-fA-F]{6}/g);
+    if (colors && colors.length >= 2) {
+      $('cG1').value = colors[0]; $('tG1').value = colors[0]; setCSSVar('--g1', colors[0]);
+      $('cG2').value = colors[1]; $('tG2').value = colors[1]; setCSSVar('--g2', colors[1]);
+    }
+  }
+  updateGradientClass();
+  /* Glass */
+  const hasGlass = css.includes('backdrop-filter') || css.includes('-webkit-backdrop-filter');
+  $('chkGlass').checked = hasGlass;
+  $('depGlass').classList.toggle('show', hasGlass);
+  $('titlebarPreview').classList.toggle('glass', hasGlass);
+  const blurMatch = css.match(/blur\((\d+)px\)/);
+  if (blurMatch) { $('sliderBlur').value = blurMatch[1]; $('valBlur').textContent = blurMatch[1] + 'px'; setCSSVar('--blur', blurMatch[1] + 'px'); }
+  /* Glossy */
+  const hasGlossy = css.includes('glossy') || (hasGrad && css.includes('.bar-btn'));
+  $('chkGlossy').checked = hasGlossy;
+  document.querySelectorAll('.bar-btn').forEach(b => b.classList.toggle('glossy', hasGlossy));
+  updateExport();
+});
+
+/* Presets */
+const PRESETS = {
+  aero:   { fg:'#1A4A5E', bg:'#E0F0F5', dim:'#5A9AAA', border:'#1A4A5E', gradient:true, g1:'#C8E4EE', g2:'#E8F3F7', glass:true, blur:8, glossy:true },
+  green:  { fg:'#00FF00', bg:'#0A0A0A', dim:'#00AA00', border:'#00FF00', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false },
+  amber:  { fg:'#FFB000', bg:'#0A0A0A', dim:'#AA7700', border:'#FFB000', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false },
+  cold:   { fg:'#E0E0E0', bg:'#1A1A2E', dim:'#555577', border:'#E0E0E0', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false },
+  paper:  { fg:'#222222', bg:'#F5F0E8', dim:'#7A6F5E', border:'#222222', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false },
+  matrix: { fg:'#00FF41', bg:'#000000', dim:'#008800', border:'#00FF41', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false },
+};
+
+document.querySelectorAll('[data-preset]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const p = PRESETS[btn.dataset.preset];
+    if (!p) return;
+    $('themeName').value = btn.dataset.preset;
+    $('cFg').value = p.fg; $('tFg').value = p.fg; setCSSVar('--fg', p.fg);
+    $('cBg').value = p.bg; $('tBg').value = p.bg; setCSSVar('--bg', p.bg);
+    $('cDim').value = p.dim; $('tDim').value = p.dim; setCSSVar('--dim', p.dim);
+    $('cBorder').value = p.border; $('tBorder').value = p.border; setCSSVar('--border', p.border);
+    $('chkGradient').checked = p.gradient;
+    $('depGradient').classList.toggle('show', p.gradient);
+    $('cG1').value = p.g1; $('tG1').value = p.g1; setCSSVar('--g1', p.g1);
+    $('cG2').value = p.g2; $('tG2').value = p.g2; setCSSVar('--g2', p.g2);
+    updateGradientClass();
+    $('chkGlass').checked = p.glass;
+    $('depGlass').classList.toggle('show', p.glass);
+    $('titlebarPreview').classList.toggle('glass', p.glass);
+    $('sliderBlur').value = p.blur; $('valBlur').textContent = p.blur + 'px'; setCSSVar('--blur', p.blur + 'px');
+    $('chkGlossy').checked = p.glossy;
+    document.querySelectorAll('.bar-btn').forEach(b => b.classList.toggle('glossy', p.glossy));
+    updateExport();
+  });
+});
+
+/* Init */
+$('depGradient').classList.toggle('show', $('chkGradient').checked);
+$('depGlass').classList.toggle('show', $('chkGlass').checked);
+updateExport();
+</script>
+</body>
+</html>

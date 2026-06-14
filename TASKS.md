@@ -484,15 +484,24 @@ npx electron-builder   # 打包验证
 | 2 | **三窗口配色同步主题** | `pet-context-menu/*`, `pet-bubble/*`, `pet-selector/*`, `electron/main.cjs` | ✅ |
 | 3 | **精灵图 9 行全调用** | `pet/pet.js` | ✅ |
 
+## v2.3 — Frutiger Aero 主题设计器
+
+> **当前阶段：v2.3（筹备中）**
+>
+> 主题设计器已完成，用于可视化调整 Frutiger Aero 配色/效果，支持导出 CSS 和导入 AI 建议。
+
+| # | 内容 | 涉及文件 | 状态 |
+|--:|------|---------|:----:|
+| 1 | **主题设计器** | `themes/designer.html` (新建) | ✅ |
+
 ---
 
 ## 规划（待定）
 
-以下内容在 v2.2 完成后考虑：
-
 | 内容 | 说明 |
 |------|------|
-| Frutiger Aero 主题（Phase 2） | 新增一套 Frutiger Aero 风格主题 |
+| Frutiger Aero 主题实装 | 基于设计器调参后写入 `src/style.css` |
+| Frutiger Aero 子窗口同步 | 同步 pet/context-menu/bubble/selector 窗口 |
 | 新副本（中世纪/赛博/修仙/克苏鲁） | 延后 |
 | Mac 适配 | Electron 天然支持，待测试并修复 |
 | Steam 上架 | Electron 版本打包后上架 |
