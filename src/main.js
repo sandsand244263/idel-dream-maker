@@ -299,7 +299,6 @@ btnTitles.addEventListener('click', () => { renderTitlesPanel(); titlesPanel.cla
 btnSettings.addEventListener('click', () => {
   settingsName.value = gameState?.player_name || '';
   settingsLanguage.value = gameState?.language || 'zh';
-  settingsAILanguage.value = gameState?.ai_output_language || 'zh';
   if (gameState?.selected_font_theme === 'custom' && gameState?.custom_theme) {
     const ct = gameState.custom_theme;
     document.getElementById('ct-fg').value = ct.fg;
