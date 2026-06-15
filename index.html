@@ -121,13 +121,11 @@
       <div class="settings-section-title">主题</div>
       <div id="theme-swatches"></div>
       <div id="custom-theme" class="hidden">
-        <div id="custom-strip">
-          <label class="custom-swatch" style="background:var(--fg)"><input type="color" id="ct-fg" value="#00FF00"><span>fg</span></label>
-          <label class="custom-swatch" style="background:var(--bg)"><input type="color" id="ct-bg" value="#0A0A0A"><span>bg</span></label>
-          <label class="custom-swatch" style="background:var(--dim)"><input type="color" id="ct-dim" value="#00AA00"><span>dim</span></label>
-          <label class="custom-swatch" style="background:var(--border)"><input type="color" id="ct-border" value="#00FF00"><span>bd</span></label>
-          <button id="ct-save">应用</button>
-        </div>
+        <div class="ct-row"><span class="ct-label">fg</span><label class="ct-swatch" style="background:#00FF00"><input type="color" id="ct-fg" value="#00FF00"></label><input class="ct-text" type="text" id="ct-fg-text" value="#00FF00"></div>
+        <div class="ct-row"><span class="ct-label">bg</span><label class="ct-swatch" style="background:#0A0A0A"><input type="color" id="ct-bg" value="#0A0A0A"></label><input class="ct-text" type="text" id="ct-bg-text" value="#0A0A0A"></div>
+        <div class="ct-row"><span class="ct-label">dim</span><label class="ct-swatch" style="background:#00AA00"><input type="color" id="ct-dim" value="#00AA00"></label><input class="ct-text" type="text" id="ct-dim-text" value="#00AA00"></div>
+        <div class="ct-row"><span class="ct-label">bd</span><label class="ct-swatch" style="background:#00FF00"><input type="color" id="ct-border" value="#00FF00"></label><input class="ct-text" type="text" id="ct-border-text" value="#00FF00"></div>
+        <button id="ct-save">应用自定义配色</button>
       </div>
     </div>
   </div>

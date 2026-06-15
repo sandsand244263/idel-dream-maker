@@ -301,10 +301,10 @@ btnSettings.addEventListener('click', () => {
   settingsLanguage.value = gameState?.language || 'zh';
   if (gameState?.selected_font_theme === 'custom' && gameState?.custom_theme) {
     const ct = gameState.custom_theme;
-    document.getElementById('ct-fg').value = ct.fg;
-    document.getElementById('ct-bg').value = ct.bg;
-    document.getElementById('ct-dim').value = ct.dim;
-    document.getElementById('ct-border').value = ct.border || ct.dim;
+    document.getElementById('ct-fg').value = ct.fg; document.getElementById('ct-fg-text').value = ct.fg;
+    document.getElementById('ct-bg').value = ct.bg; document.getElementById('ct-bg-text').value = ct.bg;
+    document.getElementById('ct-dim').value = ct.dim; document.getElementById('ct-dim-text').value = ct.dim;
+    document.getElementById('ct-border').value = ct.border || ct.dim; document.getElementById('ct-border-text').value = ct.border || ct.dim;
     document.getElementById('custom-theme').classList.remove('hidden');
   } else {
     document.getElementById('custom-theme').classList.add('hidden');
@@ -339,6 +339,14 @@ const THEMES = [
 ];
 
 
+function bindCt(id) {
+  const p = document.getElementById(id);
+  const t = document.getElementById(id + '-text');
+  if (!p || !t) return;
+  p.addEventListener('input', () => t.value = p.value);
+  t.addEventListener('input', () => { if (/^#[0-9a-f]{6}$/i.test(t.value)) p.value = t.value; });
+}
+
 function renderThemeSwatches() {
   const cur = gameState?.selected_font_theme || 'green';
   settingsTheme.innerHTML = '';
@@ -347,7 +355,10 @@ function renderThemeSwatches() {
     btn.dataset.theme = t.id;
     btn.style.cssText = `padding:4px 2px;font-size:11px;background:${t.bg};color:${t.fg};border:2px solid ${t.id === cur ? '#0078D7' : 'transparent'};border-radius:4px;cursor:pointer;font-family:inherit;text-align:center;transition:border-color 0.1s;`;
     btn.textContent = t.label;
-    if (t.id === 'custom') btn.style.borderStyle = 'dashed';
+    if (t.id === 'custom') {
+      btn.style.borderStyle = 'dashed';
+      btn.style.gridColumn = '1 / -1';
+    }
     btn.addEventListener('click', () => selectTheme(t.id));
     btn.addEventListener('mouseenter', () => { if (t.id !== cur) btn.style.borderColor = '#888'; });
     btn.addEventListener('mouseleave', () => { if (t.id !== cur) btn.style.borderColor = 'transparent'; });
@@ -365,10 +376,10 @@ async function selectTheme(id) {
 }
 
 document.getElementById('ct-save').addEventListener('click', async () => {
-  const fg = document.getElementById('ct-fg').value;
-  const bg = document.getElementById('ct-bg').value;
-  const dim = document.getElementById('ct-dim').value;
-  const border = document.getElementById('ct-border').value;
+  const fg = document.getElementById('ct-fg-text').value;
+  const bg = document.getElementById('ct-bg-text').value;
+  const dim = document.getElementById('ct-dim-text').value;
+  const border = document.getElementById('ct-border-text').value;
   try { await window.electron.invoke('set-custom-theme', { fg, bg, dim, border }); if (gameState) { gameState.selected_font_theme = 'custom'; } applyTheme('custom'); renderThemeSwatches(); } catch (e) { showToast('应用自定义主题失败', 'error'); }
 });
 
@@ -457,6 +468,8 @@ document.addEventListener('keydown', (e) => {
     } else { debugPanel.classList.add('hidden'); }
   }
 });
+
+bindCt('ct-fg'); bindCt('ct-bg'); bindCt('ct-dim'); bindCt('ct-border');
 
 init().then(() => {
   document.title = `Idel-DreamMaker v${appVersion}`; applyTheme(gameState?.selected_font_theme || 'green');
