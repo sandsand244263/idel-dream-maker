@@ -18,7 +18,7 @@ html,body { width:100%;height:100%;overflow:hidden;background:transparent;user-s
 .theme-pink { --fg:#F5C2E7; --dim:#C49AB5; --bg:rgba(30,14,26,0.85); --border:rgba(245,194,231,0.2); }
 .theme-black { --fg:#CDD6F4; --dim:#585B70; --bg:rgba(17,17,27,0.85); --border:rgba(205,214,244,0.2); }
 .theme-white { --fg:#4C4F69; --dim:#9CA0B0; --bg:rgba(239,241,245,0.9); --border:rgba(76,79,105,0.15); }
-#container { height:100%;padding:4px 0;background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow-y:auto; }
+#container { height:100%;padding:4px 0 0;background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow-y:auto; }
 #container::-webkit-scrollbar { width:0; }
 #header { font-size:12px;font-weight:bold;padding:4px 14px;border-bottom:1px solid var(--border);color:var(--fg);display:flex;align-items:center;gap:8px;cursor:pointer; }
 #header:hover { background:color-mix(in srgb,var(--fg) 10%,transparent); }
