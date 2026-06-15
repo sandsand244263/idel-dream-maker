@@ -24,7 +24,7 @@ const DEFAULT_STATES = {
 };
 
 let pets=[],selIdx=0,spritesheet=null,cols=8,rows=9,stateConfig=null;
-let curState='idle',frameIdx=0,frameList=[],animTimer=null,returnTimer=null,debounceTimer=null;
+let curState='idle',frameIdx=0,frameList=[],animFrameId=null,lastFrameTime=0,returnTimer=null,debounceTimer=null;
 let gameInfo={level:1,title:'—',exp:0,scenario:'大厅',runtime:'0h0m0s',ach:0,theme:'green',hubLevel:1,isInHub:true};
 let displayExp=0,dragMoved=false;
 
@@ -93,13 +93,25 @@ function buildFrames(s){
   return f;
 }
 function drawSprite(col,row){if(!spritesheet)return;ctx.clearRect(0,0,120,140);ctx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,120,140);}
-function stopAnim(){if(animTimer){clearInterval(animTimer);animTimer=null;}}
+function stopAnim(){if(animFrameId){cancelAnimationFrame(animFrameId);animFrameId=null;}}
+function animLoop(now){
+  if(!animFrameId)return;
+  const elapsed=now-lastFrameTime;
+  const dur=frameList[frameIdx]?frameList[frameIdx].d:140;
+  if(elapsed>=dur){
+    frameIdx=(frameIdx+1)%frameList.length;
+    drawSprite(frameList[frameIdx].c,frameList[frameIdx].r);
+    lastFrameTime=now;
+  }
+  animFrameId=requestAnimationFrame(animLoop);
+}
 function play(s){
-  if(s===curState&&animTimer)return;curState=s;stopAnim();
+  if(s===curState&&animFrameId)return;curState=s;stopAnim();
   frameList=buildFrames(s);if(!frameList.length)return;
   frameIdx=0;drawSprite(frameList[0].c,frameList[0].r);
   if(frameList.length===1)return;
-  animTimer=setInterval(()=>{frameIdx=(frameIdx+1)%frameList.length;drawSprite(frameList[frameIdx].c,frameList[frameIdx].r);},frameList[frameIdx]?frameList[frameIdx].d:140);
+  lastFrameTime=performance.now();
+  animFrameId=requestAnimationFrame(animLoop);
 }
 function transitionTo(s){
   if(curState===s)return;if(returnTimer){clearTimeout(returnTimer);returnTimer=null;}
@@ -222,7 +234,9 @@ window.pet.on('main-shown',()=>{nq.clearQueue();});
 window.pet.invoke('scan-pets').then(r=>{pets=r.pets||[];selIdx=r.selected||0;loadPet(selIdx);applyPetSettings();}).catch(()=>{});
 window.pet.invoke('pet-get-state').then(()=>updateInfoBar()).catch(()=>{});
 
-setInterval(updateExpBar,50);
+let expRafId=null;
+function expLoop(){updateExpBar();expRafId=requestAnimationFrame(expLoop);}
+expRafId=requestAnimationFrame(expLoop);
 // Random idle animation every 60s (10% chance)
 setInterval(() => {
   if (curState === 'idle' && Math.random() < 0.1) {

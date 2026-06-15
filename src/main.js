@@ -186,15 +186,25 @@ function formatRuntime(ms) { const s = Math.floor(ms / 1000); const h = Math.flo
 function pad(n) { return n.toString().padStart(2, '0'); }
 
 let toastTimer = null;
+function dismissToast() {
+  const el = document.getElementById('toast');
+  if (!el||el.classList.contains('hidden')||el.classList.contains('closing')) return;
+  el.classList.add('closing');
+}
 function showToast(msg, type) {
   const el = document.getElementById('toast');
   if (!el) return;
   if (toastTimer) clearTimeout(toastTimer);
+  el.classList.remove('closing');
   el.textContent = msg;
   el.className = 'toast-' + (type || 'error');
   el.classList.remove('hidden');
-  toastTimer = setTimeout(() => el.classList.add('hidden'), 3000);
+  toastTimer = setTimeout(() => dismissToast(), 3000);
 }
+document.getElementById('toast').addEventListener('animationend', () => {
+  const el = document.getElementById('toast');
+  if (el.classList.contains('closing')) { el.classList.add('hidden'); el.classList.remove('closing'); }
+});
 
 // ── Hub View ──
 function renderHubView() {
@@ -268,7 +278,7 @@ function flashSaveDot() {
   if (!saveDot) return;
   if (saveDotTimer) clearTimeout(saveDotTimer);
   saveDot.classList.remove('hidden');
-  saveDotTimer = setTimeout(() => saveDot.classList.add('hidden'), 2000);
+  saveDot.addEventListener('animationend', function handler(){saveDot.classList.add('hidden');saveDot.removeEventListener('animationend',handler);});
 }
 
 function addLog(type, message) {
@@ -284,19 +294,35 @@ function addLog(type, message) {
   logArea.scrollTop = logArea.scrollHeight;
 }
 
+function dismissEventOverlay() {
+  if (eventOverlay.classList.contains('hidden')||eventOverlay.classList.contains('closing')) return;
+  eventOverlay.classList.add('closing');
+}
 function showEventOverlay(title, color, text) {
   if (eventDismissTimer) clearTimeout(eventDismissTimer);
+  eventOverlay.classList.remove('closing');
   eventTitle.textContent = title; eventTitle.style.color = color; eventText.textContent = text;
-  eventOverlay.classList.remove('hidden'); eventDismissTimer = setTimeout(() => eventOverlay.classList.add('hidden'), 6000);
+  eventOverlay.classList.remove('hidden'); eventDismissTimer = setTimeout(() => dismissEventOverlay(), 6000);
 }
-eventOverlay.addEventListener('click', () => { eventOverlay.classList.add('hidden'); if (eventDismissTimer) clearTimeout(eventDismissTimer); });
+eventOverlay.addEventListener('animationend', () => {
+  if (eventOverlay.classList.contains('closing')) { eventOverlay.classList.add('hidden'); eventOverlay.classList.remove('closing'); }
+});
+eventOverlay.addEventListener('click', () => { dismissEventOverlay(); if (eventDismissTimer) clearTimeout(eventDismissTimer); });
 
+function dismissAchievementOverlay() {
+  if (achievementOverlay.classList.contains('hidden')||achievementOverlay.classList.contains('closing')) return;
+  achievementOverlay.classList.add('closing');
+}
 function showAchievementOverlay(icon, name, desc) {
   if (achievementDismissTimer) clearTimeout(achievementDismissTimer);
+  achievementOverlay.classList.remove('closing');
   achievementIcon.textContent = icon; achievementName.textContent = name; achievementDesc.textContent = desc;
-  achievementOverlay.classList.remove('hidden'); achievementDismissTimer = setTimeout(() => achievementOverlay.classList.add('hidden'), 8000);
+  achievementOverlay.classList.remove('hidden'); achievementDismissTimer = setTimeout(() => dismissAchievementOverlay(), 8000);
 }
-achievementOverlay.addEventListener('click', () => { achievementOverlay.classList.add('hidden'); if (achievementDismissTimer) clearTimeout(achievementDismissTimer); });
+achievementOverlay.addEventListener('animationend', () => {
+  if (achievementOverlay.classList.contains('closing')) { achievementOverlay.classList.add('hidden'); achievementOverlay.classList.remove('closing'); }
+});
+achievementOverlay.addEventListener('click', () => { dismissAchievementOverlay(); if (achievementDismissTimer) clearTimeout(achievementDismissTimer); });
 
 btnScenario.addEventListener('click', async () => { try { scenarioList = await window.electron.invoke('get-scenario-list'); } catch (e) { showToast(`获取副本列表失败`, 'error'); } renderScenarioPanel(); scenarioPanel.classList.remove('hidden'); });
 btnTitles.addEventListener('click', () => { renderTitlesPanel(); titlesPanel.classList.remove('hidden'); });

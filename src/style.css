@@ -44,7 +44,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 /* ── EXP Progress Bar ── */
 #exp-bar-container { flex-shrink:0; padding:6px 10px 2px; display:flex; align-items:center; gap:8px; }
 #exp-bar-track { flex:1; height:6px; background:rgba(0,255,0,0.06); border-radius:4px; overflow:hidden; }
-#exp-bar-fill { height:100%; width:0%; background:var(--fg); border-radius:4px; transition:width 0.5s ease; }
+#exp-bar-fill { height:100%; width:0%; background:var(--fg); border-radius:4px; transition:width 0.5s ease; will-change:width; }
 #exp-bar-text { font-size:10px; color:var(--dim); white-space:nowrap; }
 
 /* ── Log Area ── */
@@ -113,13 +113,16 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 
 /* ── Event & Achievement Overlays ── */
 #event-overlay { position: fixed; bottom: 40px; right: 8px; width: 300px; z-index: 100; animation: slideIn 0.3s ease-out; box-shadow: 0 0 15px rgba(0,255,0,0.15); }
+#event-overlay.closing { animation: slideOut 0.2s ease-in forwards; }
 @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
 #event-overlay.hidden { display: none; }
 #event-box { background: var(--bg); border: 1px solid var(--fg); border-radius: 4px; overflow: hidden; }
 #event-header { background: rgba(0,255,0,0.08); padding: 4px 10px; border-bottom: 1px solid var(--dim); font-weight: bold; font-size: 11px; }
 #event-body { padding: 8px 10px; min-height: 36px; }
 #event-text { color: var(--fg); font-size: 11px; line-height: 1.5; }
 #achievement-overlay { position: fixed; top: 36px; right: 8px; width: 280px; z-index: 101; animation: slideIn 0.3s ease-out; box-shadow: 0 0 25px rgba(0,229,255,0.2); }
+#achievement-overlay.closing { animation: slideOut 0.25s ease-in forwards; }
 #achievement-overlay.hidden { display: none; }
 #achievement-box { background: var(--bg); border: 1px solid #00E5FF; border-radius: 4px; overflow: hidden; }
 #achievement-header { background: rgba(0,229,255,0.1); padding: 4px 10px; border-bottom: 1px solid rgba(0,229,255,0.3); font-weight: bold; font-size: 11px; color: #00E5FF; letter-spacing: 1px; }
@@ -186,11 +189,14 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 .title-desc { font-size: 11px; color: var(--dim); flex: 1; }
 
 /* ── Toast ── */
-#toast { position:fixed; bottom:50px; left:50%; transform:translateX(-50%); z-index:500; padding:6px 14px; border-radius:4px; font-size:11px; background:rgba(10,10,10,0.92); border:1px solid var(--dim); color:var(--fg); pointer-events:none; animation:toastIn 0.2s ease-out; text-align:center; max-width:280px; }
+#toast { position:fixed; bottom:50px; left:50%; transform:translateX(-50%); z-index:500; padding:6px 14px; border-radius:4px; font-size:11px; background:rgba(10,10,10,0.92); border:1px solid var(--dim); color:var(--fg); pointer-events:none; text-align:center; max-width:280px; }
+#toast:not(.hidden):not(.closing) { animation:toastIn 0.2s ease-out; }
+#toast.closing { animation:toastOut 0.15s ease-in forwards; }
 #toast.hidden { display:none; }
 #toast.toast-error { border-color:#F44336; color:#F44336; }
 #toast.toast-success { border-color:#4CAF50; color:#4CAF50; }
 @keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(8px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+@keyframes toastOut { from { opacity:1; transform:translateX(-50%) translateY(0); } to { opacity:0; transform:translateX(-50%) translateY(8px); } }
 
 /* ── Onboarding ── */
 #onboarding-modal { position:fixed; top:0; left:0; width:100%; height:100%; z-index:400; display:flex; align-items:center; justify-content:center; }
@@ -240,4 +246,5 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 .theme-white { --fg: #4C4F69; --bg: #EFF1F5; --dim: #9CA0B0; --g1: #C0C0C0; --g2: #EFF1F5; }
 
 @media (max-width: 420px) { #event-overlay { width: calc(100% - 10px); right: 5px; } #scenario-panel, #settings-panel, #titles-panel { width: 100%; } }
+@media (prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;}}
 .hidden { display: none !important; }

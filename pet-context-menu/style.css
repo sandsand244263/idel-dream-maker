@@ -22,3 +22,6 @@ html,body { width:100%;background:transparent;user-select:none;font-family:'Mapl
 .ctx-item.ctx-off { color:color-mix(in srgb,var(--fg) 35%,transparent); }
 .ctx-arrow { float:right; }
 .ctx-sep { height:1px;background:color-mix(in srgb,var(--fg) 10%,transparent);margin:4px 10px; }
+#container { animation:fadeIn 0.12s ease-out; }
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;}}

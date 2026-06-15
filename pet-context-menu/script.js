@@ -60,6 +60,8 @@ document.addEventListener('click', (e) => {
   if (e.target === document.body) window.ctxMenu.invoke('close-menu').catch(() => {});
 });
 
+// 窗口显示时重放入场动效
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){const el=document.getElementById('container');el.style.animation='none';void el.offsetHeight;el.style.animation='';}});
 // 初始化
 window.ctxMenu.invoke('get-current-theme').then(r => { if (r) applyTheme(r.theme, r.customTheme); }).catch(() => {});
 window.ctxMenu.on('theme-changed', (d) => { if (d) applyTheme(d.theme, d.customTheme); });

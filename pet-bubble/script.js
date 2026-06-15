@@ -13,6 +13,7 @@ function applyTheme(theme, customTheme) {
   }
 }
 
+function restartAnim(el){el.style.animation='none';void el.offsetHeight;el.style.animation='';}
 function update(data) {
   titleEl.textContent = data.title || '事件';
   titleEl.style.color = data.color || '#00BFFF';
@@ -27,6 +28,7 @@ function update(data) {
     document.getElementById('bubble').style.borderLeftColor = '#00BFFF';
     titleEl.style.color = '#00BFFF';
   }
+  restartAnim(document.getElementById('bubble'));
 }
 
 window.petBubble.on('show-bubble', (d) => { update(d); });
