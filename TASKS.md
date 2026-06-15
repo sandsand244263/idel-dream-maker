@@ -45,7 +45,7 @@
 
 **目标：** 替换 Tauri 窗口系统。新建 Electron 主进程，能打开显示当前 HTML 界面。
 
-**前置条件：** 当前工作目录为项目根目录 `E:\工作内容\11_vibe-coding项目\IdleWorker`
+**前置条件：** 当前工作目录为项目根目录 `E:\工作内容\11_vibe-coding项目\Idel-DreamMaker`
 
 **执行步骤：**
 
