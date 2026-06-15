@@ -8,23 +8,16 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --fg: #00FF00;
-  --bg: #0A0A0A;
-  --dim: #00AA00;
-  --border: #00FF00;
-  --g1: #0A0A0A;
-  --g2: #1A1A1A;
-  --glass: 0;
-  --blur: 8px;
-  --glossy: 0;
+  --fg: #00FF00; --bg: #0A0A0A; --dim: #00AA00; --border: #00FF00;
+  --g1: #0A0A0A; --g2: #1A1A1A; --blur: 8px;
+  --series: 'pure';
 }
 
 html, body { width: 100%; height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; background: #1a1a1a; color: #e0e0e0; overflow: hidden; }
-
 #app { display: flex; height: 100vh; }
 
-/* ── Left panel ── */
-#controls { width: 400px; min-width: 400px; overflow-y: auto; background: #222; border-right: 1px solid #444; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+/* Left panel */
+#controls { width: 400px; min-width: 400px; overflow-y: auto; background: #222; border-right: 1px solid #444; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
 #controls::-webkit-scrollbar { width: 4px; }
 #controls::-webkit-scrollbar-track { background: transparent; }
 #controls::-webkit-scrollbar-thumb { background: #555; border-radius: 2px; }
@@ -33,70 +26,52 @@ h2 { font-size: 14px; color: #fff; letter-spacing: 1px; }
 h3 { font-size: 12px; color: #aaa; margin: 0 0 6px; border-bottom: 1px solid #333; padding-bottom: 3px; }
 
 .section { background: #2a2a2a; border-radius: 6px; padding: 10px 12px; }
-.section + .section { margin-top: 0; }
 
-.row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-.row label { font-size: 11px; color: #ccc; min-width: 72px; flex-shrink: 0; }
-.row input[type="color"] { width: 32px; height: 24px; padding: 0; border: 1px solid #444; border-radius: 3px; background: transparent; cursor: pointer; }
-.row input[type="text"] { flex: 1; min-width: 0; background: #333; border: 1px solid #444; color: #eee; padding: 2px 5px; font-size: 11px; border-radius: 3px; font-family: 'Consolas', monospace; }
-.row input[type="range"] { flex: 1; }
-.row .val { font-size: 11px; color: #888; min-width: 28px; font-family: 'Consolas', monospace; }
+/* Series toggle */
+.series-row { display: flex; background: #1a1a1a; border-radius: 4px; overflow: hidden; }
+.series-btn { flex: 1; padding: 6px 0; font-size: 12px; background: transparent; border: none; color: #888; cursor: pointer; font-family: inherit; letter-spacing: 1px; transition: all 0.12s; }
+.series-btn.active { background: #0078D7; color: #fff; }
+.series-btn:hover:not(.active) { color: #eee; }
 
-.toggle { display: flex; align-items: center; gap: 6px; }
-.toggle input[type="checkbox"] { width: auto; }
-.toggle label { font-size: 12px; cursor: pointer; color: #ddd; min-width: 0; }
+/* Color grid */
+.color-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.color-btn { padding: 6px 2px; font-size: 9px; background: #333; border: 2px solid transparent; border-radius: 4px; color: #aaa; cursor: pointer; font-family: inherit; text-align: center; transition: all 0.1s; }
+.color-btn:hover { border-color: #888; color: #fff; }
+.color-btn.active { border-color: #0078D7; color: #fff; }
+.color-btn.custom-btn { margin-top: 4px; grid-column: 1 / -1; border-style: dashed; border-color: #555; }
 
-.dependent { display: none; padding: 6px 0 2px 12px; border-left: 2px solid #444; margin: 4px 0 2px 16px; }
-.dependent.show { display: block; }
+/* Custom colors (hidden by default) */
+#customColors { display: none; }
+#customColors.show { display: block; }
+.custom-row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+.custom-row label { font-size: 11px; color: #ccc; min-width: 60px; }
+.custom-row input[type="color"] { width: 28px; height: 22px; padding: 0; border: 1px solid #444; border-radius: 3px; background: transparent; cursor: pointer; }
+.custom-row input[type="text"] { flex: 1; background: #333; border: 1px solid #444; color: #eee; padding: 2px 5px; font-size: 10px; border-radius: 3px; font-family: 'Consolas', monospace; }
 
-.presets { display: flex; gap: 4px; flex-wrap: wrap; }
-.presets button { padding: 3px 10px; font-size: 11px; background: #333; border: 1px solid #555; color: #ccc; cursor: pointer; border-radius: 3px; }
-.presets button:hover { background: #444; color: #fff; }
-.presets button:active { transform: scale(0.96); }
+/* Style checkboxes */
+.style-grid { display: flex; flex-direction: column; gap: 4px; }
+.style-row { display: flex; align-items: center; gap: 6px; }
+.style-row input[type="checkbox"] { width: auto; }
+.style-row label { font-size: 12px; color: #ddd; cursor: pointer; }
 
-.export-box { background: #1a1a1a; border: 1px solid #333; border-radius: 4px; padding: 8px; position: relative; }
-.export-box pre { font-family: 'Consolas', monospace; font-size: 10px; color: #ccc; white-space: pre-wrap; word-break: break-all; line-height: 1.4; max-height: 120px; overflow-y: auto; }
-
+/* Export */
+.export-box { background: #1a1a1a; border: 1px solid #333; border-radius: 4px; padding: 8px; }
+.export-box pre { font-family: 'Consolas', monospace; font-size: 10px; color: #ccc; white-space: pre-wrap; word-break: break-all; line-height: 1.4; max-height: 100px; overflow-y: auto; }
 .cp-btn { display: block; margin-top: 4px; width: 100%; padding: 5px 0; background: #0078D7; border: none; color: #fff; font-size: 11px; cursor: pointer; border-radius: 3px; letter-spacing: 1px; }
 .cp-btn:hover { background: #1a8ae8; }
 .cp-btn:active { transform: scale(0.98); }
 .cp-btn.copied { background: #388e3c; }
 
-.import-box { margin-top: 0; }
-.import-box textarea { width: 100%; height: 60px; background: #1a1a1a; border: 1px solid #333; color: #aaa; font-family: 'Consolas', monospace; font-size: 10px; padding: 6px; resize: vertical; border-radius: 3px; }
-.import-box .row { margin-top: 4px; }
-.import-box .row button { padding: 4px 14px; font-size: 11px; background: #444; border: 1px solid #666; color: #eee; cursor: pointer; border-radius: 3px; }
-.import-box .row button:hover { background: #555; }
-
-/* ── Scoring ── */
-.scoring { }
-.scoring-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-.scoring-header h3 { margin: 0; }
-.scoring-row { display: flex; align-items: center; gap: 4px; margin-bottom: 3px; padding: 2px 4px; border-radius: 3px; transition: background 0.15s; }
-.scoring-row:hover { background: rgba(255,255,255,0.04); }
-.scoring-label { font-size: 11px; color: #ccc; min-width: 60px; flex-shrink: 0; }
-.scoring-btns { display: flex; gap: 2px; }
-.scoring-btns button { padding: 2px 10px; font-size: 10px; background: transparent; border: 1px solid #555; color: #888; cursor: pointer; border-radius: 3px; transition: all 0.12s; line-height: 1.4; }
-.scoring-btns button:hover { border-color: #888; color: #eee; }
-.scoring-btns button.active-good { background: #2e7d32; border-color: #388e3c; color: #fff; }
-.scoring-btns button.active-bad { background: #c62828; border-color: #d32f2f; color: #fff; }
-.scoring-btns button.active-skip { background: #444; border-color: #666; color: #aaa; }
-.scoring-copy { display: block; margin-top: 6px; width: 100%; padding: 4px 0; background: #555; border: none; color: #eee; font-size: 10px; cursor: pointer; border-radius: 3px; letter-spacing: 1px; }
-.scoring-copy:hover { background: #666; }
-.scoring-copy:active { transform: scale(0.98); }
-.scoring-copy.copied { background: #388e3c; }
-.scoring-extra { width: 100%; margin-top: 4px; background: #333; border: 1px solid #555; color: #aaa; font-family: 'Consolas', monospace; font-size: 10px; padding: 3px 5px; border-radius: 3px; resize: vertical; min-height: 28px; }
-
 .note { font-size: 10px; color: #555; line-height: 1.4; }
 
-/* ── Preview ── */
+/* Preview */
 #preview-area { flex: 1; display: flex; align-items: center; justify-content: center; background: #111; position: relative; overflow: hidden; }
 #preview-area::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 30% 30%, #4A90D9, transparent 50%), radial-gradient(ellipse at 70% 70%, #87CEEB, transparent 50%), radial-gradient(ellipse at 50% 50%, #5CB85C, transparent 40%); opacity: 0.15; pointer-events: none; }
 
 .phone { width: 320px; height: 720px; border-radius: 12px; overflow: hidden; box-shadow: 0 0 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05); display: flex; flex-direction: column; background: var(--bg); color: var(--fg); font-family: 'Consolas', 'Courier New', monospace; position: relative; transition: background 0.15s, color 0.15s; }
 .phone.gradient-bg { background: linear-gradient(180deg, var(--g1), var(--g2)); }
 
-.titlebar { display: flex; align-items: center; height: 28px; flex-shrink: 0; border-bottom: 1px solid var(--border); user-select: none; position: relative; z-index: 1; transition: background 0.15s; }
+.titlebar { display: flex; align-items: center; height: 28px; flex-shrink: 0; border-bottom: 1px solid var(--dim); user-select: none; position: relative; z-index: 1; transition: background 0.15s; }
 .titlebar-id { color: var(--fg); font-weight: bold; font-size: 12px; padding-left: 8px; white-space: nowrap; }
 .titlebar-sep { color: var(--dim); font-size: 10px; margin: 0 3px; }
 .titlebar-lv { color: var(--fg); font-size: 12px; white-space: nowrap; }
@@ -105,162 +80,100 @@ h3 { font-size: 12px; color: #aaa; margin: 0 0 6px; border-bottom: 1px solid #33
 .titlebar-btn { width: 28px; height: 28px; background: transparent; border: none; color: var(--dim); font-size: 12px; cursor: default; display: flex; align-items: center; justify-content: center; }
 
 .hub-view { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-.hub-welcome { text-align: center; padding: 14px 10px 8px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.hub-welcome { text-align: center; padding: 14px 10px 8px; border-bottom: 1px solid var(--dim); flex-shrink: 0; }
 .hub-greeting { font-size: 11px; color: var(--dim); letter-spacing: 1px; }
 .hub-player-name { font-size: 18px; font-weight: bold; color: var(--fg); margin: 3px 0; }
 .hub-level { font-size: 12px; color: var(--dim); }
 
 .hub-cards { flex: 1; overflow-y: auto; padding: 6px 10px; }
-.card { border: 1px solid var(--dim); border-radius: 4px; padding: 8px 10px; margin-bottom: 6px; transition: border-color 0.15s; }
+.card { border: 1px solid var(--dim); border-radius: 4px; padding: 8px 10px; margin-bottom: 6px; transition: border-color 0.15s, background 0.15s; }
 .card:active { transform: scale(0.98); }
 .card-name { font-weight: bold; font-size: 12px; color: var(--fg); margin-bottom: 2px; }
 .card-desc { font-size: 10px; color: var(--dim); line-height: 1.4; }
 .card-meta { font-size: 9px; color: var(--dim); margin-top: 3px; display: flex; gap: 10px; }
+
+/* Glass card style */
+.card.glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; }
 
 .exp-row { flex-shrink: 0; padding: 5px 10px 2px; display: flex; align-items: center; gap: 8px; }
 .exp-track { flex: 1; height: 5px; background: rgba(128,128,128,0.12); border-radius: 3px; overflow: hidden; }
 .exp-fill { height: 100%; width: 67%; background: var(--fg); border-radius: 3px; transition: width 0.3s; }
 .exp-text { font-size: 9px; color: var(--dim); white-space: nowrap; }
 
-.status-bar { flex-shrink: 0; padding: 2px 10px; font-size: 10px; color: var(--dim); border-top: 1px solid var(--border); line-height: 1.4; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.status-bar { flex-shrink: 0; padding: 2px 10px; font-size: 10px; color: var(--dim); border-top: 1px solid var(--dim); line-height: 1.4; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 
-.btn-bar { display: flex; flex-shrink: 0; border-top: 1px solid var(--border); }
+.btn-bar { display: flex; flex-shrink: 0; border-top: 1px solid var(--dim); }
 .bar-btn { flex: 1; background: transparent; border: none; color: var(--dim); font-family: inherit; font-size: 11px; padding: 5px 0; cursor: pointer; letter-spacing: 1px; border-right: 1px solid rgba(128,128,128,0.12); transition: color 0.15s, background 0.15s; }
 .bar-btn:last-child { border-right: none; }
 .bar-btn:active { transform: scale(0.96); }
-.bar-btn.glossy { background: linear-gradient(180deg, rgba(160,198,228,0.25) 0%, rgba(140,185,220,0.08) 100%); position: relative; overflow: hidden; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(100,150,200,0.1); }
-.bar-btn.glossy::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 55%; background: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.2) 60%, transparent 100%); pointer-events: none; }
 
-/* FA Glossy style — capsule button + radial bottom glow + hover lift */
-.style-fa .bar-btn { border-radius: 9999px; padding: 5px 6px; margin: 2px; }
-.style-fa .bar-btn.glossy {
-  background:
-    radial-gradient(farthest-corner at bottom center, rgba(255,255,255,0.5), transparent 70%),
-    linear-gradient(to bottom, rgba(74,144,217,0.3), rgba(135,206,235,0.12));
+/* Glossy button style */
+.bar-btn.glossy {
+  background: radial-gradient(farthest-corner at bottom center, rgba(255,255,255,0.5), transparent 70%), linear-gradient(to bottom, rgba(74,144,217,0.3), rgba(135,206,235,0.12));
+  position: relative; overflow: hidden;
+  border-radius: 9999px; padding: 5px 6px; margin: 2px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.12);
 }
-.style-fa .bar-btn.glossy::before {
-  height: 45%;
+.bar-btn.glossy::before {
+  content: ''; position: absolute; top: 0; left: 4px; right: 4px; height: 45%;
   background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,0.1));
-  border-radius: inherit;
+  pointer-events: none; border-radius: inherit;
 }
 
-/* Skeuomorphic style */
-.style-skeuo .bar-btn { border-radius: 4px; border: 1px solid rgba(0,0,0,0.15); }
-.style-skeuo .bar-btn.glossy { box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), inset 0 -2px 0 rgba(0,0,0,0.15); }
+/* Shadow style for cards */
+.card.shadow { box-shadow: 0 4px 12px rgba(0,0,0,0.2), 0 1px 3px rgba(0,0,0,0.1); }
 
-/* Glassmorphism style — Aero glass overlay + diagonal stripes */
-.style-glass .phone::before {
-  content: ''; position: absolute; z-index: -1;
-  inset: 0; border-radius: 12px;
-  background:
-    linear-gradient(transparent 20%, rgba(255,255,255,0.7) 40%, transparent 41%),
-    linear-gradient(to right, rgba(255,255,255,0.3), rgba(0,0,0,0.08), rgba(255,255,255,0.15)),
-    hsl(210, 55%, 45%);
-  background-color: hsl(210, 55%, 45%);
-  opacity: 0.45;
-  pointer-events: none;
-}
-.style-glass .phone::after {
-  content: ''; position: absolute; z-index: -10;
-  inset: 0; border-radius: 12px;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  pointer-events: none;
-}
-.style-glass .titlebar {
-  background:
-    linear-gradient(135deg, rgba(255,255,255,0.33) 70px, transparent 100px),
-    linear-gradient(225deg, rgba(255,255,255,0.33) 70px, transparent 100px);
-}
-.style-glass .titlebar-id,
-.style-glass .titlebar-lv,
-.style-glass .titlebar-title {
-  text-shadow: 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff;
-}
-.style-glass .card { background: rgba(255,255,255,0.08); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.15); }
-.style-glass .exp-track { background: rgba(255,255,255,0.08); }
-.style-glass .status-bar { background: rgba(255,255,255,0.05); }
-.style-glass .bar-btn { border-radius: 12px; }
-.style-glass .hub-welcome { background: rgba(255,255,255,0.04); border-radius: 12px; margin: 6px 8px; padding: 12px 8px; }
+/* Hub welcome glass */
+.hub-welcome.glass { background: rgba(255,255,255,0.05); border-radius: 12px; margin: 6px 8px; padding: 12px 8px; border-bottom: none; }
+.hub-welcome.shadow { box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
 
-.toast { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); padding: 4px 10px; background: rgba(0,0,0,0.85); border: 1px solid var(--border); border-radius: 4px; color: var(--fg); font-size: 10px; white-space: nowrap; pointer-events: none; }
+.toast { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); padding: 4px 10px; background: rgba(0,0,0,0.85); border: 1px solid var(--dim); border-radius: 4px; color: var(--fg); font-size: 10px; white-space: nowrap; pointer-events: none; }
 </style>
 </head>
 <body>
 
 <div id="app">
 
-<!-- LEFT: Controls -->
+<!-- LEFT -->
 <div id="controls">
 
   <h2>主题设计器</h2>
-  <p style="font-size:10px;color:#666;margin-bottom:2px;">调完复制底部CSS发给AI，或把AI给的CSS贴到导入区看效果</p>
+  <p style="font-size:10px;color:#666;margin-bottom:2px;">选分类和配色，开关样式效果，导出 CSS 发给 AI</p>
 
-  <!-- Presets -->
+  <!-- Series -->
   <div class="section">
-    <div class="presets">
-      <button data-preset="aero">Frutiger Aero</button>
-      <button data-preset="fa">FA Glossy</button>
-      <button data-preset="skeuo">Skeuomorphic</button>
-      <button data-preset="glass">Glassmorphism</button>
-      <button data-preset="green">默认绿色</button>
-      <button data-preset="amber">琥珀色</button>
-      <button data-preset="cold">冷白</button>
-      <button data-preset="paper">纸质</button>
-      <button data-preset="matrix">矩阵</button>
+    <div class="series-row">
+      <button class="series-btn active" data-series="pure">纯色</button>
+      <button class="series-btn" data-series="gradient">渐变</button>
     </div>
   </div>
 
-  <!-- Base colors -->
+  <!-- Colors -->
   <div class="section">
-    <h3>基础配色</h3>
-    <div class="row"><label>主题名</label><input type="text" id="themeName" value="aero" style="max-width:80px"></div>
-    <div class="row"><label>--fg 前景</label><input type="color" id="cFg" value="#00FF00"><input type="text" id="tFg" value="#00FF00"></div>
-    <div class="row"><label>--bg 背景</label><input type="color" id="cBg" value="#0A0A0A"><input type="text" id="tBg" value="#0A0A0A"></div>
-    <div class="row"><label>--dim 次色</label><input type="color" id="cDim" value="#00AA00"><input type="text" id="tDim" value="#00AA00"></div>
-    <div class="row"><label>--border 边框</label><input type="color" id="cBorder" value="#00FF00"><input type="text" id="tBorder" value="#00FF00"></div>
+    <h3>配色</h3>
+    <div class="color-grid" id="colorGrid"></div>
+    <div id="customColors">
+      <div class="custom-row"><label>--fg</label><input type="color" id="cFg" value="#00FF00"><input type="text" id="tFg" value="#00FF00"></div>
+      <div class="custom-row"><label>--bg</label><input type="color" id="cBg" value="#0A0A0A"><input type="text" id="tBg" value="#0A0A0A"></div>
+      <div class="custom-row"><label>--dim</label><input type="color" id="cDim" value="#00AA00"><input type="text" id="tDim" value="#00AA00"></div>
+      <div class="custom-row"><label>--border</label><input type="color" id="cBorder" value="#00FF00"><input type="text" id="tBorder" value="#00FF00"></div>
+    </div>
   </div>
 
-  <!-- Effects -->
+  <!-- Styles -->
   <div class="section">
-    <h3>效果开关</h3>
-    <div class="row"><span class="toggle"><input type="checkbox" id="chkGradient"><label for="chkGradient">渐变背景</label></span></div>
-    <div class="dependent" id="depGradient">
-      <div class="row"><label>顶部色</label><input type="color" id="cG1" value="#0A0A0A"><input type="text" id="tG1" value="#0A0A0A"></div>
-      <div class="row"><label>底部色</label><input type="color" id="cG2" value="#1A1A1A"><input type="text" id="tG2" value="#1A1A1A"></div>
+    <h3>样式效果</h3>
+    <div class="style-grid">
+      <div class="style-row"><input type="checkbox" id="chkGlossy"><label for="chkGlossy">光泽按钮（胶囊圆角 + 白色高光 + 径向光晕）</label></div>
+      <div class="style-row"><input type="checkbox" id="chkGlass"><label for="chkGlass">毛玻璃卡片（背景模糊 + 半透明白底）</label></div>
+      <div class="style-row"><input type="checkbox" id="chkShadow"><label for="chkShadow">扩散阴影（柔和大投影）</label></div>
     </div>
-
-    <div class="row"><span class="toggle"><input type="checkbox" id="chkGlass"><label for="chkGlass">毛玻璃标题栏</label></span></div>
-    <div class="dependent" id="depGlass">
-      <div class="row"><label>模糊</label><input type="range" id="sliderBlur" min="1" max="20" value="8"><span class="val" id="valBlur">8px</span></div>
-    </div>
-
-    <div class="row"><span class="toggle"><input type="checkbox" id="chkGlossy"><label for="chkGlossy">光泽按钮</label></span></div>
-  </div>
-
-  <!-- Import -->
-  <div class="section import-box">
-    <h3>导入 CSS（粘贴 AI 给的代码）</h3>
-    <textarea id="importArea" placeholder="在此粘贴 AI 给的 CSS 代码..."></textarea>
-    <div class="row"><button id="importBtn">加载到预览</button></div>
-  </div>
-
-  <!-- Scoring -->
-  <div class="section scoring">
-    <div class="scoring-header">
-      <h3>部位评分</h3>
-      <span id="scoringStyleName" style="font-size:10px;color:#666">当前: —</span>
-    </div>
-    <div id="scoringList"></div>
-    <textarea class="scoring-extra" id="scoringExtra" placeholder="想补充什么？如：按钮颜色太淡..."></textarea>
-    <button class="scoring-copy" id="scoringCopy">复制评分给 AI</button>
   </div>
 
   <!-- Export -->
   <div class="section">
-    <h3>导出 CSS <span style="font-weight:normal;font-size:10px;color:#666">（复制后发给 AI）</span></h3>
-    <div class="export-box"><pre id="exportCss">.theme-aero { }</pre></div>
+    <h3>导出 CSS</h3>
+    <div class="export-box"><pre id="exportCss">.theme-xxx { }</pre></div>
     <button class="cp-btn" id="copyBtn">复制 CSS</button>
   </div>
 
@@ -269,7 +182,7 @@ h3 { font-size: 12px; color: #aaa; margin: 0 0 6px; border-bottom: 1px solid #33
 <!-- RIGHT: Preview -->
 <div id="preview-area">
   <div class="phone" id="phone">
-    <div class="titlebar" id="titlebarPreview">
+    <div class="titlebar">
       <span class="titlebar-id">ID:Worker</span>
       <span class="titlebar-sep">|</span>
       <span class="titlebar-lv">LV:5</span>
@@ -279,14 +192,14 @@ h3 { font-size: 12px; color: #aaa; margin: 0 0 6px; border-bottom: 1px solid #33
     </div>
 
     <div class="hub-view">
-      <div class="hub-welcome">
+      <div class="hub-welcome" id="previewWelcome">
         <div class="hub-greeting">[ 大 厅 ]</div>
         <div class="hub-player-name">Worker</div>
         <div class="hub-level">大厅 Lv.3 | 累计经验 523</div>
       </div>
       <div class="hub-cards">
-        <div class="card"><div class="card-name">废土 (Wasteland)</div><div class="card-desc">在荒芜的废土上生存，寻找资源，建立庇护所。</div><div class="card-meta"><span>500 事件</span><span>50 成就</span></div></div>
-        <div class="card"><div class="card-name">示例副本 (Demo)</div><div class="card-desc">用于预览主题效果的示例副本。</div><div class="card-meta"><span>100 事件</span><span>10 成就</span></div></div>
+        <div class="card" id="previewCard1"><div class="card-name">废土 (Wasteland)</div><div class="card-desc">在荒芜的废土上生存，寻找资源，建立庇护所。</div><div class="card-meta"><span>500 事件</span><span>50 成就</span></div></div>
+        <div class="card" id="previewCard2"><div class="card-name">示例副本 (Demo)</div><div class="card-desc">用于预览主题效果的示例副本。</div><div class="card-meta"><span>100 事件</span><span>10 成就</span></div></div>
       </div>
     </div>
 
@@ -308,91 +221,195 @@ h3 { font-size: 12px; color: #aaa; margin: 0 0 6px; border-bottom: 1px solid #33
 
 <script>
 const $ = id => document.getElementById(id);
+function setCSSVar(name, value) { document.documentElement.style.setProperty(name, value); }
 
-function setCSSVar(name, value) {
-  document.documentElement.style.setProperty(name, value);
-}
+/* ── 14 color data ── */
+const COLORS = [
+  { id:'red',     label:'红',   fg:'#F38BA8', bg:'#1E0A10', dim:'#BA7D8F' },
+  { id:'red-orange',label:'红橙',fg:'#FAB387', bg:'#1E120A', dim:'#BF9E82' },
+  { id:'orange',  label:'橙',   fg:'#FFAA44', bg:'#1E1100', dim:'#C48E40' },
+  { id:'yellow-orange',label:'黄橙',fg:'#F9D77E', bg:'#1E180A', dim:'#C4AB6E' },
+  { id:'yellow',  label:'黄',   fg:'#F9E2AF', bg:'#1E1C0A', dim:'#C4B892' },
+  { id:'yellow-green',label:'黄绿',fg:'#B8E3A1', bg:'#0E1E0A', dim:'#8FBA82' },
+  { id:'green',   label:'绿',   fg:'#A6E3A1', bg:'#0A1E0A', dim:'#82BA7D' },
+  { id:'cyan',    label:'蓝绿', fg:'#94E2D5', bg:'#0A1E1A', dim:'#75BAAD' },
+  { id:'blue',    label:'蓝',   fg:'#89B4FA', bg:'#0A0E1E', dim:'#6E94C4' },
+  { id:'blue-purple',label:'蓝紫',fg:'#A2A0F6', bg:'#0E0A1E', dim:'#7F7EC4' },
+  { id:'purple',  label:'紫',   fg:'#CBA6F7', bg:'#1A0E1E', dim:'#A284C4' },
+  { id:'pink',    label:'红紫', fg:'#F5C2E7', bg:'#1E0E1A', dim:'#C49AB5' },
+  { id:'black',   label:'黑',   fg:'#E0E0E0', bg:'#000000', dim:'#666666' },
+  { id:'white',   label:'白',   fg:'#1A1A1A', bg:'#F0F0F0', dim:'#888888' },
+];
 
-/* Bind color picker <-> text input */
-function bindColor(pickerId, textId, cssVar) {
-  const p = $(pickerId), t = $(textId);
-  const sync = () => { setCSSVar(cssVar, p.value); t.value = p.value; updateExport(); };
-  p.addEventListener('input', sync);
-  t.addEventListener('input', () => {
-    if (/^#[0-9a-f]{6}$/i.test(t.value)) { p.value = t.value; sync(); }
+const CUSTOM = { fg:'#00FF00', bg:'#0A0A0A', dim:'#00AA00', border:'#00FF00' };
+
+let series = 'pure'; // 'pure' | 'gradient'
+let selectedColor = null; // color id string or 'custom'
+
+/* ── Series toggle ── */
+document.querySelectorAll('.series-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.series-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    series = btn.dataset.series;
+    if (selectedColor) applyColor(selectedColor);
+    updateStyles();
   });
-}
-bindColor('cFg','tFg','--fg');
-bindColor('cBg','tBg','--bg');
-bindColor('cDim','tDim','--dim');
-bindColor('cBorder','tBorder','--border');
+});
 
-function bindGradient(pickerId, textId, varName) {
-  const p = $(pickerId), t = $(textId);
-  const sync = () => { setCSSVar(varName, p.value); t.value = p.value; updateGradientClass(); updateExport(); };
-  p.addEventListener('input', sync);
-  t.addEventListener('input', () => {
-    if (/^#[0-9a-f]{6}$/i.test(t.value)) { p.value = t.value; sync(); }
+/* ── Render color grid ── */
+function renderColors() {
+  const grid = $('colorGrid');
+  grid.innerHTML = '';
+  COLORS.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'color-btn' + (selectedColor === c.id ? ' active' : '');
+    btn.textContent = c.label;
+    btn.dataset.color = c.id;
+    btn.style.background = c.bg;
+    btn.style.color = c.fg;
+    btn.addEventListener('click', () => selectColor(c.id));
+    grid.appendChild(btn);
   });
+  const customBtn = document.createElement('button');
+  customBtn.className = 'color-btn custom-btn';
+  customBtn.textContent = selectedColor === 'custom' ? '▸ 自定义' : '自定义';
+  customBtn.addEventListener('click', () => selectColor('custom'));
+  grid.appendChild(customBtn);
 }
-bindGradient('cG1','tG1','--g1');
-bindGradient('cG2','tG2','--g2');
 
-function updateGradientClass() {
-  const ph = $('phone');
-  const hasGrad = $('chkGradient').checked;
-  if (hasGrad) {
-    ph.classList.add('gradient-bg');
+/* ── Select color ── */
+function selectColor(id) {
+  selectedColor = id;
+  document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+  const btns = document.querySelectorAll(`[data-color="${id}"]`);
+  btns.forEach(b => b.classList.add('active'));
+  if (id === 'custom') {
+    $('customColors').classList.add('show');
+    document.querySelector('.custom-btn').textContent = '▸ 自定义';
+    applyCustomColor();
   } else {
-    ph.classList.remove('gradient-bg');
+    $('customColors').classList.remove('show');
+    const c = COLORS.find(x => x.id === id);
+    applyColor(id);
   }
+  updateStyles();
 }
-$('chkGradient').addEventListener('change', () => {
-  $('depGradient').classList.toggle('show', $('chkGradient').checked);
-  updateGradientClass(); updateExport();
-});
 
-$('chkGlass').addEventListener('change', () => {
-  $('depGlass').classList.toggle('show', $('chkGlass').checked);
-  $('titlebarPreview').classList.toggle('glass', $('chkGlass').checked);
+function applyColor(id) {
+  const c = COLORS.find(x => x.id === id);
+  if (!c) return;
+  setCSSVar('--fg', c.fg); setCSSVar('--bg', c.bg); setCSSVar('--dim', c.dim);
+  setCSSVar('--border', c.dim);
+  if (series === 'gradient') {
+    const g1 = darken(c.bg, 0.6);
+    const g2 = c.bg;
+    setCSSVar('--g1', g1); setCSSVar('--g2', g2);
+    $('phone').classList.add('gradient-bg');
+  } else {
+    $('phone').classList.remove('gradient-bg');
+  }
+  updatePreviewCSS();
   updateExport();
-});
-$('sliderBlur').addEventListener('input', () => {
-  $('valBlur').textContent = $('sliderBlur').value + 'px';
-  setCSSVar('--blur', $('sliderBlur').value + 'px');
+}
+
+function darken(hex, factor) {
+  const r = parseInt(hex.slice(1,3), 16);
+  const g = parseInt(hex.slice(3,5), 16);
+  const b = parseInt(hex.slice(5,7), 16);
+  const nr = Math.round(r * factor);
+  const ng = Math.round(g * factor);
+  const nb = Math.round(b * factor);
+  return '#' + [nr, ng, nb].map(x => Math.max(0, x).toString(16).padStart(2,'0')).join('');
+}
+
+function applyCustomColor() {
+  const fg = $('tFg').value; const bg = $('tBg').value;
+  const dim = $('tDim').value; const border = $('tBorder').value;
+  setCSSVar('--fg', fg); setCSSVar('--bg', bg); setCSSVar('--dim', dim);
+  setCSSVar('--border', border);
+  if (series === 'gradient') {
+    setCSSVar('--g1', darken(bg, 0.6)); setCSSVar('--g2', bg);
+    $('phone').classList.add('gradient-bg');
+  } else {
+    $('phone').classList.remove('gradient-bg');
+  }
+  updatePreviewCSS();
   updateExport();
-});
+}
 
-$('chkGlossy').addEventListener('change', () => {
-  document.querySelectorAll('.bar-btn').forEach(b => b.classList.toggle('glossy', $('chkGlossy').checked));
+/* ── Bind custom color inputs ── */
+function bindCustom(id) {
+  const p = $(id); const t = $(id.replace('c', 't'));
+  if (!t) return;
+  const sync = () => { p.value = t.value; if (selectedColor === 'custom') applyCustomColor(); };
+  p.addEventListener('input', sync);
+  t.addEventListener('input', () => { if (/^#[0-9a-f]{6}$/i.test(t.value)) { p.value = t.value; sync(); } });
+}
+bindCustom('cFg'); bindCustom('cBg'); bindCustom('cDim'); bindCustom('cBorder');
+
+/* ── Styles toggle ── */
+function updateStyles() {
+  const glossy = $('chkGlossy').checked;
+  const glass = $('chkGlass').checked;
+  const shadow = $('chkShadow').checked;
+
+  document.querySelectorAll('.bar-btn').forEach(b => b.classList.toggle('glossy', glossy));
+  document.querySelectorAll('.card').forEach(c => c.classList.toggle('glass', glass));
+  document.querySelectorAll('.card').forEach(c => c.classList.toggle('shadow', shadow));
+  $('previewWelcome').classList.toggle('glass', glass);
+  $('previewWelcome').classList.toggle('shadow', shadow);
+
+  updatePreviewCSS();
   updateExport();
-});
+}
 
-$('themeName').addEventListener('input', updateExport);
+$('chkGlossy').addEventListener('change', updateStyles);
+$('chkGlass').addEventListener('change', updateStyles);
+$('chkShadow').addEventListener('change', updateStyles);
 
-/* Export */
+/* ── Update preview CSS vars ── */
+function updatePreviewCSS() {
+  const glossy = $('chkGlossy').checked;
+  const glass = $('chkGlass').checked;
+  const shadow = $('chkShadow').checked;
+}
+
+/* ── Export ── */
 function updateExport() {
-  const n = $('themeName').value || 'aero';
-  let css = `.theme-${n} {\n  --fg: ${$('tFg').value};\n  --bg: ${$('tBg').value};\n  --dim: ${$('tDim').value};\n  --border: ${$('tBorder').value};\n}`;
-  if ($('chkGradient').checked) css += `\n\n.theme-${n} #app {\n  background: linear-gradient(180deg, ${$('tG1').value}, ${$('tG2').value});\n}`;
-  if ($('chkGlass').checked) {
-    const b = $('sliderBlur').value;
-    css += `\n\n.theme-${n} #titlebar {\n  background: rgba(255,255,255,0.1);\n  backdrop-filter: blur(${b}px);\n  -webkit-backdrop-filter: blur(${b}px);\n  border-bottom: 1px solid rgba(255,255,255,0.15);\n}`;
+  const name = selectedColor === 'custom' ? 'custom' : (selectedColor || 'default');
+  const seriesLabel = series === 'gradient' ? 'gradient' : 'pure';
+  const themeName = `theme-${seriesLabel}-${name}`;
+
+  const fg = selectedColor === 'custom' ? $('tFg').value : (COLORS.find(c => c.id === selectedColor)?.fg || '#00FF00');
+  const bg = selectedColor === 'custom' ? $('tBg').value : (COLORS.find(c => c.id === selectedColor)?.bg || '#0A0A0A');
+  const dim = selectedColor === 'custom' ? $('tDim').value : (COLORS.find(c => c.id === selectedColor)?.dim || '#00AA00');
+  const border = selectedColor === 'custom' ? $('tBorder').value : dim;
+
+  let css = `.${themeName} {\n  --fg: ${fg};\n  --bg: ${bg};\n  --dim: ${dim};\n  --border: ${border};\n}`;
+
+  if (series === 'gradient') {
+    const g1 = darken(bg, 0.6);
+    const g2 = bg;
+    css += `\n\n.${themeName} #app {\n  background: linear-gradient(180deg, ${g1}, ${g2});\n}`;
   }
+
   if ($('chkGlossy').checked) {
-    css += `\n\n.theme-${n} .bar-btn {\n  background: linear-gradient(180deg, rgba(160,198,228,0.25) 0%, rgba(140,185,220,0.08) 100%);\n  position: relative;\n  overflow: hidden;\n  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(100,150,200,0.1);\n}\n.theme-${n} .bar-btn::before {\n  content: '';\n  position: absolute;\n  top: 0; left: 0; right: 0;\n  height: 55%;\n  background: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.2) 60%, transparent 100%);\n  pointer-events: none;\n}`;
+    css += `\n\n.${themeName} .bar-btn {\n  background: radial-gradient(farthest-corner at bottom center, rgba(255,255,255,0.5), transparent 70%), linear-gradient(to bottom, rgba(74,144,217,0.3), rgba(135,206,235,0.12));\n  position: relative;\n  overflow: hidden;\n  border-radius: 9999px;\n  padding: 0.4em 1em;\n  box-shadow: 0 2px 4px rgba(0,0,0,0.12);\n}\n.${themeName} .bar-btn::before {\n  content: '';\n  position: absolute;\n  top: 0; left: 4px; right: 4px;\n  height: 45%;\n  background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,0.1));\n  pointer-events: none;\n  border-radius: inherit;\n}`;
   }
-  if (currentStyle === 'fa') {
-    css += `\n\n.theme-${n} .bar-btn {\n  border-radius: 9999px;\n  padding: 0.4em 1em;\n}\n.theme-${n} .bar-btn.glossy {\n  background:\n    radial-gradient(farthest-corner at bottom center, rgba(255,255,255,0.5), transparent 70%),\n    linear-gradient(to bottom, rgba(74,144,217,0.3), rgba(135,206,235,0.12));\n  box-shadow: 0 2px 4px rgba(0,0,0,0.12);\n}`;
-  } else if (currentStyle === 'skeuo') {
-    css += `\n\n.theme-${n} .bar-btn {\n  border-radius: 4px;\n  border: 1px solid rgba(0,0,0,0.15);\n  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), inset 0 -2px 0 rgba(0,0,0,0.15);\n}`;
-  } else if (currentStyle === 'glass') {
-    css += `\n\n.theme-${n} .card {\n  background: rgba(255,255,255,0.08);\n  backdrop-filter: blur(15px);\n  -webkit-backdrop-filter: blur(15px);\n  border-radius: 16px;\n  border: 1px solid rgba(255,255,255,0.15);\n}\n.theme-${n} .bar-btn {\n  border-radius: 12px;\n}`;
+
+  if ($('chkGlass').checked) {
+    css += `\n\n.${themeName} .card {\n  background: rgba(255,255,255,0.08);\n  backdrop-filter: blur(10px);\n  -webkit-backdrop-filter: blur(10px);\n  border-radius: 12px;\n  border: 1px solid rgba(255,255,255,0.15);\n}`;
   }
+
+  if ($('chkShadow').checked) {
+    css += `\n\n.${themeName} .card {\n  box-shadow: 0 4px 12px rgba(0,0,0,0.2), 0 1px 3px rgba(0,0,0,0.1);\n}`;
+  }
+
   $('exportCss').textContent = css;
 }
 
-/* Copy */
+/* ── Copy ── */
 $('copyBtn').addEventListener('click', async () => {
   const txt = $('exportCss').textContent;
   try { await navigator.clipboard.writeText(txt); }
@@ -401,152 +418,9 @@ $('copyBtn').addEventListener('click', async () => {
   setTimeout(() => { btn.textContent = '复制 CSS'; btn.classList.remove('copied'); }, 1500);
 });
 
-/* Import - parse CSS pasted by AI */
-$('importBtn').addEventListener('click', () => {
-  const css = $('importArea').value;
-  if (!css.trim()) return;
-  /* Extract theme name */
-  const nameMatch = css.match(/\.theme-(\w+)/);
-  if (nameMatch) $('themeName').value = nameMatch[1];
-  /* Extract color variables */
-  const fg = css.match(/--fg:\s*(#[0-9a-fA-F]{6})/);
-  if (fg) { $('cFg').value = fg[1]; $('tFg').value = fg[1]; setCSSVar('--fg', fg[1]); }
-  const bg = css.match(/--bg:\s*(#[0-9a-fA-F]{6})/);
-  if (bg) { $('cBg').value = bg[1]; $('tBg').value = bg[1]; setCSSVar('--bg', bg[1]); }
-  const dim = css.match(/--dim:\s*(#[0-9a-fA-F]{6})/);
-  if (dim) { $('cDim').value = dim[1]; $('tDim').value = dim[1]; setCSSVar('--dim', dim[1]); }
-  const border = css.match(/--border:\s*(#[0-9a-fA-F]{6})/);
-  if (border) { $('cBorder').value = border[1]; $('tBorder').value = border[1]; setCSSVar('--border', border[1]); }
-  /* Gradient */
-  const hasGrad = css.includes('linear-gradient');
-  $('chkGradient').checked = hasGrad;
-  $('depGradient').classList.toggle('show', hasGrad);
-  if (hasGrad) {
-    const colors = css.match(/#[0-9a-fA-F]{6}/g);
-    if (colors && colors.length >= 2) {
-      $('cG1').value = colors[0]; $('tG1').value = colors[0]; setCSSVar('--g1', colors[0]);
-      $('cG2').value = colors[1]; $('tG2').value = colors[1]; setCSSVar('--g2', colors[1]);
-    }
-  }
-  updateGradientClass();
-  /* Glass */
-  const hasGlass = css.includes('backdrop-filter') || css.includes('-webkit-backdrop-filter');
-  $('chkGlass').checked = hasGlass;
-  $('depGlass').classList.toggle('show', hasGlass);
-  $('titlebarPreview').classList.toggle('glass', hasGlass);
-  const blurMatch = css.match(/blur\((\d+)px\)/);
-  if (blurMatch) { $('sliderBlur').value = blurMatch[1]; $('valBlur').textContent = blurMatch[1] + 'px'; setCSSVar('--blur', blurMatch[1] + 'px'); }
-  /* Glossy */
-  const hasGlossy = css.includes('glossy') || (hasGrad && css.includes('.bar-btn'));
-  $('chkGlossy').checked = hasGlossy;
-  document.querySelectorAll('.bar-btn').forEach(b => b.classList.toggle('glossy', hasGlossy));
-  updateExport();
-});
-
-/* Presets */
-const PRESETS = {
-  aero:   { fg:'#1A1A1A', bg:'#F5F8FA', dim:'#6A9AB0', border:'#4A90D9', gradient:true, g1:'#E8F0F8', g2:'#F5F8FA', glass:false, blur:8, glossy:true, style:'fa' },
-  fa:     { fg:'#1A1A1A', bg:'#F5F8FA', dim:'#6A9AB0', border:'#4A90D9', gradient:true, g1:'#E8F0F8', g2:'#F5F8FA', glass:false, blur:8, glossy:true, style:'fa' },
-  skeuo:  { fg:'#3A2A1A', bg:'#E8DCC8', dim:'#8A6A4A', border:'#6A4A2A', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:true, style:'skeuo' },
-  glass:  { fg:'#E0D0F0', bg:'#1A0A2A', dim:'#7A5A9A', border:'rgba(255,255,255,0.15)', gradient:true, g1:'#1A0A2A', g2:'#2A1A4A', glass:true, blur:15, glossy:true, style:'glass' },
-  green:  { fg:'#00FF00', bg:'#0A0A0A', dim:'#00AA00', border:'#00FF00', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false, style:'default' },
-  amber:  { fg:'#FFB000', bg:'#0A0A0A', dim:'#AA7700', border:'#FFB000', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false, style:'default' },
-  cold:   { fg:'#E0E0E0', bg:'#1A1A2E', dim:'#555577', border:'#E0E0E0', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false, style:'default' },
-  paper:  { fg:'#222222', bg:'#F5F0E8', dim:'#7A6F5E', border:'#222222', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false, style:'default' },
-  matrix: { fg:'#00FF41', bg:'#000000', dim:'#008800', border:'#00FF41', gradient:false, g1:'#0A0A0A', g2:'#1A1A1A', glass:false, blur:8, glossy:false, style:'default' },
-};
-
-let currentStyle = 'default';
-
-document.querySelectorAll('[data-preset]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const p = PRESETS[btn.dataset.preset];
-    if (!p) return;
-    currentStyle = p.style || 'default';
-    $('themeName').value = btn.dataset.preset;
-    $('cFg').value = p.fg; $('tFg').value = p.fg; setCSSVar('--fg', p.fg);
-    $('cBg').value = p.bg; $('tBg').value = p.bg; setCSSVar('--bg', p.bg);
-    $('cDim').value = p.dim; $('tDim').value = p.dim; setCSSVar('--dim', p.dim);
-    $('cBorder').value = p.border; $('tBorder').value = p.border; setCSSVar('--border', p.border);
-    $('chkGradient').checked = p.gradient;
-    $('depGradient').classList.toggle('show', p.gradient);
-    $('cG1').value = p.g1; $('tG1').value = p.g1; setCSSVar('--g1', p.g1);
-    $('cG2').value = p.g2; $('tG2').value = p.g2; setCSSVar('--g2', p.g2);
-    updateGradientClass();
-    $('chkGlass').checked = p.glass;
-    $('depGlass').classList.toggle('show', p.glass);
-    $('titlebarPreview').classList.toggle('glass', p.glass);
-    $('sliderBlur').value = p.blur; $('valBlur').textContent = p.blur + 'px'; setCSSVar('--blur', p.blur + 'px');
-    $('chkGlossy').checked = p.glossy;
-    document.querySelectorAll('.bar-btn').forEach(b => b.classList.toggle('glossy', p.glossy));
-    $('phone').className = 'phone' + (currentStyle !== 'default' ? ' style-' + currentStyle : '') + ($('chkGradient').checked ? ' gradient-bg' : '');
-    $('scoringStyleName').textContent = '当前: ' + (btn.dataset.preset);
-    updateExport();
-  });
-});
-
-/* ── Scoring ── */
-const SCORE_PARTS = [
-  { id:'titlebar', label:'标题栏' },
-  { id:'welcome', label:'欢迎区' },
-  { id:'card', label:'副本卡片' },
-  { id:'expbar', label:'经验条' },
-  { id:'status', label:'状态栏' },
-  { id:'buttons', label:'按钮栏' },
-  { id:'bg', label:'整体背景' },
-];
-const scoreState = {};
-SCORE_PARTS.forEach(p => scoreState[p.id] = 'skip');
-
-function renderScoring() {
-  const list = $('scoringList');
-  list.innerHTML = '';
-  SCORE_PARTS.forEach(p => {
-    const row = document.createElement('div');
-    row.className = 'scoring-row';
-    row.innerHTML = `<span class="scoring-label">${p.label}</span><div class="scoring-btns">
-      <button data-part="${p.id}" data-vote="good">好</button>
-      <button data-part="${p.id}" data-vote="bad">不好</button>
-      <button data-part="${p.id}" data-vote="skip">跳过</button>
-    </div>`;
-    list.appendChild(row);
-    row.querySelectorAll('button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const part = btn.dataset.part;
-        const vote = btn.dataset.vote;
-        scoreState[part] = vote;
-        const btns = row.querySelectorAll('button');
-        btns.forEach(b => {
-          b.className = '';
-          if (b.dataset.vote === vote) b.classList.add('active-' + vote);
-        });
-      });
-    });
-  });
-}
-
-$('scoringCopy').addEventListener('click', async () => {
-  const styleName = $('scoringStyleName').textContent.replace('当前: ', '');
-  const extra = $('scoringExtra').value.trim();
-  let lines = [`【${styleName} 评分】`];
-  SCORE_PARTS.forEach(p => {
-    const icons = { good: '好', bad: '不好', skip: '—' };
-    lines.push(`${p.label}: ${icons[scoreState[p.id]] || '—'}`);
-  });
-  if (extra) lines.push(`\n补充: ${extra}`);
-  const txt = lines.join('\n');
-  try { await navigator.clipboard.writeText(txt); }
-  catch { const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
-  const btn = $('scoringCopy'); btn.textContent = '已复制!'; btn.classList.add('copied');
-  setTimeout(() => { btn.textContent = '复制评分给 AI'; btn.classList.remove('copied'); }, 1500);
-});
-
-renderScoring();
-
-/* Init */
-$('depGradient').classList.toggle('show', $('chkGradient').checked);
-$('depGlass').classList.toggle('show', $('chkGlass').checked);
-updateExport();
+/* ── Init ── */
+renderColors();
+selectColor('green');
 </script>
 </body>
 </html>
