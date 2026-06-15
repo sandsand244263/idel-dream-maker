@@ -6,7 +6,7 @@ contextBridge.exposeInMainWorld('electron', {
       'get-full-state', 'get-scenario-list', 'set-player-name',
       'select-scenario', 'draw-scenario', 'exit-to-hub',
       'get-hub-titles', 'set-title', 'set-language',
-      'set-ai-output-language', 'set-font-theme',
+      'set-font-theme',
       'hide-window', 'start-dragging', 'set-window-mode',
       'window-minimize', 'window-toggle-maximize',
       'set-window-position', 'update-tooltip',

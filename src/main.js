@@ -80,7 +80,6 @@ const settingsName = document.getElementById('settings-name');
 const settingsNameSave = document.getElementById('settings-name-save');
 const settingsTheme = document.getElementById('theme-swatches');
 const settingsLanguage = document.getElementById('settings-language');
-const settingsAILanguage = document.getElementById('settings-ai-language');
 const titlesPanel = document.getElementById('titles-panel');
 const titlesClose = document.getElementById('titles-close');
 const titlesListEl = document.getElementById('titles-list');
@@ -303,10 +302,10 @@ btnSettings.addEventListener('click', () => {
   settingsAILanguage.value = gameState?.ai_output_language || 'zh';
   if (gameState?.selected_font_theme === 'custom' && gameState?.custom_theme) {
     const ct = gameState.custom_theme;
-    document.getElementById('ct-fg-text').value = ct.fg; document.getElementById('ct-fg').value = ct.fg;
-    document.getElementById('ct-bg-text').value = ct.bg; document.getElementById('ct-bg').value = ct.bg;
-    document.getElementById('ct-dim-text').value = ct.dim; document.getElementById('ct-dim').value = ct.dim;
-    document.getElementById('ct-border-text').value = ct.border || ct.dim; document.getElementById('ct-border').value = ct.border || ct.dim;
+    document.getElementById('ct-fg').value = ct.fg;
+    document.getElementById('ct-bg').value = ct.bg;
+    document.getElementById('ct-dim').value = ct.dim;
+    document.getElementById('ct-border').value = ct.border || ct.dim;
     document.getElementById('custom-theme').classList.remove('hidden');
   } else {
     document.getElementById('custom-theme').classList.add('hidden');
@@ -317,7 +316,6 @@ btnSettings.addEventListener('click', () => {
 settingsClose.addEventListener('click', () => settingsPanel.classList.add('hidden'));
 settingsNameSave.addEventListener('click', async () => { const n = settingsName.value.trim(); if (!n) return; try { await window.electron.invoke('set-player-name', { name: n }); if (gameState) gameState.player_name = n; renderHubView(); updateUI(); } catch (e) { showToast('保存名称失败', 'error'); } });
 settingsLanguage.addEventListener('change', async () => { const v = settingsLanguage.value; try { await window.electron.invoke('set-language', { lang: v }); if (gameState) gameState.language = v; applyLanguage(); renderHubView(); } catch (e) { showToast('切换语言失败', 'error'); } });
-settingsAILanguage.addEventListener('change', async () => { const v = settingsAILanguage.value; try { await window.electron.invoke('set-ai-output-language', { lang: v }); if (gameState) gameState.ai_output_language = v; } catch (e) { showToast('切换 AI 语言失败', 'error'); } });
 document.getElementById('btn-tutorial').addEventListener('click', async () => {
   if (onboardingInput) onboardingInput.value = gameState?.player_name || '';
   if (onboardingModal) onboardingModal.classList.remove('hidden');
@@ -341,13 +339,6 @@ const THEMES = [
   { id:'custom', label:'自定义', fg:'#00FF00', bg:'#0A0A0A' },
 ];
 
-function bindCustomInput(pickerId, textId) {
-  const p = document.getElementById(pickerId), t = document.getElementById(textId);
-  if (!p || !t) return;
-  const sync = () => { p.value = t.value; };
-  p.addEventListener('input', sync);
-  t.addEventListener('input', () => { if (/^#[0-9a-f]{6}$/i.test(t.value)) p.value = t.value; });
-}
 
 function renderThemeSwatches() {
   const cur = gameState?.selected_font_theme || 'green';
@@ -363,14 +354,6 @@ function renderThemeSwatches() {
     btn.addEventListener('mouseleave', () => { if (t.id !== cur) btn.style.borderColor = 'transparent'; });
     settingsTheme.appendChild(btn);
   });
-  syncCustomPickers();
-}
-
-function syncCustomPickers() {
-  bindCustomInput('ct-fg', 'ct-fg-text');
-  bindCustomInput('ct-bg', 'ct-bg-text');
-  bindCustomInput('ct-dim', 'ct-dim-text');
-  bindCustomInput('ct-border', 'ct-border-text');
 }
 
 async function selectTheme(id) {
@@ -383,10 +366,10 @@ async function selectTheme(id) {
 }
 
 document.getElementById('ct-save').addEventListener('click', async () => {
-  const fg = document.getElementById('ct-fg-text').value;
-  const bg = document.getElementById('ct-bg-text').value;
-  const dim = document.getElementById('ct-dim-text').value;
-  const border = document.getElementById('ct-border-text').value;
+  const fg = document.getElementById('ct-fg').value;
+  const bg = document.getElementById('ct-bg').value;
+  const dim = document.getElementById('ct-dim').value;
+  const border = document.getElementById('ct-border').value;
   try { await window.electron.invoke('set-custom-theme', { fg, bg, dim, border }); if (gameState) { gameState.selected_font_theme = 'custom'; } applyTheme('custom'); renderThemeSwatches(); } catch (e) { showToast('应用自定义主题失败', 'error'); }
 });
 

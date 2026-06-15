@@ -505,11 +505,6 @@ function registerIpcHandlers() {
     return true;
   });
 
-  ipcMain.handle('set-ai-output-language', (_, { lang }) => {
-    gameState.aiOutputLanguage = lang;
-    return true;
-  });
-
   ipcMain.handle('set-font-theme', (_, { theme }) => {
     gameState.selectedFontTheme = theme;
     return true;
