@@ -236,7 +236,7 @@ hubDrawBtn.addEventListener('click', async () => {
 });
 
 btnBackHub.addEventListener('click', async () => {
-  const ok = await showConfirmModal('确定返回大厅吗？副本等级将重置，经验累入全局等级。');
+  const ok = await showConfirmModal('确定返回大厅吗？副本进度将保存，本次新增经验累入全局等级。');
   if (!ok) return;
   try { const r = await window.electron.invoke('exit-to-hub'); gameState.hub_total_exp = r.hubTotalExp; hubLevel = r.hubLevel; gameState.is_in_hub = true; switchView(true); renderHubView(); renderHubCards(); addLog('info', tf('systemBack', hubLevel)); updateUI(); lastRuntime = 0; } catch (e) { showToast(t('systemBackFail'), 'error'); }
 });

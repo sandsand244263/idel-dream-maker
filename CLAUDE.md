@@ -167,10 +167,10 @@
                         └→ 每 30s → save_game()
 
       退出副本时：
-         hub.total_exp += scenario.exp_earned
-         scenario.exp_earned = 0
-         scenario.level = 1
+         hub.total_exp += delta（本次新获得经验，避免重复累加）
+         副本进度保存到 scenarioProgress（经验/时长/事件/成就）
          is_in_hub = true → 切换显示大厅界面
+         下次进入同一副本时从保存点恢复
 ```
 
 ### 大厅与副本切换流程
@@ -221,15 +221,28 @@
 **退出副本逻辑：**
 ```js
 function exitToHub() {
-  gameState.hubTotalExp += gameState.totalExpEarned;
+  const unlocked = getUnlockedTitles(currentScenario, gameState.level).map(t => t.name);
+  const sid = gameState.scenarioId;
+  if (sid) {
+    if (!gameState.unlockedTitleSets) gameState.unlockedTitleSets = {};
+    gameState.unlockedTitleSets[sid] = unlocked;
+    // Only add delta exp to hub to avoid double counting
+    const prevProgress = gameState.scenarioProgress && gameState.scenarioProgress[sid];
+    const prevExp = prevProgress ? prevProgress.totalExpEarned : 0;
+    const delta = gameState.totalExpEarned - prevExp;
+    gameState.hubTotalExp += Math.max(0, delta);
+    // Save progress so re-entering same scenario resumes
+    gameState.scenarioProgress[sid] = {
+      totalExpEarned: gameState.totalExpEarned,
+      totalRuntimeMs: gameState.totalRuntimeMs,
+      triggeredEvents: [...gameState.triggeredEvents],
+      unlockedAchievements: [...gameState.unlockedAchievements],
+      equippedTitleIndex: gameState.equippedTitleIndex,
+    };
+  }
   gameState.scenarioId = '';
-  gameState.level = 1;
-  gameState.exp = 0;
-  gameState.totalExpEarned = 0;
-  gameState.totalRuntimeMs = 0;
-  gameState.triggeredEvents = [];
-  gameState.unlockedAchievements = [];
   gameState.isInHub = true;
+  hubLevel = calcLevel(gameState.hubTotalExp);
 }
 ```
 
@@ -283,7 +296,7 @@ function exitToHub() {
 |------|------|------|
 | EXP 速率 | 1 EXP/s | 恒定不变，仅副本内生效 |
 | 大厅等级公式 | `floor(sqrt(hub_total_exp / 100)) + 1` | 全局进度，永不重置 |
-| 副本等级公式 | `floor(sqrt(副本内总经验 / 100)) + 1` | 退出时重置，经验累入大厅 |
+| 副本等级公式 | `floor(sqrt(副本内总经验 / 100)) + 1` | 退出时保存进度，增量经验累入大厅 |
 | 称号等级段 | 30 级/副本 | 约 1-2 天解锁一级 |
 | 事件文本 | 500 条/副本 | AI 批量生成，作者整理后放入 .md 文件 |
 | 成就 | 50 个/副本 | 等级/时长/事件/收集四类 |
@@ -298,13 +311,16 @@ function exitToHub() {
 
 ```
 每次退出副本时：
-  hub.total_exp += scenario.exp_earned_this_run
+  delta = 本次总经验 - 上次保存的经验（避免重复累加）
+  hub.total_exp += delta
   hub.level = calculate_level(hub.total_exp)
+  副本进度保存，下次进入时恢复
 
 其中：
   calculate_level(exp) = floor(sqrt(exp / 100)) + 1
 ```
 
+- 副本内等级/经验/时长在退出时保留（保存到 scenarioProgress），下次进入同一副本时恢复
 - 大厅自身挂机不涨经验
 - 切换副本时同步累加
 - 大厅等级**永不重置**
