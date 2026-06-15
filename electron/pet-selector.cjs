@@ -1,6 +1,7 @@
 const { BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
+const HIDE_POS = { x: -9999, y: -9999 };
 let selectorWindow = null;
 let petWindowRef = null;
 let appRef = null;
@@ -11,6 +12,12 @@ function sendToSelector(channel, data) {
   if (selectorWindow && !selectorWindow.isDestroyed()) {
     try { selectorWindow.webContents.send(channel, data); } catch {}
   }
+}
+
+function hideSelector() {
+  if (!selectorWindow || selectorWindow.isDestroyed()) return;
+  selectorWindow.setBounds({ x: HIDE_POS.x, y: HIDE_POS.y, width: 180, height: 200 });
+  selectorWindow.setOpacity(0);
 }
 
 function initSelector(app, petWin) {
@@ -36,21 +43,14 @@ function initSelector(app, petWin) {
 
   selectorWindow.loadFile(path.join(__dirname, '..', 'pet-selector', 'index.html'));
 
-  selectorWindow.on('blur', () => {
-    if (selectorWindow && !selectorWindow.isDestroyed()) selectorWindow.hide();
+  selectorWindow.webContents.once('did-finish-load', () => {
+    selectorWindow.setBounds({ x: HIDE_POS.x, y: HIDE_POS.y, width: 180, height: 200 });
+    selectorWindow.show();
+    selectorWindow.setOpacity(0);
   });
-  selectorWindow.on('closed', () => { selectorWindow = null; });
-}
 
-function positionAndShowSelector() {
-  if (!selectorWindow || selectorWindow.isDestroyed()) {
-    initSelector(appRef, petWindowRef);
-    selectorWindow.webContents.once('did-finish-load', () => {
-      doShowSelector();
-    });
-    return;
-  }
-  doShowSelector();
+  selectorWindow.on('blur', () => { hideSelector(); });
+  selectorWindow.on('closed', () => { selectorWindow = null; });
 }
 
 function doShowSelector() {
@@ -68,7 +68,19 @@ function doShowSelector() {
   }
 
   selectorWindow.setBounds({ x, y, width: selWidth, height: selHeight });
-  selectorWindow.showInactive();
+  selectorWindow.setOpacity(1);
+  selectorWindow.show();
+}
+
+function positionAndShowSelector() {
+  if (!selectorWindow || selectorWindow.isDestroyed()) {
+    initSelector(appRef, petWindowRef);
+    selectorWindow.webContents.once('did-finish-load', () => {
+      doShowSelector();
+    });
+    return;
+  }
+  doShowSelector();
 }
 
 function registerSelectorIpcHandlers(app) {
@@ -85,10 +97,7 @@ function registerSelectorIpcHandlers(app) {
     return { pets: currentPetList, selected: selectedPetIndex };
   });
 
-  ipcMain.handle('close-selector', () => {
-    if (selectorWindow && !selectorWindow.isDestroyed()) selectorWindow.hide();
-    return true;
-  });
+  ipcMain.handle('close-selector', () => { hideSelector(); return true; });
 }
 
 module.exports = { registerSelectorIpcHandlers, initSelector, sendToSelector };
