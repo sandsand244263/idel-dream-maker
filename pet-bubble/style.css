@@ -15,7 +15,6 @@ html,body { width:100%;background:transparent;user-select:none;font-family:'Mapl
 .theme-pink { --fg:#E0E0E0; --dim:#C49AB5; --bg:rgba(30,14,26,0.9); --border:rgba(245,194,231,0.2); }
 .theme-black { --fg:#E0E0E0; --dim:#666666; --bg:rgba(0,0,0,0.9); --border:rgba(204,204,204,0.2); }
 .theme-white { --fg:#222222; --dim:#7A6F5E; --bg:rgba(245,240,232,0.9); --border:rgba(34,34,34,0.15); }
-.theme-aero { --fg:#1A1A1A; --dim:#6A9AB0; --bg:rgba(245,248,250,0.9); --border:rgba(74,144,217,0.2); }
 #bubble { background:var(--bg);border:1px solid var(--border);border-radius:6px;overflow:hidden;border-left:3px solid #00BFFF; }
-#bubble-header { padding:6px 10px;border-bottom:1px solid var(--border);font-size:13px;font-weight:bold;color:#00BFFF;letter-spacing:1px; }
-#bubble-body { padding:8px 10px;font-size:13px;line-height:1.5;word-break:break-word;white-space:pre-wrap;color:#E0E0E0; }
+#bubble-header { padding:6px 10px;border-bottom:1px solid var(--border);font-size:12px;font-weight:bold;color:#00BFFF;letter-spacing:1px; }
+#bubble-body { padding:8px 10px;font-size:11px;line-height:1.5;word-break:break-word;white-space:pre-wrap;color:#E0E0E0; }

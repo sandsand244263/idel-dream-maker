@@ -16,7 +16,6 @@ html,body { width:100%;background:transparent;user-select:none; }
 .theme-pink { --fg:#F5C2E7; --dim:#C49AB5; --bg:#1E0E1A; --border-color:rgba(245,194,231,0.2); }
 .theme-black { --fg:#CCCCCC; --dim:#666666; --bg:#000000; --border-color:rgba(204,204,204,0.2); }
 .theme-white { --fg:#222222; --dim:#7A6F5E; --bg:#F5F0E8; --border-color:rgba(34,34,34,0.15); }
-.theme-aero { --fg:#1A1A1A; --dim:#6A9AB0; --bg:#F5F8FA; --border-color:rgba(74,144,217,0.2); }
 .theme-paper #info-text,
 .theme-paper #exp-detail { color:rgba(0,200,0,0.6); }
 
@@ -27,7 +26,7 @@ body { font-family:var(--font); color:var(--fg); }
 
 /* Info bar */
 #info-bar { text-align:center;height:18px;display:flex;align-items:center;justify-content:center;pointer-events:none;flex-shrink:0; }
-#info-text { font-size:12px;color:color-mix(in srgb,var(--fg) 60%,transparent);white-space:nowrap; }
+#info-text { font-size:11px;color:color-mix(in srgb,var(--fg) 60%,transparent);white-space:nowrap; }
 
 /* Canvas wrap */
 #canvas-wrap { position:relative;width:120px;height:140px;flex-shrink:0; }
@@ -43,7 +42,7 @@ body { font-family:var(--font); color:var(--fg); }
 @keyframes pulse { 0%,100% { transform:scale(1);opacity:0.6; } 50% { transform:scale(1.2);opacity:1; } }
 
 /* Bubble zone (flex child, between canvas and exp) */
-#bubble-zone { width:100%;background:rgba(0,0,0,0.85);border-left:3px solid #00BFFF;padding:2px 10px 2px 8px;font-size:13px;color:#E0E0E0;line-height:1.4;pointer-events:auto;z-index:13;word-break:break-word;transition:opacity 0.15s ease;flex-shrink:0;white-space:normal; }
+#bubble-zone { width:100%;background:rgba(0,0,0,0.85);border-left:3px solid #00BFFF;padding:2px 10px 2px 8px;font-size:12px;color:#E0E0E0;line-height:1.4;pointer-events:auto;z-index:13;word-break:break-word;transition:opacity 0.15s ease;flex-shrink:0;white-space:normal; }
 #bubble-zone.zone-show { display:block;opacity:1; }
 #bubble-zone.zone-hide { display:none; }
 #bubble-zone.zone-hidden { display:none; }
@@ -55,6 +54,6 @@ body { font-family:var(--font); color:var(--fg); }
 @keyframes shimmer { 0% { background-position:200% 0; } 100% { background-position:-200% 0; } }
 
 #exp-pct { display:none; }
-#exp-detail { font-size:11px;color:color-mix(in srgb,var(--fg) 30%,transparent);line-height:1; }
+#exp-detail { font-size:10px;color:color-mix(in srgb,var(--fg) 30%,transparent);line-height:1; }
 
 .hidden { display:none !important; }

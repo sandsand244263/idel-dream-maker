@@ -342,6 +342,7 @@ function registerIpcHandlers() {
         language: gameState.language,
         ai_output_language: gameState.aiOutputLanguage || 'zh',
         selected_font_theme: gameState.selectedFontTheme || 'green',
+        custom_theme: gameState.customTheme || null,
         scenario_alias: gameState.scenarioAlias || '',
         unlocked_title_sets: gameState.unlockedTitleSets || {},
         scenario_progress: gameState.scenarioProgress || {},
@@ -400,6 +401,7 @@ function registerIpcHandlers() {
         language: gameState.language,
         ai_output_language: gameState.aiOutputLanguage || 'zh',
         selected_font_theme: gameState.selectedFontTheme || 'green',
+        custom_theme: gameState.customTheme || null,
         scenario_alias: gameState.scenarioAlias || '',
         unlocked_title_sets: gameState.unlockedTitleSets || {},
         scenario_progress: gameState.scenarioProgress || {},
@@ -430,6 +432,7 @@ function registerIpcHandlers() {
         language: gameState.language,
         ai_output_language: gameState.aiOutputLanguage || 'zh',
         selected_font_theme: gameState.selectedFontTheme || 'green',
+        custom_theme: gameState.customTheme || null,
         scenario_alias: gameState.scenarioAlias || '',
         unlocked_title_sets: gameState.unlockedTitleSets || {},
         scenario_progress: gameState.scenarioProgress || {},
@@ -509,6 +512,12 @@ function registerIpcHandlers() {
 
   ipcMain.handle('set-font-theme', (_, { theme }) => {
     gameState.selectedFontTheme = theme;
+    return true;
+  });
+
+  ipcMain.handle('set-custom-theme', (_, { fg, bg, dim, border }) => {
+    gameState.selectedFontTheme = 'custom';
+    gameState.customTheme = { fg, bg, dim, border };
     return true;
   });
 

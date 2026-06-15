@@ -301,6 +301,16 @@ btnSettings.addEventListener('click', () => {
   settingsName.value = gameState?.player_name || '';
   settingsLanguage.value = gameState?.language || 'zh';
   settingsAILanguage.value = gameState?.ai_output_language || 'zh';
+  if (gameState?.selected_font_theme === 'custom' && gameState?.custom_theme) {
+    const ct = gameState.custom_theme;
+    document.getElementById('ct-fg-text').value = ct.fg; document.getElementById('ct-fg').value = ct.fg;
+    document.getElementById('ct-bg-text').value = ct.bg; document.getElementById('ct-bg').value = ct.bg;
+    document.getElementById('ct-dim-text').value = ct.dim; document.getElementById('ct-dim').value = ct.dim;
+    document.getElementById('ct-border-text').value = ct.border || ct.dim; document.getElementById('ct-border').value = ct.border || ct.dim;
+    document.getElementById('custom-theme').classList.remove('hidden');
+  } else {
+    document.getElementById('custom-theme').classList.add('hidden');
+  }
   renderThemeSwatches();
   settingsPanel.classList.remove('hidden');
 });
@@ -328,8 +338,16 @@ const THEMES = [
   { id:'pink', label:'红紫', fg:'#F5C2E7', bg:'#1E0E1A' },
   { id:'black', label:'黑', fg:'#CCCCCC', bg:'#000000' },
   { id:'white', label:'白', fg:'#222222', bg:'#F5F0E8' },
-  { id:'aero', label:'Aero', fg:'#1A1A1A', bg:'#F5F8FA' },
+  { id:'custom', label:'自定义', fg:'#00FF00', bg:'#0A0A0A' },
 ];
+
+function bindCustomInput(pickerId, textId) {
+  const p = document.getElementById(pickerId), t = document.getElementById(textId);
+  if (!p || !t) return;
+  const sync = () => { p.value = t.value; };
+  p.addEventListener('input', sync);
+  t.addEventListener('input', () => { if (/^#[0-9a-f]{6}$/i.test(t.value)) p.value = t.value; });
+}
 
 function renderThemeSwatches() {
   const cur = gameState?.selected_font_theme || 'green';
@@ -337,20 +355,51 @@ function renderThemeSwatches() {
   THEMES.forEach(t => {
     const btn = document.createElement('button');
     btn.dataset.theme = t.id;
-    btn.style.cssText = `padding:5px 2px;font-size:10px;background:${t.bg};color:${t.fg};border:2px solid ${t.id === cur ? '#0078D7' : 'transparent'};border-radius:4px;cursor:pointer;font-family:inherit;text-align:center;transition:border-color 0.1s;`;
+    btn.style.cssText = `padding:4px 2px;font-size:11px;background:${t.bg};color:${t.fg};border:2px solid ${t.id === cur ? '#0078D7' : 'transparent'};border-radius:4px;cursor:pointer;font-family:inherit;text-align:center;transition:border-color 0.1s;`;
     btn.textContent = t.label;
+    if (t.id === 'custom') btn.style.borderStyle = 'dashed';
     btn.addEventListener('click', () => selectTheme(t.id));
     btn.addEventListener('mouseenter', () => { if (t.id !== cur) btn.style.borderColor = '#888'; });
     btn.addEventListener('mouseleave', () => { if (t.id !== cur) btn.style.borderColor = 'transparent'; });
     settingsTheme.appendChild(btn);
   });
+  syncCustomPickers();
+}
+
+function syncCustomPickers() {
+  bindCustomInput('ct-fg', 'ct-fg-text');
+  bindCustomInput('ct-bg', 'ct-bg-text');
+  bindCustomInput('ct-dim', 'ct-dim-text');
+  bindCustomInput('ct-border', 'ct-border-text');
 }
 
 async function selectTheme(id) {
+  if (id === 'custom') {
+    document.getElementById('custom-theme').classList.remove('hidden');
+    return;
+  }
+  document.getElementById('custom-theme').classList.add('hidden');
   try { await window.electron.invoke('set-font-theme', { theme: id }); if (gameState) gameState.selected_font_theme = id; applyTheme(id); renderThemeSwatches(); } catch (e) { showToast('切换主题失败', 'error'); }
 }
 
-function applyTheme(id) { document.documentElement.className = `theme-${id}`; }
+document.getElementById('ct-save').addEventListener('click', async () => {
+  const fg = document.getElementById('ct-fg-text').value;
+  const bg = document.getElementById('ct-bg-text').value;
+  const dim = document.getElementById('ct-dim-text').value;
+  const border = document.getElementById('ct-border-text').value;
+  try { await window.electron.invoke('set-custom-theme', { fg, bg, dim, border }); if (gameState) { gameState.selected_font_theme = 'custom'; } applyTheme('custom'); renderThemeSwatches(); } catch (e) { showToast('应用自定义主题失败', 'error'); }
+});
+
+function applyTheme(id) {
+  document.documentElement.className = `theme-${id}`;
+  if (id === 'custom' && gameState?.custom_theme) {
+    const ct = gameState.custom_theme;
+    document.documentElement.style.setProperty('--fg', ct.fg);
+    document.documentElement.style.setProperty('--bg', ct.bg);
+    document.documentElement.style.setProperty('--dim', ct.dim);
+    document.documentElement.style.setProperty('--border', ct.border || ct.dim);
+  }
+}
 function applyLanguage() { document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); }); }
 
 function renderScenarioPanel() {
@@ -368,7 +417,7 @@ titlesClose.addEventListener('click', () => titlesPanel.classList.add('hidden'))
 async function renderTitlesPanel() {
   titlesListEl.innerHTML = '';
   if (gameState?.is_in_hub) {
-    try { const ht = await window.electron.invoke('get-hub-titles'); ht.forEach(s => { const g = document.createElement('div'); g.className = 'hub-title-group'; const sm = document.createElement('div'); sm.className = 'hub-title-summary'; sm.innerHTML = `▶ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>`; const bd = document.createElement('div'); bd.className = 'hub-title-body hidden'; (s.unlockedTitles.length ? s.unlockedTitles : [t('hubTitleEmpty')]).forEach(n => { const it = document.createElement('div'); it.className = 'title-item'; it.innerHTML = `<span class="title-name" style="color:var(--fg);font-size:12px">${n}</span>`; bd.appendChild(it); }); sm.addEventListener('click', () => { bd.classList.toggle('hidden'); sm.innerHTML = bd.classList.contains('hidden') ? `▶ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>` : `▼ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>`; }); g.appendChild(sm); g.appendChild(bd); titlesListEl.appendChild(g); }); } catch (e) { showToast('获取大厅称号失败', 'error'); } return;
+    try { const ht = await window.electron.invoke('get-hub-titles'); ht.forEach(s => { const g = document.createElement('div'); g.className = 'hub-title-group'; const sm = document.createElement('div'); sm.className = 'hub-title-summary'; sm.innerHTML = `▶ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>`; const bd = document.createElement('div'); bd.className = 'hub-title-body hidden'; (s.unlockedTitles.length ? s.unlockedTitles : [t('hubTitleEmpty')]).forEach(n => { const it = document.createElement('div'); it.className = 'title-item'; it.innerHTML = `<span class="title-name" style="color:var(--fg)">${n}</span>`; bd.appendChild(it); }); sm.addEventListener('click', () => { bd.classList.toggle('hidden'); sm.innerHTML = bd.classList.contains('hidden') ? `▶ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>` : `▼ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>`; }); g.appendChild(sm); g.appendChild(bd); titlesListEl.appendChild(g); }); } catch (e) { showToast('获取大厅称号失败', 'error'); } return;
   }
   try { const d = await window.electron.invoke('get-scenario-detail', { id: gameState?.scenario_id }); const cur = gameState?.equipped_title_index ?? 0; d.titles.forEach((t, idx) => { const u = t.level <= gameState.level; const eq = u && idx === cur; const it = document.createElement('div'); it.className = `title-item${u ? '' : ' locked'}${eq ? ' equipped' : ''}`; it.innerHTML = `<span class="title-level">Lv.${t.level}</span><span class="title-name" style="color:${u ? t.color : 'var(--dim)'}">${u ? t.name : '???'}</span><span class="title-desc">${u ? t.desc : '???'}</span>`; if (u) { it.style.cursor = 'pointer'; it.addEventListener('click', async () => { try { await window.electron.invoke('set-title', { index: idx }); if (gameState) gameState.equipped_title_index = idx; currentTitle = { name: t.name, color: t.color, desc: t.desc }; updateUI(); renderTitlesPanel(); } catch (e) { showToast('佩戴称号失败', 'error'); } }); } titlesListEl.appendChild(it); }); } catch (e) { showToast('获取副本详情失败', 'error'); }
 }
