@@ -14,6 +14,7 @@ function initContextMenu(app, petWin) {
     height: 240,
     frame: false,
     transparent: true,
+    backgroundColor: '#00000000',
     alwaysOnTop: true,
     show: false,
     resizable: false,
@@ -53,8 +54,7 @@ function doShow() {
   if (x + cw > screen.width) x = Math.max(0, petBounds.x - cw - 5);
   const y = Math.max(0, petBounds.y);
   contextWindow.setBounds({ x, y, width: cw, height: ch });
-  contextWindow.show();
-  contextWindow.focus();
+  contextWindow.showInactive();
 }
 
 function registerContextMenuIpcHandlers() {

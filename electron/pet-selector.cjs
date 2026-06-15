@@ -22,6 +22,7 @@ function initSelector(app, petWin) {
     height: 200,
     frame: false,
     transparent: true,
+    backgroundColor: '#00000000',
     alwaysOnTop: true,
     show: false,
     resizable: false,
@@ -67,8 +68,7 @@ function doShowSelector() {
   }
 
   selectorWindow.setBounds({ x, y, width: selWidth, height: selHeight });
-  selectorWindow.show();
-  selectorWindow.focus();
+  selectorWindow.showInactive();
 }
 
 function registerSelectorIpcHandlers(app) {

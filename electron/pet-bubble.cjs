@@ -21,6 +21,7 @@ function initBubble(app, petWin) {
     height: 100,
     frame: false,
     transparent: true,
+    backgroundColor: '#00000000',
     alwaysOnTop: true,
     show: false,
     resizable: false,
@@ -62,8 +63,7 @@ function doShowBubble(data) {
   if (y + bh > screen.height) y = Math.max(0, petBounds.y - bh - 5);
 
   bubbleWindow.setBounds({ x, y, width: bw, height: bh });
-  bubbleWindow.show();
-  bubbleWindow.focus();
+  bubbleWindow.showInactive();
   if (data) { currentData = data; sendToBubble('show-bubble', data); }
 }
 
