@@ -1,7 +1,7 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 :root { --fg: #00FF00; --bg: #0A0A0A; --dim: #00AA00; --font: 'MapleMonoNFCN', 'Courier New', monospace; --border: #00FF00; }
 html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 12px; line-height: 1.4; }
-#app { display: flex; flex-direction: column; height: 100vh; border: 1px solid var(--dim); border-radius: 6px; overflow: hidden; background:var(--bg); }
+#app { display: flex; flex-direction: column; height: 100vh; border: 1px solid var(--dim); border-radius: 6px; overflow: hidden; background: linear-gradient(180deg, var(--g1), var(--g2)); }
 
 /* ── Titlebar ── */
 #titlebar { display: flex; align-items: center; height: 28px; flex-shrink: 0; background: rgba(0,255,0,0.04); border-bottom: 1px solid var(--dim); user-select: none; border-radius: 6px 6px 0 0; }
@@ -221,20 +221,20 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #debug-content { flex: 1; overflow: auto; padding: 8px 10px; font-family: var(--font); font-size: 10px; color: var(--fg); white-space: pre-wrap; word-break: break-all; line-height: 1.4; }
 
 /* ── Themes ── */
-.theme-red { --fg: #F38BA8; --bg: #1E0A10; --dim: #BA7D8F; --border: #BA7D8F; }
-.theme-red-orange { --fg: #FAB387; --bg: #1E120A; --dim: #BF9E82; --border: #BF9E82; }
-.theme-orange { --fg: #FFB000; --bg: #0A0A0A; --dim: #AA7700; --border: #AA7700; }
-.theme-yellow-orange { --fg: #F9D77E; --bg: #1E180A; --dim: #C4AB6E; --border: #C4AB6E; }
-.theme-yellow { --fg: #F9E2AF; --bg: #1E1C0A; --dim: #C4B892; --border: #C4B892; }
-.theme-yellow-green { --fg: #B8E3A1; --bg: #0E1E0A; --dim: #8FBA82; --border: #8FBA82; }
-.theme-green { --fg: #00FF00; --bg: #0A0A0A; --dim: #00AA00; --border: #00AA00; }
-.theme-cyan { --fg: #94E2D5; --bg: #0A1E1A; --dim: #75BAAD; --border: #75BAAD; }
-.theme-blue { --fg: #E0E0E0; --bg: #1A1A2E; --dim: #555577; --border: #555577; }
-.theme-blue-purple { --fg: #A2A0F6; --bg: #0E0A1E; --dim: #7F7EC4; --border: #7F7EC4; }
-.theme-purple { --fg: #CBA6F7; --bg: #1A0E1E; --dim: #A284C4; --border: #A284C4; }
-.theme-pink { --fg: #F5C2E7; --bg: #1E0E1A; --dim: #C49AB5; --border: #C49AB5; }
-.theme-black { --fg: #CCCCCC; --bg: #000000; --dim: #666666; --border: #666666; }
-.theme-white { --fg: #222222; --bg: #F5F0E8; --dim: #7A6F5E; --border: #7A6F5E; }
+.theme-red { --fg: #F38BA8; --bg: #1E0A10; --dim: #BA7D8F; --border: #BA7D8F; --g1: #0E0004; --g2: #1E0A10; }
+.theme-red-orange { --fg: #FAB387; --bg: #1E120A; --dim: #BF9E82; --border: #BF9E82; --g1: #0E0400; --g2: #1E120A; }
+.theme-orange { --fg: #FF9E64; --bg: #1E1000; --dim: #C47D3A; --border: #C47D3A; --g1: #0E0400; --g2: #1E1000; }
+.theme-yellow-orange { --fg: #EECB8C; --bg: #1E1400; --dim: #C4A050; --border: #C4A050; --g1: #0E0A00; --g2: #1E1400; }
+.theme-yellow { --fg: #F9E2AF; --bg: #1E1C0A; --dim: #C4B892; --border: #C4B892; --g1: #0E0E00; --g2: #1E1C0A; }
+.theme-yellow-green { --fg: #A8D86A; --bg: #0A1400; --dim: #7DAA40; --border: #7DAA40; --g1: #000A00; --g2: #0A1400; }
+.theme-green { --fg: #00FF00; --bg: #0A0A0A; --dim: #00AA00; --border: #00AA00; --g1: #000000; --g2: #0A0A0A; }
+.theme-cyan { --fg: #94E2D5; --bg: #0A1E1A; --dim: #75BAAD; --border: #75BAAD; --g1: #000E0E; --g2: #0A1E1A; }
+.theme-blue { --fg: #89B4FA; --bg: #0E1428; --dim: #5A7FBF; --border: #5A7FBF; --g1: #00041E; --g2: #0E1428; }
+.theme-blue-purple { --fg: #A2A0F6; --bg: #0E0A1E; --dim: #7F7EC4; --border: #7F7EC4; --g1: #04001E; --g2: #0E0A1E; }
+.theme-purple { --fg: #CBA6F7; --bg: #1A0E1E; --dim: #A284C4; --border: #A284C4; --g1: #0E001E; --g2: #1A0E1E; }
+.theme-pink { --fg: #F5C2E7; --bg: #1E0E1A; --dim: #C49AB5; --border: #C49AB5; --g1: #1E0014; --g2: #1E0E1A; }
+.theme-black { --fg: #CDD6F4; --bg: #11111B; --dim: #585B70; --border: #585B70; --g1: #000000; --g2: #11111B; }
+.theme-white { --fg: #4C4F69; --bg: #EFF1F5; --dim: #9CA0B0; --border: #9CA0B0; --g1: #C0C0C0; --g2: #EFF1F5; }
 
 @media (max-width: 420px) { #event-overlay { width: calc(100% - 10px); right: 5px; } #scenario-panel, #settings-panel, #titles-panel { width: 100%; } }
 .hidden { display: none !important; }
