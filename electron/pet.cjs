@@ -2,9 +2,9 @@ const { BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
-const { registerSelectorIpcHandlers, initSelector } = require('./pet-selector.cjs');
-const { registerBubbleIpcHandlers, initBubble } = require('./pet-bubble.cjs');
-const { initContextMenu, registerContextMenuIpcHandlers, showContextMenu } = require('./pet-context-menu.cjs');
+const { registerSelectorIpcHandlers, initSelector, sendToSelector } = require('./pet-selector.cjs');
+const { registerBubbleIpcHandlers, initBubble, sendToBubble } = require('./pet-bubble.cjs');
+const { initContextMenu, registerContextMenuIpcHandlers, showContextMenu, sendToContextMenu } = require('./pet-context-menu.cjs');
 
 let petWindow = null;
 let currentPetList = [];
@@ -241,4 +241,12 @@ function initPet(app) {
   return win;
 }
 
-module.exports = { scanPets, registerPetIpcHandlers, forwardToPet, showPetWindow, togglePetWindow, initPet };
+function broadcastTheme(theme, customTheme) {
+  const payload = { theme, customTheme: customTheme || null };
+  sendToPet('theme-changed', payload);
+  sendToContextMenu('theme-changed', payload);
+  sendToSelector('theme-changed', payload);
+  sendToBubble('theme-changed', payload);
+}
+
+module.exports = { scanPets, registerPetIpcHandlers, forwardToPet, showPetWindow, togglePetWindow, initPet, broadcastTheme };

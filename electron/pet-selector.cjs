@@ -91,4 +91,4 @@ function registerSelectorIpcHandlers(app) {
   });
 }
 
-module.exports = { registerSelectorIpcHandlers, initSelector };
+module.exports = { registerSelectorIpcHandlers, initSelector, sendToSelector };

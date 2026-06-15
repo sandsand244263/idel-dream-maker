@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld('petSelector', {
     return Promise.reject(new Error('Invalid selector channel: ' + channel));
   },
   on: (channel, callback) => {
-    if (channel === 'pet-list') {
+    if (channel === 'pet-list' || channel === 'theme-changed') {
       const fn = (_, d) => callback(d);
       ipcRenderer.on(channel, fn);
       return () => ipcRenderer.removeListener(channel, fn);

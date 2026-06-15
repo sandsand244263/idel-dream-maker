@@ -4,7 +4,7 @@ const fs = require('fs');
 
 const { createMainWindow, getMainWindow } = require('./windows.cjs');
 const { createTray, setToolTip, getTray } = require('./tray.cjs');
-const { registerPetIpcHandlers, forwardToPet, initPet } = require('./pet.cjs');
+const { registerPetIpcHandlers, forwardToPet, initPet, broadcastTheme } = require('./pet.cjs');
 const { getTodaysHolidayId, getHolidayName, getHolidayIcon, getHolidayEventFromScenario, getRandomHolidayEvent } = require('./holiday.cjs');
 
 let mainWindow = null;
@@ -303,6 +303,7 @@ function startGameLoop() {
       currentTitle: currentTitle ? currentTitle.name : null,
       scenario_name: currentScenario ? (currentScenario.name_cn || currentScenario.nameCN || currentScenario.name) : null,
       theme: gameState.selectedFontTheme || 'green',
+      custom_theme: gameState.customTheme || null,
     };
     try { mainWindow.webContents.send('game-tick', payload); } catch {}
     forwardToPet('game-tick', payload);
@@ -507,12 +508,14 @@ function registerIpcHandlers() {
 
   ipcMain.handle('set-font-theme', (_, { theme }) => {
     gameState.selectedFontTheme = theme;
+    broadcastTheme(theme, gameState.customTheme);
     return true;
   });
 
   ipcMain.handle('set-custom-theme', (_, { fg, bg, dim, border }) => {
     gameState.selectedFontTheme = 'custom';
     gameState.customTheme = { fg, bg, dim, border };
+    broadcastTheme('custom', gameState.customTheme);
     return true;
   });
 
@@ -585,7 +588,7 @@ function registerIpcHandlers() {
   });
 
   ipcMain.handle('get-current-theme', () => {
-    return gameState?.selectedFontTheme || 'green';
+    return { theme: gameState?.selectedFontTheme || 'green', customTheme: gameState?.customTheme || null };
   });
 
   // ── Dev Tools ──

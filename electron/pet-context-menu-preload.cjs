@@ -6,4 +6,13 @@ contextBridge.exposeInMainWorld('ctxMenu', {
     if (valid.includes(channel)) return ipcRenderer.invoke(channel, ...args);
     return Promise.reject(new Error('Invalid ctxMenu channel: ' + channel));
   },
+  on: (channel, callback) => {
+    if (channel === 'theme-changed') {
+      const fn = (_, d) => callback(d);
+      ipcRenderer.on(channel, fn);
+      return () => ipcRenderer.removeListener(channel, fn);
+    }
+    console.warn('Invalid ctxMenu listen channel:', channel);
+    return () => {};
+  },
 });

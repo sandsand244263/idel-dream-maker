@@ -6,7 +6,7 @@ contextBridge.exposeInMainWorld('petBubble', {
     return Promise.reject(new Error('Invalid bubble channel: ' + channel));
   },
   on: (channel, callback) => {
-    if (channel === 'show-bubble' || channel === 'hide-bubble') {
+    if (channel === 'show-bubble' || channel === 'hide-bubble' || channel === 'theme-changed') {
       const fn = (_, d) => callback(d);
       ipcRenderer.on(channel, fn);
       return () => ipcRenderer.removeListener(channel, fn);

@@ -79,4 +79,4 @@ function registerBubbleIpcHandlers(app) {
   });
 }
 
-module.exports = { registerBubbleIpcHandlers, initBubble };
+module.exports = { registerBubbleIpcHandlers, initBubble, sendToBubble };

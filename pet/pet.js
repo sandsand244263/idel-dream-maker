@@ -148,9 +148,16 @@ function updateInfoBar(){
   infoText.textContent=title?`${gameInfo.scenario} | Lv.${gameInfo.level} | ${title}`:`${gameInfo.scenario} | Lv.${gameInfo.level}`;
   updateExpBar();
 }
-function applyTheme(theme){
+function applyTheme(theme, customTheme){
   document.body.className='';
-  if(theme&&theme!=='green')document.body.classList.add('theme-'+theme);
+  if(customTheme){
+    document.body.style.setProperty('--fg', customTheme.fg);
+    document.body.style.setProperty('--bg', customTheme.bg);
+    document.body.style.setProperty('--dim', customTheme.dim);
+    document.body.style.setProperty('--border-color', customTheme.border || customTheme.dim);
+  } else if(theme&&theme!=='green'){
+    document.body.classList.add('theme-'+theme);
+  }
 }
 
 // ── Drag ──
@@ -195,9 +202,10 @@ window.pet.on('game-tick',d=>{
   const ms=d.total_runtime_ms||0,s=Math.floor(ms/1000);
   gameInfo.runtime=`${Math.floor(s/3600)}h${Math.floor((s%3600)/60)}m${s%60}s`;
   gameInfo.ach=(d.unlockedAchievements||[]).length;
-  if(d.theme&&d.theme!==gameInfo.theme){gameInfo.theme=d.theme;applyTheme(d.theme);}
+  if(d.theme&&d.theme!==gameInfo.theme){gameInfo.theme=d.theme;applyTheme(d.theme, d.customTheme);}
   updateInfoBar();
 });
+window.pet.on('theme-changed',(d)=>{if(d){gameInfo.theme=d.theme;applyTheme(d.theme, d.customTheme);}});
 window.pet.on('event-triggered',d=>{transitionTo('run');nq.enqueue({text:d.text,title:d.title||'事件',type:'event'},1);});
 window.pet.on('level-up',d=>{gameInfo.title=d.title||gameInfo.title;transitionTo(Math.random()<0.5?'jump':'extra3');nq.enqueue({text:`升级! Lv.${d.level}`,title:'等级提升',type:'levelup'},2);});
 window.pet.on('achievement-unlocked',d=>{transitionTo(Math.random()<0.5?'review':'extra1');nq.enqueue({text:`${d.icon||'★'} ${d.name}`,title:'成就解锁',type:'achievement'},3);});

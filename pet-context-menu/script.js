@@ -1,9 +1,16 @@
 function setToggle(key, val) { localStorage.setItem('pet_' + key, val); }
 function getToggle(key, def) { const v = localStorage.getItem('pet_' + key); return v !== null ? v === 'true' : def; }
 
-function applyTheme(theme) {
+function applyTheme(theme, customTheme) {
   document.body.className = '';
-  if (theme && theme !== 'green') document.body.classList.add('theme-' + theme);
+  if (customTheme) {
+    document.body.style.setProperty('--fg', customTheme.fg);
+    document.body.style.setProperty('--bg', customTheme.bg);
+    document.body.style.setProperty('--dim', customTheme.dim);
+    document.body.style.setProperty('--border', customTheme.border || customTheme.dim);
+  } else if (theme && theme !== 'green') {
+    document.body.classList.add('theme-' + theme);
+  }
 }
 
 function updateUI() {
@@ -54,4 +61,5 @@ document.addEventListener('click', (e) => {
 });
 
 // 初始化
-window.ctxMenu.invoke('get-current-theme').then(t => { if (t) applyTheme(t); }).catch(() => {});
+window.ctxMenu.invoke('get-current-theme').then(r => { if (r) applyTheme(r.theme, r.customTheme); }).catch(() => {});
+window.ctxMenu.on('theme-changed', (d) => { if (d) applyTheme(d.theme, d.customTheme); });

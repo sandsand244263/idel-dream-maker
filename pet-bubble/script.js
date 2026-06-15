@@ -1,9 +1,16 @@
 const titleEl = document.getElementById('bubble-title');
 const textEl = document.getElementById('bubble-text');
 
-function applyTheme(theme) {
+function applyTheme(theme, customTheme) {
   document.body.className = '';
-  if (theme && theme !== 'green') document.body.classList.add('theme-' + theme);
+  if (customTheme) {
+    document.body.style.setProperty('--fg', customTheme.fg);
+    document.body.style.setProperty('--bg', customTheme.bg);
+    document.body.style.setProperty('--dim', customTheme.dim);
+    document.body.style.setProperty('--border', customTheme.border || customTheme.dim);
+  } else if (theme && theme !== 'green') {
+    document.body.classList.add('theme-' + theme);
+  }
 }
 
 function update(data) {
@@ -29,4 +36,5 @@ document.getElementById('bubble').addEventListener('click', () => {
   window.petBubble.invoke('close-bubble').catch(() => {});
 });
 
-window.petBubble.invoke('get-current-theme').then(t => { if (t) applyTheme(t); }).catch(() => {});
+window.petBubble.invoke('get-current-theme').then(r => { if (r) applyTheme(r.theme, r.customTheme); }).catch(() => {});
+window.petBubble.on('theme-changed', (d) => { if (d) applyTheme(d.theme, d.customTheme); });

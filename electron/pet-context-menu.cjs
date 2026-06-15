@@ -75,4 +75,10 @@ function registerContextMenuIpcHandlers() {
   });
 }
 
-module.exports = { initContextMenu, registerContextMenuIpcHandlers, showContextMenu };
+function sendToContextMenu(channel, data) {
+  if (contextWindow && !contextWindow.isDestroyed()) {
+    try { contextWindow.webContents.send(channel, data); } catch {}
+  }
+}
+
+module.exports = { initContextMenu, registerContextMenuIpcHandlers, showContextMenu, sendToContextMenu };
