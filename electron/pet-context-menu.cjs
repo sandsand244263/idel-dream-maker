@@ -1,9 +1,16 @@
 const { BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
+const HIDE_POS = { x: -9999, y: -9999 };
 let contextWindow = null;
 let petWindowRef = null;
 let appRef = null;
+
+function hideWindow() {
+  if (!contextWindow || contextWindow.isDestroyed()) return;
+  contextWindow.setBounds({ x: HIDE_POS.x, y: HIDE_POS.y, width: 170, height: 240 });
+  contextWindow.setOpacity(0);
+}
 
 function initContextMenu(app, petWin) {
   appRef = app;
@@ -28,21 +35,14 @@ function initContextMenu(app, petWin) {
 
   contextWindow.loadFile(path.join(__dirname, '..', 'pet-context-menu', 'index.html'));
 
-  contextWindow.on('blur', () => {
-    if (contextWindow && !contextWindow.isDestroyed()) contextWindow.hide();
+  contextWindow.webContents.once('did-finish-load', () => {
+    contextWindow.setBounds({ x: HIDE_POS.x, y: HIDE_POS.y, width: 170, height: 240 });
+    contextWindow.show();
+    contextWindow.setOpacity(0);
   });
-  contextWindow.on('closed', () => { contextWindow = null; });
-}
 
-function showContextMenu() {
-  if (!contextWindow || contextWindow.isDestroyed()) {
-    initContextMenu(appRef, petWindowRef);
-    contextWindow.webContents.once('did-finish-load', () => {
-      doShow();
-    });
-    return;
-  }
-  doShow();
+  contextWindow.on('blur', () => { hideWindow(); });
+  contextWindow.on('closed', () => { contextWindow = null; });
 }
 
 function doShow() {
@@ -54,7 +54,18 @@ function doShow() {
   if (x + cw > screen.width) x = Math.max(0, petBounds.x - cw - 5);
   const y = Math.max(0, petBounds.y);
   contextWindow.setBounds({ x, y, width: cw, height: ch });
-  contextWindow.showInactive();
+  contextWindow.setOpacity(1);
+  contextWindow.show();
+}
+
+function showContextMenu() {
+  if (!contextWindow || contextWindow.isDestroyed()) {
+    initContextMenu(appRef, petWindowRef);
+    contextWindow.webContents.on('did-finish-load', () => { doShow(); }, { once: true });
+    return;
+  }
+  if (contextWindow.getOpacity() > 0) { hideWindow(); return; }
+  doShow();
 }
 
 function registerContextMenuIpcHandlers() {
@@ -65,10 +76,7 @@ function registerContextMenuIpcHandlers() {
     return true;
   });
 
-  ipcMain.handle('close-menu', () => {
-    if (contextWindow && !contextWindow.isDestroyed()) contextWindow.hide();
-    return true;
-  });
+  ipcMain.handle('close-menu', () => { hideWindow(); return true; });
 
   ipcMain.handle('get-toggle-state', () => {
     return {};

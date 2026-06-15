@@ -1,6 +1,7 @@
 const { BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
+const HIDE_POS = { x: -9999, y: -9999 };
 let bubbleWindow = null;
 let petWindowRef = null;
 let appRef = null;
@@ -10,6 +11,12 @@ function sendToBubble(channel, data) {
   if (bubbleWindow && !bubbleWindow.isDestroyed()) {
     try { bubbleWindow.webContents.send(channel, data); } catch {}
   }
+}
+
+function hideBubble() {
+  if (!bubbleWindow || bubbleWindow.isDestroyed()) return;
+  bubbleWindow.setBounds({ x: HIDE_POS.x, y: HIDE_POS.y, width: 260, height: 100 });
+  bubbleWindow.setOpacity(0);
 }
 
 function initBubble(app, petWin) {
@@ -35,21 +42,14 @@ function initBubble(app, petWin) {
 
   bubbleWindow.loadFile(path.join(__dirname, '..', 'pet-bubble', 'index.html'));
 
-  bubbleWindow.on('blur', () => {
-    if (bubbleWindow && !bubbleWindow.isDestroyed()) bubbleWindow.hide();
+  bubbleWindow.webContents.once('did-finish-load', () => {
+    bubbleWindow.setBounds({ x: HIDE_POS.x, y: HIDE_POS.y, width: 260, height: 100 });
+    bubbleWindow.show();
+    bubbleWindow.setOpacity(0);
   });
-  bubbleWindow.on('closed', () => { bubbleWindow = null; currentData = null; });
-}
 
-function positionAndShowBubble(data) {
-  if (!bubbleWindow || bubbleWindow.isDestroyed()) {
-    initBubble(appRef, petWindowRef);
-    bubbleWindow.webContents.once('did-finish-load', () => {
-      doShowBubble(data);
-    });
-    return;
-  }
-  doShowBubble(data);
+  bubbleWindow.on('blur', () => { hideBubble(); });
+  bubbleWindow.on('closed', () => { bubbleWindow = null; currentData = null; });
 }
 
 function doShowBubble(data) {
@@ -63,8 +63,20 @@ function doShowBubble(data) {
   if (y + bh > screen.height) y = Math.max(0, petBounds.y - bh - 5);
 
   bubbleWindow.setBounds({ x, y, width: bw, height: bh });
-  bubbleWindow.showInactive();
+  bubbleWindow.setOpacity(1);
+  bubbleWindow.show();
   if (data) { currentData = data; sendToBubble('show-bubble', data); }
+}
+
+function positionAndShowBubble(data) {
+  if (!bubbleWindow || bubbleWindow.isDestroyed()) {
+    initBubble(appRef, petWindowRef);
+    bubbleWindow.webContents.once('did-finish-load', () => {
+      doShowBubble(data);
+    });
+    return;
+  }
+  doShowBubble(data);
 }
 
 function registerBubbleIpcHandlers(app) {
@@ -73,10 +85,7 @@ function registerBubbleIpcHandlers(app) {
     return true;
   });
 
-  ipcMain.handle('close-bubble', () => {
-    if (bubbleWindow && !bubbleWindow.isDestroyed()) bubbleWindow.hide();
-    return true;
-  });
+  ipcMain.handle('close-bubble', () => { hideBubble(); return true; });
 }
 
 module.exports = { registerBubbleIpcHandlers, initBubble, sendToBubble };
