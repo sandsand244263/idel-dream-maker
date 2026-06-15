@@ -11,7 +11,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #titlebar-lv { color: var(--fg); }
 #titlebar-title { color: var(--fg); }
 #titlebar-btns { display: flex; height: 100%; }
-.titlebar-btn { width: 28px; height: 28px; background: transparent; border: none; color: var(--dim); font-family: var(--font); font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; -webkit-app-region: no-drag; }
+.titlebar-btn { width: 28px; height: 28px; background: transparent; border: none; color: var(--dim); font-family: var(--font); font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; -webkit-app-region: no-drag; }
 .titlebar-btn:hover { background: rgba(0,255,0,0.08); color: var(--fg); }
 .titlebar-btn:active { background: rgba(0,255,0,0.15); transform:scale(0.92); }
 .titlebar-btn-close:hover { background: rgba(244,67,54,0.3); color: #F44336; }
@@ -101,7 +101,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #alias-box { position: relative; background: var(--bg); border: 1px solid var(--fg); border-radius: 4px; padding: 16px; width: 260px; box-shadow: 0 0 30px rgba(0,255,0,0.15); }
 #alias-title { font-weight: bold; font-size: 14px; margin-bottom: 8px; }
 #alias-desc { font-size: 11px; color: var(--dim); margin-bottom: 10px; }
-#alias-input { width: 100%; background: rgba(0,255,0,0.05); border: 1px solid var(--dim); color: var(--fg); padding: 8px 10px; font-family: var(--font); font-size: 12px; outline: none; margin-bottom: 12px; }
+#alias-input { width: 100%; background: rgba(0,255,0,0.05); border: 1px solid var(--dim); color: var(--fg); padding: 8px 10px; font-family: var(--font); font-size: 11px; outline: none; margin-bottom: 12px; }
 #alias-input:focus { border-color: var(--fg); }
 #alias-input::placeholder { color: var(--dim); }
 #alias-buttons { display: flex; gap: 8px; justify-content: flex-end; }
@@ -118,7 +118,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #event-box { background: var(--bg); border: 1px solid var(--fg); border-radius: 4px; overflow: hidden; }
 #event-header { background: rgba(0,255,0,0.08); padding: 4px 10px; border-bottom: 1px solid var(--dim); font-weight: bold; font-size: 11px; }
 #event-body { padding: 8px 10px; min-height: 36px; }
-#event-text { color: var(--fg); font-size: 12px; line-height: 1.5; }
+#event-text { color: var(--fg); font-size: 11px; line-height: 1.5; }
 #achievement-overlay { position: fixed; top: 36px; right: 8px; width: 280px; z-index: 101; animation: slideIn 0.3s ease-out; box-shadow: 0 0 25px rgba(0,229,255,0.2); }
 #achievement-overlay.hidden { display: none; }
 #achievement-box { background: var(--bg); border: 1px solid #00E5FF; border-radius: 4px; overflow: hidden; }
@@ -205,7 +205,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #onboarding-name { flex:1; min-width:0; background:rgba(0,255,0,0.05); border:1px solid var(--dim); color:var(--fg); padding:4px 8px; font-family:var(--font); font-size:11px; outline:none; }
 #onboarding-name:focus { border-color:var(--fg); }
 #onboarding-body b { color:var(--fg); }
-#onboarding-ok { display:block; margin:14px auto 0; background:transparent; border:1px solid var(--fg); color:var(--fg); padding:6px 24px; font-family:var(--font); font-size:12px; cursor:pointer; letter-spacing:1px; }
+#onboarding-ok { display:block; margin:14px auto 0; background:transparent; border:1px solid var(--fg); color:var(--fg); padding:6px 24px; font-family:var(--font); font-size:11px; cursor:pointer; letter-spacing:1px; }
 #onboarding-ok:hover { background:rgba(0,255,0,0.08); }
 #onboarding-ok:active { transform:scale(0.96); }
 
