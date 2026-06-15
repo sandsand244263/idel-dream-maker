@@ -241,7 +241,33 @@ function startGameLoop() {
   let lastTick = Date.now();
 
   gameLoopInterval = setInterval(() => {
-    if (!gameState || gameState.isInHub) return;
+    if (!gameState) return;
+
+    // Send game tick regardless of hub/scenario
+    const payload = {
+      player_name: gameState.playerName,
+      scenario_id: gameState.scenarioId,
+      level: gameState.level,
+      exp: gameState.exp,
+      total_exp_earned: gameState.totalExpEarned,
+      total_runtime_ms: gameState.totalRuntimeMs,
+      equipped_title_index: gameState.equippedTitleIndex,
+      is_in_hub: gameState.isInHub,
+      hub_total_exp: gameState.hubTotalExp,
+      unlockedAchievements: gameState.unlockedAchievements,
+      triggered_events: gameState.triggeredEvents,
+      language: gameState.language,
+      currentTitle: currentTitle ? currentTitle.name : null,
+      scenario_name: currentScenario ? (currentScenario.name_cn || currentScenario.nameCN || currentScenario.name) : null,
+      theme: gameState.selectedFontTheme || 'green',
+      custom_theme: gameState.customTheme || null,
+      hub_level: calcLevel(gameState.hubTotalExp),
+    };
+    try { mainWindow.webContents.send('game-tick', payload); } catch {}
+    forwardToPet('game-tick', payload);
+    forwardToPet('pet-state', { hubLevel: calcLevel(gameState.hubTotalExp), isInHub: gameState.isInHub, level: gameState.level });
+
+    if (gameState.isInHub) return;
 
     const now = Date.now();
     const delta = now - lastTick;
@@ -285,30 +311,6 @@ function startGameLoop() {
       try { mainWindow.webContents.send('achievement-unlocked', achPayload); } catch {}
       forwardToPet('achievement-unlocked', achPayload);
     }
-
-    // Send game tick
-    const payload = {
-      player_name: gameState.playerName,
-      scenario_id: gameState.scenarioId,
-      level: gameState.level,
-      exp: gameState.exp,
-      total_exp_earned: gameState.totalExpEarned,
-      total_runtime_ms: gameState.totalRuntimeMs,
-      equipped_title_index: gameState.equippedTitleIndex,
-      is_in_hub: gameState.isInHub,
-      hub_total_exp: gameState.hubTotalExp,
-      unlockedAchievements: gameState.unlockedAchievements,
-      triggered_events: gameState.triggeredEvents,
-      language: gameState.language,
-      currentTitle: currentTitle ? currentTitle.name : null,
-      scenario_name: currentScenario ? (currentScenario.name_cn || currentScenario.nameCN || currentScenario.name) : null,
-      theme: gameState.selectedFontTheme || 'green',
-      custom_theme: gameState.customTheme || null,
-      hub_level: calcLevel(gameState.hubTotalExp),
-    };
-    try { mainWindow.webContents.send('game-tick', payload); } catch {}
-    forwardToPet('game-tick', payload);
-    forwardToPet('pet-state', { hubLevel: calcLevel(gameState.hubTotalExp), isInHub: gameState.isInHub, level: gameState.level });
 
     // Auto-save every 30s
     if (gameState.totalRuntimeMs % 30000 < delta) {
