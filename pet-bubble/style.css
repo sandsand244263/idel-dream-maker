@@ -15,6 +15,6 @@ html,body { width:100%;background:transparent;user-select:none;font-family:'Mapl
 .theme-pink { --fg:#F5C2E7; --dim:#C49AB5; --bg:rgba(30,14,26,0.9); --border:rgba(245,194,231,0.2); }
 .theme-black { --fg:#CDD6F4; --dim:#585B70; --bg:rgba(17,17,27,0.9); --border:rgba(205,214,244,0.2); }
 .theme-white { --fg:#4C4F69; --dim:#9CA0B0; --bg:rgba(239,241,245,0.9); --border:rgba(76,79,105,0.15); }
-#bubble { background:var(--bg);border:1px solid var(--border);border-radius:6px;overflow:hidden;border-left:3px solid #00BFFF; }
+#bubble { background:var(--bg);border:1px solid var(--border);border-radius:6px;overflow:hidden;border-left:3px solid var(--fg); }
 #bubble-header { padding:6px 10px;border-bottom:1px solid var(--border);font-size:12px;font-weight:bold;color:#00BFFF;letter-spacing:1px; }
 #bubble-body { padding:8px 10px;font-size:11px;line-height:1.5;word-break:break-word;white-space:pre-wrap;color:#E0E0E0; }

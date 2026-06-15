@@ -163,6 +163,7 @@ function registerPetIpcHandlers(mainWindow, app) {
     if (index >= 0 && index < currentPetList.length) {
       selectedPetIndex = index;
       sendToPet('pet-selected', { index, pet: currentPetList[index] });
+      sendToSelector('pet-list', { pets: currentPetList, selected: selectedPetIndex });
     }
     return true;
   });
