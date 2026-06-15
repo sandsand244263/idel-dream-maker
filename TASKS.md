@@ -484,19 +484,30 @@ npx electron-builder   # 打包验证
 | 2 | **三窗口配色同步主题** | `pet-context-menu/*`, `pet-bubble/*`, `pet-selector/*`, `electron/main.cjs` | ✅ |
 | 3 | **精灵图 9 行全调用** | `pet/pet.js` | ✅ |
 
-## v2.3 — Frutiger Aero 主题设计器
+## v2.3 — 主题体系全面实装
 
-> **当前阶段：v2.3（进行中）**
+> **当前阶段：v2.3（已完成）**
 >
-> 主题设计器持续迭代：14 色+自定义配色 + 渐变常驻 + 毛玻璃卡片常驻 + 字号/间距统一。支持多形态预览（待实装）。
+> 14 色主题 + 自定义配色 + 渐变背景 + 毛玻璃卡片 + 子窗口主题同步 + 字号/间距/圆角体系统一。
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
-| 1 | **主题设计器初版** | `themes/designer.html` (新建) | ✅ |
-| 2 | **配色体系**（14 色 + 自定义 + 渐变 g1/g2） | `themes/designer.html` | ✅ |
-| 3 | **毛玻璃卡片常驻**（删除样式开关） | `themes/designer.html` | ✅ |
-| 4 | **字号/间距统一**（4级字号 + 3级间距） | `themes/designer.html` | ✅ |
-| 5 | **多形态预览**（主窗口/宠物窗口/迷你栏切换） | `themes/designer.html` | 待定 |
+| 1 | **14 色主题系统**（替换旧 5 色） | `src/style.css` + 4 子窗口 CSS | ✅ |
+| 2 | **渐变背景**（每色 g1/g2 手动设定） | `src/style.css` | ✅ |
+| 3 | **毛玻璃卡片常驻**（所有主题通用） | `src/style.css` | ✅ |
+| 4 | **字号体系统一**（14/12/11/10 四级） | 全部 5 个 CSS 文件 | ✅ |
+| 5 | **间距体系统一**（4/8/12 三级） | 全部 5 个 CSS 文件 | ✅ |
+| 6 | **圆角体系统一**（2/4/8/50% 四级） | 全部 5 个 CSS 文件 | ✅ |
+| 7 | **`--border` 变量名统一** | `pet/style.css` `--border-color` → `--border` | ✅ |
+| 8 | **设置面板重做**（色块选主题 + 自定义配色） | `index.html` + `src/main.js` | ✅ |
+| 9 | **配色替换**（橙/黄绿/蓝/黑/白 换为 Tokyo Night / Catppuccin） | 全部 5 个 CSS 文件 | ✅ |
+| 10 | **子窗口主题同步**（broadcastTheme 推送） | `electron/main.cjs` + 4 个 preload + 4 个 script | ✅ |
+| 11 | **硬编码边框修复**（3 处） | `pet/style.css` + `pet-bubble/style.css` | ✅ |
+| 12 | **宠物选择器 UI 润色** | `pet-selector/style.css` | ✅ |
+| 13 | **教程界面重排**（5 段 + 左对齐列表 + 行高/间距） | `index.html` + `src/style.css` | ✅ |
+| 14 | **宠物索引持久化** | `electron/main.cjs` + `electron/pet.cjs` | ✅ |
+| 15 | **宠物窗口等级同步**（大厅时显示大厅等级） | `electron/main.cjs` | ✅ |
+| 16 | **设计器工具** → 已删除 | `themes/` | ✅ |
 
 ---
 
@@ -504,8 +515,6 @@ npx electron-builder   # 打包验证
 
 | 内容 | 说明 |
 |------|------|
-| Frutiger Aero 主题实装 | 基于设计器调参后写入 `src/style.css` |
-| Frutiger Aero 子窗口同步 | 同步 pet/context-menu/bubble/selector 窗口 |
 | 新副本（中世纪/赛博/修仙/克苏鲁） | 延后 |
 | Mac 适配 | Electron 天然支持，待测试并修复 |
 | Steam 上架 | Electron 版本打包后上架 |
