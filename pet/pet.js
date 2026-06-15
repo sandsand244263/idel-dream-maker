@@ -197,6 +197,7 @@ window.pet.on('toggle-feature', d => {
   applyPetSettings();
 });
 window.pet.on('game-tick',d=>{
+  console.log('PET TICK:', d.is_in_hub, d.hub_level, d.level);
   gameInfo.level=d.level||1;gameInfo.exp=d.total_exp_earned||0;
   gameInfo.hubLevel=d.hub_level||1;
   gameInfo.isInHub=d.is_in_hub!==false;

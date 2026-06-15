@@ -206,7 +206,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #onboarding-name { width:160px; background:rgba(0,255,0,0.05); border:1px solid var(--dim); color:var(--fg); padding:4px 8px; font-family:var(--font); font-size:11px; outline:none; text-align:center; }
 #onboarding-name:focus { border-color:var(--fg); }
 .ob-list-left { text-align:left; padding-left:8px; }
-.ob-list-left p { text-align:left; }
+.ob-list-left p { text-align:left !important; }
 #onboarding-body b { color:var(--fg); }
 #onboarding-ok { display:block; margin:14px auto 0; background:transparent; border:1px solid var(--fg); color:var(--fg); padding:6px 24px; font-family:var(--font); font-size:11px; cursor:pointer; letter-spacing:1px; }
 #onboarding-ok:hover { background:rgba(0,255,0,0.08); }
