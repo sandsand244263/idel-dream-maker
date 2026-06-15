@@ -153,7 +153,7 @@ async function init() {
     gameState = full.game; currentScenario = full.scenario; currentTitle = full.currentTitle;
     hubLevel = full.hubLevel || 1; appVersion = full.appVersion || '1.0.0'; scenarioList = await window.electron.invoke('get-scenario-list');
   } catch (e) { addLog('system', `${t('systemInitFail')}: ${e}`); }
-  updateUI(); renderHubView(); switchView(gameState?.is_in_hub !== false);
+  updateUI(); renderHubView(); renderHubCards(); switchView(gameState?.is_in_hub !== false);
   window.electron.on('game-tick', (event) => {
     const p = event;
     if (gameState?.is_in_hub) {
@@ -201,6 +201,10 @@ function renderHubView() {
   if (!gameState) return;
   hubGreeting.textContent = t('hubWelcome'); hubPlayerName.textContent = gameState.player_name;
   hubLevelDisplay.textContent = `${t('hubLevel')}${hubLevel}`; hubDrawBtn.textContent = t('drawBtn');
+}
+
+function renderHubCards() {
+  if (!scenarioList) return;
   hubScenarioList.innerHTML = '';
   if (!scenarioList || scenarioList.length === 0) {
     hubScenarioList.innerHTML = `<div class="hub-empty"><div class="hub-empty-icon">[ ~ ~ ]</div><div class="hub-empty-text">${t('noScenarios')}</div><div class="hub-empty-hint">点击下方 [副本] 或 [+ 抽取副本] 开始，点击 [教程] 查看操作说明</div></div>`;
@@ -224,7 +228,7 @@ hubDrawBtn.addEventListener('click', async () => {
 btnBackHub.addEventListener('click', async () => {
   const ok = await showConfirmModal('确定返回大厅吗？副本等级将重置，经验累入全局等级。');
   if (!ok) return;
-  try { const r = await window.electron.invoke('exit-to-hub'); gameState.hub_total_exp = r.hubTotalExp; hubLevel = r.hubLevel; gameState.is_in_hub = true; switchView(true); renderHubView(); addLog('info', tf('systemBack', hubLevel)); updateUI(); lastRuntime = 0; } catch (e) { showToast(t('systemBackFail'), 'error'); }
+  try { const r = await window.electron.invoke('exit-to-hub'); gameState.hub_total_exp = r.hubTotalExp; hubLevel = r.hubLevel; gameState.is_in_hub = true; switchView(true); renderHubView(); renderHubCards(); addLog('info', tf('systemBack', hubLevel)); updateUI(); lastRuntime = 0; } catch (e) { showToast(t('systemBackFail'), 'error'); }
 });
 
 // ── UI ──
@@ -443,7 +447,7 @@ onboardingOk.addEventListener('click', async () => {
   if (n) { try { await window.electron.invoke('set-player-name', { name: n }); if (gameState) gameState.player_name = n; } catch {} }
   onboardingModal.classList.add('hidden');
   window.electron.invoke('set-onboarding-seen').catch(() => {});
-  renderHubView(); updateUI();
+  renderHubView(); renderHubCards(); updateUI();
 });
 
 const debugPanel = document.getElementById('debug-panel'), debugContent = document.getElementById('debug-content'), debugClose = document.getElementById('debug-close');
