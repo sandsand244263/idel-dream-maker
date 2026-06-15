@@ -144,8 +144,9 @@ function updateExpBar(){
   expDetail.textContent=`${Math.floor(e)} / ${nr} (${rounded}%)`;
 }
 function updateInfoBar(){
+  const title=gameInfo.title&&gameInfo.title!=='—'?gameInfo.title:'';
   const dl=gameInfo.isInHub?(gameInfo.hubLevel||1):(gameInfo.level||1);
-  infoText.textContent=`hub:${gameInfo.hubLevel} inHub:${gameInfo.isInHub} lv:${gameInfo.level} dl:${dl}`;
+  infoText.textContent=title?`${gameInfo.scenario} | LV.${dl} | ${title}`:`${gameInfo.scenario} | LV.${dl}`;
   updateExpBar();
 }
 function applyTheme(theme, customTheme){

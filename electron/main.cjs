@@ -304,7 +304,7 @@ function startGameLoop() {
       scenario_name: currentScenario ? (currentScenario.name_cn || currentScenario.nameCN || currentScenario.name) : null,
       theme: gameState.selectedFontTheme || 'green',
       custom_theme: gameState.customTheme || null,
-      hub_level: hubLevel || 1,
+      hub_level: calcLevel(gameState.hubTotalExp),
     };
     try { mainWindow.webContents.send('game-tick', payload); } catch {}
     forwardToPet('game-tick', payload);
