@@ -25,7 +25,7 @@ const DEFAULT_STATES = {
 
 let pets=[],selIdx=0,spritesheet=null,cols=8,rows=9,stateConfig=null;
 let curState='idle',frameIdx=0,frameList=[],animTimer=null,returnTimer=null,debounceTimer=null;
-let gameInfo={level:1,title:'—',exp:0,scenario:'大厅',runtime:'0h0m0s',ach:0,theme:'green'};
+let gameInfo={level:1,title:'—',exp:0,scenario:'大厅',runtime:'0h0m0s',ach:0,theme:'green',hubLevel:1,isInHub:true};
 let displayExp=0,dragMoved=false;
 
 // ── Notification Queue ──
@@ -145,7 +145,8 @@ function updateExpBar(){
 }
 function updateInfoBar(){
   const title=gameInfo.title&&gameInfo.title!=='—'?gameInfo.title:'';
-  infoText.textContent=title?`${gameInfo.scenario} | Lv.${gameInfo.level} | ${title}`:`${gameInfo.scenario} | Lv.${gameInfo.level}`;
+  const levelLabel=gameInfo.isInHub?`Hub Lv.${gameInfo.hubLevel||1}`:`Lv.${gameInfo.level}`;
+  infoText.textContent=title?`${gameInfo.scenario} | ${levelLabel} | ${title}`:`${gameInfo.scenario} | ${levelLabel}`;
   updateExpBar();
 }
 function applyTheme(theme, customTheme){
@@ -197,6 +198,8 @@ window.pet.on('toggle-feature', d => {
 });
 window.pet.on('game-tick',d=>{
   gameInfo.level=d.level||1;gameInfo.exp=d.total_exp_earned||0;
+  gameInfo.hubLevel=d.hub_level||1;
+  gameInfo.isInHub=d.is_in_hub!==false;
   if(d.currentTitle)gameInfo.title=d.currentTitle;
   gameInfo.scenario=d.is_in_hub?'大厅':(d.scenario_name||'副本');
   const ms=d.total_runtime_ms||0,s=Math.floor(ms/1000);

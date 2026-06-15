@@ -200,10 +200,13 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #onboarding-title { font-weight:bold; font-size:14px; letter-spacing:1px; text-align:center; }
 #onboarding-subtitle { font-weight:bold; font-size:12px; margin-bottom:10px; letter-spacing:1px; text-align:center; }
 #onboarding-body p { font-size:11px; line-height:1.6; margin-bottom:4px; color:var(--dim); text-align:center; }
-#onboarding-name-row { margin:8px 0; display:flex; align-items:center; gap:6px; justify-content:center; }
-#onboarding-name-row label { font-size:11px; color:var(--fg); white-space:nowrap; flex-shrink:0; }
-#onboarding-name { flex:1; min-width:0; background:rgba(0,255,0,0.05); border:1px solid var(--dim); color:var(--fg); padding:4px 8px; font-family:var(--font); font-size:11px; outline:none; }
+.ob-separator { height:14px; }
+#onboarding-name-row { margin:0; display:flex; flex-direction:column; align-items:center; gap:6px; }
+#onboarding-name-row label { font-size:11px; color:var(--fg); }
+#onboarding-name { width:160px; background:rgba(0,255,0,0.05); border:1px solid var(--dim); color:var(--fg); padding:4px 8px; font-family:var(--font); font-size:11px; outline:none; text-align:center; }
 #onboarding-name:focus { border-color:var(--fg); }
+.ob-list-left { text-align:left; padding-left:8px; }
+.ob-list-left p { text-align:left; }
 #onboarding-body b { color:var(--fg); }
 #onboarding-ok { display:block; margin:14px auto 0; background:transparent; border:1px solid var(--fg); color:var(--fg); padding:6px 24px; font-family:var(--font); font-size:11px; cursor:pointer; letter-spacing:1px; }
 #onboarding-ok:hover { background:rgba(0,255,0,0.08); }

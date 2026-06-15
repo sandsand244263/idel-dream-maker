@@ -9,6 +9,9 @@ const { initContextMenu, registerContextMenuIpcHandlers, showContextMenu, sendTo
 let petWindow = null;
 let currentPetList = [];
 let selectedPetIndex = 0;
+let onPetSelectedCb = null;
+
+function setOnPetSelected(cb) { onPetSelectedCb = cb; }
 
 function getAppDir(app) {
   return path.join(app.getPath('appData'), 'Idel-DreamMaker');
@@ -164,6 +167,7 @@ function registerPetIpcHandlers(mainWindow, app) {
       selectedPetIndex = index;
       sendToPet('pet-selected', { index, pet: currentPetList[index] });
       sendToSelector('pet-list', { pets: currentPetList, selected: selectedPetIndex });
+      if (onPetSelectedCb) onPetSelectedCb(index);
     }
     return true;
   });
@@ -232,8 +236,11 @@ function togglePetWindow() {
   }
 }
 
-function initPet(app) {
+function initPet(app, selectedIndex) {
   scanPets(app);
+  if (selectedIndex !== undefined && selectedIndex >= 0 && selectedIndex < currentPetList.length) {
+    selectedPetIndex = selectedIndex;
+  }
   const win = createPetWindow(app);
   initSelector(app, win);
   initBubble(app, win);
@@ -252,4 +259,4 @@ function broadcastTheme(theme, customTheme) {
 
 function getSelectedPetIndex() { return selectedPetIndex; }
 
-module.exports = { scanPets, registerPetIpcHandlers, forwardToPet, showPetWindow, togglePetWindow, initPet, broadcastTheme, getSelectedPetIndex };
+module.exports = { scanPets, registerPetIpcHandlers, forwardToPet, showPetWindow, togglePetWindow, initPet, broadcastTheme, getSelectedPetIndex, setOnPetSelected };

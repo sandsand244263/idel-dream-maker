@@ -4,7 +4,7 @@ const fs = require('fs');
 
 const { createMainWindow, getMainWindow } = require('./windows.cjs');
 const { createTray, setToolTip, getTray } = require('./tray.cjs');
-const { registerPetIpcHandlers, forwardToPet, initPet, broadcastTheme } = require('./pet.cjs');
+const { registerPetIpcHandlers, forwardToPet, initPet, broadcastTheme, setOnPetSelected } = require('./pet.cjs');
 const { getTodaysHolidayId, getHolidayName, getHolidayIcon, getHolidayEventFromScenario, getRandomHolidayEvent } = require('./holiday.cjs');
 
 let mainWindow = null;
@@ -304,6 +304,7 @@ function startGameLoop() {
       scenario_name: currentScenario ? (currentScenario.name_cn || currentScenario.nameCN || currentScenario.name) : null,
       theme: gameState.selectedFontTheme || 'green',
       custom_theme: gameState.customTheme || null,
+      hub_level: hubLevel || 1,
     };
     try { mainWindow.webContents.send('game-tick', payload); } catch {}
     forwardToPet('game-tick', payload);
@@ -350,6 +351,7 @@ function registerIpcHandlers() {
         triggered_events: gameState.triggeredEvents || [],
         unlockedAchievements: gameState.unlockedAchievements || [],
         has_seen_onboarding: gameState.hasSeenOnboarding || false,
+        pet_selected_index: gameState.petSelectedIndex || 0,
       },
       hubLevel: hubLevel,
       scenario: currentScenario ? {
@@ -409,6 +411,7 @@ function registerIpcHandlers() {
         triggered_events: gameState.triggeredEvents || [],
         unlockedAchievements: gameState.unlockedAchievements || [],
         has_seen_onboarding: gameState.hasSeenOnboarding || false,
+        pet_selected_index: gameState.petSelectedIndex || 0,
       },
       scenario: {
         id: scenario.id,
@@ -440,6 +443,7 @@ function registerIpcHandlers() {
         triggered_events: gameState.triggeredEvents || [],
         unlockedAchievements: gameState.unlockedAchievements || [],
         has_seen_onboarding: gameState.hasSeenOnboarding || false,
+        pet_selected_index: gameState.petSelectedIndex || 0,
       },
       scenario: {
         id: scenario.id,
@@ -690,6 +694,7 @@ app.whenReady().then(() => {
       scenarioProgress: {},
       triggeredEvents: [],
       unlockedAchievements: [],
+      petSelectedIndex: 0,
       hasSeenOnboarding: false,
     };
   }
@@ -730,7 +735,8 @@ app.whenReady().then(() => {
   setupTray();
   registerIpcHandlers();
   registerPetIpcHandlers(mainWindow, app);
-  initPet(app);
+  setOnPetSelected((idx) => { if (gameState) gameState.petSelectedIndex = idx; });
+  initPet(app, gameState?.petSelectedIndex);
   startGameLoop();
 
   // Tooltip update every 5s
