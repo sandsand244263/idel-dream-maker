@@ -1,27 +1,27 @@
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 html,body { width:100%;background:transparent;user-select:none; }
 
-:root { --fg:#00FF00; --dim:#00AA00; --bg:#0A0A0A; --font:'MapleMonoNFCN','Courier New',monospace; --border-color:rgba(0,255,0,0.2); }
-.theme-red { --fg:#F38BA8; --dim:#BA7D8F; --bg:#1E0A10; --border-color:rgba(243,139,168,0.2); }
-.theme-red-orange { --fg:#FAB387; --dim:#BF9E82; --bg:#1E120A; --border-color:rgba(250,179,135,0.2); }
-.theme-orange { --fg:#FF9E64; --dim:#C47D3A; --bg:#1E1000; --border-color:rgba(255,158,100,0.2); }
-.theme-yellow-orange { --fg:#EECB8C; --dim:#C4A050; --bg:#1E1400; --border-color:rgba(238,203,140,0.2); }
-.theme-yellow { --fg:#F9E2AF; --dim:#C4B892; --bg:#1E1C0A; --border-color:rgba(249,226,175,0.2); }
-.theme-yellow-green { --fg:#A8D86A; --dim:#7DAA40; --bg:#0A1400; --border-color:rgba(168,216,106,0.2); }
-.theme-green { --fg:#00FF00; --dim:#00AA00; --bg:#0A0A0A; --border-color:rgba(0,255,0,0.2); }
-.theme-cyan { --fg:#94E2D5; --dim:#75BAAD; --bg:#0A1E1A; --border-color:rgba(148,226,213,0.2); }
-.theme-blue { --fg:#89B4FA; --dim:#5A7FBF; --bg:#0E1428; --border-color:rgba(137,180,250,0.2); }
-.theme-blue-purple { --fg:#A2A0F6; --dim:#7F7EC4; --bg:#0E0A1E; --border-color:rgba(162,160,246,0.2); }
-.theme-purple { --fg:#CBA6F7; --dim:#A284C4; --bg:#1A0E1E; --border-color:rgba(203,166,247,0.2); }
-.theme-pink { --fg:#F5C2E7; --dim:#C49AB5; --bg:#1E0E1A; --border-color:rgba(245,194,231,0.2); }
-.theme-black { --fg:#CDD6F4; --dim:#585B70; --bg:#11111B; --border-color:rgba(205,214,244,0.2); }
-.theme-white { --fg:#4C4F69; --dim:#9CA0B0; --bg:#EFF1F5; --border-color:rgba(76,79,105,0.15); }
+:root { --fg:#00FF00; --dim:#00AA00; --bg:#0A0A0A; --font:'MapleMonoNFCN','Courier New',monospace; --border:rgba(0,255,0,0.2); }
+.theme-red { --fg:#F38BA8; --dim:#BA7D8F; --bg:#1E0A10; --border:rgba(243,139,168,0.2); }
+.theme-red-orange { --fg:#FAB387; --dim:#BF9E82; --bg:#1E120A; --border:rgba(250,179,135,0.2); }
+.theme-orange { --fg:#FF9E64; --dim:#C47D3A; --bg:#1E1000; --border:rgba(255,158,100,0.2); }
+.theme-yellow-orange { --fg:#EECB8C; --dim:#C4A050; --bg:#1E1400; --border:rgba(238,203,140,0.2); }
+.theme-yellow { --fg:#F9E2AF; --dim:#C4B892; --bg:#1E1C0A; --border:rgba(249,226,175,0.2); }
+.theme-yellow-green { --fg:#A8D86A; --dim:#7DAA40; --bg:#0A1400; --border:rgba(168,216,106,0.2); }
+.theme-green { --fg:#00FF00; --dim:#00AA00; --bg:#0A0A0A; --border:rgba(0,255,0,0.2); }
+.theme-cyan { --fg:#94E2D5; --dim:#75BAAD; --bg:#0A1E1A; --border:rgba(148,226,213,0.2); }
+.theme-blue { --fg:#89B4FA; --dim:#5A7FBF; --bg:#0E1428; --border:rgba(137,180,250,0.2); }
+.theme-blue-purple { --fg:#A2A0F6; --dim:#7F7EC4; --bg:#0E0A1E; --border:rgba(162,160,246,0.2); }
+.theme-purple { --fg:#CBA6F7; --dim:#A284C4; --bg:#1A0E1E; --border:rgba(203,166,247,0.2); }
+.theme-pink { --fg:#F5C2E7; --dim:#C49AB5; --bg:#1E0E1A; --border:rgba(245,194,231,0.2); }
+.theme-black { --fg:#CDD6F4; --dim:#585B70; --bg:#11111B; --border:rgba(205,214,244,0.2); }
+.theme-white { --fg:#4C4F69; --dim:#9CA0B0; --bg:#EFF1F5; --border:rgba(76,79,105,0.15); }
 .theme-paper #info-text,
 .theme-paper #exp-detail { color:rgba(0,200,0,0.6); }
 
 body { font-family:var(--font); color:var(--fg); }
 
-#container { width:100%;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;position:relative;background:rgba(10,10,10,0.85);border:1px solid var(--border-color);border-radius:6px;overflow:hidden; }
+#container { width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0;position:relative;background:rgba(10,10,10,0.85);border:1px solid var(--border);border-radius:8px;overflow:hidden; }
 #container.border-hidden { border:none;background:transparent;border-radius:0;padding:0; }
 
 /* Info bar */
@@ -48,7 +48,7 @@ body { font-family:var(--font); color:var(--fg); }
 #bubble-zone.zone-hidden { display:none; }
 
 /* EXP progress bar */
-#exp-wrap { display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0; }
+#exp-wrap { display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0; }
 #exp-track { width:70%;height:8px;background:color-mix(in srgb,var(--fg) 6%,transparent);border-radius:4px;overflow:hidden; }
 #exp-fill { height:100%;width:0%;border-radius:4px;position:relative;background:linear-gradient(90deg,color-mix(in srgb,var(--fg) 25%,transparent),color-mix(in srgb,var(--fg) 80%,transparent),color-mix(in srgb,var(--fg) 25%,transparent));background-size:200% 100%;animation:shimmer 3s ease-in-out infinite; }
 @keyframes shimmer { 0% { background-position:200% 0; } 100% { background-position:-200% 0; } }

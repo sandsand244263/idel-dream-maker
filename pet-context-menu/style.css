@@ -15,10 +15,10 @@ html,body { width:100%;background:transparent;user-select:none;font-family:'Mapl
 .theme-pink { --fg:#F5C2E7; --dim:#C49AB5; --bg:rgba(30,14,26,0.85); --border:rgba(245,194,231,0.2); }
 .theme-black { --fg:#CDD6F4; --dim:#585B70; --bg:rgba(17,17,27,0.85); --border:rgba(205,214,244,0.2); }
 .theme-white { --fg:#4C4F69; --dim:#9CA0B0; --bg:rgba(239,241,245,0.9); --border:rgba(76,79,105,0.15); }
-#container { background:var(--bg);border:1px solid var(--border);border-radius:6px;overflow:hidden; }
-.ctx-item { padding:5px 14px;cursor:pointer;color:color-mix(in srgb,var(--fg) 70%,transparent);font-size:11px;white-space:nowrap; }
+#container { background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow:hidden; }
+.ctx-item { padding:4px 14px;cursor:pointer;color:color-mix(in srgb,var(--fg) 70%,transparent);font-size:11px;white-space:nowrap; }
 .ctx-item:hover { background:color-mix(in srgb,var(--fg) 10%,transparent);color:var(--fg); }
 .ctx-item.ctx-on { color:var(--fg); }
 .ctx-item.ctx-off { color:color-mix(in srgb,var(--fg) 35%,transparent); }
 .ctx-arrow { float:right; }
-.ctx-sep { height:1px;background:color-mix(in srgb,var(--fg) 10%,transparent);margin:3px 10px; }
+.ctx-sep { height:1px;background:color-mix(in srgb,var(--fg) 10%,transparent);margin:4px 10px; }
