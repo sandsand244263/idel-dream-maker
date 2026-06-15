@@ -52,5 +52,3 @@ window.petSelector.invoke('get-initial-state').then((r) => {
 
 window.petSelector.invoke('get-current-theme').then(r => { if (r) applyTheme(r.theme, r.customTheme); }).catch(() => {});
 window.petSelector.on('theme-changed', (d) => { if (d) applyTheme(d.theme, d.customTheme); });
-// 窗口显示时重放入场动效
-document.addEventListener('visibilitychange',()=>{if(!document.hidden){const el=document.getElementById('container');el.style.animation='none';void el.offsetHeight;el.style.animation='';}});
