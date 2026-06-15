@@ -2,10 +2,21 @@
 html,body { width:100%;background:transparent;user-select:none; }
 
 :root { --fg:#00FF00; --dim:#00AA00; --bg:#0A0A0A; --font:'MapleMonoNFCN','Courier New',monospace; --border-color:rgba(0,255,0,0.2); }
-.theme-amber { --fg:#FFB000; --dim:#AA7700; --bg:#0A0A0A; --border-color:rgba(255,176,0,0.2); }
-.theme-cold  { --fg:#E0E0E0; --dim:#555577; --bg:#1A1A2E; --border-color:rgba(224,224,224,0.15); }
-.theme-paper { --fg:#222222; --dim:#7A6F5E; --bg:#F5F0E8; --border-color:rgba(34,34,34,0.15); }
-.theme-matrix{ --fg:#00FF41; --dim:#008800; --bg:#000000; --border-color:rgba(0,255,65,0.2); }
+.theme-red { --fg:#F38BA8; --dim:#BA7D8F; --bg:#1E0A10; --border-color:rgba(243,139,168,0.2); }
+.theme-red-orange { --fg:#FAB387; --dim:#BF9E82; --bg:#1E120A; --border-color:rgba(250,179,135,0.2); }
+.theme-orange { --fg:#FFB000; --dim:#AA7700; --bg:#0A0A0A; --border-color:rgba(255,176,0,0.2); }
+.theme-yellow-orange { --fg:#F9D77E; --dim:#C4AB6E; --bg:#1E180A; --border-color:rgba(249,215,126,0.2); }
+.theme-yellow { --fg:#F9E2AF; --dim:#C4B892; --bg:#1E1C0A; --border-color:rgba(249,226,175,0.2); }
+.theme-yellow-green { --fg:#B8E3A1; --dim:#8FBA82; --bg:#0E1E0A; --border-color:rgba(184,227,161,0.2); }
+.theme-green { --fg:#00FF00; --dim:#00AA00; --bg:#0A0A0A; --border-color:rgba(0,255,0,0.2); }
+.theme-cyan { --fg:#94E2D5; --dim:#75BAAD; --bg:#0A1E1A; --border-color:rgba(148,226,213,0.2); }
+.theme-blue { --fg:#E0E0E0; --dim:#555577; --bg:#1A1A2E; --border-color:rgba(224,224,224,0.15); }
+.theme-blue-purple { --fg:#A2A0F6; --dim:#7F7EC4; --bg:#0E0A1E; --border-color:rgba(162,160,246,0.2); }
+.theme-purple { --fg:#CBA6F7; --dim:#A284C4; --bg:#1A0E1E; --border-color:rgba(203,166,247,0.2); }
+.theme-pink { --fg:#F5C2E7; --dim:#C49AB5; --bg:#1E0E1A; --border-color:rgba(245,194,231,0.2); }
+.theme-black { --fg:#CCCCCC; --dim:#666666; --bg:#000000; --border-color:rgba(204,204,204,0.2); }
+.theme-white { --fg:#222222; --dim:#7A6F5E; --bg:#F5F0E8; --border-color:rgba(34,34,34,0.15); }
+.theme-aero { --fg:#1A1A1A; --dim:#6A9AB0; --bg:#F5F8FA; --border-color:rgba(74,144,217,0.2); }
 .theme-paper #info-text,
 .theme-paper #exp-detail { color:rgba(0,200,0,0.6); }
 

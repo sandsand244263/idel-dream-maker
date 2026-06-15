@@ -78,7 +78,7 @@ const settingsPanel = document.getElementById('settings-panel');
 const settingsClose = document.getElementById('settings-close');
 const settingsName = document.getElementById('settings-name');
 const settingsNameSave = document.getElementById('settings-name-save');
-const settingsTheme = document.getElementById('settings-theme');
+const settingsTheme = document.getElementById('theme-swatches');
 const settingsLanguage = document.getElementById('settings-language');
 const settingsAILanguage = document.getElementById('settings-ai-language');
 const titlesPanel = document.getElementById('titles-panel');
@@ -297,16 +297,58 @@ achievementOverlay.addEventListener('click', () => { achievementOverlay.classLis
 
 btnScenario.addEventListener('click', async () => { try { scenarioList = await window.electron.invoke('get-scenario-list'); } catch (e) { showToast(`获取副本列表失败`, 'error'); } renderScenarioPanel(); scenarioPanel.classList.remove('hidden'); });
 btnTitles.addEventListener('click', () => { renderTitlesPanel(); titlesPanel.classList.remove('hidden'); });
-btnSettings.addEventListener('click', () => { settingsName.value = gameState?.player_name || ''; settingsTheme.value = gameState?.selected_font_theme || 'green'; settingsLanguage.value = gameState?.language || 'zh'; settingsAILanguage.value = gameState?.ai_output_language || 'zh'; settingsPanel.classList.remove('hidden'); });
+btnSettings.addEventListener('click', () => {
+  settingsName.value = gameState?.player_name || '';
+  settingsLanguage.value = gameState?.language || 'zh';
+  settingsAILanguage.value = gameState?.ai_output_language || 'zh';
+  renderThemeSwatches();
+  settingsPanel.classList.remove('hidden');
+});
 settingsClose.addEventListener('click', () => settingsPanel.classList.add('hidden'));
 settingsNameSave.addEventListener('click', async () => { const n = settingsName.value.trim(); if (!n) return; try { await window.electron.invoke('set-player-name', { name: n }); if (gameState) gameState.player_name = n; renderHubView(); updateUI(); } catch (e) { showToast('保存名称失败', 'error'); } });
-settingsTheme.addEventListener('change', async () => { const v = settingsTheme.value; try { await window.electron.invoke('set-font-theme', { theme: v }); if (gameState) gameState.selected_font_theme = v; applyTheme(v); } catch (e) { showToast('切换主题失败', 'error'); } });
 settingsLanguage.addEventListener('change', async () => { const v = settingsLanguage.value; try { await window.electron.invoke('set-language', { lang: v }); if (gameState) gameState.language = v; applyLanguage(); renderHubView(); } catch (e) { showToast('切换语言失败', 'error'); } });
 settingsAILanguage.addEventListener('change', async () => { const v = settingsAILanguage.value; try { await window.electron.invoke('set-ai-output-language', { lang: v }); if (gameState) gameState.ai_output_language = v; } catch (e) { showToast('切换 AI 语言失败', 'error'); } });
 document.getElementById('btn-tutorial').addEventListener('click', async () => {
   if (onboardingInput) onboardingInput.value = gameState?.player_name || '';
   if (onboardingModal) onboardingModal.classList.remove('hidden');
 });
+
+const THEMES = [
+  { id:'red', label:'红', fg:'#F38BA8', bg:'#1E0A10' },
+  { id:'red-orange', label:'红橙', fg:'#FAB387', bg:'#1E120A' },
+  { id:'orange', label:'橙', fg:'#FFB000', bg:'#0A0A0A' },
+  { id:'yellow-orange', label:'黄橙', fg:'#F9D77E', bg:'#1E180A' },
+  { id:'yellow', label:'黄', fg:'#F9E2AF', bg:'#1E1C0A' },
+  { id:'yellow-green', label:'黄绿', fg:'#B8E3A1', bg:'#0E1E0A' },
+  { id:'green', label:'绿', fg:'#00FF00', bg:'#0A0A0A' },
+  { id:'cyan', label:'蓝绿', fg:'#94E2D5', bg:'#0A1E1A' },
+  { id:'blue', label:'蓝', fg:'#E0E0E0', bg:'#1A1A2E' },
+  { id:'blue-purple', label:'蓝紫', fg:'#A2A0F6', bg:'#0E0A1E' },
+  { id:'purple', label:'紫', fg:'#CBA6F7', bg:'#1A0E1E' },
+  { id:'pink', label:'红紫', fg:'#F5C2E7', bg:'#1E0E1A' },
+  { id:'black', label:'黑', fg:'#CCCCCC', bg:'#000000' },
+  { id:'white', label:'白', fg:'#222222', bg:'#F5F0E8' },
+  { id:'aero', label:'Aero', fg:'#1A1A1A', bg:'#F5F8FA' },
+];
+
+function renderThemeSwatches() {
+  const cur = gameState?.selected_font_theme || 'green';
+  settingsTheme.innerHTML = '';
+  THEMES.forEach(t => {
+    const btn = document.createElement('button');
+    btn.dataset.theme = t.id;
+    btn.style.cssText = `padding:5px 2px;font-size:10px;background:${t.bg};color:${t.fg};border:2px solid ${t.id === cur ? '#0078D7' : 'transparent'};border-radius:4px;cursor:pointer;font-family:inherit;text-align:center;transition:border-color 0.1s;`;
+    btn.textContent = t.label;
+    btn.addEventListener('click', () => selectTheme(t.id));
+    btn.addEventListener('mouseenter', () => { if (t.id !== cur) btn.style.borderColor = '#888'; });
+    btn.addEventListener('mouseleave', () => { if (t.id !== cur) btn.style.borderColor = 'transparent'; });
+    settingsTheme.appendChild(btn);
+  });
+}
+
+async function selectTheme(id) {
+  try { await window.electron.invoke('set-font-theme', { theme: id }); if (gameState) gameState.selected_font_theme = id; applyTheme(id); renderThemeSwatches(); } catch (e) { showToast('切换主题失败', 'error'); }
+}
 
 function applyTheme(id) { document.documentElement.className = `theme-${id}`; }
 function applyLanguage() { document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); }); }
