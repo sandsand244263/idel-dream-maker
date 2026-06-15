@@ -73,9 +73,9 @@ function doShowSelector() {
 
 function registerSelectorIpcHandlers(app) {
   ipcMain.handle('show-pet-selector', () => {
-    const { scanPets } = require('./pet.cjs');
+    const { scanPets, getSelectedPetIndex } = require('./pet.cjs');
     currentPetList = scanPets(app);
-    selectedPetIndex = 0;
+    selectedPetIndex = getSelectedPetIndex();
     sendToSelector('pet-list', { pets: currentPetList, selected: selectedPetIndex });
     positionAndShowSelector();
     return true;

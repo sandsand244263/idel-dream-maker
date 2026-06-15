@@ -250,4 +250,6 @@ function broadcastTheme(theme, customTheme) {
   sendToBubble('theme-changed', payload);
 }
 
-module.exports = { scanPets, registerPetIpcHandlers, forwardToPet, showPetWindow, togglePetWindow, initPet, broadcastTheme };
+function getSelectedPetIndex() { return selectedPetIndex; }
+
+module.exports = { scanPets, registerPetIpcHandlers, forwardToPet, showPetWindow, togglePetWindow, initPet, broadcastTheme, getSelectedPetIndex };
