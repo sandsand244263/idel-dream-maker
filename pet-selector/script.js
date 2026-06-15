@@ -35,7 +35,7 @@ document.getElementById('btn-open-folder').addEventListener('click', () => {
   window.petSelector.invoke('open-pets-folder').catch(() => {});
 });
 
-document.getElementById('btn-back').addEventListener('click', () => {
+document.getElementById('header').addEventListener('click', () => {
   window.petSelector.invoke('close-selector').catch(() => {});
   window.petSelector.invoke('show-context-menu').catch(() => {});
 });
