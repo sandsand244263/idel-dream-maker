@@ -508,6 +508,8 @@ npx electron-builder   # 打包验证
 | 14 | **宠物索引持久化** | `electron/main.cjs` + `electron/pet.cjs` | ✅ |
 | 15 | **宠物窗口等级同步**（大厅时显示大厅等级） | `electron/main.cjs` | ✅ |
 | 16 | **设计器工具** → 已删除 | `themes/` | ✅ |
+| 17 | **副本卡片 hover 闪烁修复** | `src/main.js` + `src/style.css` | ✅ |
+| 18 | **宠物选择器底部溢出修复** | `pet-selector/style.css` | ✅ |
 
 ---
 
