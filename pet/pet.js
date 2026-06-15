@@ -210,6 +210,10 @@ window.pet.on('game-tick',d=>{
   updateInfoBar();
 });
 window.pet.on('theme-changed',(d)=>{if(d){gameInfo.theme=d.theme;applyTheme(d.theme, d.customTheme);}});
+window.pet.on('pet-state',d=>{
+  gameInfo.hubLevel=d.hubLevel||1;gameInfo.isInHub=d.isInHub!==false;gameInfo.level=d.level||1;
+  updateInfoBar();
+});
 window.pet.on('event-triggered',d=>{transitionTo('run');nq.enqueue({text:d.text,title:d.title||'事件',type:'event'},1);});
 window.pet.on('level-up',d=>{gameInfo.title=d.title||gameInfo.title;transitionTo(Math.random()<0.5?'jump':'extra3');nq.enqueue({text:`升级! Lv.${d.level}`,title:'等级提升',type:'levelup'},2);});
 window.pet.on('achievement-unlocked',d=>{transitionTo(Math.random()<0.5?'review':'extra1');nq.enqueue({text:`${d.icon||'★'} ${d.name}`,title:'成就解锁',type:'achievement'},3);});

@@ -89,8 +89,11 @@ function findSpritesheet(dir) {
 }
 
 function sendToPet(channel, data) {
+  console.log('sendToPet:', channel, data ? Object.keys(data) : null);
   if (petWindow && !petWindow.isDestroyed()) {
-    try { petWindow.webContents.send(channel, data); } catch {}
+    try { petWindow.webContents.send(channel, data); } catch (e) { console.log('sendToPet error:', e); }
+  } else {
+    console.log('sendToPet FAIL: petWindow', !!petWindow, petWindow ? petWindow.isDestroyed() : 'N/A');
   }
 }
 
