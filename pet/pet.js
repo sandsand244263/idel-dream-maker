@@ -1,5 +1,6 @@
 const canvas = document.getElementById('pet-canvas');
 const ctx = canvas.getContext('2d');
+ctx.imageSmoothingEnabled = false;
 const dotEl = document.getElementById('bubble-dot');
 const dotSymbol = document.getElementById('dot-symbol');
 const infoText = document.getElementById('info-text');
