@@ -321,21 +321,21 @@ document.getElementById('btn-tutorial').addEventListener('click', async () => {
 });
 
 const THEMES = [
-  { id:'red', label:'红', fg:'#F38BA8', bg:'#1E0A10' },
-  { id:'red-orange', label:'红橙', fg:'#FAB387', bg:'#1E120A' },
-  { id:'orange', label:'橙', fg:'#FFB000', bg:'#0A0A0A' },
-  { id:'yellow-orange', label:'黄橙', fg:'#F9D77E', bg:'#1E180A' },
-  { id:'yellow', label:'黄', fg:'#F9E2AF', bg:'#1E1C0A' },
-  { id:'yellow-green', label:'黄绿', fg:'#B8E3A1', bg:'#0E1E0A' },
-  { id:'green', label:'绿', fg:'#00FF00', bg:'#0A0A0A' },
-  { id:'cyan', label:'蓝绿', fg:'#94E2D5', bg:'#0A1E1A' },
-  { id:'blue', label:'蓝', fg:'#E0E0E0', bg:'#1A1A2E' },
-  { id:'blue-purple', label:'蓝紫', fg:'#A2A0F6', bg:'#0E0A1E' },
-  { id:'purple', label:'紫', fg:'#CBA6F7', bg:'#1A0E1E' },
-  { id:'pink', label:'红紫', fg:'#F5C2E7', bg:'#1E0E1A' },
-  { id:'black', label:'黑', fg:'#CCCCCC', bg:'#000000' },
-  { id:'white', label:'白', fg:'#222222', bg:'#F5F0E8' },
-  { id:'custom', label:'自定义', fg:'#00FF00', bg:'#0A0A0A' },
+  { id:'red', label:'红', fg:'#F38BA8', bg:'#1E0A10', dim:'#BA7D8F' },
+  { id:'red-orange', label:'红橙', fg:'#FAB387', bg:'#1E120A', dim:'#BF9E82' },
+  { id:'orange', label:'橙', fg:'#FFB000', bg:'#0A0A0A', dim:'#AA7700' },
+  { id:'yellow-orange', label:'黄橙', fg:'#F9D77E', bg:'#1E180A', dim:'#C4AB6E' },
+  { id:'yellow', label:'黄', fg:'#F9E2AF', bg:'#1E1C0A', dim:'#C4B892' },
+  { id:'yellow-green', label:'黄绿', fg:'#B8E3A1', bg:'#0E1E0A', dim:'#8FBA82' },
+  { id:'green', label:'绿', fg:'#00FF00', bg:'#0A0A0A', dim:'#00AA00' },
+  { id:'cyan', label:'蓝绿', fg:'#94E2D5', bg:'#0A1E1A', dim:'#75BAAD' },
+  { id:'blue', label:'蓝', fg:'#E0E0E0', bg:'#1A1A2E', dim:'#555577' },
+  { id:'blue-purple', label:'蓝紫', fg:'#A2A0F6', bg:'#0E0A1E', dim:'#7F7EC4' },
+  { id:'purple', label:'紫', fg:'#CBA6F7', bg:'#1A0E1E', dim:'#A284C4' },
+  { id:'pink', label:'红紫', fg:'#F5C2E7', bg:'#1E0E1A', dim:'#C49AB5' },
+  { id:'black', label:'黑', fg:'#CCCCCC', bg:'#000000', dim:'#666666' },
+  { id:'white', label:'白', fg:'#222222', bg:'#F5F0E8', dim:'#7A6F5E' },
+  { id:'custom', label:'自定义', fg:'#00FF00', bg:'#0A0A0A', dim:'#00AA00' },
 ];
 
 
@@ -372,6 +372,13 @@ async function selectTheme(id) {
     return;
   }
   document.getElementById('custom-theme').classList.add('hidden');
+  const t = THEMES.find(x => x.id === id);
+  if (t) {
+    document.getElementById('ct-fg').value = t.fg; document.getElementById('ct-fg-text').value = t.fg;
+    document.getElementById('ct-bg').value = t.bg; document.getElementById('ct-bg-text').value = t.bg;
+    document.getElementById('ct-dim').value = t.dim; document.getElementById('ct-dim-text').value = t.dim;
+    document.getElementById('ct-border').value = t.dim; document.getElementById('ct-border-text').value = t.dim;
+  }
   try { await window.electron.invoke('set-font-theme', { theme: id }); if (gameState) gameState.selected_font_theme = id; applyTheme(id); renderThemeSwatches(); } catch (e) { showToast('切换主题失败', 'error'); }
 }
 
