@@ -517,7 +517,7 @@ npx electron-builder   # 打包验证
 
 > **当前阶段：v2.3.1（已完成）**
 >
-> Canvas rAF 重构、CSS will-change + prefers-reduced-motion、transitionend 替代 setTimeout、子窗口闪烁修复（setOpacity 方案）、右键菜单 toggle、文案对齐。
+> Canvas rAF 重构、CSS will-change + prefers-reduced-motion、transitionend 替代 setTimeout、子窗口闪烁修复（setOpacity 方案）、右键菜单 toggle、文案对齐、精灵图描边修复、两窗口样式统一。
 
 | # | 内容 | 涉及文件 | 状态 |
 |--:|------|---------|:----:|
@@ -526,10 +526,12 @@ npx electron-builder   # 打包验证
 | 3 | **CSS will-change + prefers-reduced-motion** | 全部 6 个 CSS 文件 | ✅ |
 | 4 | **子窗口入场动效**（后因闪烁移除） | `pet-bubble/*`, `pet-context-menu/*`, `pet-selector/*` | ✅ |
 | 5 | **transitionend 替代 setTimeout**（弹窗消失动效） | `src/main.js`, `src/style.css` | ✅ |
-| 6 | **子窗口闪烁修复**（backgroundColor + setOpacity 替代 hide/show） | `electron/pet-context-menu.cjs`, `electron/pet-bubble.cjs` | ✅ |
+| 6 | **子窗口闪烁修复**（backgroundColor + setOpacity 替代 hide/show） | `electron/pet-context-menu.cjs`, `electron/pet-bubble.cjs`, `electron/pet-selector.cjs` | ✅ |
 | 7 | **右键菜单 toggle**（重复右键关闭） | `electron/pet-context-menu.cjs` | ✅ |
 | 8 | **退出弹窗文案对齐实际行为** | `src/main.js`, `CLAUDE.md` | ✅ |
 | 9 | **工作区文件夹改名** `IdleWorker` → `Idel-DreamMaker` | — | ✅ |
+| 10 | **精灵图描边修复**（imageSmoothingEnabled + alpha 阈值清理） | `pet/pet.js` | ✅ |
+| 11 | **右键菜单与选择器样式完全统一**（边距/字号/分割线/高亮/容器 padding） | `pet-context-menu/style.css`, `pet-selector/style.css`, `pet-selector/script.js` | ✅ |
 
 ---
 

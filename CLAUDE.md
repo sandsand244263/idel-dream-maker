@@ -456,7 +456,7 @@ function exitToHub() {
 | **2.3.0-dev** | **2026-06-14** | **配色体系升级：** 14色+自定义+手动g1/g2渐变；删除样式开关，毛玻璃常驻；字号4级+间距3级统一
 | **2.3.0** | **2026-06-15** | **主题体系全面实装：** 14色实装+渐变+毛玻璃卡片+设置面板色块+配色替换+子窗口主题同步+三大体系统一+宠物索引持久化+等级同步+教程重排+选择器UI
 | **2.3.0** | **2026-06-15** | **体验修复：** 副本卡片hover闪烁修复(拆分renderHubView)+宠物选择器底部溢出修复+sendToPet日志清理+game-tick修复(大厅时发送)
-| **2.3.1** | **2026-06-15** | **动效优化 + 闪烁修复：** Canvas rAF 重构、CSS will-change + prefers-reduced-motion、transitionend 替代 setTimeout、子窗口入场动效(后删除)、子窗口透明窗口闪烁修复(backgroundColor + showInactive + setOpacity方案)、右键菜单toggle、退出弹窗文案对齐实际行为、工作区文件夹改名 IdleWorker → Idel-DreamMaker
+| **2.3.1** | **2026-06-15** | **动效优化 + 闪烁修复 + 样式统一：** Canvas rAF 重构、CSS will-change + prefers-reduced-motion、transitionend 替代 setTimeout、子窗口入场动效(后删除)、子窗口透明窗口闪烁修复(backgroundColor + showInactive + setOpacity方案)、右键菜单toggle、退出弹窗文案对齐实际行为、工作区文件夹改名 IdleWorker → Idel-DreamMaker、精灵图缩放描边修复(imageSmoothingEnabled + alpha阈值清理)、右键菜单与宠物选择器样式完全统一(边距/字号/分割线/高亮/容器padding)
 
 ---
 
