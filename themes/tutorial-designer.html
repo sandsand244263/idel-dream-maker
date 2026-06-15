@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Idel-DreamMaker 教程界面设计器</title>
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --title-size:14; --subtitle-size:12; --body-size:11; --hint-size:11; --btn-size:11;
+  --lh:1.6; --w:280; --pd:20; --br:8;
+  --title-mb:0; --subtitle-mb:10; --p-mb:4; --ok-mt:14;
+}
+html,body { width:100%;height:100%;font-family:'Segoe UI',system-ui,sans-serif;background:#1a1a1a;color:#e0e0e0;overflow:hidden; }
+#app { display:flex;height:100vh; }
+
+/* Left panel */
+#controls { width:400px;min-width:400px;overflow-y:auto;background:#222;border-right:1px solid #444;padding:16px;display:flex;flex-direction:column;gap:8px; }
+#controls::-webkit-scrollbar { width:4px; }
+#controls::-webkit-scrollbar-track { background:transparent; }
+#controls::-webkit-scrollbar-thumb { background:#555;border-radius:2px; }
+h2 { font-size:14px;color:#fff;letter-spacing:1px;margin-bottom:4px; }
+h3 { font-size:12px;color:#aaa;margin:4px 0 6px;border-bottom:1px solid #333;padding-bottom:3px; }
+.section { background:#2a2a2a;border-radius:6px;padding:10px 12px; }
+.row { display:flex;align-items:center;gap:8px;margin-bottom:4px; }
+.row label { font-size:11px;color:#ccc;min-width:80px;flex-shrink:0; }
+.row input[type="range"] { flex:1; }
+.row .val { font-size:11px;color:#888;min-width:40px;font-family:'Consolas',monospace; }
+.preset-btn { padding:4px 10px;font-size:11px;background:#444;border:1px solid #666;color:#ccc;cursor:pointer;border-radius:3px; }
+.preset-btn:hover { background:#555;color:#fff; }
+.toggle { display:flex;align-items:center;gap:6px; }
+.toggle label { font-size:11px;color:#ddd;cursor:pointer; }
+
+/* Export */
+.export-box { background:#1a1a1a;border:1px solid #333;border-radius:4px;padding:8px; }
+.export-box pre { font-family:'Consolas',monospace;font-size:10px;color:#ccc;white-space:pre-wrap;word-break:break-all;line-height:1.4;max-height:120px;overflow-y:auto; }
+.cp-btn { display:block;margin-top:4px;width:100%;padding:5px 0;background:#0078D7;border:none;color:#fff;font-size:11px;cursor:pointer;border-radius:3px; }
+.cp-btn:hover { background:#1a8ae8; }
+.cp-btn:active { transform:scale(0.98); }
+.cp-btn.copied { background:#388e3c; }
+
+/* Preview */
+#preview-area { flex:1;display:flex;align-items:center;justify-content:center;background:repeating-conic-gradient(#181818 0% 25%,#1f1f1f 0% 50%) 0 0 / 20px 20px; }
+.phone { width:320px;height:640px;border-radius:12px;overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,0.8),0 0 0 1px rgba(255,255,255,0.05);display:flex;flex-direction:column;background:#0A0A0A;color:#00FF00;font-family:'Consolas','Courier New',monospace;position:relative; }
+
+/* Titlebar */
+.titlebar { display:flex;align-items:center;height:28px;flex-shrink:0;background:rgba(0,255,0,0.04);border-bottom:1px solid #00AA00;padding:0 8px;font-size:12px; }
+.titlebar-id { font-weight:bold; }
+.titlebar-sep { color:#00AA00;margin:0 4px;font-size:10px; }
+.titlebar-btn { margin-left:auto;width:28px;height:28px;background:transparent;border:none;color:#00AA00;font-size:11px;cursor:default;display:flex;align-items:center;justify-content:center; }
+
+/* Onboarding preview */
+.onboarding { flex:1;display:flex;align-items:center;justify-content:center;padding:20px; }
+.onboarding-box {
+  background:#0A0A0A;border:1px solid #00FF00;border-radius:calc(var(--br) * 1px);
+  padding:calc(var(--pd) * 1px);width:calc(var(--w) * 1px);
+  box-shadow:0 0 40px rgba(0,255,0,0.2);
+}
+.ob-title { font-weight:bold;font-size:calc(var(--title-size) * 1px);letter-spacing:1px;text-align:center;color:#00FF00;margin-bottom:calc(var(--title-mb) * 1px); }
+.ob-subtitle { font-weight:bold;font-size:calc(var(--subtitle-size) * 1px);margin-bottom:calc(var(--subtitle-mb) * 1px);letter-spacing:1px;text-align:center;color:#00FF00; }
+.ob-body { }
+.ob-body p { font-size:calc(var(--body-size) * 1px);line-height:var(--lh);margin-bottom:calc(var(--p-mb) * 1px);color:#00AA00;text-align:center; }
+.ob-name-row { margin:8px 0;display:flex;align-items:center;gap:6px;justify-content:center; }
+.ob-name-row label { font-size:calc(var(--body-size) * 1px);color:#00FF00;white-space:nowrap;flex-shrink:0; }
+.ob-name { flex:1;min-width:0;background:rgba(0,255,0,0.05);border:1px solid #00AA00;color:#00FF00;padding:4px 8px;font-family:inherit;font-size:calc(var(--body-size) * 1px);outline:none; }
+.ob-body b { color:#00FF00; }
+.ob-hint { margin-top:8px;font-size:calc(var(--hint-size) * 1px);color:#00AA00;opacity:0.6;text-align:center; }
+.ob-hint.hidden { display:none; }
+.ob-ok { display:block;margin:calc(var(--ok-mt) * 1px) auto 0;background:transparent;border:1px solid #00FF00;color:#00FF00;padding:6px 24px;font-family:inherit;font-size:calc(var(--btn-size) * 1px);cursor:pointer;letter-spacing:1px; }
+.ob-ok:active { transform:scale(0.96); }
+
+/* Button bar */
+.btn-bar { display:flex;flex-shrink:0;border-top:1px solid #00AA00; }
+.bar-btn { flex:1;background:transparent;border:none;color:#00AA00;font-family:inherit;font-size:11px;padding:6px 0;cursor:pointer;letter-spacing:1px;border-right:1px solid rgba(10,90,10,0.3); }
+.bar-btn:last-child { border-right:none; }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+<!-- LEFT -->
+<div id="controls">
+  <h2>教程界面设计器</h2>
+  <p style="font-size:10px;color:#666;margin-bottom:4px;">调节滑杆实时预览，调好复制 CSS 发给 AI</p>
+
+  <div class="section">
+    <h3>字号</h3>
+    <div class="row"><label>标题</label><input type="range" id="sTitle" min="10" max="24" value="14"><span class="val" id="vTitle">14px</span></div>
+    <div class="row"><label>副标题</label><input type="range" id="sSubtitle" min="10" max="20" value="12"><span class="val" id="vSubtitle">12px</span></div>
+    <div class="row"><label>正文</label><input type="range" id="sBody" min="9" max="16" value="11"><span class="val" id="vBody">11px</span></div>
+    <div class="row"><label>提示</label><input type="range" id="sHint" min="9" max="14" value="11"><span class="val" id="vHint">11px</span></div>
+    <div class="row"><label>按钮</label><input type="range" id="sBtn" min="9" max="16" value="11"><span class="val" id="vBtn">11px</span></div>
+  </div>
+
+  <div class="section">
+    <h3>行高 / 间距</h3>
+    <div class="row"><label>正文行高</label><input type="range" id="sLh" min="1" max="2.4" step="0.1" value="1.6"><span class="val" id="vLh">1.6</span></div>
+    <div class="row"><label>标题下边距</label><input type="range" id="sTitleMb" min="0" max="20" value="0"><span class="val" id="vTitleMb">0px</span></div>
+    <div class="row"><label>副标题下边距</label><input type="range" id="sSubMb" min="0" max="20" value="10"><span class="val" id="vSubMb">10px</span></div>
+    <div class="row"><label>段落间距</label><input type="range" id="sPMb" min="0" max="16" value="4"><span class="val" id="vPMb">4px</span></div>
+    <div class="row"><label>按钮上边距</label><input type="range" id="sOkMt" min="0" max="32" value="14"><span class="val" id="vOkMt">14px</span></div>
+    <div class="row"><label>容器宽度</label><input type="range" id="sW" min="220" max="360" value="280"><span class="val" id="vW">280px</span></div>
+    <div class="row"><label>容器内边距</label><input type="range" id="sPd" min="8" max="32" value="20"><span class="val" id="vPd">20px</span></div>
+    <div class="row"><label>圆角</label><input type="range" id="sBr" min="0" max="20" value="8"><span class="val" id="vBr">8px</span></div>
+  </div>
+
+  <div class="section">
+    <h3>显示控制</h3>
+    <div class="row">
+      <span class="toggle"><input type="checkbox" id="chkHint" checked><label for="chkHint">显示提示文字</label></span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>预设</h3>
+    <div class="row" style="gap:4px;flex-wrap:wrap;">
+      <button class="preset-btn" data-preset="default">默认</button>
+      <button class="preset-btn" data-preset="compact">紧凑</button>
+      <button class="preset-btn" data-preset="spacious">宽松</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>导出 CSS</h3>
+    <div class="export-box"><pre id="exportCss">#onboarding-box { }</pre></div>
+    <button class="cp-btn" id="copyBtn">复制 CSS</button>
+  </div>
+</div>
+
+<!-- RIGHT: Preview -->
+<div id="preview-area">
+  <div class="phone">
+    <div class="titlebar">
+      <span class="titlebar-id">ID:Worker</span>
+      <span class="titlebar-sep">|</span>
+      <span>LV:5</span>
+      <span class="titlebar-sep">|</span>
+      <span>拾荒者</span>
+      <button class="titlebar-btn">&times;</button>
+    </div>
+    <div class="onboarding">
+      <div class="onboarding-box" id="obBox">
+        <div class="ob-title">欢迎来到</div>
+        <div class="ob-subtitle">Idel-DreamMaker</div>
+        <div class="ob-body">
+          <p>藏在系统托盘里的宠物陪伴应用</p>
+          <p>挂机升级 · 解锁称号与成就</p>
+          <p>触发故事事件——陪你度过每一刻</p>
+          <div class="ob-name-row"><label>你的名称：</label><input class="ob-name" value="Worker"></div>
+          <p><b>如何开始：</b></p>
+          <p>1. 点击 <b>[副本]</b> 或 <b>[+ 抽取副本]</b> 选择一个故事世界</p>
+          <p>2. 进入后自动挂机，经验随时间增长</p>
+          <p>3. 升级解锁称号，随机弹出故事事件</p>
+          <p>4. 随时点击 <b>[大厅]</b> 退出，经验累入全局等级</p>
+        </div>
+        <div class="ob-hint" id="obHint">提示：宠物窗口常驻桌面，点击宠物可交互</div>
+        <button class="ob-ok">开始冒险</button>
+      </div>
+    </div>
+    <div class="btn-bar">
+      <button class="bar-btn">宠物</button>
+      <button class="bar-btn">副本</button>
+      <button class="bar-btn">称号</button>
+      <button class="bar-btn">设置</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+function bindSlider(sliderId, valId, cssVar) {
+  const s = $(sliderId), v = $(valId);
+  s.addEventListener('input', () => {
+    const suffix = cssVar === '--lh' ? '' : 'px';
+    v.textContent = s.value + suffix;
+    document.documentElement.style.setProperty(cssVar, s.value);
+    updateExport();
+  });
+}
+
+bindSlider('sTitle', 'vTitle', '--title-size');
+bindSlider('sSubtitle', 'vSubtitle', '--subtitle-size');
+bindSlider('sBody', 'vBody', '--body-size');
+bindSlider('sHint', 'vHint', '--hint-size');
+bindSlider('sBtn', 'vBtn', '--btn-size');
+bindSlider('sLh', 'vLh', '--lh');
+bindSlider('sTitleMb', 'vTitleMb', '--title-mb');
+bindSlider('sSubMb', 'vSubMb', '--subtitle-mb');
+bindSlider('sPMb', 'vPMb', '--p-mb');
+bindSlider('sOkMt', 'vOkMt', '--ok-mt');
+bindSlider('sW', 'vW', '--w');
+bindSlider('sPd', 'vPd', '--pd');
+bindSlider('sBr', 'vBr', '--br');
+
+$('chkHint').addEventListener('change', () => {
+  $('obHint').classList.toggle('hidden', !$('chkHint').checked);
+  updateExport();
+});
+
+/* Presets */
+const PRESETS = {
+  default: { title:14, subtitle:12, body:11, hint:11, btn:11, lh:1.6, titleMb:0, subMb:10, pMb:4, okMt:14, w:280, pd:20, br:8 },
+  compact: { title:13, subtitle:11, body:10, hint:10, btn:10, lh:1.4, titleMb:0, subMb:6, pMb:2, okMt:10, w:260, pd:14, br:6 },
+  spacious: { title:16, subtitle:14, body:12, hint:12, btn:12, lh:1.8, titleMb:4, subMb:14, pMb:6, okMt:18, w:300, pd:24, br:12 },
+};
+
+document.querySelectorAll('[data-preset]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const p = PRESETS[btn.dataset.preset];
+    if (!p) return;
+    const map = [
+      ['sTitle','vTitle','--title-size',p.title,'px'],
+      ['sSubtitle','vSubtitle','--subtitle-size',p.subtitle,'px'],
+      ['sBody','vBody','--body-size',p.body,'px'],
+      ['sHint','vHint','--hint-size',p.hint,'px'],
+      ['sBtn','vBtn','--btn-size',p.btn,'px'],
+      ['sLh','vLh','--lh',p.lh,''],
+      ['sTitleMb','vTitleMb','--title-mb',p.titleMb,'px'],
+      ['sSubMb','vSubMb','--subtitle-mb',p.subMb,'px'],
+      ['sPMb','vPMb','--p-mb',p.pMb,'px'],
+      ['sOkMt','vOkMt','--ok-mt',p.okMt,'px'],
+      ['sW','vW','--w',p.w,'px'],
+      ['sPd','vPd','--pd',p.pd,'px'],
+      ['sBr','vBr','--br',p.br,'px'],
+    ];
+    map.forEach(([sid, vid, cssv, val, suffix]) => {
+      $(sid).value = val;
+      $(vid).textContent = val + suffix;
+      document.documentElement.style.setProperty(cssv, val);
+    });
+    updateExport();
+  });
+});
+
+/* Export */
+function updateExport() {
+  const w = $('sW').value; const pd = $('sPd').value; const br = $('sBr').value;
+  const tSize = $('sTitle').value; const subSize = $('sSubtitle').value;
+  const bSize = $('sBody').value; const hSize = $('sHint').value; const btnSize = $('sBtn').value;
+  const lh = $('sLh').value; const tMb = $('sTitleMb').value;
+  const subMb = $('sSubMb').value; const pMb = $('sPMb').value; const okMt = $('sOkMt').value;
+  let css = `#onboarding-box {\n  width: ${w}px;\n  padding: ${pd}px;\n  border-radius: ${br}px;\n}`;
+  css += `\n\n#onboarding-title {\n  font-size: ${tSize}px;\n  margin-bottom: ${tMb}px;\n}`;
+  css += `\n\n#onboarding-subtitle {\n  font-size: ${subSize}px;\n  margin-bottom: ${subMb}px;\n}`;
+  css += `\n\n#onboarding-body p {\n  font-size: ${bSize}px;\n  line-height: ${lh};\n  margin-bottom: ${pMb}px;\n}`;
+  css += `\n\n#onboarding-ok {\n  font-size: ${btnSize}px;\n  margin-top: ${okMt}px;\n}`;
+  if ($('chkHint').checked) {
+    css += `\n\n.onboarding-hint {\n  font-size: ${hSize}px;\n}`;
+  }
+  $('exportCss').textContent = css;
+}
+
+/* Copy */
+$('copyBtn').addEventListener('click', async () => {
+  const txt = $('exportCss').textContent;
+  try { await navigator.clipboard.writeText(txt); }
+  catch { const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
+  const btn = $('copyBtn'); btn.textContent = '已复制!'; btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = '复制 CSS'; btn.classList.remove('copied'); }, 1500);
+});
+
+updateExport();
+</script>
+</body>
+</html>
