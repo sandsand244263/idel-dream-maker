@@ -53,44 +53,11 @@ h3 { font-size: 12px; color: #aaa; margin: 0 0 6px; border-bottom: 1px solid #33
 .note { font-size: 10px; color: #555; line-height: 1.4; }
 
 /* Preview */
-#preview-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #111; position: relative; overflow: hidden; }
+#preview-area { flex: 1; display: flex; align-items: center; justify-content: center; background: #111; position: relative; overflow: hidden; }
 #preview-area::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 30% 30%, #4A90D9, transparent 50%), radial-gradient(ellipse at 70% 70%, #87CEEB, transparent 50%), radial-gradient(ellipse at 50% 50%, #5CB85C, transparent 40%); opacity: 0.15; pointer-events: none; }
 
-.preview-toolbar { display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.06); flex-shrink: 0; width: 100%; z-index: 1; }
-.preview-toolbar-label { font-size: 11px; color: #666; margin-right: 4px; }
-.preview-tab { padding: 4px 12px; font-size: 11px; background: transparent; border: 1px solid #555; color: #888; cursor: pointer; border-radius: 3px; font-family: inherit; letter-spacing: 0.5px; transition: all 0.12s; }
-.preview-tab:hover { border-color: #888; color: #eee; }
-.preview-tab.active { background: #0078D7; border-color: #0078D7; color: #fff; }
-
-/* ── Preview containers ── */
-.preview-area-inner { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; position: relative; }
-.preview { display: none; flex-direction: column; background: linear-gradient(180deg, var(--g1), var(--g2)); color: var(--fg); font-family: 'Consolas', 'Courier New', monospace; box-shadow: 0 0 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05); transition: background 0.15s, color 0.15s; }
-.preview.show { display: flex; }
-
-/* Main window */
-.preview.main { width: 320px; height: 720px; border-radius: 12px; overflow: hidden; }
-
-/* Pet window */
-.preview.pet { width: 260px; height: 320px; border-radius: 16px; padding: 12px; overflow: hidden; }
-.pet-header { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px; flex-shrink: 0; }
-.pet-canvas { flex: 1; display: flex; align-items: center; justify-content: center; border-radius: 12px; margin-bottom: 8px; border: 1px dashed var(--dim); background: rgba(255,255,255,0.03); min-height: 100px; }
-.pet-canvas span { opacity: 0.35; font-size: 32px; }
-.pet-info { text-align: center; font-size: 12px; margin-bottom: 8px; flex-shrink: 0; }
-.pet-info .title { color: var(--fg); font-weight: bold; }
-.pet-info .detail { color: var(--dim); }
-.pet-event { border: 1px solid var(--dim); border-radius: 8px; padding: 8px; margin-bottom: 8px; font-size: 11px; background: rgba(255,255,255,0.04); flex-shrink: 0; }
-.pet-event-text { color: var(--fg); }
-.pet-footer { display: flex; gap: 6px; flex-shrink: 0; }
-.pet-btn { flex: 1; padding: 4px 0; background: transparent; border: 1px solid var(--dim); color: var(--dim); font-family: inherit; font-size: 11px; cursor: pointer; border-radius: 4px; letter-spacing: 1px; }
-.pet-btn:hover { color: var(--fg); border-color: var(--fg); }
-
-/* Mini bar */
-.preview.mini { width: 250px; height: auto; border-radius: 8px; padding: 8px 12px; gap: 6px; }
-.mini-info { font-size: 11px; display: flex; gap: 4px; flex-wrap: wrap; flex-shrink: 0; }
-.mini-info .sep { color: var(--dim); }
-.mini-info .dim { color: var(--dim); }
-.mini-exp { height: 8px; background: rgba(128,128,128,0.12); border-radius: 4px; overflow: hidden; }
-.mini-exp-fill { height: 100%; width: 67%; background: linear-gradient(90deg, var(--fg), var(--dim)); border-radius: 4px; }
+.phone { width: 320px; height: 720px; border-radius: 12px; overflow: hidden; box-shadow: 0 0 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05); display: flex; flex-direction: column; background: var(--bg); color: var(--fg); font-family: 'Consolas', 'Courier New', monospace; position: relative; transition: background 0.15s, color 0.15s; }
+.phone.gradient-bg { background: linear-gradient(180deg, var(--g1), var(--g2)); }
 
 .titlebar { display: flex; align-items: center; height: 28px; flex-shrink: 0; border-bottom: 1px solid var(--dim); user-select: none; position: relative; z-index: 1; transition: background 0.15s; }
 .titlebar-id { color: var(--fg); font-weight: bold; font-size: 12px; padding-left: 6px; white-space: nowrap; }
@@ -157,78 +124,39 @@ h3 { font-size: 12px; color: #aaa; margin: 0 0 6px; border-bottom: 1px solid #33
 
 <!-- RIGHT: Preview -->
 <div id="preview-area">
-  <div class="preview-toolbar">
-    <span class="preview-toolbar-label">形态:</span>
-    <button class="preview-tab active" data-view="main">主窗口</button>
-    <button class="preview-tab" data-view="pet">宠物窗口</button>
-    <button class="preview-tab" data-view="mini">迷你栏</button>
-  </div>
-  <div class="preview-area-inner">
-
-    <!-- Main window -->
-    <div class="preview main show" id="viewMain">
-      <div class="titlebar">
-        <span class="titlebar-id">ID:Worker</span>
-        <span class="titlebar-sep">|</span>
-        <span class="titlebar-lv">LV:5</span>
-        <span class="titlebar-sep">|</span>
-        <span class="titlebar-title">拾荒者</span>
-        <div class="titlebar-btns"><button class="titlebar-btn">&times;</button></div>
-      </div>
-      <div class="hub-view">
-        <div class="hub-welcome">
-          <div class="hub-greeting">[ 大 厅 ]</div>
-          <div class="hub-player-name">Worker</div>
-          <div class="hub-level">大厅 Lv.3 | 累计经验 523</div>
-        </div>
-        <div class="hub-cards">
-          <div class="card"><div class="card-name">废土 (Wasteland)</div><div class="card-desc">在荒芜的废土上生存，寻找资源，建立庇护所。</div><div class="card-meta"><span>500 事件</span><span>50 成就</span></div></div>
-          <div class="card"><div class="card-name">示例副本 (Demo)</div><div class="card-desc">用于预览主题效果的示例副本。</div><div class="card-meta"><span>100 事件</span><span>10 成就</span></div></div>
-        </div>
-      </div>
-      <div class="exp-row"><div class="exp-track"><div class="exp-fill"></div></div><div class="exp-text">Lv.5 | 67%</div></div>
-      <div class="status-bar">v2.2.0 | Worker | 废土<br>LV:5 | 拾荒者 | 1h23m | 成就:3</div>
-      <div class="btn-bar">
-        <button class="bar-btn">宠物</button>
-        <button class="bar-btn">副本</button>
-        <button class="bar-btn">称号</button>
-        <button class="bar-btn">设置</button>
-      </div>
-      <div class="toast">提示：这是一个示例消息</div>
+  <div class="phone" id="phone">
+    <div class="titlebar">
+      <span class="titlebar-id">ID:Worker</span>
+      <span class="titlebar-sep">|</span>
+      <span class="titlebar-lv">LV:5</span>
+      <span class="titlebar-sep">|</span>
+      <span class="titlebar-title">拾荒者</span>
+      <div class="titlebar-btns"><button class="titlebar-btn">&times;</button></div>
     </div>
 
-    <!-- Pet window -->
-    <div class="preview pet" id="viewPet">
-      <div class="pet-header">
-        <span style="color:var(--fg);font-weight:bold;">ID:Worker</span>
-        <span style="color:var(--dim);">Lv.5</span>
+    <div class="hub-view">
+      <div class="hub-welcome" id="previewWelcome">
+        <div class="hub-greeting">[ 大 厅 ]</div>
+        <div class="hub-player-name">Worker</div>
+        <div class="hub-level">大厅 Lv.3 | 累计经验 523</div>
       </div>
-      <div class="pet-canvas"><span>[ 宠物 ]</span></div>
-      <div class="pet-info">
-        <div class="title">拾荒者</div>
-        <div class="detail">28m · 成就:0</div>
-      </div>
-      <div class="pet-event">
-        <div class="pet-event-text">事件气泡占位文本</div>
-      </div>
-      <div class="pet-footer">
-        <button class="pet-btn">切换</button>
-        <button class="pet-btn">设置</button>
+      <div class="hub-cards">
+        <div class="card" id="previewCard1"><div class="card-name">废土 (Wasteland)</div><div class="card-desc">在荒芜的废土上生存，寻找资源，建立庇护所。</div><div class="card-meta"><span>500 事件</span><span>50 成就</span></div></div>
+        <div class="card" id="previewCard2"><div class="card-name">示例副本 (Demo)</div><div class="card-desc">用于预览主题效果的示例副本。</div><div class="card-meta"><span>100 事件</span><span>10 成就</span></div></div>
       </div>
     </div>
 
-    <!-- Mini bar -->
-    <div class="preview mini" id="viewMini">
-      <div class="mini-info">
-        <span style="color:var(--fg);">Worker</span>
-        <span class="sep">|</span>
-        <span style="color:var(--fg);">LV:5</span>
-        <span class="sep">|</span>
-        <span class="dim">拾荒者</span>
-      </div>
-      <div class="mini-exp"><div class="mini-exp-fill"></div></div>
+    <div class="exp-row"><div class="exp-track"><div class="exp-fill"></div></div><div class="exp-text">Lv.5 | 67%</div></div>
+    <div class="status-bar">v2.2.0 | Worker | 废土<br>LV:5 | 拾荒者 | 1h23m | 成就:3</div>
+
+    <div class="btn-bar">
+      <button class="bar-btn">宠物</button>
+      <button class="bar-btn">副本</button>
+      <button class="bar-btn">称号</button>
+      <button class="bar-btn">设置</button>
     </div>
 
+    <div class="toast">提示：这是一个示例消息</div>
   </div>
 </div>
 
@@ -305,6 +233,7 @@ function applyColor(id) {
   setCSSVar('--fg', c.fg); setCSSVar('--bg', c.bg); setCSSVar('--dim', c.dim);
   setCSSVar('--border', c.dim);
   setCSSVar('--g1', c.g1); setCSSVar('--g2', c.g2);
+  $('phone').classList.add('gradient-bg');
   updateExport();
 }
 
@@ -314,6 +243,7 @@ function applyCustomColor() {
   setCSSVar('--fg', fg); setCSSVar('--bg', bg); setCSSVar('--dim', dim);
   setCSSVar('--border', border);
   setCSSVar('--g1', '#333'); setCSSVar('--g2', bg);
+  $('phone').classList.add('gradient-bg');
   updateExport();
 }
 
@@ -356,17 +286,6 @@ $('copyBtn').addEventListener('click', async () => {
   catch { const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
   const btn = $('copyBtn'); btn.textContent = '已复制!'; btn.classList.add('copied');
   setTimeout(() => { btn.textContent = '复制 CSS'; btn.classList.remove('copied'); }, 1500);
-});
-
-/* ── View switching ── */
-document.querySelectorAll('.preview-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.preview-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    const view = tab.dataset.view;
-    document.querySelectorAll('.preview').forEach(p => p.classList.remove('show'));
-    document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1)).classList.add('show');
-  });
 });
 
 /* ── Init ── */
