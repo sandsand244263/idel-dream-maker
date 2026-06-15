@@ -28,7 +28,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #hub-scenario-list::-webkit-scrollbar-track { background: var(--bg); }
 #hub-scenario-list::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
 .hub-card { border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.15s; background: rgba(255,255,255,0.08); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.12); transform: translateZ(0); }
-.hub-card:hover { border-color: var(--fg); background: rgba(0,255,0,0.04); backdrop-filter: none; -webkit-backdrop-filter: none; }
+.hub-card:hover { border-color: var(--fg); }
 .hub-card:active { transform:scale(0.98); }
 .hub-card-name { font-weight: bold; font-size: 12px; margin-bottom: 4px; color: var(--fg); }
 .hub-card-desc { font-size: 11px; color: var(--dim); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
