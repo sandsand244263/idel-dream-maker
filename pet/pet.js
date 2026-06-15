@@ -128,8 +128,16 @@ function loadSpritesheet(b64,ext,cfg){
   if(!b64||b64.length<100)return;
   const img=new Image();
   img.onload=()=>{
-    spritesheet=img;
     const iw=img.naturalWidth,ih=img.naturalHeight;
+    // Clean semi-transparent edge pixels (alpha<24 → fully transparent)
+    const oc=document.createElement('canvas');
+    oc.width=iw; oc.height=ih;
+    const octx=oc.getContext('2d');
+    octx.drawImage(img,0,0);
+    const d=octx.getImageData(0,0,iw,ih);
+    for(let i=3;i<d.data.length;i+=4){const a=d.data[i];if(a>0&&a<24)d.data[i]=0;}
+    octx.putImageData(d,0,0);
+    spritesheet=oc;
     if(iw%192===0&&ih%208===0){FW=192;FH=208;}
     else if(iw%128===0&&ih%128===0){FW=128;FH=128;}
     else if(iw%64===0&&ih%64===0){FW=64;FH=64;}
