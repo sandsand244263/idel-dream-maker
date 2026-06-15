@@ -358,6 +358,9 @@ function renderThemeSwatches() {
     if (t.id === 'custom') {
       btn.style.borderStyle = 'dashed';
       btn.style.gridColumn = '1 / -1';
+      const st = getComputedStyle(document.documentElement);
+      btn.style.background = st.getPropertyValue('--bg').trim() || t.bg;
+      btn.style.color = st.getPropertyValue('--fg').trim() || t.fg;
     }
     btn.addEventListener('click', () => selectTheme(t.id));
     btn.addEventListener('mouseenter', () => { if (t.id !== cur) btn.style.borderColor = '#888'; });
