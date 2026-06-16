@@ -1,4 +1,4 @@
-const { BrowserWindow, ipcMain } = require('electron');
+const { BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
 
 const HIDE_POS = { x: -9999, y: -9999 };
@@ -108,6 +108,10 @@ function registerSelectorIpcHandlers(app) {
   });
 
   ipcMain.handle('close-selector', () => { hideSelector(); return true; });
+  ipcMain.handle('open-external-link', (_, { url }) => {
+    if (url) shell.openExternal(url);
+    return true;
+  });
 }
 
 module.exports = { registerSelectorIpcHandlers, initSelector, sendToSelector };

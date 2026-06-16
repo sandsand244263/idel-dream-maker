@@ -152,7 +152,7 @@ function loadSpritesheet(b64,ext,cfg){
 function loadPet(idx){
   if(idx<0||idx>=pets.length){
     spritesheet=null;
-    infoText.textContent='暂无宠物，请放入精灵图';
+    infoText.textContent='暂无宠物，前往 petdex.dev 下载精灵图';
     return;
   }
   window.pet.invoke('get-pet-spritesheet',{index:idx}).then(r=>{if(r)loadSpritesheet(r.data,r.ext,r.config||null);}).catch(()=>{});
@@ -169,7 +169,7 @@ function updateExpBar(){
   expDetail.textContent=`${Math.floor(e)} / ${nr} (${rounded}%)`;
 }
 function updateInfoBar(){
-  if(!spritesheet){infoText.textContent='暂无宠物，请放入精灵图';return;}
+  if(!spritesheet){infoText.textContent='暂无宠物，前往 petdex.dev 下载精灵图';return;}
   const title=gameInfo.title&&gameInfo.title!=='—'?gameInfo.title:'';
   const dl=gameInfo.isInHub?(gameInfo.hubLevel||1):(gameInfo.level||1);
   infoText.textContent=title?`${gameInfo.scenario} | LV.${dl} | ${title}`:`${gameInfo.scenario} | LV.${dl}`;

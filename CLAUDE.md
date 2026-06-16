@@ -494,7 +494,7 @@ function exitToHub() {
 
 ## 注意点
 
-- **像素宠物版权声明：** PetDex 社区精灵为玩家自行下载的用户数据（`%APPDATA%/Idel-DreamMaker/pets/`）。应用不捆绑、不分发任何精灵文件。精灵版权归各自创作者或 IP 权利人。应用内显示免责声明。
+- **像素宠物版权声明：** PetDex 社区精灵为玩家自行下载的用户数据（`%APPDATA%/Idel-DreamMaker/pets/`）。应用不捆绑、不分发任何精灵文件。精灵版权归各自创作者或 IP 权利人。应用内显示免责声明。下载地址：https://petdex.dev/
 - 游戏引擎在 Electron 主进程运行（`electron/main.cjs`），通过 IPC (`contextBridge` + `ipcRenderer`/`ipcMain`) 与渲染进程通信
 - 副本 `.md` 文件为作者内部制作工具，构建时由 `build.js` 解析为 JSON
 - 游戏是零交互的——进入副本后没有按钮/点击，纯挂机

@@ -1,4 +1,4 @@
-const LANG = { back:'返回', hint:'将精灵图放入宠物文件夹', openFolder:'打开文件夹', empty:'暂无宠物' };
+const LANG = { back:'返回', hint:'从 petdex.dev 下载精灵图，解压后将文件夹放入', openFolder:'打开文件夹', petdexLink:'前往 petdex.dev 下载', disclaimer:'宠物精灵为社区用户创作的同人作品，版权归各自权利人。本软件不捆绑、不分发任何精灵文件。', empty:'暂无宠物' };
 function t(key) { return LANG[key] || key; }
 
 const petListEl = document.getElementById('pet-list');
@@ -41,6 +41,10 @@ function render() {
 
 document.getElementById('btn-open-folder').addEventListener('click', () => {
   window.petSelector.invoke('open-pets-folder').catch(() => {});
+});
+
+document.getElementById('btn-petdex-link').addEventListener('click', () => {
+  window.petSelector.invoke('open-external-link', { url: 'https://petdex.dev/' }).catch(() => {});
 });
 
 document.getElementById('header').addEventListener('click', () => {
