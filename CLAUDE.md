@@ -248,9 +248,9 @@ function exitToHub() {
 
 | 配置项 | 存储位置 | 说明 |
 |--------|---------|------|
-| `language` | `GameState.language` (`electron/main.cjs`) | UI 语言，默认 `zh`，可选 `en` |
+| `language` | `GameState.language` (`electron/main.cjs`) | UI 语言，仅中文 |
 
-前端通过 `const LANG = { zh: {...}, en: {...} }` 映射表实现文本切换（`src/main.js`）。
+前端通过 `const LANG = { ... }` 映射表实现文本切换（`src/main.js`）。
 
 静态 HTML 文本通过 `data-i18n` 属性标记，由 `applyLanguage()` 统一替换；
 动态生成文本通过 `t(key)` / `tf(key, ...)` 函数从 LANG 表取值；
@@ -473,7 +473,7 @@ function exitToHub() {
 | **2.3.1** | **2026-06-15** | **动效优化 + 闪烁修复 + 样式统一：** Canvas rAF 重构、CSS will-change + prefers-reduced-motion、transitionend 替代 setTimeout、子窗口入场动效(后删除)、子窗口透明窗口闪烁修复(backgroundColor + showInactive + setOpacity方案)、右键菜单toggle、退出弹窗文案对齐实际行为、工作区文件夹改名 IdleWorker → Idel-DreamMaker、精灵图缩放描边修复(imageSmoothingEnabled + alpha阈值清理)、右键菜单与宠物选择器样式完全统一(边距/字号/分割线/高亮/容器padding)
 | **2.3.2** | **2026-06-16** | **Bug 修复：** 成就 runtime 条件乘 360 万倍修复、auto-save IPC 白名单缺失修复、删除前端旧 game.js 死代码
 | **2.4.0** | **2026-06-16** | **数据规格对齐 + 节假日系统重写：** 称号30/成就50/节日25+，农历动态计算，临近3天检测，ScenarioWriter全规格更新；删副本MD格式模板+节假日事件池+副本设定集；废土副本扩充(称号30/成就50/节日事件52条)；Mac适配代码编写（未测试）
-| **2.4.0** | **2026-06-16** | **全面中英适配：** LANG表重构+data-i18n全面标记+子窗口本地化+tray菜单动态中英文切换
+| **2.4.0** | **2026-06-16** | **全面中文本地化：** LANG表重构+data-i18n全面标记+子窗口本地化+tray菜单动态；后续移除英文支持
 
 ---
 
