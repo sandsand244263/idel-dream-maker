@@ -93,20 +93,7 @@ function buildFrames(s){
   for(let i=0;i<n;i++){let d=b;if(i===0)d*=c.firstMult||2;else if(i===n-1)d*=c.lastMult||2;f.push({c:i,r:c.row,d});}
   return f;
 }
-// Offscreen canvas for double-buffering (prevent flicker from clearRect)
-const offscreen = document.createElement('canvas');
-offscreen.width = 120;
-offscreen.height = 140;
-const offCtx = offscreen.getContext('2d');
-offCtx.imageSmoothingEnabled = false;
-
-function drawSprite(col,row){
-  if(!spritesheet)return;
-  offCtx.fillStyle = '#0a0a0a';
-  offCtx.fillRect(0,0,120,140);
-  offCtx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,120,140);
-  ctx.drawImage(offscreen,0,0);
-}
+function drawSprite(col,row){if(!spritesheet)return;ctx.clearRect(0,0,120,140);ctx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,120,140);}
 function stopAnim(){if(animFrameId){cancelAnimationFrame(animFrameId);animFrameId=null;}}
 function animLoop(now){
   if(!animFrameId)return;
@@ -114,9 +101,9 @@ function animLoop(now){
   const dur=frameList[frameIdx]?frameList[frameIdx].d:140;
   if(elapsed>=dur){
     frameIdx=(frameIdx+1)%frameList.length;
-    drawSprite(frameList[frameIdx].c,frameList[frameIdx].r);
     lastFrameTime=now;
   }
+  drawSprite(frameList[frameIdx].c,frameList[frameIdx].r);
   animFrameId=requestAnimationFrame(animLoop);
 }
 function play(s){
@@ -266,6 +253,7 @@ let expRafId=null;
 function expLoop(){updateExpBar();expRafId=requestAnimationFrame(expLoop);}
 expRafId=requestAnimationFrame(expLoop);
 const IDLE_ANIMS=['failed','review','extra1','extra2'];
+// Random idle animation every 20s (30% chance)
 setInterval(() => {
   if (curState === 'idle' && Math.random() < 0.3) {
     transitionTo(IDLE_ANIMS[Math.floor(Math.random()*IDLE_ANIMS.length)]);
