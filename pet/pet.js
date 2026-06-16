@@ -118,7 +118,7 @@ function transitionTo(s){
   if(curState===s)return;if(returnTimer){clearTimeout(returnTimer);returnTimer=null;}
   play(s);if(s==='idle')return;
   const totalMs=frameList.reduce((sf,fd)=>sf+fd.d,0);
-  returnTimer=setTimeout(()=>{returnTimer=null;if(curState!=='idle')play('idle');},totalMs+200);
+  returnTimer=setTimeout(()=>{returnTimer=null;if(curState!=='idle')play('idle');},Math.max(0,totalMs-50));
 }
 function animToIdle(){if(curState!=='idle')play('idle');}
 
