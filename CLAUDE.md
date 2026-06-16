@@ -252,6 +252,11 @@ function exitToHub() {
 
 前端通过 `const LANG = { zh: {...}, en: {...} }` 映射表实现文本切换（`src/main.js`）。
 
+静态 HTML 文本通过 `data-i18n` 属性标记，由 `applyLanguage()` 统一替换；
+动态生成文本通过 `t(key)` / `tf(key, ...)` 函数从 LANG 表取值；
+子窗口（右键菜单/气泡/选择器）通过 IPC `language-changed` 事件接收语言切换；
+托盘菜单通过 `updateMenu()` 动态重建并显示当前语言。
+
 | 配置项 | 说明 | 默认值 |
 |--------|------|--------|
 | `language` | UI 界面语言（按钮/标签/提示等） | `zh` |
@@ -428,7 +433,7 @@ function exitToHub() {
 | **v2.3** | **主题体系全面实装** | ✅ |
 | **v2.3.1** | **动效优化 + 闪烁修复** | ✅ |
 | **v2.3.2** | **Bug 修复** | ✅ |
-| **v2.4.0** | **数据规格对齐 + 节假日系统重写：** 称号30/成就50/节日25+，农历动态计算，临近3天检测，ScenarioWriter全规格更新 | ✅ |
+| **v2.4.0** | **数据规格对齐 + 节假日系统重写** | ✅ |
 | v2.5+ | 新副本 / Mac 适配 / Linux 打包 / Steam | 待定 |
 
 > 注：Tauri 版已废弃（WebView2/Edge v149 不兼容，官方 1.5 年未修）。v1.0 迁移到 Electron。
@@ -468,6 +473,7 @@ function exitToHub() {
 | **2.3.1** | **2026-06-15** | **动效优化 + 闪烁修复 + 样式统一：** Canvas rAF 重构、CSS will-change + prefers-reduced-motion、transitionend 替代 setTimeout、子窗口入场动效(后删除)、子窗口透明窗口闪烁修复(backgroundColor + showInactive + setOpacity方案)、右键菜单toggle、退出弹窗文案对齐实际行为、工作区文件夹改名 IdleWorker → Idel-DreamMaker、精灵图缩放描边修复(imageSmoothingEnabled + alpha阈值清理)、右键菜单与宠物选择器样式完全统一(边距/字号/分割线/高亮/容器padding)
 | **2.3.2** | **2026-06-16** | **Bug 修复：** 成就 runtime 条件乘 360 万倍修复、auto-save IPC 白名单缺失修复、删除前端旧 game.js 死代码
 | **2.4.0** | **2026-06-16** | **数据规格对齐 + 节假日系统重写：** 称号30/成就50/节日25+，农历动态计算，临近3天检测，ScenarioWriter全规格更新；删副本MD格式模板+节假日事件池+副本设定集；废土副本扩充(称号30/成就50/节日事件52条)；Mac适配代码编写（未测试）
+| **2.4.0** | **2026-06-16** | **全面中英适配：** LANG表重构+data-i18n全面标记+子窗口本地化+tray菜单动态中英文切换
 
 ---
 
