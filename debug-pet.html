@@ -14,6 +14,8 @@
   <button onclick="runAnim('wave')">Run Wave</button>
   <button onclick="runAnim('jump')">Run Jump</button>
   <button onclick="runAnim('idle')">Run Idle</button>
+  <button onclick="stepFrame()">Step &#9654;</button>
+  <span id="step-display" style="color:#888;font-size:12px;margin-left:10px">-</span>
   <button onclick="stopAll()">Stop</button>
   <button onclick="logEl.textContent=''">Clear Log</button>
 </div>
@@ -46,6 +48,15 @@ const DEFAULT_STATES={
 
 let spritesheet=null,frameList=[],frameIdx=0,animFrameId=null,curState='idle',lastFrameTime=0;
 let cycleCount=0;
+let stepIdx=-1,stepFrames=[],stepTotal=0,stepState='';
+
+function log(msg){logEl.textContent+=msg+'\n';console.log(msg);}
+
+function updateStepDisplay(){
+  const el=document.getElementById('step-display');
+  if(stepIdx<0||stepFrames.length===0){el.textContent='-';return;}
+  el.textContent=`当前帧: ${stepIdx}/${stepFrames.length} | 累计: ${stepTotal}ms`;
+}
 
 function log(msg){logEl.textContent+=msg+'\n';console.log(msg);}
 
@@ -105,6 +116,25 @@ function play(s){
   if(frameList.length===1)return;
   lastFrameTime=performance.now();
   animFrameId=requestAnimationFrame(animLoop);
+}
+
+// Step one frame forward
+function stepFrame(){
+  if(!spritesheet){log('请先加载精灵图');return;}
+  if(!stepFrames.length||stepIdx>=stepFrames.length-1){
+    const s='review';
+    stepState=s;stepFrames=buildFrames(s);stepIdx=-1;stepTotal=0;
+    log(`=== ${s} 步进模式 ===`);
+    log(`帧数:${stepFrames.length}, 每帧:[${stepFrames.map(f=>f.d).join(',')}], 总计:${stepFrames.reduce((sf,fd)=>sf+fd.d,0)}ms`);
+    stopAnim();curState=s;
+  }
+  stepIdx++;
+  if(stepIdx<stepFrames.length){
+    stepTotal=stepFrames.slice(0,stepIdx+1).reduce((sf,fd)=>sf+fd.d,0);
+    drawSprite(stepFrames[stepIdx].c,stepFrames[stepIdx].r);
+    log(`[${stepState}] 帧 ${stepIdx}/${stepFrames.length-1} → 累计 ${stepTotal}ms`);
+    updateStepDisplay();
+  }else{log(`[${stepState}] 播完所有帧，总计 ${stepTotal}ms`);}
 }
 
 // Simulate transitionTo with totalMs-50
