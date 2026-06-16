@@ -3,36 +3,26 @@
 <head><meta charset="utf-8"><title>Pet Animation Debug</title></head>
 <body style="background:#111;color:#0f0;font-family:monospace;padding:20px">
 <h2 style="color:#0f0">Pet Animation Debug</h2>
-<p id="load-status" style="color:#ff0">等待精灵图加载...</p>
+<p id="load-status" style="color:#ff0">请选择精灵图文件</p>
 
 <canvas id="c" width="120" height="140" style="border:1px solid #0f0;display:block;margin:20px 0;image-rendering:pixelated"></canvas>
 
 <div style="margin:10px 0">
+  <input type="file" id="file-input" accept=".webp,.png">
+  <button onclick="loadFile()">加载精灵图</button>
   <button onclick="runAnim('review')">Run Review</button>
   <button onclick="runAnim('wave')">Run Wave</button>
   <button onclick="runAnim('jump')">Run Jump</button>
-  <button onclick="runAnim('failed')">Run Failed</button>
   <button onclick="runAnim('idle')">Run Idle</button>
   <button onclick="stopAll()">Stop</button>
   <button onclick="logEl.textContent=''">Clear Log</button>
 </div>
 
-<p style="color:#888;font-size:12px">操作说明：<br>
-1. 用 electron 启动游戏<br>
-2. 在宠物窗口按 Ctrl+Shift+I 打开 DevTools<br>
-3. Console 输入: localStorage.getItem('debug_sprite')<br>
-4. 把结果复制到下面输入框，点"加载"</p>
+<p style="color:#888;font-size:12px">
+  选择 spritesheet.webp 或 spritesheet.png 后点击"加载精灵图"
+</p>
 
-<textarea id="sprite-input" rows="4" cols="60" placeholder="粘贴 localStorage.getItem('debug_sprite') 的结果到这里" style="background:#222;color:#0f0;border:1px solid #0f0;width:100%;font-family:monospace;font-size:12px"></textarea>
-<button onclick="loadFromInput()">加载精灵图</button>
-
-<div style="margin-top:10px;color:#888;font-size:12px">
-  或者在 pet.js 的 loadSpritesheet 里加一行：<br>
-  <code style="background:#222;padding:2px 4px">localStorage.setItem('debug_sprite', JSON.stringify({b64, ext}));</code>
-  <br>然后刷新宠物窗口，点击按钮测试
-</div>
-
-<pre id="log" style="margin-top:20px;background:#000;padding:10px;border:1px solid #0f0;min-height:200px;overflow:auto"></pre>
+<pre id="log" style="margin-top:20px;background:#000;padding:10px;border:1px solid #0f0;min-height:200px;overflow:auto;font-size:12px"></pre>
 
 <script>
 const canvas=document.getElementById('c');
@@ -84,13 +74,18 @@ function animLoop(now){
   const elapsed=now-lastFrameTime;
   const dur=frameList[frameIdx]?frameList[frameIdx].d:140;
   if(elapsed>=dur){
-    if(frameIdx===frameList.length-1){
-      cycleCount++;
-      log(`[${curState}] 第 ${cycleCount} 轮播完，帧 ${frameIdx} → 回到帧 0 (进入第 ${cycleCount+1} 轮)`);
-    }else{
-      log(`[${curState}] 帧 ${frameIdx} → ${(frameIdx+1) % frameList.length} (${elapsed.toFixed(0)}ms)`);
+    const prev=frameIdx;
+    if(frameIdx===frameList.length-1 && curState!=='idle'){
+      stopAnim();
+      log(`[${curState}] 播完最后一帧(帧${prev})后停住, 不循环`);
+      return;
     }
     frameIdx=(frameIdx+1)%frameList.length;
+    log(`[${curState}] 帧 ${prev} → ${frameIdx} (${elapsed.toFixed(0)}ms)`);
+    if(frameIdx===0&&prev===frameList.length-1){
+      cycleCount++;
+      log(`[${curState}] 进入第 ${cycleCount} 轮循环`);
+    }
     lastFrameTime=now;
   }
   drawSprite(frameList[frameIdx].c,frameList[frameIdx].r);
@@ -103,7 +98,7 @@ function play(s){
   frameList=buildFrames(s);
   const totalMs=frameList.reduce((sf,fd)=>sf+fd.d,0);
   log(`=== ${s} ===`);
-  log(`帧数: ${frameList.length}, 每帧(ms): [${frameList.map(f=>f.d).join(', ')}], 总计: ${totalMs}ms`);
+  log(`帧数:${frameList.length}, 每帧:[${frameList.map(f=>f.d).join(',')}], 总计:${totalMs}ms`);
   if(!frameList.length)return;
   frameIdx=0;cycleCount=0;
   drawSprite(frameList[0].c,frameList[0].r);
@@ -112,9 +107,26 @@ function play(s){
   animFrameId=requestAnimationFrame(animLoop);
 }
 
+// Simulate transitionTo with totalMs-50
 function runAnim(s){
   stopAll();
-  setTimeout(()=>play(s),100);
+  if(s==='idle'){setTimeout(()=>play(s),50);return;}
+  setTimeout(()=>{
+    play(s);
+    const frames=buildFrames(s);
+    const totalMs=frames.reduce((sf,fd)=>sf+fd.d,0);
+    const delay=Math.max(0,totalMs-50);
+    log(`[回弹计时器] ${delay}ms 后切回 idle (totalMs=${totalMs})`);
+    setTimeout(()=>{
+      log(`[回弹触发] 此时 curState=${curState}，准备切 idle`);
+      if(curState!=='idle'){
+        play('idle');
+        log(`[切换完成] 已切到 idle`);
+      }else{
+        log(`[无需切换] 已是 idle`);
+      }
+    },delay);
+  },100);
 }
 
 function stopAll(){
@@ -122,47 +134,41 @@ function stopAll(){
   if(window.rt){clearTimeout(window.rt);window.rt=null;}
 }
 
-function loadFromInput(){
-  const val=document.getElementById('sprite-input').value.trim();
-  if(!val){log('请输入精灵图数据');return;}
-  try{
-    const d=JSON.parse(val);
-    loadSpritesheetFromBase64(d.b64,d.ext);
-  }catch(e){
-    log('解析失败: '+e.message);
-  }
-}
-
-function loadSpritesheetFromBase64(b64,ext){
-  if(!b64||b64.length<100){log('数据太短，无效');return;}
-  const img=new Image();
-  img.onload=()=>{
-    const oc=document.createElement('canvas');
-    oc.width=img.naturalWidth;oc.height=img.naturalHeight;
-    const octx=oc.getContext('2d');
-    octx.drawImage(img,0,0);
-    const d=octx.getImageData(0,0,oc.width,oc.height);
-    for(let i=3;i<d.data.length;i+=4){if(d.data[i]>0&&d.data[i]<24)d.data[i]=0;}
-    octx.putImageData(d,0,0);
-    spritesheet=oc;
-    loadStatus.textContent='精灵图已加载 ('+oc.width+'x'+oc.height+')';
-    log('精灵图加载成功 '+oc.width+'x'+oc.height);
+// File loader
+function loadFile(){
+  const file=document.getElementById('file-input').files[0];
+  if(!file){log('请先选择文件');return;}
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const data=e.target.result;
+    const img=new Image();
+    img.onload=function(){
+      // Clean alpha
+      const oc=document.createElement('canvas');
+      oc.width=img.naturalWidth;oc.height=img.naturalHeight;
+      const octx=oc.getContext('2d');
+      octx.drawImage(img,0,0);
+      const d=octx.getImageData(0,0,oc.width,oc.height);
+      for(let i=3;i<d.data.length;i+=4){if(d.data[i]>0&&d.data[i]<24)d.data[i]=0;}
+      octx.putImageData(d,0,0);
+      spritesheet=oc;
+      loadStatus.textContent='精灵图已加载 ('+oc.width+'x'+oc.height+')';
+      log('精灵图加载成功 '+oc.width+'x'+oc.height);
+      // Show frame count
+      const cols=Math.floor(oc.width/192);
+      const rows=Math.floor(oc.height/208);
+      log('帧网格: '+cols+'x'+rows);
+    };
+    img.onerror=function(){log('图片加载失败，请确认是有效图片');};
+    img.src=data;
   };
-  img.onerror=()=>{log('图片加载失败');};
-  img.src='data:image/'+(ext||'png')+';base64,'+b64;
+  reader.readAsDataURL(file);
 }
 
-log('=== Pet Animation Debug 已启动 ===');
-log('请加载精灵图后点击按钮测试');
-
-// Auto-load from localStorage if available
-try{
-  const saved=localStorage.getItem('debug_sprite');
-  if(saved){
-    const d=JSON.parse(saved);
-    loadSpritesheetFromBase64(d.b64,d.ext);
-  }
-}catch(e){}
+log('=== Pet Animation Debug ===');
+log('1. 选择精灵图文件 → 点加载');
+log('2. 点 Run Review / Wave / Jump 测试');
+log('3. 查看日志确认是否进入第二轮循环');
 </script>
 </body>
 </html>
