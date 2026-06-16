@@ -89,7 +89,6 @@
 | `index.html` | 主 HTML 入口 | 大厅界面 + 副本界面 + 弹窗 + 侧面板 |
 | `src/main.js` | 前端逻辑 | 状态同步、事件监听、按钮操作、面板渲染 |
 | `src/style.css` | 前端样式 | 瘦长窗口 UI、Maple Mono 字体、动画 |
-| `src/game.js` | 游戏引擎模块 | GameState、事件触发、成就检测 |
 | `src/scenario.js` | 数据模型模块 | Scenario 结构体、等级/称号计算 |
 | `electron/main.cjs` | Electron 主进程 | 窗口创建、IPC 注册、游戏循环、存档 |
 | `electron/preload.cjs` | IPC 桥接 | contextBridge 暴露 invoke/on 给渲染进程 |
@@ -212,7 +211,7 @@
 
 | 模块 | 实现位置 | 说明 |
 |------|---------|------|
-| GameState | `electron/main.cjs` + `src/game.js` | 副本内状态：level/exp/称号/事件/成就 |
+| GameState | `electron/main.cjs` | 副本内状态：level/exp/称号/事件/成就 |
 | 游戏循环 | `electron/main.cjs` `startGameLoop()` | 500ms tick，仅当 `!isInHub` 时执行 |
 | 事件触发 | `electron/main.cjs` `checkAndTriggerEvent()` | 每 60s 概率触发 |
 | 成就检测 | `electron/main.cjs` `checkAchievements()` | 每 tick 检测 |
@@ -399,11 +398,11 @@ function exitToHub() {
 | 14. Mac 适配 | **0%** | Electron 天然支持，待测试 |
 | 15. Steam+P2P | **0%** | 待定 |
 
-**当前阶段：** v2.3.1（已完成） — 动效优化 + 闪烁修复
+**当前阶段：** v2.3.2（已完成） — Bug 修复
 
 | 项目 | 值 |
 |------|-----|
-| 当前版本 | 2.3.1 |
+| 当前版本 | 2.3.2 |
 | 版本策略 | 主版本.功能版本.修复版本 |
 | 下一阶段 | 新副本 / Mac 适配 / Steam |
 
@@ -420,6 +419,7 @@ function exitToHub() {
 | **v2.2** | **UI 打磨 Phase 1（9 项细节优化）** | ✅ |
 | **v2.3** | **主题体系全面实装** | ✅ |
 | **v2.3.1** | **动效优化 + 闪烁修复** | ✅ |
+| **v2.3.2** | **Bug 修复** | ✅ |
 | v2.4+ | 新副本 / Mac 适配 / Linux 打包 / Steam | 待定 |
 
 > 注：Tauri 版已废弃（WebView2/Edge v149 不兼容，官方 1.5 年未修）。v1.0 迁移到 Electron。
@@ -457,6 +457,7 @@ function exitToHub() {
 | **2.3.0** | **2026-06-15** | **主题体系全面实装：** 14色实装+渐变+毛玻璃卡片+设置面板色块+配色替换+子窗口主题同步+三大体系统一+宠物索引持久化+等级同步+教程重排+选择器UI
 | **2.3.0** | **2026-06-15** | **体验修复：** 副本卡片hover闪烁修复(拆分renderHubView)+宠物选择器底部溢出修复+sendToPet日志清理+game-tick修复(大厅时发送)
 | **2.3.1** | **2026-06-15** | **动效优化 + 闪烁修复 + 样式统一：** Canvas rAF 重构、CSS will-change + prefers-reduced-motion、transitionend 替代 setTimeout、子窗口入场动效(后删除)、子窗口透明窗口闪烁修复(backgroundColor + showInactive + setOpacity方案)、右键菜单toggle、退出弹窗文案对齐实际行为、工作区文件夹改名 IdleWorker → Idel-DreamMaker、精灵图缩放描边修复(imageSmoothingEnabled + alpha阈值清理)、右键菜单与宠物选择器样式完全统一(边距/字号/分割线/高亮/容器padding)
+| **2.3.2** | **2026-06-16** | **Bug 修复：** 成就 runtime 条件乘 360 万倍修复、auto-save IPC 白名单缺失修复、删除前端旧 game.js 死代码
 
 ---
 

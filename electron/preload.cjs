@@ -21,7 +21,7 @@ contextBridge.exposeInMainWorld('electron', {
   },
   on: (channel, callback) => {
     const validChannels = [
-      'game-tick', 'event-triggered', 'level-up',
+      'game-tick', 'auto-save', 'event-triggered', 'level-up',
       'achievement-unlocked', 'scenario-changed',
     ];
     if (validChannels.includes(channel)) {

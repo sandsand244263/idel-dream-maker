@@ -219,7 +219,7 @@ function checkAchievements() {
         met = gameState.level >= a.condition.value;
         break;
       case 'runtime':
-        met = gameState.totalRuntimeMs >= a.condition.value * 3600000;
+        met = gameState.totalRuntimeMs >= a.condition.value;
         break;
       case 'events':
         met = gameState.triggeredEvents.length >= a.condition.value;
