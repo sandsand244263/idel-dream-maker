@@ -33,8 +33,6 @@ const DEFAULT_STATES = {
 
 let pets=[],selIdx=0,spritesheet=null,cols=8,rows=9,stateConfig=null;
 let curState='idle',frameIdx=0,frameList=[],animFrameId=null,lastFrameTime=0,returnTimer=null,debounceTimer=null;
-let fadeActive=false,fadeStart=0,fadeFrom=null,fadeRafId=null,fadeToState='',fadeToCol=0,fadeToRow=0;
-const FADE_MS=80;
 let gameInfo={level:1,title:'—',exp:0,scenario:'大厅',runtime:'0h0m0s',ach:0,theme:'green',hubLevel:1,isInHub:true};
 let displayExp=0,dragMoved=false;
 
@@ -129,40 +127,12 @@ function play(s){
   animFrameId=requestAnimationFrame(animLoop);
 }
 function transitionTo(s){
-  if(curState===s)return;
-  if(returnTimer){clearTimeout(returnTimer);returnTimer=null;}
-  // Snapshot current canvas
-  fadeFrom=null;
-  try{const t=document.createElement('canvas');t.width=120;t.height=140;t.getContext('2d').drawImage(canvas,0,0);fadeFrom=t;}catch(e){}
-  if(!spritesheet){play(s);return;}
-  const cfg=loadStateCfg(s);
-  fadeActive=true;fadeStart=performance.now();
-  fadeToState=s;fadeToCol=0;fadeToRow=cfg.row;
-  stopAnim();
-  if(fadeRafId){cancelAnimationFrame(fadeRafId);fadeRafId=null;}
-  fadeRafId=requestAnimationFrame(fadeLoop);
-  // Return timer for non-idle states
-  if(s!=='idle'){
-    const frames=buildFrames(s);
-    const totalMs=frames.reduce((sf,fd)=>sf+fd.d,0);
-    returnTimer=setTimeout(()=>{returnTimer=null;if(curState!=='idle')transitionTo('idle');},totalMs+30);
-  }
+  if(curState===s)return;if(returnTimer){clearTimeout(returnTimer);returnTimer=null;}
+  play(s);if(s==='idle')return;
+  const frames=buildFrames(s);
+  const totalMs=frames.reduce((sf,fd)=>sf+fd.d,0);
+  returnTimer=setTimeout(()=>{returnTimer=null;if(curState!=='idle')transitionTo('idle');},totalMs+30);
 }
-function fadeLoop(now){
-  const progress=Math.min((now-fadeStart)/FADE_MS,1);
-  ctx.clearRect(0,0,120,140);
-  if(fadeFrom){ctx.globalAlpha=1-progress;ctx.drawImage(fadeFrom,0,0);}
-  if(spritesheet){
-    ctx.globalAlpha=progress;
-    offCtx.clearRect(0,0,120,140);
-    offCtx.drawImage(spritesheet,fadeToCol*FW,fadeToRow*FH,FW,FH,0,0,120,140);
-    ctx.drawImage(offscreen,0,0);
-  }
-  ctx.globalAlpha=1;
-  if(progress<1){fadeRafId=requestAnimationFrame(fadeLoop);}
-  else{fadeActive=false;fadeFrom=null;play(fadeToState);}
-}
-function animToIdle(){if(curState!=='idle')transitionTo('idle');}
 
 function calcExpForLevel(lv){if(lv<=1)return 0;return 100*(lv-1)*(lv-1);}
 
