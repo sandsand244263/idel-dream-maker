@@ -13,6 +13,12 @@
         "desc": "在废墟中翻找食物残渣"
       },
       {
+        "level": 2,
+        "name": "流浪者",
+        "color": "#7A7A7A",
+        "desc": "独自跋涉在无边的荒原上"
+      },
+      {
         "level": 3,
         "name": "幸存者",
         "color": "#AAAAAA",
@@ -23,6 +29,12 @@
         "name": "开拓者",
         "color": "#4CAF50",
         "desc": "建立了临时营地"
+      },
+      {
+        "level": 8,
+        "name": "寻路者",
+        "color": "#66BB6A",
+        "desc": "在废墟中找到前行的方向"
       },
       {
         "level": 10,
@@ -43,6 +55,12 @@
         "desc": "重建了第一栋建筑"
       },
       {
+        "level": 23,
+        "name": "守护者",
+        "color": "#8D6E63",
+        "desc": "开始守护身边的人"
+      },
+      {
         "level": 26,
         "name": "领袖",
         "color": "#9C27B0",
@@ -61,6 +79,12 @@
         "desc": "统治着一座小型定居点"
       },
       {
+        "level": 44,
+        "name": "筑城者",
+        "color": "#EC407A",
+        "desc": "将废墟变成了家园"
+      },
+      {
         "level": 48,
         "name": "将军",
         "color": "#FF5722",
@@ -76,7 +100,13 @@
         "level": 65,
         "name": "大领主",
         "color": "#673AB7",
-        "desc": "势力范围覆盖大片废土"
+        "desc": "势力覆盖大片废土"
+      },
+      {
+        "level": 70,
+        "name": "传道者",
+        "color": "#7E57C2",
+        "desc": "将知识和希望传递给下一代"
       },
       {
         "level": 75,
@@ -94,7 +124,13 @@
         "level": 100,
         "name": "理想乡",
         "color": "#00E676",
-        "desc": "你种下的种子已长成森林"
+        "desc": "种下的种子已长成森林"
+      },
+      {
+        "level": 110,
+        "name": "守望者",
+        "color": "#69F0AE",
+        "desc": "守护着来之不易的文明火种"
       },
       {
         "level": 120,
@@ -103,10 +139,22 @@
         "desc": "超越了人类的极限"
       },
       {
+        "level": 130,
+        "name": "传说",
+        "color": "#EA80FC",
+        "desc": "传说般的存在，被后人铭记"
+      },
+      {
         "level": 150,
         "name": "先驱",
         "color": "#FF6D00",
         "desc": "为文明开辟了新的道路"
+      },
+      {
+        "level": 175,
+        "name": "奠基者",
+        "color": "#FF8A65",
+        "desc": "为新世界打下了坚实基石"
       },
       {
         "level": 200,
@@ -115,10 +163,22 @@
         "desc": "刻入了废土的历史"
       },
       {
+        "level": 250,
+        "name": "涅槃",
+        "color": "#FF4081",
+        "desc": "从灰烬中重生，已非昨日之我"
+      },
+      {
         "level": 300,
         "name": "创世",
         "color": "#00E5FF",
         "desc": "废土因你而重生"
+      },
+      {
+        "level": 400,
+        "name": "永恒",
+        "color": "#B388FF",
+        "desc": "超越了时间的界限"
       },
       {
         "level": 500,
@@ -4132,12 +4192,30 @@
     "holidayEvents": [
       {
         "holidayId": "new_year",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "废土上的日历又翻过了一页。你清理避难所墙壁上的旧划痕，准备迎接新的一年。"
+      },
+      {
+        "holidayId": "new_year",
         "type": "day",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
         "once": true,
         "text": "新年的第一缕阳光透过辐射云照亮了废土。你在日志上写下：新的一年，继续活下去。"
+      },
+      {
+        "holidayId": "valentine",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在废墟里翻到了一张皱巴巴的情人节贺卡，上面的字迹已模糊不清。你把它夹进了日记本。"
       },
       {
         "holidayId": "valentine",
@@ -4150,12 +4228,30 @@
       },
       {
         "holidayId": "april_fools",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "听说明天是愚人节，聚居点的老人们在讲核战前的整人故事。你决定也捉弄一下隔壁的小子。"
+      },
+      {
+        "holidayId": "april_fools",
         "type": "day",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
         "once": true,
         "text": "你的盖革计数器突然爆表了。你惊慌失措地检查了半天，才发现被人贴了一张恶作剧贴纸。"
+      },
+      {
+        "holidayId": "halloween",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "废土上的风声变得诡异起来。老人们说亡者的灵魂会在万圣夜靠近活人的世界。"
       },
       {
         "holidayId": "halloween",
@@ -4168,12 +4264,30 @@
       },
       {
         "holidayId": "christmas",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在物资堆里发现了一串旧彩灯。试着通电，居然还有一盏能亮。"
+      },
+      {
+        "holidayId": "christmas",
         "type": "day",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
         "once": true,
         "text": "你在一个废弃的商店里找到了一棵塑料圣诞树。你把它搬回了避难所，挂上了几个废铁片做的装饰。"
+      },
+      {
+        "holidayId": "mid_autumn",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "天上的辐射云今晚出奇地薄，月亮的轮廓清晰可见。你想起核战前的中秋节。"
       },
       {
         "holidayId": "mid_autumn",
@@ -4186,6 +4300,15 @@
       },
       {
         "holidayId": "lantern_festival",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始收集废旧的透明塑料片和铁丝，想试着做一盏能亮起来的灯笼。"
+      },
+      {
+        "holidayId": "lantern_festival",
         "type": "day",
         "minLevel": 1,
         "minHours": 0,
@@ -4195,12 +4318,345 @@
       },
       {
         "holidayId": "childrens_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你翻出了一个破损的玩具熊，缝好洗干净，准备明天送给聚居点的孩子们。"
+      },
+      {
+        "holidayId": "childrens_day",
         "type": "day",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
         "once": true,
         "text": "聚居点的孩子们在玩游戏——用废铁片做的毽子。你看了很久。"
+      },
+      {
+        "holidayId": "women_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "聚居点的女人们正在组织集会讨论废土上的生存权利。你帮忙搬了几张破凳子。"
+      },
+      {
+        "holidayId": "women_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "妇女节。一位老奶奶用废布和铁丝做了一朵花，送给了聚居点里每一位女性。"
+      },
+      {
+        "holidayId": "white_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你发现之前送出去的那朵变异玫瑰被精心保存在铁盒里。你想回赠点什么。"
+      },
+      {
+        "holidayId": "white_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "白色情人节。你用白色塑料片做了一朵假花，悄悄挂在了那个人的避难所门口。"
+      },
+      {
+        "holidayId": "earth_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你清理了避难所周围的一片垃圾堆，把可回收的金属和塑料分类挑了出来。"
+      },
+      {
+        "holidayId": "earth_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "地球日。你在焦土上挖了个坑，种下一颗从废墟里找到的橡树种子。"
+      },
+      {
+        "holidayId": "labor_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "聚居点号召明天集体修缮防御工事。你在打磨自己的工具和焊接面罩。"
+      },
+      {
+        "holidayId": "labor_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "劳动节。大家一起修好了水循环系统。老工程师说这是废土上最充实的一天。"
+      },
+      {
+        "holidayId": "environment_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你注意到附近的辐射读数最近在缓慢下降。也许环境真的在自我修复。"
+      },
+      {
+        "holidayId": "environment_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你发现了一处长出新草的地方。虽然稀疏，但那是生命在废土上倔强的证明。"
+      },
+      {
+        "holidayId": "peace_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "废土上难得安静的一天，没有枪声和爆炸。你站在避难所入口看着远方。"
+      },
+      {
+        "holidayId": "peace_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "几个聚居点之间达成了临时停火协议。你第一次看到孩子们在空地玩耍。"
+      },
+      {
+        "holidayId": "christmas_eve",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在准备明天的圣诞晚餐。用罐头肉和干野菜炖了一锅汤，香味飘满了避难所。"
+      },
+      {
+        "holidayId": "christmas_eve",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "平安夜。你坐在避难所门口看星星，辐射云之间有微弱的光，像遥远时代的灯火。"
+      },
+      {
+        "holidayId": "new_year_eve",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你翻出了最后一支完整的蜡烛，决定在跨年夜点亮它照亮避难所的黑暗。"
+      },
+      {
+        "holidayId": "new_year_eve",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "午夜。你和聚居点的幸存者们一起倒数。废土上响起了零星的欢呼声。"
+      },
+      {
+        "holidayId": "spring_festival",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在废墟里捡到一张旧春联，上面的字还勉强认得。你决定回避难所写一副。"
+      },
+      {
+        "holidayId": "spring_festival",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "春节。你用红油漆在铁门上歪歪扭扭写了一个福字。大家凑在一起吃了顿热乎的。"
+      },
+      {
+        "holidayId": "dragon_boat",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你沿着干涸的河床走，想起核战前的龙舟赛和热闹的人群。现在只剩辐射泥浆。"
+      },
+      {
+        "holidayId": "dragon_boat",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "端午节。你用变异芦苇叶包了粽子，里面是米饭和罐头肉。味道出奇地好。"
+      },
+      {
+        "holidayId": "qixi",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "废土上流传着一个故事：两个避难所隔着致命的辐射区，每天用摩斯电码通信。"
+      },
+      {
+        "holidayId": "qixi",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "七夕。有人用废铁片做了一对喜鹊挂在枯树上。风一吹，铁片轻轻作响。"
+      },
+      {
+        "holidayId": "zhongyuan",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "最近废土上雾气很重，能见度极低。老人们说中元节快到了，晚上不要出门。"
+      },
+      {
+        "holidayId": "zhongyuan",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "中元节。你在路口烧了几张废纸，祭奠那些没能在核战中活下来的人。"
+      },
+      {
+        "holidayId": "double_ninth",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你爬上避难所旁边最高的废墟堆，视野开阔。废土在夕阳下镀了一层金色。"
+      },
+      {
+        "holidayId": "double_ninth",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "重阳节。你登高望远，发现遥远的地平线上有一抹绿色。也许那里还有希望。"
+      },
+      {
+        "holidayId": "qingming",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始整理那些死在核战中的亲人遗物。几件旧衣物和一张模糊的照片。"
+      },
+      {
+        "holidayId": "qingming",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "清明。你在废墟之间找到一片相对干净的土地，立了一个简陋的墓碑。雨下了起来。"
+      },
+      {
+        "holidayId": "easter",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人在废土上看到了兔子。你不太信，但还是偷偷在避难所周围设了几个陷阱。"
+      },
+      {
+        "holidayId": "easter",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "复活节。你真的在陷阱里抓到一只变异兔。它的窝里有三个蛋，外壳是彩色的。"
+      },
+      {
+        "holidayId": "mothers_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你想起了自己的母亲。你决定用收集到的漂亮石块和铁丝做一条项链。"
+      },
+      {
+        "holidayId": "mothers_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "母亲节。你把石子项链送给聚居点里收养了五个孤儿的母亲。她露出了笑容。"
+      },
+      {
+        "holidayId": "fathers_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你修好了一把旧摇椅，想起父亲以前总在午后的阳光下坐在上面打盹。"
+      },
+      {
+        "holidayId": "fathers_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "父亲节。你教聚居点的孩子们用废铁丝做弹弓，就像小时候父亲教你那样。"
+      },
+      {
+        "holidayId": "thanksgiving",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你清点了避难所的存粮和水储备。虽然不多，但够撑过冬天。值得感恩。"
+      },
+      {
+        "holidayId": "thanksgiving",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "感恩节。你和聚居点的幸存者分享了食物。每个人讲了一件今年最庆幸还活着的事。"
       }
     ],
     "achievements": [
@@ -4215,32 +4671,12 @@
         }
       },
       {
-        "id": "wa_veteran",
-        "name": "老练",
-        "desc": "运行满 24 小时",
-        "icon": "⏱",
-        "condition": {
-          "type": "runtime",
-          "value": 86400000
-        }
-      },
-      {
         "id": "wa_survivor",
         "name": "幸存者",
         "desc": "达到等级 10",
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 10
-        }
-      },
-      {
-        "id": "wa_explorer",
-        "name": "探索者",
-        "desc": "触发 10 个不同事件",
-        "icon": "★",
-        "condition": {
-          "type": "events",
           "value": 10
         }
       },
@@ -4265,6 +4701,166 @@
         }
       },
       {
+        "id": "wa_level_110",
+        "name": "荒原砥柱",
+        "desc": "达到等级 110",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 110
+        }
+      },
+      {
+        "id": "wa_level_140",
+        "name": "铁脊",
+        "desc": "达到等级 140",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 140
+        }
+      },
+      {
+        "id": "wa_level_170",
+        "name": "废墟领主",
+        "desc": "达到等级 170",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 170
+        }
+      },
+      {
+        "id": "wa_level_210",
+        "name": "不灭意志",
+        "desc": "达到等级 210",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 210
+        }
+      },
+      {
+        "id": "wa_level_250",
+        "name": "废土之王",
+        "desc": "达到等级 250",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 250
+        }
+      },
+      {
+        "id": "wa_level_300",
+        "name": "永恒旅人",
+        "desc": "达到等级 300",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 300
+        }
+      },
+      {
+        "id": "wa_level_350",
+        "name": "灰烬重生",
+        "desc": "达到等级 350",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 350
+        }
+      },
+      {
+        "id": "wa_level_400",
+        "name": "不朽传说",
+        "desc": "达到等级 400",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 400
+        }
+      },
+      {
+        "id": "wa_level_460",
+        "name": "主宰",
+        "desc": "达到等级 460",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 460
+        }
+      },
+      {
+        "id": "wa_level_500",
+        "name": "新世界",
+        "desc": "达到等级 500",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 500
+        }
+      },
+      {
+        "id": "wa_hourly",
+        "name": "第一小时",
+        "desc": "运行满 1 小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 3600000
+        }
+      },
+      {
+        "id": "wa_halfday",
+        "name": "半日值守",
+        "desc": "运行满 12 小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 43200000
+        }
+      },
+      {
+        "id": "wa_veteran",
+        "name": "老练",
+        "desc": "运行满 24 小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 86400000
+        }
+      },
+      {
+        "id": "wa_twodays",
+        "name": "两天两夜",
+        "desc": "运行满 48 小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 172800000
+        }
+      },
+      {
+        "id": "wa_threedays",
+        "name": "三日坚守",
+        "desc": "运行满 72 小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 259200000
+        }
+      },
+      {
+        "id": "wa_sixdays",
+        "name": "一周守望",
+        "desc": "运行满 6 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 518400000
+        }
+      },
+      {
         "id": "wa_runner",
         "name": "挂机达人",
         "desc": "运行满 7 天",
@@ -4275,12 +4871,292 @@
         }
       },
       {
+        "id": "wa_twoweeks",
+        "name": "半月",
+        "desc": "运行满 14 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 1209600000
+        }
+      },
+      {
+        "id": "wa_monthly",
+        "name": "月度幸存者",
+        "desc": "运行满 30 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 2592000000
+        }
+      },
+      {
+        "id": "wa_bimonthly",
+        "name": "两月",
+        "desc": "运行满 60 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 5184000000
+        }
+      },
+      {
+        "id": "wa_quarterly",
+        "name": "季度",
+        "desc": "运行满 90 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 7776000000
+        }
+      },
+      {
+        "id": "wa_fivemonths",
+        "name": "五个月",
+        "desc": "运行满 150 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 12960000000
+        }
+      },
+      {
+        "id": "wa_halfyear",
+        "name": "半年守望",
+        "desc": "运行满 180 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 15552000000
+        }
+      },
+      {
+        "id": "wa_explorer",
+        "name": "探索者",
+        "desc": "触发 10 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 10
+        }
+      },
+      {
         "id": "wa_collector",
         "name": "故事收集者",
         "desc": "触发 25 个不同事件",
         "icon": "★",
         "condition": {
           "type": "events",
+          "value": 25
+        }
+      },
+      {
+        "id": "wa_events_5",
+        "name": "初探",
+        "desc": "触发 5 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 5
+        }
+      },
+      {
+        "id": "wa_events_15",
+        "name": "听闻",
+        "desc": "触发 15 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 15
+        }
+      },
+      {
+        "id": "wa_events_20",
+        "name": "耳语",
+        "desc": "触发 20 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 20
+        }
+      },
+      {
+        "id": "wa_events_30",
+        "name": "收集者",
+        "desc": "触发 30 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 30
+        }
+      },
+      {
+        "id": "wa_events_40",
+        "name": "倾听者",
+        "desc": "触发 40 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 40
+        }
+      },
+      {
+        "id": "wa_events_50",
+        "name": "故事猎人",
+        "desc": "触发 50 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 50
+        }
+      },
+      {
+        "id": "wa_events_75",
+        "name": "历史记录者",
+        "desc": "触发 75 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 75
+        }
+      },
+      {
+        "id": "wa_events_100",
+        "name": "百事通",
+        "desc": "触发 100 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 100
+        }
+      },
+      {
+        "id": "wa_events_150",
+        "name": "史诗记录",
+        "desc": "触发 150 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 150
+        }
+      },
+      {
+        "id": "wa_events_200",
+        "name": "遗失的历史",
+        "desc": "触发 200 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 200
+        }
+      },
+      {
+        "id": "wa_events_300",
+        "name": "往事如烟",
+        "desc": "触发 300 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 300
+        }
+      },
+      {
+        "id": "wa_titles_3",
+        "name": "初露锋芒",
+        "desc": "解锁 3 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 3
+        }
+      },
+      {
+        "id": "wa_titles_5",
+        "name": "五重荣耀",
+        "desc": "解锁 5 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 5
+        }
+      },
+      {
+        "id": "wa_titles_8",
+        "name": "八面威风",
+        "desc": "解锁 8 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 8
+        }
+      },
+      {
+        "id": "wa_titles_10",
+        "name": "名满荒原",
+        "desc": "解锁 10 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 10
+        }
+      },
+      {
+        "id": "wa_titles_12",
+        "name": "称号收藏家",
+        "desc": "解锁 12 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 12
+        }
+      },
+      {
+        "id": "wa_titles_15",
+        "name": "废土名门",
+        "desc": "解锁 15 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 15
+        }
+      },
+      {
+        "id": "wa_titles_18",
+        "name": "威名远扬",
+        "desc": "解锁 18 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 18
+        }
+      },
+      {
+        "id": "wa_titles_20",
+        "name": "二十冠冕",
+        "desc": "解锁 20 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 20
+        }
+      },
+      {
+        "id": "wa_titles_22",
+        "name": "传奇之名",
+        "desc": "解锁 22 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 22
+        }
+      },
+      {
+        "id": "wa_titles_25",
+        "name": "不朽之名",
+        "desc": "解锁 25 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
           "value": 25
         }
       }
