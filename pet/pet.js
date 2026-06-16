@@ -100,6 +100,11 @@ function animLoop(now){
   const elapsed=now-lastFrameTime;
   const dur=frameList[frameIdx]?frameList[frameIdx].d:140;
   if(elapsed>=dur){
+    // Non-idle: stop after last frame (no looping), wait for returnTimer
+    if(frameIdx===frameList.length-1 && curState!=='idle'){
+      stopAnim();
+      return;
+    }
     frameIdx=(frameIdx+1)%frameList.length;
     lastFrameTime=now;
   }
