@@ -100,11 +100,6 @@ function animLoop(now){
   const elapsed=now-lastFrameTime;
   const dur=frameList[frameIdx]?frameList[frameIdx].d:140;
   if(elapsed>=dur){
-    // Non-idle: stop after last frame (no looping), wait for returnTimer
-    if(frameIdx===frameList.length-1 && curState!=='idle'){
-      stopAnim();
-      return;
-    }
     frameIdx=(frameIdx+1)%frameList.length;
     lastFrameTime=now;
   }
@@ -122,10 +117,10 @@ function play(s){
 function transitionTo(s){
   if(curState===s)return;if(returnTimer){clearTimeout(returnTimer);returnTimer=null;}
   play(s);if(s==='idle')return;
-  const frames=buildFrames(s);
-  const totalMs=frames.reduce((sf,fd)=>sf+fd.d,0);
-  returnTimer=setTimeout(()=>{returnTimer=null;if(curState!=='idle')transitionTo('idle');},totalMs+30);
+  const totalMs=frameList.reduce((sf,fd)=>sf+fd.d,0);
+  returnTimer=setTimeout(()=>{returnTimer=null;if(curState!=='idle')play('idle');},totalMs+200);
 }
+function animToIdle(){if(curState!=='idle')play('idle');}
 
 function calcExpForLevel(lv){if(lv<=1)return 0;return 100*(lv-1)*(lv-1);}
 
