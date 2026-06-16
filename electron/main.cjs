@@ -226,15 +226,20 @@ function checkAndTriggerEvent() {
     const holidayInfo = todayHoliday || upcomingHoliday;
 
     if (holidayInfo) {
-      const he = getHolidayEventFromScenario(currentScenario, holidayInfo.id, holidayInfo.type);
-      if (he) {
-        return {
-          id: 'holiday_' + holidayInfo.id,
-          title: he.holidayName,
-          color: '#FFD700',
-          text: he.text,
-          isHoliday: true,
-        };
+      const holidayKey = 'holiday_' + holidayInfo.id + '_' + holidayInfo.type;
+      // Skip if already triggered, fall through to normal events
+      if (!gameState.triggeredEvents.includes(holidayKey)) {
+        const he = getHolidayEventFromScenario(currentScenario, holidayInfo.id, holidayInfo.type);
+        if (he) {
+          gameState.triggeredEvents.push(holidayKey);
+          return {
+            id: holidayKey,
+            title: he.holidayName,
+            color: '#FFD700',
+            text: he.text,
+            isHoliday: true,
+          };
+        }
       }
     }
 

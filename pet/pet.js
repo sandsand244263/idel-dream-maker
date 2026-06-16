@@ -101,9 +101,9 @@ function animLoop(now){
   const dur=frameList[frameIdx]?frameList[frameIdx].d:140;
   if(elapsed>=dur){
     frameIdx=(frameIdx+1)%frameList.length;
-    drawSprite(frameList[frameIdx].c,frameList[frameIdx].r);
     lastFrameTime=now;
   }
+  drawSprite(frameList[frameIdx].c,frameList[frameIdx].r);
   animFrameId=requestAnimationFrame(animLoop);
 }
 function play(s){

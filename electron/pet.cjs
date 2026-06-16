@@ -111,6 +111,7 @@ function createPetWindow(app) {
       contextIsolation: true,
       nodeIntegration: false,
       enablePreferredSizeMode: true,
+      backgroundThrottling: false,
     },
   };
   if (process.platform === 'darwin') {
