@@ -59,7 +59,7 @@ function doShowSelector() {
   if (!selectorWindow || selectorWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) return;
   const petBounds = petWindowRef.getBounds();
   const selWidth = 180;
-  const selHeight = Math.min(240, Math.max(120, (currentPetList.length || 1) * 32 + 60));
+  const selHeight = Math.min(280, Math.max(180, (currentPetList.length || 1) * 32 + 80));
 
   let x, y = petBounds.y;
   const screen = require('electron').screen.getPrimaryDisplay().workAreaSize;
