@@ -112,7 +112,6 @@
 | `public/scenarios_data.json` | 副本数据 | 构建时生成，被游戏引擎加载 |
 | `CLAUDE.md` | 项目主规范 | AI 新会话首读 |
 | `TASKS.md` | 工作追踪 | 版本任务清单 + 路线规划 |
-| `副本设定集.md` | 副本设计文档 | 世界观/称号/事件设计模式 |
 | — | 副本格式规范 | 见 ScenarioWriter `references/format-rules.md` |
 | — | 节假日设计 | 见 `electron/holiday.cjs` 和 ScenarioWriter |
 | `themes/designer.html` | 主题设计工具 | 可视化调整配色/效果，导出CSS，导入AI建议 |
