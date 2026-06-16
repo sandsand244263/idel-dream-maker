@@ -58,7 +58,7 @@
 
 ## 核心规则（AI 必须遵守）
 
-1. **所有事件文本不在代码里硬编码**，由作者创作后放入副本文件（`.md` 格式，详见`副本MD格式模板.md`），构建时解析为 JSON 嵌入
+1. **所有事件文本不在代码里硬编码**，由作者创作后放入副本文件（`.md` 格式，由 ScenarioWriter 按格式规则生成），构建时解析为 JSON 嵌入
 2. **副本数据构建时保护**：.md 文件由 build.js 解析为 JSON，存入 `public/scenarios_data.json`，编译进 exe
 3. **游戏是零交互的**——进入副本后没有按钮、点击、选择分支。纯挂机 + 偶尔阅读
 4. **Steamworks 集成为可选项**，延后到 1.0，代码里条件编译
@@ -113,8 +113,8 @@
 | `CLAUDE.md` | 项目主规范 | AI 新会话首读 |
 | `TASKS.md` | 工作追踪 | 版本任务清单 + 路线规划 |
 | `副本设定集.md` | 副本设计文档 | 世界观/称号/事件设计模式 |
-| `副本MD格式模板.md` | 副本格式规范 | `.md` 模板 + 字段说明 + 校验规则 |
-| `节假日事件池.md` | 节假日设计 | 全球节假日事件池 |
+| — | 副本格式规范 | 见 ScenarioWriter `references/format-rules.md` |
+| — | 节假日设计 | 见 `electron/holiday.cjs` 和 ScenarioWriter |
 | `themes/designer.html` | 主题设计工具 | 可视化调整配色/效果，导出CSS，导入AI建议 |
 
 ---
@@ -369,7 +369,7 @@ function exitToHub() {
 | `vite.config.js` | port: 1420 |
 | `build.js` | 构建时 .md → `public/scenarios_data.json` |
 | `electron-builder` | (通过 `electron:build` script 调用) |
-| `副本MD格式模板.md` | `.md` 副本文件完整格式规范 |
+| — | 副本格式规范 | 见 ScenarioWriter `references/format-rules.md` |
 
 **存档路径：**
 - Windows: `%APPDATA%/Idel-DreamMaker/save.json`
