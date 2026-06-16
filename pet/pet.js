@@ -89,7 +89,14 @@ function loadStateCfg(s){
   return c||DEFAULT_STATES[s]||DEFAULT_STATES.idle;
 }
 function buildFrames(s){
-  const c=loadStateCfg(s),n=c.frames,b=c.dur,f=[];
+  const c=loadStateCfg(s);
+  let n=c.frames;
+  // Auto-detect actual frame count from spritesheet if available
+  if(spritesheet&&spritesheet._rowFrames){
+    const rd=spritesheet._rowFrames[c.row];
+    if(rd&&rd<n)n=rd;
+  }
+  const b=c.dur,f=[];
   for(let i=0;i<n;i++){let d=b;if(i===0)d*=c.firstMult||2;else if(i===n-1)d*=c.lastMult||2;f.push({c:i,r:c.row,d});}
   return f;
 }
@@ -144,6 +151,23 @@ function loadSpritesheet(b64,ext,cfg){
     else if(iw%64===0&&ih%64===0){FW=64;FH=64;}
     else{FW=192;FH=208;}
     cols=Math.floor(iw/FW);rows=Math.floor(ih/FH);
+    // Auto-detect frame count per row (check center region of each cell for non-transparent pixels)
+    const pix=d.data;
+    const cy=Math.floor(FH/2),cx=Math.floor(FW/2);
+    for(let r=0;r<rows;r++){
+      let last=-1;
+      for(let c=cols-1;c>=0;c--){
+        let has=false;
+        for(let y=cy-4;y<cy+4&&!has;y++){
+          for(let x=cx-4;x<cx+4&&!has;x++){
+            const idx=((r*FH+y)*iw+(c*FW+x))*4+3;
+            if(idx<pix.length&&pix[idx]>0)has=true;
+          }
+        }
+        if(has){last=c;break;}
+      }
+      oc._rowFrames=oc._rowFrames||[];oc._rowFrames[r]=last+1;
+    }
     stateConfig=cfg||null;
     play('idle');
   };
