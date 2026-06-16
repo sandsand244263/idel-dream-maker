@@ -101,9 +101,9 @@ function animLoop(now){
   const dur=frameList[frameIdx]?frameList[frameIdx].d:140;
   if(elapsed>=dur){
     frameIdx=(frameIdx+1)%frameList.length;
+    drawSprite(frameList[frameIdx].c,frameList[frameIdx].r);
     lastFrameTime=now;
   }
-  drawSprite(frameList[frameIdx].c,frameList[frameIdx].r);
   animFrameId=requestAnimationFrame(animLoop);
 }
 function play(s){
@@ -253,7 +253,12 @@ let expRafId=null;
 function expLoop(){updateExpBar();expRafId=requestAnimationFrame(expLoop);}
 expRafId=requestAnimationFrame(expLoop);
 const IDLE_ANIMS=['failed','review','extra1','extra2'];
-// Random idle animation every 20s (30% chance)
+// ── Idle keepalive: redraw current frame every 500ms to prevent transparent window compositor glitches ──
+setInterval(() => {
+  if (curState === 'idle' && spritesheet && frameList.length > 0) {
+    drawSprite(frameList[frameIdx].c, frameList[frameIdx].r);
+  }
+}, 500);
 setInterval(() => {
   if (curState === 'idle' && Math.random() < 0.3) {
     transitionTo(IDLE_ANIMS[Math.floor(Math.random()*IDLE_ANIMS.length)]);
