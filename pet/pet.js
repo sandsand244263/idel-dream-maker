@@ -13,7 +13,6 @@ canvas.width = 120;
 canvas.height = 140;
 canvas.style.width = '120px';
 canvas.style.height = '140px';
-ctx.clearRect(0, 0, 120, 140);
 
 let FW = 192, FH = 208;
 
@@ -94,7 +93,19 @@ function buildFrames(s){
   for(let i=0;i<n;i++){let d=b;if(i===0)d*=c.firstMult||2;else if(i===n-1)d*=c.lastMult||2;f.push({c:i,r:c.row,d});}
   return f;
 }
-function drawSprite(col,row){if(!spritesheet)return;ctx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,120,140);}
+// Offscreen canvas for double-buffering (prevent flicker from clearRect)
+const offscreen = document.createElement('canvas');
+offscreen.width = 120;
+offscreen.height = 140;
+const offCtx = offscreen.getContext('2d');
+offCtx.imageSmoothingEnabled = false;
+
+function drawSprite(col,row){
+  if(!spritesheet)return;
+  offCtx.clearRect(0,0,120,140);
+  offCtx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,120,140);
+  ctx.drawImage(offscreen,0,0);
+}
 function stopAnim(){if(animFrameId){cancelAnimationFrame(animFrameId);animFrameId=null;}}
 function animLoop(now){
   if(!animFrameId)return;
@@ -254,12 +265,6 @@ let expRafId=null;
 function expLoop(){updateExpBar();expRafId=requestAnimationFrame(expLoop);}
 expRafId=requestAnimationFrame(expLoop);
 const IDLE_ANIMS=['failed','review','extra1','extra2'];
-// ── Idle keepalive: redraw current frame every 500ms to prevent transparent window compositor glitches ──
-setInterval(() => {
-  if (curState === 'idle' && spritesheet && frameList.length > 0) {
-    drawSprite(frameList[frameIdx].c, frameList[frameIdx].r);
-  }
-}, 500);
 setInterval(() => {
   if (curState === 'idle' && Math.random() < 0.3) {
     transitionTo(IDLE_ANIMS[Math.floor(Math.random()*IDLE_ANIMS.length)]);
