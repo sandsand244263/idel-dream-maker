@@ -264,7 +264,7 @@ function exitToHub() {
 |------|-----|
 | 默认尺寸 | 320 × 840（瘦长，类似 QQ 面板风格） |
 | 最小尺寸 | 280 × 400 |
-| 标题栏 | 自定义（`decorations: false`），自绘 ID/LV/称号 + [×] 按钮 |
+| 标题栏 | 自定义（`decorations: false`，Mac 为 `titleBarStyle: hidden`），自绘 ID/LV/称号 + [×] 按钮 |
 | 贴边自动隐藏 | 已移除（v0.3.2） |
 | Pet 宠物窗口 | v2.0 — PetDex 像素宠物窗口（独立透明 BrowserWindow + Canvas 动画） |
 | 右键菜单窗口 | v2.2 — 独立 BrowserWindow，失焦自动隐藏，位于宠物窗口右侧 |
@@ -276,8 +276,8 @@ function exitToHub() {
 
 | 操作 | 行为 |
 |------|------|
-| 左键单击 | 显示/隐藏窗口 |
-| 右键单击 | 弹出菜单（Show/Hide、Quit） |
+| 左键单击 | Windows：显示/隐藏窗口；Mac：展开菜单 |
+| 右键单击 | Windows：弹出菜单（Show/Hide、Quit）；Mac：同上（点击展开菜单） |
 | 悬停 tooltip | 每 5 秒更新：`Lv.X 称号 | XhXmXs` 或 `大厅 Lv.X | XhXmXs` |
 
 ### 开发者工具
