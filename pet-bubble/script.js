@@ -1,18 +1,5 @@
-const LANG = {
-  zh: { event: '事件' },
-  en: { event: 'Event' },
-};
-let currentLang = 'zh';
-
-function t(key) { return (LANG[currentLang] && LANG[currentLang][key]) || LANG.zh[key] || key; }
-
-function applyLanguage() {
-  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
-}
-
-window.bubble.on('show-bubble', (data) => {
+window.petBubble.on('show-bubble', (data) => {
   if (!data) return;
-  applyLanguage();
   const titleEl = document.getElementById('bubble-title');
   const textEl = document.getElementById('bubble-text');
   if (data.title) titleEl.textContent = data.title;
@@ -20,7 +7,7 @@ window.bubble.on('show-bubble', (data) => {
   document.getElementById('bubble').style.display = 'block';
 });
 
-window.bubble.invoke('get-current-theme').then(r => {
+window.petBubble.invoke('get-current-theme').then(r => {
   if (r) {
     document.body.className = r.theme && r.theme !== 'green' ? 'theme-' + r.theme : '';
     if (r.customTheme) {
@@ -31,7 +18,7 @@ window.bubble.invoke('get-current-theme').then(r => {
     }
   }
 }).catch(() => {});
-window.bubble.on('theme-changed', (d) => {
+window.petBubble.on('theme-changed', (d) => {
   if (d) {
     document.body.className = d.theme && d.theme !== 'green' ? 'theme-' + d.theme : '';
     if (d.customTheme) {
@@ -42,4 +29,3 @@ window.bubble.on('theme-changed', (d) => {
     }
   }
 });
-window.bubble.on('language-changed', (d) => { if (d && d.lang) { currentLang = d.lang; applyLanguage(); } });

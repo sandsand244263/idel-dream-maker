@@ -82,7 +82,7 @@ function createWindow() {
 } 
 
 function setupTray() {
-  tray = createTray(mainWindow, () => gameState.language);
+  tray = createTray(mainWindow);
 }
 
 function getAppDataPath() {
@@ -561,12 +561,7 @@ function registerIpcHandlers() {
     return true;
   });
 
-  ipcMain.handle('set-language', (_, { lang }) => {
-    gameState.language = lang;
-    forwardToPet('language-changed', { lang });
-    if (getTray) updateMenu();
-    return true;
-  });
+  // Language is locked to zh-CN only
 
   ipcMain.handle('set-font-theme', (_, { theme }) => {
     gameState.selectedFontTheme = theme;

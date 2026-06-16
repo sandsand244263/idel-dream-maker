@@ -1,107 +1,42 @@
 // IPC via window.electron (provided by preload.cjs)
 
 const LANG = {
-  zh: {
-    // Hub
-    hubWelcome: '欢迎回来', hubLevel: '大厅 Lv.', drawBtn: '+ 抽取副本',
-    noScenarios: '暂无可用的副本', hubEmptyHint: '点击下方 [副本] 或 [+ 抽取副本] 开始，点击 [教程] 查看操作说明',
-    // Buttons
-    btnMini: '宠物', btnBack: '大厅', btnScenario: '副本', btnTitles: '称号',
-    btnSettings: '设置', btnTutorial: '教程',
-    // Panels
-    panelScenario: '副本选择', panelTitles: '称号一览', panelSettings: '设置',
-    // Settings
-    labelName: '名称', labelTheme: '主题', labelLanguage: '界面语言',
-    settingsSave: '保存', settingsThemeTitle: '主题', ctSave: '应用自定义配色',
-    // Events & Achievements
-    eventHeader: '事件', achievementHeader: '成就解锁',
-    // System messages
-    systemInitFail: '初始化失败', systemEnterFail: '进入副本失败',
-    systemDrawFail: '抽取失败', systemBackFail: '返回失败',
-    systemLevelUp: '等级 {0}！{1}',
-    systemEntered: '进入: {0}', systemDrew: '抽到并进入: {0}', systemBack: '返回大厅 — 大厅 Lv.{0}',
-    systemTitleEquipFail: '佩戴称号失败', systemTitleFetchFail: '获取大厅称号失败',
-    systemDetailFail: '获取副本详情失败', systemThemeFail: '切换主题失败',
-    // Log
-    logStartHub: '启动完成', logStartScenario: '已挂机 {0}，等级 {1}',
-    // Scenario cards
-    scenarioEvent: '事件', scenarioAchievement: '成就',
-    // Hub titles
-    hubTitleEmpty: '尚无解锁称号',
-    // Alias modal
-    aliasTitle: '进入副本', aliasPlaceholder: '输入名称（留空用默认）',
-    enterPrompt: '进入「{0}」— 输入名称（留空用默认）',
-    aliasCancel: '取消', aliasConfirm: '进入',
-    // Confirm modal
-    confirmTitle: '返回大厅', confirmDesc: '确定返回大厅吗？副本进度将保留，经验累入全局等级。',
-    confirmCancel: '取消', confirmOk: '确定',
-    // Onboarding
-    obWelcome: '欢迎来到', obSubtitle: 'Idel-DreamMaker',
-    obDesc1: '藏在系统托盘里的宠物陪伴应用', obDesc2: '挂机升级 · 解锁称号与成就',
-    obDesc3: '触发故事事件——陪你度过每一刻',
-    obHow: '如何开始：', obStep1: '点击 [副本] 或 [+ 抽取副本] 选择一个故事世界',
-    obStep2: '进入后自动挂机，经验随时间增长', obStep3: '升级解锁称号，随机弹出故事事件',
-    obStep4: '随时点击 [大厅] 退出，经验累入全局等级',
-    obTip: '提示：宠物窗口常驻桌面，点击宠物可交互',
-    obName: '你的名称', obNamePlaceholder: '输入名称', obStart: '开始冒险',
-    // Debug panel
-    dbgEvent: '触发事件', dbgLevelup: '+10 级', dbgAchievement: '解锁成就',
-    dbgRuntime: '+1h', dbgHoliday: '节日事件',
-    // Status bar
-    statusHub: '（大厅）', statusNone: '-',
-  },
-  en: {
-    // Hub
-    hubWelcome: 'Welcome back', hubLevel: 'Hub Lv.', drawBtn: '+ Draw Scenario',
-    noScenarios: 'No scenarios available', hubEmptyHint: 'Click [Scenarios] or [+ Draw Scenario] to start, click [Tutorial] for help',
-    // Buttons
-    btnMini: 'Pet', btnBack: 'Hub', btnScenario: 'Scenarios', btnTitles: 'Titles',
-    btnSettings: 'Settings', btnTutorial: 'Tutorial',
-    // Panels
-    panelScenario: 'Scenarios', panelTitles: 'Titles', panelSettings: 'Settings',
-    // Settings
-    labelName: 'Name', labelTheme: 'Theme', labelLanguage: 'Language',
-    settingsSave: 'Save', settingsThemeTitle: 'Theme', ctSave: 'Apply Custom Theme',
-    // Events & Achievements
-    eventHeader: 'Event', achievementHeader: 'Achievement',
-    // System messages
-    systemInitFail: 'Init failed', systemEnterFail: 'Failed to enter',
-    systemDrawFail: 'Draw failed', systemBackFail: 'Failed to return',
-    systemLevelUp: 'Level {0}! {1}',
-    systemEntered: 'Entered: {0}', systemDrew: 'Drew & entered: {0}', systemBack: 'Back to Hub — Hub Lv.{0}',
-    systemTitleEquipFail: 'Failed to equip title', systemTitleFetchFail: 'Failed to fetch titles',
-    systemDetailFail: 'Failed to load details', systemThemeFail: 'Failed to switch theme',
-    // Log
-    logStartHub: 'Ready', logStartScenario: 'Running {0}, level {1}',
-    // Scenario cards
-    scenarioEvent: 'Events', scenarioAchievement: 'Achievements',
-    // Hub titles
-    hubTitleEmpty: 'No titles yet',
-    // Alias modal
-    aliasTitle: 'Enter Scenario', aliasPlaceholder: 'Enter a name (leave empty for default)',
-    enterPrompt: 'Enter "{0}" — Enter a name (leave empty for default)',
-    aliasCancel: 'Cancel', aliasConfirm: 'Enter',
-    // Confirm modal
-    confirmTitle: 'Back to Hub', confirmDesc: 'Return to hub? Progress will be saved, exp added to global level.',
-    confirmCancel: 'Cancel', confirmOk: 'OK',
-    // Onboarding
-    obWelcome: 'Welcome to', obSubtitle: 'Idel-DreamMaker',
-    obDesc1: 'A desktop pet companion in your system tray', obDesc2: 'Idle · Level up · Unlock titles & achievements',
-    obDesc3: 'Trigger story events — accompany you every moment',
-    obHow: 'How to start:', obStep1: 'Click [Scenarios] or [+ Draw Scenario] to choose a world',
-    obStep2: 'Auto-idle once inside, EXP grows over time', obStep3: 'Level up to unlock titles and story events',
-    obStep4: 'Click [Hub] anytime to exit, exp adds to global level',
-    obTip: 'Tip: Pet window stays on desktop, click to interact',
-    obName: 'Your name', obNamePlaceholder: 'Enter name', obStart: 'Start Adventure',
-    // Debug panel
-    dbgEvent: 'Trigger Event', dbgLevelup: '+10 Lv', dbgAchievement: 'Unlock Achievement',
-    dbgRuntime: '+1h', dbgHoliday: 'Holiday',
-    // Status bar
-    statusHub: '(Hub)', statusNone: '-',
-  },
+  hubWelcome: '欢迎回来', hubLevel: '大厅 Lv.', drawBtn: '+ 抽取副本',
+  noScenarios: '暂无可用的副本', hubEmptyHint: '点击下方 [副本] 或 [+ 抽取副本] 开始，点击 [教程] 查看操作说明',
+  btnMini: '宠物', btnBack: '大厅', btnScenario: '副本', btnTitles: '称号',
+  btnSettings: '设置', btnTutorial: '教程',
+  panelScenario: '副本选择', panelTitles: '称号一览', panelSettings: '设置',
+  labelName: '名称',
+  settingsSave: '保存', settingsThemeTitle: '主题', ctSave: '应用自定义配色',
+  eventHeader: '事件', achievementHeader: '成就解锁',
+  systemInitFail: '初始化失败', systemEnterFail: '进入副本失败',
+  systemDrawFail: '抽取失败', systemBackFail: '返回失败',
+  systemLevelUp: '等级 {0}！{1}',
+  systemEntered: '进入: {0}', systemDrew: '抽到并进入: {0}', systemBack: '返回大厅 — 大厅 Lv.{0}',
+  systemTitleEquipFail: '佩戴称号失败', systemTitleFetchFail: '获取大厅称号失败',
+  systemDetailFail: '获取副本详情失败', systemThemeFail: '切换主题失败',
+  logStartHub: '启动完成', logStartScenario: '已挂机 {0}，等级 {1}',
+  scenarioEvent: '事件', scenarioAchievement: '成就',
+  hubTitleEmpty: '尚无解锁称号',
+  aliasTitle: '进入副本', aliasPlaceholder: '输入名称（留空用默认）',
+  enterPrompt: '进入「{0}」— 输入名称（留空用默认）',
+  aliasCancel: '取消', aliasConfirm: '进入',
+  confirmTitle: '返回大厅', confirmDesc: '确定返回大厅吗？副本进度将保留，经验累入全局等级。',
+  confirmCancel: '取消', confirmOk: '确定',
+  obWelcome: '欢迎来到', obSubtitle: 'Idel-DreamMaker',
+  obDesc1: '藏在系统托盘里的宠物陪伴应用', obDesc2: '挂机升级 · 解锁称号与成就',
+  obDesc3: '触发故事事件——陪你度过每一刻',
+  obHow: '如何开始：', obStep1: '点击 [副本] 或 [+ 抽取副本] 选择一个故事世界',
+  obStep2: '进入后自动挂机，经验随时间增长', obStep3: '升级解锁称号，随机弹出故事事件',
+  obStep4: '随时点击 [大厅] 退出，经验累入全局等级',
+  obTip: '提示：宠物窗口常驻桌面，点击宠物可交互',
+  obName: '你的名称', obNamePlaceholder: '输入名称', obStart: '开始冒险',
+  dbgEvent: '触发事件', dbgLevelup: '+10 级', dbgAchievement: '解锁成就',
+  dbgRuntime: '+1h', dbgHoliday: '节日事件',
+  statusHub: '（大厅）', statusNone: '-',
 };
 
-function t(key) { const l = gameState?.language || 'zh'; return LANG[l]?.[key] ?? LANG.zh[key] ?? key; }
+function t(key) { return LANG[key] || key; }
 function tf(key, ...args) { let s = t(key); args.forEach((a, i) => { s = s.replace(`{${i}}`, String(a)); }); return s; }
 
 let gameState = null, scenarioList = [], currentScenario = null, currentTitle = null, hubLevel = 1, appVersion = '1.0.0';
@@ -133,7 +68,6 @@ const settingsClose = document.getElementById('settings-close');
 const settingsName = document.getElementById('settings-name');
 const settingsNameSave = document.getElementById('settings-name-save');
 const settingsTheme = document.getElementById('theme-swatches');
-const settingsLanguage = document.getElementById('settings-language');
 const titlesPanel = document.getElementById('titles-panel');
 const titlesClose = document.getElementById('titles-close');
 const titlesListEl = document.getElementById('titles-list');
@@ -382,7 +316,6 @@ btnScenario.addEventListener('click', async () => { try { scenarioList = await w
 btnTitles.addEventListener('click', () => { renderTitlesPanel(); titlesPanel.classList.remove('hidden'); });
 btnSettings.addEventListener('click', () => {
   settingsName.value = gameState?.player_name || '';
-  settingsLanguage.value = gameState?.language || 'zh';
   if (gameState?.selected_font_theme === 'custom' && gameState?.custom_theme) {
     const ct = gameState.custom_theme;
     document.getElementById('ct-fg').value = ct.fg; document.getElementById('ct-fg-text').value = ct.fg;
@@ -398,7 +331,6 @@ btnSettings.addEventListener('click', () => {
 });
 settingsClose.addEventListener('click', () => settingsPanel.classList.add('hidden'));
 settingsNameSave.addEventListener('click', async () => { const n = settingsName.value.trim(); if (!n) return; try { await window.electron.invoke('set-player-name', { name: n }); if (gameState) gameState.player_name = n; renderHubView(); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); } });
-settingsLanguage.addEventListener('change', async () => { const v = settingsLanguage.value; try { await window.electron.invoke('set-language', { lang: v }); if (gameState) gameState.language = v; applyLanguage(); renderHubView(); } catch (e) { showToast(t('systemInitFail'), 'error'); } });
 document.getElementById('btn-tutorial').addEventListener('click', async () => {
   if (onboardingInput) onboardingInput.value = gameState?.player_name || '';
   if (onboardingModal) onboardingModal.classList.remove('hidden');

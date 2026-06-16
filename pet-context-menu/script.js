@@ -1,10 +1,5 @@
-const LANG = {
-  zh: { selectPet:'选择宠物', border:'显示边框', infobar:'信息栏', expbar:'进度条', hide:'隐藏' },
-  en: { selectPet:'Select Pet', border:'Border', infobar:'Info Bar', expbar:'EXP Bar', hide:'Hide' },
-};
-let currentLang = 'zh';
-
-function t(key) { return (LANG[currentLang] && LANG[currentLang][key]) || LANG.zh[key] || key; }
+const LANG = { selectPet:'选择宠物', border:'显示边框', infobar:'信息栏', expbar:'进度条', hide:'隐藏' };
+function t(key) { return LANG[key] || key; }
 
 function setToggle(key, val) { localStorage.setItem('pet_' + key, val); }
 function getToggle(key, def) { const v = localStorage.getItem('pet_' + key); return v !== null ? v === 'true' : def; }
@@ -71,4 +66,3 @@ document.addEventListener('click', (e) => {
 
 window.ctxMenu.invoke('get-current-theme').then(r => { if (r) applyTheme(r.theme, r.customTheme); }).catch(() => {});
 window.ctxMenu.on('theme-changed', (d) => { if (d) applyTheme(d.theme, d.customTheme); });
-window.ctxMenu.on('language-changed', (d) => { if (d && d.lang) { currentLang = d.lang; updateUI(); } });

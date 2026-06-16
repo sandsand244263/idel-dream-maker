@@ -1,10 +1,5 @@
-const LANG = {
-  zh: { back:'返回', hint:'将精灵图放入宠物文件夹', openFolder:'打开文件夹', empty:'暂无宠物' },
-  en: { back:'Back', hint:'Put spritesheets in the pets folder', openFolder:'Open Folder', empty:'No pets yet' },
-};
-let currentLang = 'zh';
-
-function t(key) { return (LANG[currentLang] && LANG[currentLang][key]) || LANG.zh[key] || key; }
+const LANG = { back:'返回', hint:'将精灵图放入宠物文件夹', openFolder:'打开文件夹', empty:'暂无宠物' };
+function t(key) { return LANG[key] || key; }
 
 const petListEl = document.getElementById('pet-list');
 let pets = [], selIdx = 0;
@@ -65,4 +60,3 @@ window.petSelector.invoke('get-initial-state').then((r) => {
 
 window.petSelector.invoke('get-current-theme').then(r => { if (r) applyTheme(r.theme, r.customTheme); }).catch(() => {});
 window.petSelector.on('theme-changed', (d) => { if (d) applyTheme(d.theme, d.customTheme); });
-window.petSelector.on('language-changed', (d) => { if (d && d.lang) { currentLang = d.lang; render(); } });

@@ -3,19 +3,12 @@ const path = require('path');
 
 const isMac = process.platform === 'darwin';
 
-const LANG = {
-  zh: { show:'显示窗口', hide:'隐藏窗口', showPet:'显示宠物', hidePet:'隐藏宠物', quit:'退出' },
-  en: { show:'Show', hide:'Hide', showPet:'Show Pet', hidePet:'Hide Pet', quit:'Quit' },
-};
+const LANG = { show:'显示窗口', hide:'隐藏窗口', showPet:'显示宠物', hidePet:'隐藏宠物', quit:'退出' };
 
 let tray = null;
 let mainWindowRef = null;
-let getLanguageRef = null;
 
-function t(key) {
-  const lang = (typeof getLanguageRef === 'function' ? getLanguageRef() : 'zh') || 'zh';
-  return (LANG[lang] && LANG[lang][key]) || LANG.zh[key] || key;
-}
+function t(key) { return LANG[key] || key; }
 
 function rebuildMenu() {
   if (!tray || !mainWindowRef) return;
@@ -54,9 +47,8 @@ function rebuildMenu() {
   tray.setContextMenu(contextMenu);
 }
 
-function createTray(mainWindow, getLanguage) {
+function createTray(mainWindow) {
   mainWindowRef = mainWindow;
-  getLanguageRef = getLanguage;
 
   const iconPath = path.join(__dirname, '..', 'icons', '32x32.png');
   const icon = nativeImage.createFromPath(iconPath);
