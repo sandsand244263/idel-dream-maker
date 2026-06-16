@@ -13,6 +13,7 @@ canvas.width = 120;
 canvas.height = 140;
 canvas.style.width = '120px';
 canvas.style.height = '140px';
+ctx.clearRect(0, 0, 120, 140);
 
 let FW = 192, FH = 208;
 
@@ -93,7 +94,7 @@ function buildFrames(s){
   for(let i=0;i<n;i++){let d=b;if(i===0)d*=c.firstMult||2;else if(i===n-1)d*=c.lastMult||2;f.push({c:i,r:c.row,d});}
   return f;
 }
-function drawSprite(col,row){if(!spritesheet)return;ctx.clearRect(0,0,120,140);ctx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,120,140);}
+function drawSprite(col,row){if(!spritesheet)return;ctx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,120,140);}
 function stopAnim(){if(animFrameId){cancelAnimationFrame(animFrameId);animFrameId=null;}}
 function animLoop(now){
   if(!animFrameId)return;
