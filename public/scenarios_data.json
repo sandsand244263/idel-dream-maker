@@ -1,5 +1,5168 @@
 [
   {
+    "id": "starfield",
+    "name": "Starfield",
+    "name_cn": "星际拓荒",
+    "description": "人类踏入星辰大海的时代。作为星际拓荒者，驾驶飞船穿越未知星系，在陌生星球上建立据点，邂逅奇异文明，最终在无垠宇宙中写下属于自己的传奇。",
+    "player_title": "初航者",
+    "titles": [
+      {
+        "level": 1,
+        "name": "初航者",
+        "color": "#888888",
+        "desc": "刚刚踏上星际之旅的新人"
+      },
+      {
+        "level": 2,
+        "name": "星际旅人",
+        "color": "#7A7A7A",
+        "desc": "在星空中迈出了第一步"
+      },
+      {
+        "level": 3,
+        "name": "跃迁新手",
+        "color": "#AAAAAA",
+        "desc": "完成了第一次空间跃迁"
+      },
+      {
+        "level": 6,
+        "name": "星系探索者",
+        "color": "#4CAF50",
+        "desc": "探索了第一个陌生星系"
+      },
+      {
+        "level": 8,
+        "name": "星图绘制者",
+        "color": "#66BB6A",
+        "desc": "开始绘制星际航图"
+      },
+      {
+        "level": 10,
+        "name": "小行星猎人",
+        "color": "#2196F3",
+        "desc": "在小行星带中安全穿行"
+      },
+      {
+        "level": 15,
+        "name": "前哨奠基人",
+        "color": "#FF9800",
+        "desc": "建立了第一个星际前哨站"
+      },
+      {
+        "level": 20,
+        "name": "星际商人",
+        "color": "#795548",
+        "desc": "打通了第一条星际贸易路线"
+      },
+      {
+        "level": 23,
+        "name": "异星生态学家",
+        "color": "#8D6E63",
+        "desc": "研究了三种外星生物"
+      },
+      {
+        "level": 26,
+        "name": "舰队指挥官",
+        "color": "#9C27B0",
+        "desc": "指挥着一支小型星际舰队"
+      },
+      {
+        "level": 33,
+        "name": "外交官",
+        "color": "#F44336",
+        "desc": "与外星文明建立了外交关系"
+      },
+      {
+        "level": 40,
+        "name": "星系领主",
+        "color": "#E91E63",
+        "desc": "势力覆盖一个完整星系"
+      },
+      {
+        "level": 44,
+        "name": "文明桥梁",
+        "color": "#EC407A",
+        "desc": "促进了人类与外星文明的交流"
+      },
+      {
+        "level": 48,
+        "name": "星云穿越者",
+        "color": "#FF5722",
+        "desc": "穿越了致命的星云区"
+      },
+      {
+        "level": 56,
+        "name": "远古科技探寻者",
+        "color": "#00BCD4",
+        "desc": "掌握着失落的远古科技知识"
+      },
+      {
+        "level": 65,
+        "name": "星盟议长",
+        "color": "#673AB7",
+        "desc": "统领星际联盟的最高议席"
+      },
+      {
+        "level": 70,
+        "name": "星际导师",
+        "color": "#7E57C2",
+        "desc": "培养了一代新的拓荒者"
+      },
+      {
+        "level": 75,
+        "name": "传奇船长",
+        "color": "#FFEB3B",
+        "desc": "名字在星际间被传颂"
+      },
+      {
+        "level": 85,
+        "name": "宇宙开拓者",
+        "color": "#FF9800",
+        "desc": "将人类足迹扩展到全新的星域"
+      },
+      {
+        "level": 100,
+        "name": "星系建造者",
+        "color": "#00E676",
+        "desc": "建成了繁荣的星际都市"
+      },
+      {
+        "level": 110,
+        "name": "星海守望者",
+        "color": "#69F0AE",
+        "desc": "守护着星际航道的安全"
+      },
+      {
+        "level": 120,
+        "name": "神话船长",
+        "color": "#E040FB",
+        "desc": "书写了无法超越的传奇"
+      },
+      {
+        "level": 130,
+        "name": "传说领航员",
+        "color": "#EA80FC",
+        "desc": "传说般的星际领航者"
+      },
+      {
+        "level": 150,
+        "name": "先驱",
+        "color": "#FF6D00",
+        "desc": "为人类打开了星际时代的大门"
+      },
+      {
+        "level": 175,
+        "name": "奠基者",
+        "color": "#FF8A65",
+        "desc": "为星际文明打下了坚实基石"
+      },
+      {
+        "level": 200,
+        "name": "星际传说",
+        "color": "#FF1744",
+        "desc": "刻入了星际编年史"
+      },
+      {
+        "level": 250,
+        "name": "文明引路人",
+        "color": "#FF4081",
+        "desc": "引领了多个文明的发展"
+      },
+      {
+        "level": 300,
+        "name": "星河主宰",
+        "color": "#00E5FF",
+        "desc": "星海因你而改变"
+      },
+      {
+        "level": 400,
+        "name": "永恒星灵",
+        "color": "#B388FF",
+        "desc": "超越了生命与时间的界限"
+      },
+      {
+        "level": 500,
+        "name": "???",
+        "color": "#FFFFFF",
+        "desc": "超越了认知的极限"
+      }
+    ],
+    "events": [
+      {
+        "id": "s_e001",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你站在地球轨道站的舷窗前，蔚蓝的母星在脚下缓缓转动。明天的这个时候，你就要出发了。"
+      },
+      {
+        "id": "s_e002",
+        "minLevel": 2,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你背着行囊走进星舰的登舰通道。通道很长，像一个通往未来的隧道。"
+      },
+      {
+        "id": "s_e003",
+        "minLevel": 3,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "星舰起飞的震动从座椅传遍全身。舷窗外，地球越来越小，最终变成了一颗星星。"
+      },
+      {
+        "id": "s_e004",
+        "minLevel": 4,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你被分配到一间不足五平米的小舱室。一张床、一张桌、一面舷窗。够了。"
+      },
+      {
+        "id": "s_e005",
+        "minLevel": 5,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "舰长在广播里说：各位拓荒者，从今天起，你们属于星辰大海了。你把这句话记在了日记本上。"
+      },
+      {
+        "id": "s_e006",
+        "minLevel": 6,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在舰上的第一天不太顺利，找不到餐厅，在走廊里迷了路。一个老船员笑着把你领了过去。"
+      },
+      {
+        "id": "s_e007",
+        "minLevel": 7,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始学习星舰的基本操作。导航、能源、生命维持，内容很多，但你学得格外认真。"
+      },
+      {
+        "id": "s_e008",
+        "minLevel": 8,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你认识了对门舱室的室友。一个叫陆远的年轻人，话不多，但笑起来很真诚。"
+      },
+      {
+        "id": "s_e009",
+        "minLevel": 9,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "星舰进行了第一次补给停靠。一座中继空间站，你在里面逛了一圈，买了一本星际地图册。"
+      },
+      {
+        "id": "s_e010",
+        "minLevel": 10,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你收到了来自地球的最后一封家书。母亲的字迹有些颤抖。你把信折好放进胸口的口袋里。"
+      },
+      {
+        "id": "s_e011",
+        "minLevel": 11,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "星舰进入了跃迁准备阶段。全体人员就位。你坐在座位上，心脏跳得像是要冲出胸腔。"
+      },
+      {
+        "id": "s_e012",
+        "minLevel": 12,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "跃迁引擎启动的那一刻，你感觉到整个世界被拉长了。视野里只剩下流动的光，声音也消失了。"
+      },
+      {
+        "id": "s_e013",
+        "minLevel": 13,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "跃迁持续了十七分钟。当星舰回归正常空间时，舷窗外是一个你从未见过的星系。你屏住了呼吸。"
+      },
+      {
+        "id": "s_e014",
+        "minLevel": 14,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "恒星是橙色的，比太阳大得多。它的光芒透过舷窗照进来，把整个舱室都染成了一片温暖的金色。"
+      },
+      {
+        "id": "s_e015",
+        "minLevel": 15,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "星舰开始对行星系统进行扫描。找到了七颗行星，三颗在宜居带内。舰长说我们中奖了。"
+      },
+      {
+        "id": "s_e016",
+        "minLevel": 16,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你被选入了第一批登陆队。你穿上宇航服，检查了三次气密性，深吸了一口气走进登陆舱。"
+      },
+      {
+        "id": "s_e017",
+        "minLevel": 17,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "登陆舱脱离母舰。穿过大气层时剧烈颠簸，你抓紧扶手，手心全是汗，但眼睛一刻也没离开舷窗。"
+      },
+      {
+        "id": "s_e018",
+        "minLevel": 18,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你踏上了第一颗异星的土地。地面是红色的，天空是紫色的。你在原地站了很久，忘了说话。"
+      },
+      {
+        "id": "s_e019",
+        "minLevel": 19,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在星球表面插下了第一面旗帜。没有国家的标志，只有拓荒者协会的徽章，在异星的风中飘扬。"
+      },
+      {
+        "id": "s_e020",
+        "minLevel": 20,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的空气过滤器发出警报。滤芯需要更换。你不太熟练，花了半小时才换好，满手都是汗。"
+      },
+      {
+        "id": "s_e021",
+        "minLevel": 21,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在岩石下面发现了一种从未见过的苔藓。它在紫光下发出淡蓝色的荧光，像地上的星星。"
+      },
+      {
+        "id": "s_e022",
+        "minLevel": 22,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你采集了第一批样本。土壤、岩石、空气、微生物，每一样都小心地放进标本箱，像对待珍宝。"
+      },
+      {
+        "id": "s_e023",
+        "minLevel": 23,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在登陆舱旁边搭起了第一个充气营地。钻进睡袋的时候你笑了。你真的做到了。"
+      },
+      {
+        "id": "s_e024",
+        "minLevel": 24,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "母舰派来了第二批登陆队，一共十二个人，带来了更多的设备和物资。基地的规模开始扩大。"
+      },
+      {
+        "id": "s_e025",
+        "minLevel": 25,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你负责带领一支勘探小队去北方的山脉。队员们都比你年长，但他们说，你说了算。"
+      },
+      {
+        "id": "s_e026",
+        "minLevel": 26,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你们在山脉中发现了一个洞穴。洞穴深处有水，液态水。所有人都兴奋得喊了起来。"
+      },
+      {
+        "id": "s_e027",
+        "minLevel": 27,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "水质分析显示可以饮用。你成了第一个喝下这颗星球水的人。有一点甜，你喝了两大口。"
+      },
+      {
+        "id": "s_e028",
+        "minLevel": 28,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在洞穴壁上发现了一些奇怪的纹路，看起来不像是自然形成的。你拍了照，心里充满了好奇。"
+      },
+      {
+        "id": "s_e029",
+        "minLevel": 29,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "地质学家说那些纹路是晶体生长痕迹，不是人造的。你有点失望，但没有完全放弃那个想法。"
+      },
+      {
+        "id": "s_e030",
+        "minLevel": 30,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "基地的第一栋永久建筑封顶了。一座圆顶的栖息舱。你亲手拧上了最后一颗螺栓，手有点抖。"
+      },
+      {
+        "id": "s_e031",
+        "minLevel": 31,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你给这座基地取了一个名字，叫望乡。因为站在圆顶下透过天窗，能大致看到地球的方向。"
+      },
+      {
+        "id": "s_e032",
+        "minLevel": 32,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你收到了来自地球的消息。母亲说家里一切都好，让你注意安全。你把消息反复看了五遍。"
+      },
+      {
+        "id": "s_e033",
+        "minLevel": 33,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "星舰上的厨师今天做了地球菜，一份简单的番茄炒蛋。你吃了两份，盘子舔得干干净净。"
+      },
+      {
+        "id": "s_e034",
+        "minLevel": 34,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在一次外出勘探中扭伤了脚踝。同伴把你背回了基地。你躺在床上画了一整天的星图。"
+      },
+      {
+        "id": "s_e035",
+        "minLevel": 35,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始学习外星生物的基础知识。教授是个严肃的老太太，但你很喜欢她讲课时眼里闪烁的光。"
+      },
+      {
+        "id": "s_e036",
+        "minLevel": 36,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在基地外围发现了一株高大的植物。它能分泌一种粘稠的液体，闻起来有清凉的薄荷味。"
+      },
+      {
+        "id": "s_e037",
+        "minLevel": 37,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "第一次沙尘暴来袭。能见度降到了零。你躲在栖息舱里听着风声在穹顶外呼啸了一整夜。"
+      },
+      {
+        "id": "s_e038",
+        "minLevel": 38,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "沙尘暴过后，基地的太阳能板被覆盖了一层细沙。你带着人清理了一整天，手臂酸得抬不起来。"
+      },
+      {
+        "id": "s_e039",
+        "minLevel": 39,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在沙地上发现了一些脚印，不是人类的。你跟着脚印走了很远，但最终还是没有找到来源。"
+      },
+      {
+        "id": "s_e040",
+        "minLevel": 40,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在夜间值班时看到了极光。这颗星球的极光是粉红色的，在星空中缓缓舞动，像丝绒一样。"
+      },
+      {
+        "id": "s_e041",
+        "minLevel": 41,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你学会了开探测车。第一次上路就撞上了一块岩石。保险杠凹了一块，但人没事，车也能开。"
+      },
+      {
+        "id": "s_e042",
+        "minLevel": 42,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你又收到了地球的消息。是一个朋友发来的视频。他看着镜头说，老兄，你真了不起。你笑了。"
+      },
+      {
+        "id": "s_e043",
+        "minLevel": 43,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在基地里组织了一次观影夜，放的是地球的老电影。大家都看得很安静，没有人提前离场。"
+      },
+      {
+        "id": "s_e044",
+        "minLevel": 44,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始写日记。不想漏掉每一天的细节。你怕将来老了会忘记这些颜色和味道。"
+      },
+      {
+        "id": "s_e045",
+        "minLevel": 45,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "母舰完成了对附近星系的初步勘测。有三颗行星具备开发价值。你被列入了下一次远征的名单。"
+      },
+      {
+        "id": "s_e046",
+        "minLevel": 46,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在离开前回望了一眼望乡基地。橙色的恒星将它镀上了一层金色的光。你心里说，会回来的。"
+      },
+      {
+        "id": "s_e047",
+        "minLevel": 47,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你乘坐探索舰驶向未知的星域。星图上只有大致的坐标，其余全是黑暗，等着被填满。"
+      },
+      {
+        "id": "s_e048",
+        "minLevel": 48,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "第二颗星球是气态巨行星。你们没有降落，只是在轨道上收集了大气层的数据和风暴的影像。"
+      },
+      {
+        "id": "s_e049",
+        "minLevel": 49,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "第三颗星球全是冰。冰盖下有液态海洋。你在冰面上打了个洞，放下探测器，等了一个小时才有数据。"
+      },
+      {
+        "id": "s_e050",
+        "minLevel": 50,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "探测器传回的数据显示冰下海洋中有复杂的有机分子。不是生命，但离生命不远了。这是一个开始。"
+      },
+      {
+        "id": "s_e051",
+        "minLevel": 51,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你回到了望乡基地。发现基地已经扩建了，多了一个新的穹顶。里面种着蔬菜，绿油油的一片。"
+      },
+      {
+        "id": "s_e052",
+        "minLevel": 52,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在穹顶里看到了绿色的生菜和番茄。你摘了一颗番茄，直接咬了一口，是地球的味道。"
+      },
+      {
+        "id": "s_e053",
+        "minLevel": 53,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "基地来了一艘新的补给船。带来了更多的设备和二十个新人。你突然发现自己已经是前辈了。"
+      },
+      {
+        "id": "s_e054",
+        "minLevel": 54,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "新来的人中有一个叫艾琳的生物学家。她一眼就认出了你采集的荧光苔藓的品种。"
+      },
+      {
+        "id": "s_e055",
+        "minLevel": 55,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你和艾琳一起研究那种苔藓。发现它能在极端环境下生存，还能产生一种天然的抗辐射物质。"
+      },
+      {
+        "id": "s_e056",
+        "minLevel": 56,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开着探测车往更远的区域探索。这次你带了足够七天的补给和一台全地形车，准备走远一些。"
+      },
+      {
+        "id": "s_e057",
+        "minLevel": 57,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在一片干涸的河床中发现了一座结构物，有整齐的切割痕迹，不是自然形成的。你的心跳加快了。"
+      },
+      {
+        "id": "s_e058",
+        "minLevel": 58,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "结构物是一个半埋在地下的建筑，入口被某种材料密封了。你决定先不打开，等考古队来了再说。"
+      },
+      {
+        "id": "s_e059",
+        "minLevel": 59,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你标记了坐标返回基地。一路上你一直在想那座建筑是谁建的，他们还在不在。"
+      },
+      {
+        "id": "s_e060",
+        "minLevel": 60,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "考古队花了三天时间打开了密封门。里面是一条长长的走廊，墙壁上有壁画，色彩依然鲜艳。"
+      },
+      {
+        "id": "s_e061",
+        "minLevel": 61,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "壁画描绘了一个外星种族的历史。他们的形象由光构成，美丽而脆弱，像宇宙中的萤火虫。"
+      },
+      {
+        "id": "s_e062",
+        "minLevel": 62,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在走廊尽头发现了一个房间。房间中央有一个发光的球体。你走近时它亮了起来，像在回应你。"
+      },
+      {
+        "id": "s_e063",
+        "minLevel": 63,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "发光球体释放了一段全息信息。你看不懂内容，但你把它完整地录了下来，交给了语言学家。"
+      },
+      {
+        "id": "s_e064",
+        "minLevel": 64,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "研究人员花了两个月才初步破译了那段信息。内容是警告：离开这里，危险正在靠近。"
+      },
+      {
+        "id": "s_e065",
+        "minLevel": 65,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在基地的会议上展示了这个发现。大家沉默了三十秒。然后开始制定应急方案。没有人退缩。"
+      },
+      {
+        "id": "s_e066",
+        "minLevel": 66,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你给那个外星种族起了一个名字，叫光灵。因为他们由光构成，也因为他们带来了光明。"
+      },
+      {
+        "id": "s_e067",
+        "minLevel": 67,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "光灵的警告让你睡不着觉。你每晚都要检查一遍基地的防御系统才能勉强合眼。"
+      },
+      {
+        "id": "s_e068",
+        "minLevel": 68,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你申请了一艘自己的小型飞船。是一艘二手货，但你花了一周时间把它修得焕然一新。"
+      },
+      {
+        "id": "s_e069",
+        "minLevel": 69,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你给自己的飞船命名，叫晨星号。你开着它在星系里转了一圈，测试了所有系统，一切正常。"
+      },
+      {
+        "id": "s_e070",
+        "minLevel": 70,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "晨星号第一次远航。你带着艾琳和陆远前往星系边缘的一个异常信号源。大家都有点紧张。"
+      },
+      {
+        "id": "s_e071",
+        "minLevel": 71,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "信号源是一艘坠毁的外星飞船，比人类的飞船古老得多。你小心翼翼地登了船，空气很陈旧。"
+      },
+      {
+        "id": "s_e072",
+        "minLevel": 72,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "飞船内部保存得出奇完好。你在驾驶舱找到了一段航行日志，文字和你见过的都不一样。"
+      },
+      {
+        "id": "s_e073",
+        "minLevel": 73,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你把外星飞船的坐标发回了基地。考古队兴奋得连夜出发赶来，就像孩子发现了宝藏。"
+      },
+      {
+        "id": "s_e074",
+        "minLevel": 74,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在外星飞船中发现了一种能源核心，比人类的核聚变技术先进至少两个世代。"
+      },
+      {
+        "id": "s_e075",
+        "minLevel": 75,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "光灵的警告再次出现在你的脑海里。你开始觉得那个警告不是给所有人的，是给你的。"
+      },
+      {
+        "id": "s_e076",
+        "minLevel": 76,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你决定在晨星号上安装从外星飞船逆向工程得来的新技术。风险很大，但值得一试。"
+      },
+      {
+        "id": "s_e077",
+        "minLevel": 77,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "晨星号升级完毕。新的跃迁引擎可以让你在更短时间内跨越更远的距离。你充满了期待。"
+      },
+      {
+        "id": "s_e078",
+        "minLevel": 78,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你用新引擎做了一次测试跃迁。你跳到了一个从未记录的星系，到处都是发光的水母状生物。"
+      },
+      {
+        "id": "s_e079",
+        "minLevel": 79,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你伸手碰了一下其中一只水母。它化成了细碎的光点消散了，然后又重新聚合成原来的形状。"
+      },
+      {
+        "id": "s_e080",
+        "minLevel": 80,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你给这个星系取名为水母星云。你在星图上标记了它的坐标，在旁边画了一个笑脸。"
+      },
+      {
+        "id": "s_e081",
+        "minLevel": 81,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "回到基地后你发现艾琳和陆远在一起了。你假装没看见他们牵在一起的手，但心里很高兴。"
+      },
+      {
+        "id": "s_e082",
+        "minLevel": 82,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "基地的人口突破了二百。望乡从一个小型前哨站变成了一座真正的星际城镇。"
+      },
+      {
+        "id": "s_e083",
+        "minLevel": 83,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你当选为基地的管理委员会委员。你的工作从探索变成了一部分行政事务，你不太适应。"
+      },
+      {
+        "id": "s_e084",
+        "minLevel": 84,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你不喜欢坐办公室。但你清楚总得有人做这些事。你尽力把每一份文件都认真看完。"
+      },
+      {
+        "id": "s_e085",
+        "minLevel": 85,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你推动了基地的第一部自治法规。很简单，核心只有三句：团结、互助、探索。"
+      },
+      {
+        "id": "s_e086",
+        "minLevel": 86,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "晨星号第二次远航。这次你往星系的反方向走。你想知道星空的另一边有什么。"
+      },
+      {
+        "id": "s_e087",
+        "minLevel": 87,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在途中遇到了一颗流浪行星。它不绕任何恒星运行，孤独地在星际空间中漂流了亿万年。"
+      },
+      {
+        "id": "s_e088",
+        "minLevel": 88,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你降落在流浪行星上。表面温度接近绝对零度。你的飞船外壳结了一层薄薄的冰霜。"
+      },
+      {
+        "id": "s_e089",
+        "minLevel": 89,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "但你在地下发现了热源。一个地热口，附近有微生物在活动。在零下两百度的世界里，生命依然顽强。"
+      },
+      {
+        "id": "s_e090",
+        "minLevel": 90,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你采集了那些极端微生物的样本。它们能在液氮温度下正常代谢。这完全颠覆了生物学认知。"
+      },
+      {
+        "id": "s_e091",
+        "minLevel": 91,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "回到基地后你把样本交给了艾琳。她兴奋得跳了起来，说这是她职业生涯中最重要的发现。"
+      },
+      {
+        "id": "s_e092",
+        "minLevel": 92,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的发现传回了地球。你在不知情的情况下成了名人，记者们在基地外等着采访你。"
+      },
+      {
+        "id": "s_e093",
+        "minLevel": 93,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你拒绝了所有采访。你说，我只是一个普通的拓荒者，真正的工作是那些科学家做的。"
+      },
+      {
+        "id": "s_e094",
+        "minLevel": 94,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "但你的名字已经传开了。人们称你为星际探险家。你不太喜欢这个称号，但也没法阻止。"
+      },
+      {
+        "id": "s_e095",
+        "minLevel": 95,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "光灵的全息信息还在破译中。语言学家说你留下的录音中包含了某种情感波长。"
+      },
+      {
+        "id": "s_e096",
+        "minLevel": 96,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "发光球体有一天对你说话了。它用了你的语言。它说：你被选中了。你愣了很久。"
+      },
+      {
+        "id": "s_e097",
+        "minLevel": 97,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你问球体选中了什么。球体没有回答。只是静静地悬浮在那里，散发着柔和的光。"
+      },
+      {
+        "id": "s_e098",
+        "minLevel": 98,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你没有告诉任何人这件事。你怕他们以为你疯了。但你知道自己没有疯。你知道那是真实的。"
+      },
+      {
+        "id": "s_e099",
+        "minLevel": 99,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始频繁地做梦。梦里是无尽的星空，有一个声音在呼唤你，像来自宇宙深处的回响。"
+      },
+      {
+        "id": "s_e100",
+        "minLevel": 100,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你决定深入调查光灵的警告。你向基地委员会提交了一份长期探险计划，目标直指未知星域。"
+      },
+      {
+        "id": "s_e101",
+        "minLevel": 101,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "委员会批准了你的计划。你用了三个月做准备，晨星号进行了全面检修，每一颗螺丝都检查过了。"
+      },
+      {
+        "id": "s_e102",
+        "minLevel": 102,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "出发前，艾琳找到你。她说，你一定要回来。你笑着答应了，虽然你心里也没底。"
+      },
+      {
+        "id": "s_e103",
+        "minLevel": 103,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "陆远拍了拍你的肩膀。他说，别死在外面。你说，尽量。你们握了握手，像两个老友。"
+      },
+      {
+        "id": "s_e104",
+        "minLevel": 104,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你一个人驾驶晨星号出发了。往星系深处去，目标只有一个：找到光灵的起源。"
+      },
+      {
+        "id": "s_e105",
+        "minLevel": 105,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "第一次跃迁就出了问题。你在跃迁通道中遇到了引力异常，飞船像被一只无形的手抓住，剧烈震荡。"
+      },
+      {
+        "id": "s_e106",
+        "minLevel": 106,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你被弹出了跃迁通道。晨星号受损了，警报声响成一片。你花了三天才把主要系统修好。"
+      },
+      {
+        "id": "s_e107",
+        "minLevel": 107,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你发现自己到了一个陌生的星域。星图上没有记录，通讯也断了。你孤立无援。"
+      },
+      {
+        "id": "s_e108",
+        "minLevel": 108,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你没有恐慌。你检查了物资储备，够撑两个月。你对自己说，一步一步来。"
+      },
+      {
+        "id": "s_e109",
+        "minLevel": 109,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在附近发现了一个空间站，看起来是光灵建造的，已经废弃了，但结构还算完整。"
+      },
+      {
+        "id": "s_e110",
+        "minLevel": 110,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "空间站内部还有能源。灯光在你走近时自动亮起。你找到了控制室，控制台还在工作。"
+      },
+      {
+        "id": "s_e111",
+        "minLevel": 111,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "控制台上的数据记录了一段历史。光灵曾经与一个敌人交战，那个敌人叫暗裔。"
+      },
+      {
+        "id": "s_e112",
+        "minLevel": 112,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "暗裔是吞噬恒星、毁灭一切有生命星球的恐怖文明。光灵输掉了那场战争。"
+      },
+      {
+        "id": "s_e113",
+        "minLevel": 113,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "暗裔没有彻底消失。它们只是休眠了，等待宇宙中再次出现繁荣的文明时才会醒来。"
+      },
+      {
+        "id": "s_e114",
+        "minLevel": 114,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你坐在控制台前沉默了很久。你只是一个拓荒者。你拿什么对抗吞噬恒星的敌人。"
+      },
+      {
+        "id": "s_e115",
+        "minLevel": 115,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "但你也没有逃避。你把所有数据都拷贝了下来，准备带回基地。至少要让其他人知道真相。"
+      },
+      {
+        "id": "s_e116",
+        "minLevel": 116,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "回程的路上你遇到了麻烦。暗裔的探测器发现了你的踪迹。它们的小型舰队追了过来。"
+      },
+      {
+        "id": "s_e117",
+        "minLevel": 117,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "晨星号不是战斗舰。你只能逃。你做了几次连续跃迁，引擎差点过载，但终于甩掉了追兵。"
+      },
+      {
+        "id": "s_e118",
+        "minLevel": 118,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你回到基地时晨星号满身伤痕。你瘦了一圈，但活着回来了。艾琳看到你时眼眶红了。"
+      },
+      {
+        "id": "s_e119",
+        "minLevel": 119,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你把光灵和暗裔的情报提交给了委员会。会议室里安静得能听到自己的心跳声。"
+      },
+      {
+        "id": "s_e120",
+        "minLevel": 120,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "委员会决定把情报上报地球联合政府，同时启动全星域的防御准备。没有人质疑你的判断。"
+      },
+      {
+        "id": "s_e121",
+        "minLevel": 121,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你被任命为星系防御计划的特别顾问。你又多了一个头衔，但你不在乎这个。"
+      },
+      {
+        "id": "s_e122",
+        "minLevel": 122,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你不想要头衔。但你接受了。因为除了你，没有人更了解暗裔。你觉得这是你的责任。"
+      },
+      {
+        "id": "s_e123",
+        "minLevel": 123,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始训练基地的武装力量。你从最简单的射击教起。每个人都很认真，没有人抱怨。"
+      },
+      {
+        "id": "s_e124",
+        "minLevel": 124,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的学员中有一个叫林小星的年轻人。他特别机灵，学什么都快。你在他身上看到了年轻的自己。"
+      },
+      {
+        "id": "s_e125",
+        "minLevel": 125,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "林小星问你，暗裔真的那么可怕吗。你说，比你想象的更可怕。但他没有退缩。"
+      },
+      {
+        "id": "s_e126",
+        "minLevel": 126,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "地球联合政府派来了舰队，五艘最先进的战斗舰。你觉得不够，但好过什么都没有。"
+      },
+      {
+        "id": "s_e127",
+        "minLevel": 127,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你参加了第一次联合军演。你在演习中模拟对抗暗裔的战术，所有人都认真地学。"
+      },
+      {
+        "id": "s_e128",
+        "minLevel": 128,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "军演的结果不乐观。你的战术最多只能拖延时间，无法取得决定性的胜利。"
+      },
+      {
+        "id": "s_e129",
+        "minLevel": 129,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "光灵的发光球体被转移到了更安全的地方。但它仍然只和你说话。它对你是特殊的。"
+      },
+      {
+        "id": "s_e130",
+        "minLevel": 130,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你问球体，为什么是我。球体说，因为你是第一个不害怕的人。你不太确定它说得对不对。"
+      },
+      {
+        "id": "s_e131",
+        "minLevel": 131,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你制定了疏散计划。如果暗裔真的来了，至少能让平民先走。你把每条路线都走了三遍。"
+      },
+      {
+        "id": "s_e132",
+        "minLevel": 132,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的计划被采纳了。各殖民点开始进行疏散演习。有些人抱怨太频繁，你没有让步。"
+      },
+      {
+        "id": "s_e133",
+        "minLevel": 133,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你说，宁可白跑一百次，也不能一次来不及。这句话后来成了联邦的应急口号。"
+      },
+      {
+        "id": "s_e134",
+        "minLevel": 134,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "林小星在一次演习中救了一个被困在气密舱里的孩子。你当着所有人的面表扬了他。"
+      },
+      {
+        "id": "s_e135",
+        "minLevel": 135,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始感觉自己像一个军人多过一个拓荒者。你不喜欢这种感觉，但你没有抱怨。"
+      },
+      {
+        "id": "s_e136",
+        "minLevel": 136,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "晚上你坐在晨星号的驾驶舱里，抚摸着控制台。你怀念以前单纯的探索日子。"
+      },
+      {
+        "id": "s_e137",
+        "minLevel": 137,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "但你很清楚，有些事情必须有人来做。如果不是你，那还能是谁呢。"
+      },
+      {
+        "id": "s_e138",
+        "minLevel": 138,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "通讯恢复了。地球方面派来了更多的支援，总计十二艘战斗舰，还有两艘补给舰。"
+      },
+      {
+        "id": "s_e139",
+        "minLevel": 139,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在作战会议上提出了一个大胆的计划——主动出击，寻找暗裔的巢穴。"
+      },
+      {
+        "id": "s_e140",
+        "minLevel": 140,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "所有人都觉得你疯了。但你拿出了数据和光灵的日志。沉默之后，计划通过了。"
+      },
+      {
+        "id": "s_e141",
+        "minLevel": 141,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你选了三艘最快的船，你亲自指挥旗舰。出击时间定在七十二小时后。"
+      },
+      {
+        "id": "s_e142",
+        "minLevel": 142,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你写了一封信，没有指定收信人。你在信里说了很多你一直没敢说的话。"
+      },
+      {
+        "id": "s_e143",
+        "minLevel": 143,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "出发前你把信交给了艾琳。她说，你回来自己交。你笑了笑，没有回答。"
+      },
+      {
+        "id": "s_e144",
+        "minLevel": 144,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "舰队出发了。目标坐标来自光灵的数据库，一个被称为暗域的地方。航程需要六天。"
+      },
+      {
+        "id": "s_e145",
+        "minLevel": 145,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "航行中你每天给全舰人员讲话。你讲拓荒者的故事，讲望乡基地的第一颗番茄。"
+      },
+      {
+        "id": "s_e146",
+        "minLevel": 146,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你看到年轻人们眼中的恐惧在减少。你心想，这就是领导的意义吧。"
+      },
+      {
+        "id": "s_e147",
+        "minLevel": 147,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "暗域到了。那是一片没有恒星的区域。死寂的黑暗中有某种庞大的东西在缓缓移动。"
+      },
+      {
+        "id": "s_e148",
+        "minLevel": 148,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你下令减速。所有武器系统进入待命状态。你深吸了一口气，然后说，我们上。"
+      },
+      {
+        "id": "s_e149",
+        "minLevel": 149,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "黑暗中亮起了一对巨大的光点。不是恒星。是暗裔的旗舰，比人类的母舰大十倍。"
+      },
+      {
+        "id": "s_e150",
+        "minLevel": 150,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你没有犹豫。你下令开火。第一轮齐射在暗裔旗舰的护盾上激起了一圈涟漪。战斗开始了。"
+      },
+      {
+        "id": "s_e151",
+        "minLevel": 151,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "暗裔反击了。它们的武器能直接破坏空间结构。一艘护航舰在爆炸中被撕成了碎片。"
+      },
+      {
+        "id": "s_e152",
+        "minLevel": 152,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "战术屏幕上友军的光点一个接一个熄灭。你的手心全是汗，但你的声音依然很稳。"
+      },
+      {
+        "id": "s_e153",
+        "minLevel": 153,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你动用了光灵留下的武器原型。一束能量击穿了暗裔旗舰的护盾。舰队士气大振。"
+      },
+      {
+        "id": "s_e154",
+        "minLevel": 154,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "战斗持续了六个小时。你损失了一半的船，但暗裔的旗舰也受到了重创，开始撤退。"
+      },
+      {
+        "id": "s_e155",
+        "minLevel": 155,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "暗裔拖着受损的旗舰消失在了黑暗中。你下令不追击。你的任务不是歼灭，是争取时间。"
+      },
+      {
+        "id": "s_e156",
+        "minLevel": 156,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你带着残存的舰队回到了基地。人们像欢迎英雄一样迎接你。你只想好好睡一觉。"
+      },
+      {
+        "id": "s_e157",
+        "minLevel": 157,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你睡了整整一天一夜。醒来时发现林小星坐在你的床边，眼睛红红的。你说，没事了。"
+      },
+      {
+        "id": "s_e158",
+        "minLevel": 158,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "暗裔没有再次出现。但你清楚它们只是暂时退却了。下一次它们会准备得更充分。"
+      },
+      {
+        "id": "s_e159",
+        "minLevel": 159,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你把光灵的武器技术分享给了联合政府。全球的科学家都在研究它，希望能找到破解暗裔的方法。"
+      },
+      {
+        "id": "s_e160",
+        "minLevel": 160,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你回到了探索的老本行。晨星号再次起航。这次你带着林小星做副手，教他看星图。"
+      },
+      {
+        "id": "s_e161",
+        "minLevel": 161,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你教他如何读取星图，如何判断行星的可居住性，如何在危险来临时保持冷静。"
+      },
+      {
+        "id": "s_e162",
+        "minLevel": 162,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你们发现了一颗完美的星球。有海洋，有大气，有生命。你给它取名为新地球。"
+      },
+      {
+        "id": "s_e163",
+        "minLevel": 163,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "新地球的消息传回后引发了移民潮。你看着满载移民的飞船从头顶飞过，像一群迁徙的鸟。"
+      },
+      {
+        "id": "s_e164",
+        "minLevel": 164,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在新地球上建了一座小屋。在海边，用水晶玻璃做的。你坐在窗前看潮起潮落。"
+      },
+      {
+        "id": "s_e165",
+        "minLevel": 165,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "但你没有闲下来太久。星际联邦成立了。你被邀请在成立仪式上致辞。"
+      },
+      {
+        "id": "s_e166",
+        "minLevel": 166,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你说了一段很短的话：我们来自不同的星球，但我们是同一个物种。团结才有未来。"
+      },
+      {
+        "id": "s_e167",
+        "minLevel": 167,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的话被刻在了联邦总部大厅的墙上。每次你路过都觉得有点不好意思，但又觉得挺好。"
+      },
+      {
+        "id": "s_e168",
+        "minLevel": 168,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "林小星独立了。他有了自己的飞船。他对你说，船长，我准备好了。你拍了拍他的肩膀。"
+      },
+      {
+        "id": "s_e169",
+        "minLevel": 169,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你收到了光灵球体的最后一条消息。它说：我们该见面了。"
+      },
+      {
+        "id": "s_e170",
+        "minLevel": 170,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你再次独自出发。这次你知道目的地——一条隐藏的跃迁通道，通往宇宙的深处。"
+      },
+      {
+        "id": "s_e171",
+        "minLevel": 171,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你穿过通道到达了一个星云。星云的中心是一座城市，一座由光构成的梦幻城市。"
+      },
+      {
+        "id": "s_e172",
+        "minLevel": 172,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "光灵迎接了你。他们现在的形态已经接近纯能量，没有固定的形状，但你能感受到他们的善意。"
+      },
+      {
+        "id": "s_e173",
+        "minLevel": 173,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "光灵的首领是一个巨大的金色光球。它用你的语言说：你是第一个来到这里的外星人。"
+      },
+      {
+        "id": "s_e174",
+        "minLevel": 174,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你和光灵交流了三天。他们没有声音，但你理解了他们的全部历史和文化。超越语言的沟通。"
+      },
+      {
+        "id": "s_e175",
+        "minLevel": 175,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "光灵给了你一份礼物——一份完整的星际航图，标注了宇宙中所有的危险区域。"
+      },
+      {
+        "id": "s_e176",
+        "minLevel": 176,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你带着航图回到联邦。这张图的价值无法估量。你把它交给了科学院。"
+      },
+      {
+        "id": "s_e177",
+        "minLevel": 177,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "科学院的人看到航图后集体沉默了。然后一个老院士捂着脸哭了起来。"
+      },
+      {
+        "id": "s_e178",
+        "minLevel": 178,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你再次成为焦点。但你躲回了新地球的小屋。你种了一棵从地球带来的树苗。"
+      },
+      {
+        "id": "s_e179",
+        "minLevel": 179,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "树苗在异星的土壤中活了下来。你每天给它浇水。它长得很快，比在地球上还快。"
+      },
+      {
+        "id": "s_e180",
+        "minLevel": 180,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "艾琳和陆远来看你。他们结婚了，你当了证婚人。仪式在海边的日落中举行。"
+      },
+      {
+        "id": "s_e181",
+        "minLevel": 181,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "暗裔仍然是一个威胁。但你有了光灵的航图，可以提前预警它们的行动了。"
+      },
+      {
+        "id": "s_e182",
+        "minLevel": 182,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦建立了暗裔警戒网络。你在每一个监测站上都安装了你亲自设计的预警系统。"
+      },
+      {
+        "id": "s_e183",
+        "minLevel": 183,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的白发多了起来。你在舷窗玻璃上看到自己的倒影，觉得和以前不太一样了。"
+      },
+      {
+        "id": "s_e184",
+        "minLevel": 184,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始写回忆录。不是为了出版，只是想把经历记下来，怕有一天会忘记。"
+      },
+      {
+        "id": "s_e185",
+        "minLevel": 185,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你写到了第一次跃迁时的恐惧，写到了在流浪行星上的寒冷，写到了暗裔的炮火。"
+      },
+      {
+        "id": "s_e186",
+        "minLevel": 186,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你写下了一句话：宇宙很危险，但值得。"
+      },
+      {
+        "id": "s_e187",
+        "minLevel": 187,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "新地球上的居民越来越多。小屋周围建起了城镇。你成了镇上的名人。"
+      },
+      {
+        "id": "s_e188",
+        "minLevel": 188,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你每天早上沿海边散步。人们和你打招呼。你认识每一个人。"
+      },
+      {
+        "id": "s_e189",
+        "minLevel": 189,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有一所学校以你的名字命名。你去参观时孩子们围着你问各种问题。"
+      },
+      {
+        "id": "s_e190",
+        "minLevel": 190,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个孩子问你，宇宙的尽头是什么。你说，不知道，但总有一天会有人知道的。"
+      },
+      {
+        "id": "s_e191",
+        "minLevel": 191,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "暗裔的一次小规模袭扰被警戒网络发现了。舰队提前做好了准备，零伤亡击退了它们。"
+      },
+      {
+        "id": "s_e192",
+        "minLevel": 192,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦议会授予你最高荣誉勋章。你接受了，但把它挂在了小屋的墙上，从来没有戴过。"
+      },
+      {
+        "id": "s_e193",
+        "minLevel": 193,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "晨星号老了。你也老了。但你舍不得换新船。每一道划痕都是一段故事。"
+      },
+      {
+        "id": "s_e194",
+        "minLevel": 194,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你带林小星做了一次师徒旅行，去了你发现的所有重要地点，像一场告别巡礼。"
+      },
+      {
+        "id": "s_e195",
+        "minLevel": 195,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "林小星在路上问了你很多问题，关于勇气，关于选择，关于人生的意义。"
+      },
+      {
+        "id": "s_e196",
+        "minLevel": 196,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的回答很简单：做你认为对的事，然后接受结果。不管结果怎么样。"
+      },
+      {
+        "id": "s_e197",
+        "minLevel": 197,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "回到新地球后你生了一场病。不算严重，但恢复得很慢。你意识到身体不饶人了。"
+      },
+      {
+        "id": "s_e198",
+        "minLevel": 198,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在联邦议会上正式辞去了所有职务。你说，该交给年轻人了。"
+      },
+      {
+        "id": "s_e199",
+        "minLevel": 199,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "退休后的第一天你睡到自然醒。然后去海边散步。你第一次觉得时间完全属于自己。"
+      },
+      {
+        "id": "s_e200",
+        "minLevel": 200,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在海边捡到一块透明的石头，里面有一些发光的小点。你把它放在书架上，每天都会看一眼。"
+      },
+      {
+        "id": "s_e201",
+        "minLevel": 201,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始重新布置小屋。把那些从各个星球收集的纪念品摆放整齐，每一件背后都有一段故事。"
+      },
+      {
+        "id": "s_e202",
+        "minLevel": 202,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个来自光灵的使者通过全息影像拜访了你，给你展示了宇宙中正在发生的奇观。"
+      },
+      {
+        "id": "s_e203",
+        "minLevel": 203,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你虽然退休了，但偶尔还会给年轻的拓荒者上课。你讲得深入浅出，学生们都喜欢听。"
+      },
+      {
+        "id": "s_e204",
+        "minLevel": 204,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的膝盖开始疼了。医生说是长期在不同重力环境下生活的后遗症。你开始用拐杖。"
+      },
+      {
+        "id": "s_e205",
+        "minLevel": 205,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你不太喜欢拐杖，但它让你能走更远的路。你妥协了。"
+      },
+      {
+        "id": "s_e206",
+        "minLevel": 206,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你收到了一封来自地球的信。是当年那个朋友写来的。他说他也老了，头发全白了。"
+      },
+      {
+        "id": "s_e207",
+        "minLevel": 207,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在回信里附了一张新地球的海边照片。你说，这里有世界上最美的日落。"
+      },
+      {
+        "id": "s_e208",
+        "minLevel": 208,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的回忆录出版了，你本不想出，但出版社说服了你。你把全部版税捐给了拓荒者基金。"
+      },
+      {
+        "id": "s_e209",
+        "minLevel": 209,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "回忆录成了畅销书。你走在街上会有人认出你。你不太习惯，但还是尽量对每个人微笑。"
+      },
+      {
+        "id": "s_e210",
+        "minLevel": 210,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "暗裔的威胁渐渐远了。但你没有放松警惕。你把光灵的预警系统维护手册完整地写了出来。"
+      },
+      {
+        "id": "s_e211",
+        "minLevel": 211,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦按照你的手册培训了新一代的操作员。你亲自去上了一周的课。"
+      },
+      {
+        "id": "s_e212",
+        "minLevel": 212,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在课堂上看到了一个特别认真的学员，叫安娜。她让你想起了年轻时的自己。"
+      },
+      {
+        "id": "s_e213",
+        "minLevel": 213,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "安娜问你，拓荒者最重要的品质是什么。你说，好奇心和责任感，缺一不可。"
+      },
+      {
+        "id": "s_e214",
+        "minLevel": 214,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你收养了一只外星生物。长得像猫，但会变色。你给它取名阿彩，它每天趴在你腿上。"
+      },
+      {
+        "id": "s_e215",
+        "minLevel": 215,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始研究园艺。在新地球的土壤里种出了地球的玫瑰。第一朵花开的时候你拍了照留念。"
+      },
+      {
+        "id": "s_e216",
+        "minLevel": 216,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "林小星结婚了。新娘是他在一次救援任务中认识的领航员。你参加了婚礼，坐在第一排。"
+      },
+      {
+        "id": "s_e217",
+        "minLevel": 217,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在婚礼上讲了话。你说，在茫茫宇宙中两个人能相遇，本身就是一个小小的奇迹。"
+      },
+      {
+        "id": "s_e218",
+        "minLevel": 218,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "阿彩生了一窝小崽，五只，颜色各不相同。你花了一个下午给它们取名字。"
+      },
+      {
+        "id": "s_e219",
+        "minLevel": 219,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你带着阿彩和它的孩子们去海边散步。路人笑着说你像一个养猫的退休老人。"
+      },
+      {
+        "id": "s_e220",
+        "minLevel": 220,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你梦到了光灵。它们邀请你再去一次它们的城市。你醒来后坐在床边想了很久。"
+      },
+      {
+        "id": "s_e221",
+        "minLevel": 221,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你再次出发了。但这次不是一个人。你带着安娜，她将成为光灵与联邦之间的联络官。"
+      },
+      {
+        "id": "s_e222",
+        "minLevel": 222,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "光灵的城市又扩建了。新的建筑像是凝固的光线，在星云的映照下熠熠生辉。安娜看呆了。"
+      },
+      {
+        "id": "s_e223",
+        "minLevel": 223,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "光灵首领对你表示欢迎。它说它们一直在观察人类的进步，它们很满意。"
+      },
+      {
+        "id": "s_e224",
+        "minLevel": 224,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "安娜和光灵的交流很顺利。她的精神波长和光灵很匹配。你在旁边微笑着看这一切。"
+      },
+      {
+        "id": "s_e225",
+        "minLevel": 225,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在光灵城市里看到了一个纪念碑，上面刻着许多名字，有光灵的，也有人类的。"
+      },
+      {
+        "id": "s_e226",
+        "minLevel": 226,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在纪念碑上找到了自己的名字，被刻在最高的地方。你没有说什么。"
+      },
+      {
+        "id": "s_e227",
+        "minLevel": 227,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "回到新地球后安娜正式担任驻光灵大使。你送了她一份礼物，是你用了多年的旧星图。"
+      },
+      {
+        "id": "s_e228",
+        "minLevel": 228,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦科学院宣布了一项重大突破——他们成功复制了光灵的能源核心技术。能源危机解决了。"
+      },
+      {
+        "id": "s_e229",
+        "minLevel": 229,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在新闻里看到这个消息时正在浇花。你对着阿彩说，世界要变好了。"
+      },
+      {
+        "id": "s_e230",
+        "minLevel": 230,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的身体越来越差了。但你的精神还好。你每天还是会去海边走一走，看一看。"
+      },
+      {
+        "id": "s_e231",
+        "minLevel": 231,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始整理自己的物品。把该捐的捐掉，该送的送掉。你想轻装前行。"
+      },
+      {
+        "id": "s_e232",
+        "minLevel": 232,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你给每一个你在乎的人写了信。有的长，有的短，写了整整一个月。"
+      },
+      {
+        "id": "s_e233",
+        "minLevel": 233,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "林小星的孩子出生了。你成了干爷爷。你抱着婴儿的时候手在微微颤抖，心里却格外温暖。"
+      },
+      {
+        "id": "s_e234",
+        "minLevel": 234,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你对婴儿说，小家伙，宇宙很大，等着你去探索呢。婴儿抓住了你的手指。"
+      },
+      {
+        "id": "s_e235",
+        "minLevel": 235,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在小屋的院子里种下了第十棵树。每一棵都是从不同星球带回来的种子。"
+      },
+      {
+        "id": "s_e236",
+        "minLevel": 236,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "院子成了一个微型星际植物园。来自各个星球的生命在这里和平共处，生根发芽。"
+      },
+      {
+        "id": "s_e237",
+        "minLevel": 237,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你坐在树荫下看书。阿彩趴在你身边。阳光从树叶间洒下来，暖洋洋的。"
+      },
+      {
+        "id": "s_e238",
+        "minLevel": 238,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的手开始发抖了。写出的字歪歪扭扭的。你放下笔，看着窗外的海面。"
+      },
+      {
+        "id": "s_e239",
+        "minLevel": 239,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "安娜从光灵那里带回了一种医疗技术，可以修复衰老的细胞。你说，留给年轻人吧。"
+      },
+      {
+        "id": "s_e240",
+        "minLevel": 240,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你不是不想活得更久。你只是觉得，每个人都有属于自己的时间。你的已经够长了。"
+      },
+      {
+        "id": "s_e241",
+        "minLevel": 241,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你让艾琳帮你剪头发。她一边剪一边掉眼泪。你没问她为什么哭，你知道。"
+      },
+      {
+        "id": "s_e242",
+        "minLevel": 242,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你梦到了第一次跃迁时的光流，梦到了那颗橙色恒星的光芒，梦到了望乡基地的第一座穹顶。"
+      },
+      {
+        "id": "s_e243",
+        "minLevel": 243,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "春天来了。你院子里的树开花了。粉色的花瓣飘落在你的肩膀上。"
+      },
+      {
+        "id": "s_e244",
+        "minLevel": 244,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "收音机里播着新闻。联邦又发现了一个新的宜居星系。你听到后嘴角微微上扬。"
+      },
+      {
+        "id": "s_e245",
+        "minLevel": 245,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你已经很少出门了。但你每天都会在窗前坐一会儿，看看海，看看天空。"
+      },
+      {
+        "id": "s_e246",
+        "minLevel": 246,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "阿彩趴在你腿上睡着了。它的皮毛在阳光下闪闪发光。你轻轻地抚摸着它。"
+      },
+      {
+        "id": "s_e247",
+        "minLevel": 247,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "光灵发来了一段全息影像。是那片水母星云。水母们还在那里，还在发光。"
+      },
+      {
+        "id": "s_e248",
+        "minLevel": 248,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你握着那份旧的星际地图。地图的边缘已经磨损了。你用手指划过你走过的航线。"
+      },
+      {
+        "id": "s_e249",
+        "minLevel": 249,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "林小星坐在你的床边。他已经不是那个年轻人了，但他的眼睛还是那么亮。"
+      },
+      {
+        "id": "s_e250",
+        "minLevel": 250,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你闭着眼睛。能听到海浪的声音。一波一波的，像宇宙的呼吸。你很平静。"
+      },
+      {
+        "id": "s_e251",
+        "minLevel": 251,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你闻到了海风的味道。带着一点点腥味和一点点甜。这是新地球的味道。"
+      },
+      {
+        "id": "s_e252",
+        "minLevel": 252,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你想起了第一次踏上异星土地的那一刻。你站在红色的地面上，看着紫色的天空。已经是很久以前的事了。"
+      },
+      {
+        "id": "s_e253",
+        "minLevel": 253,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你听到了窗外孩子们的笑声。他们在海边玩耍。笑声是最好的声音。"
+      },
+      {
+        "id": "s_e254",
+        "minLevel": 254,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你感觉自己越来越轻了。像一颗尘埃，准备融进星海。你不害怕。"
+      },
+      {
+        "id": "s_e255",
+        "minLevel": 255,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "安娜在给你念信。是来自地球的问候。你听着听着就睡着了。她停下来给你掖了掖被角。"
+      },
+      {
+        "id": "s_e256",
+        "minLevel": 256,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你做了一个很长的梦。梦里你回到了晨星号上。舷窗外是流动的光。你知道那是回家的路。"
+      },
+      {
+        "id": "s_e257",
+        "minLevel": 257,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你已经好几天没有进食了。但你并不觉得饿。你的身体在做最后的告别。"
+      },
+      {
+        "id": "s_e258",
+        "minLevel": 258,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的呼吸变得很轻很轻。像是怕打扰到这个世界。窗外的海浪声也变得遥远了。"
+      },
+      {
+        "id": "s_e259",
+        "minLevel": 259,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "眼前闪过了一生中所有的画面。地球的蓝色、橙色的恒星、荧光苔藓、光灵的城市。你在微笑。"
+      },
+      {
+        "id": "s_e260",
+        "minLevel": 260,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你看到那棵从地球带来的树苗已经长成了参天大树。树枝在风中摇曳。"
+      },
+      {
+        "id": "s_e261",
+        "minLevel": 261,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "林小星、艾琳、陆远、安娜，他们都在。你看着他们的脸，觉得这辈子值了。"
+      },
+      {
+        "id": "s_e262",
+        "minLevel": 262,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你说不出话来了。但你在心里说，不要难过，我只是先走一步。宇宙那么大，总会再见的。"
+      },
+      {
+        "id": "s_e263",
+        "minLevel": 263,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的心脏还在跳动。很慢，很稳。像遥远的恒星在闪烁。"
+      },
+      {
+        "id": "s_e264",
+        "minLevel": 264,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "窗外的光线变了。天快亮了。你不知第多少次看到新地球的黎明。"
+      },
+      {
+        "id": "s_e265",
+        "minLevel": 265,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你最后听到的是海鸟的叫声。新地球的海鸟，翅膀是蓝色的。它们回来了。"
+      },
+      {
+        "id": "s_e266",
+        "minLevel": 266,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你走了。在一个宁静的清晨。阳光透过窗子洒在你的脸上。你的表情很安详。"
+      },
+      {
+        "id": "s_e267",
+        "minLevel": 267,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "林小星把你的星图捐给了联邦博物馆。展柜的标签上写着：一个拓荒者的一生。"
+      },
+      {
+        "id": "s_e268",
+        "minLevel": 268,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦为你举行了星际葬礼。你的骨灰将撒向宇宙，随风飘散在星海之中。"
+      },
+      {
+        "id": "s_e269",
+        "minLevel": 269,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的名字被刻在了联邦先驱纪念墙上，和那些为星辰大海付出一切的人在一起。"
+      },
+      {
+        "id": "s_e270",
+        "minLevel": 270,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那棵从地球带来的树还在长，树枝伸向天空。树下有一个小牌子：拓荒者之树。"
+      },
+      {
+        "id": "s_e271",
+        "minLevel": 271,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦出版了一本书，叫《晨星号航海志》，记录了你所有的探索路线和数据。"
+      },
+      {
+        "id": "s_e272",
+        "minLevel": 272,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "树旁边种了更多的树。人们叫它望乡林。每一棵树都代表一次成功的远征。"
+      },
+      {
+        "id": "s_e273",
+        "minLevel": 273,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "林小星成为了联邦探险队的队长。他说，老船长教过我，星空永远值得前往。"
+      },
+      {
+        "id": "s_e274",
+        "minLevel": 274,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "新地球上再没有贫穷和饥饿。你当年建立的小小基地变成了一座百万人口的城市。"
+      },
+      {
+        "id": "s_e275",
+        "minLevel": 275,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "光灵的纪念碑上又多了一个名字。人类和光灵的友谊，从你开始。"
+      },
+      {
+        "id": "s_e276",
+        "minLevel": 276,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "孩子们在学校读你的故事。老师问他们你是什么样的人。他们说，一个勇敢的人。"
+      },
+      {
+        "id": "s_e277",
+        "minLevel": 277,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "第一座跨星系图书馆以你的名字命名。最珍贵的藏品是晨星号的航行日志原件。"
+      },
+      {
+        "id": "s_e278",
+        "minLevel": 278,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "拓荒者日成为了联邦法定节日。每到这一天，所有殖民点都会升起拓荒者旗帜。"
+      },
+      {
+        "id": "s_e279",
+        "minLevel": 279,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的海边小屋成为了历史保护建筑。你的摇椅和书架都保持着原样。"
+      },
+      {
+        "id": "s_e280",
+        "minLevel": 280,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "安娜成为了联邦最有名望的外交官。她说，是你教会了她如何与不同的文明对话。"
+      },
+      {
+        "id": "s_e281",
+        "minLevel": 281,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人编写了一部关于你的全息剧，名叫《晨星号》。首映那天全联邦同步播出。"
+      },
+      {
+        "id": "s_e282",
+        "minLevel": 282,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事被翻译成了几十种星际语言。在遥远的星系中也有人知道你的名字。"
+      },
+      {
+        "id": "s_e283",
+        "minLevel": 283,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "人类和光灵合作建立了一个联合科研站，就在那片水母星云中。每天都有新发现。"
+      },
+      {
+        "id": "s_e284",
+        "minLevel": 284,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那棵拓荒者之树高过了所有的建筑。树下建了一个广场，每天都有孩子在玩耍。"
+      },
+      {
+        "id": "s_e285",
+        "minLevel": 285,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "艾琳退休了。她也种了一棵树，就在你种的那棵旁边。她说，这样离你近一些。"
+      },
+      {
+        "id": "s_e286",
+        "minLevel": 286,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "历史书上写着：一个初航者，在星辰大海中找到了人类的未来。"
+      },
+      {
+        "id": "s_e287",
+        "minLevel": 287,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦的星际飞船已经能飞到银河系的边缘了。你在世时这还只是梦想。现在它实现了。"
+      },
+      {
+        "id": "s_e288",
+        "minLevel": 288,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "宇宙的各个角落都有人在默默探索。你不孤单。你的精神传给了无数人。"
+      },
+      {
+        "id": "s_e289",
+        "minLevel": 289,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "新地球上出现了一种新的花。蓝色的花瓣，边缘有一圈银色的光。人们叫它晨星花。"
+      },
+      {
+        "id": "s_e290",
+        "minLevel": 290,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "孩子们在树下画画。画的是飞船和星球。他们没见过宇宙最黑暗的样子，但他们知道光明在哪里。"
+      },
+      {
+        "id": "s_e291",
+        "minLevel": 291,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦总部搬迁到了一座新的城市。那座城是在你当年绘制的一张星图位置上建起来的。"
+      },
+      {
+        "id": "s_e292",
+        "minLevel": 292,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一艘深空探索飞船从新地球出发，目标银河系对岸。船名是晨星二号。"
+      },
+      {
+        "id": "s_e293",
+        "minLevel": 293,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "科学家培育出了一种能在极端真空环境中存活的微生物。灵感来自你在流浪行星上的发现。"
+      },
+      {
+        "id": "s_e294",
+        "minLevel": 294,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一幅壁画上画着一个人站在飞船舷窗前，面向无垠的星空。每个人都知道那是谁。"
+      },
+      {
+        "id": "s_e295",
+        "minLevel": 295,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "艾琳的头发也白了。她坐在那棵树下，风吹过来，和当年你在的时候一样温柔。"
+      },
+      {
+        "id": "s_e296",
+        "minLevel": 296,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的航行日志全集出版了。序言里写着：这是一部人类走向星辰的史诗。"
+      },
+      {
+        "id": "s_e297",
+        "minLevel": 297,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦的旗帜换了。新旗帜的背景是一片星空，中间是一艘小飞船的剪影，正在向前飞行。"
+      },
+      {
+        "id": "s_e298",
+        "minLevel": 298,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个年轻人站在你的雕像前，对身边的同伴说，我长大以后也要像他那样。"
+      },
+      {
+        "id": "s_e299",
+        "minLevel": 299,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "春天又来了。拓荒者之树的花瓣被风吹得到处都是，像一场蓝色的雪。"
+      },
+      {
+        "id": "s_e300",
+        "minLevel": 300,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "天边出现了第一颗人造恒星。是联邦发射的，为远方的殖民点提供光明。"
+      },
+      {
+        "id": "s_e301",
+        "minLevel": 301,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦深空局成立了。负责人说，人类的脚步不应该止步于银河系。"
+      },
+      {
+        "id": "s_e302",
+        "minLevel": 302,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "林小星的孩子长大了。他选择了和父亲一样的职业，成了一名星际领航员。"
+      },
+      {
+        "id": "s_e303",
+        "minLevel": 303,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的曾孙出生了。你没能抱到他，但林小星给他取了一个和你一样的名字。"
+      },
+      {
+        "id": "s_e304",
+        "minLevel": 304,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦的星际网络覆盖了上千个星系。你在任何一个角落都能和地球实时通话。"
+      },
+      {
+        "id": "s_e305",
+        "minLevel": 305,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "探测器从银河系边缘发回信号。那里有一道巨大的结构，不是自然形成的。"
+      },
+      {
+        "id": "s_e306",
+        "minLevel": 306,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的事迹被收录进了联邦基础教育教材。每个孩子在上学第一天都会读到你的故事。"
+      },
+      {
+        "id": "s_e307",
+        "minLevel": 307,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一部关于你的纪录片在全联邦同步上映。导演花了五年时间采访了所有认识你的人。"
+      },
+      {
+        "id": "s_e308",
+        "minLevel": 308,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "暗裔再也没有出现过。光灵说它们已经彻底离开了这个宇宙维度。但警戒网络还在运行。"
+      },
+      {
+        "id": "s_e309",
+        "minLevel": 309,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的小屋每天都有游客来参观。管理员说，最多的一天来了三千人。"
+      },
+      {
+        "id": "s_e310",
+        "minLevel": 310,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在最后那段日子里写的信被收集起来出版成了一本书。书名叫《星海来信》。"
+      },
+      {
+        "id": "s_e311",
+        "minLevel": 311,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦的第一艘跨星系殖民飞船以你的名字命名。它载着十万人前往另一个星系。"
+      },
+      {
+        "id": "s_e312",
+        "minLevel": 312,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那片水母星云被设立为自然保护区。任何飞船未经许可不得进入。水母们在那里安详地生活。"
+      },
+      {
+        "id": "s_e313",
+        "minLevel": 313,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "新地球的海洋中发现了一种新的生物，和地球上的水母很像，但会发出柔和的蓝光。"
+      },
+      {
+        "id": "s_e314",
+        "minLevel": 314,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "人类的寿命因为光灵的医疗技术延长了一倍。但你的故事中说，生命的价值不在长短。"
+      },
+      {
+        "id": "s_e315",
+        "minLevel": 315,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个外星文明通过光灵联系上了联邦。他们说，他们听过你的故事。"
+      },
+      {
+        "id": "s_e316",
+        "minLevel": 316,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那个外星文明的首领说，你证明了善良和勇气是宇宙通用的语言。"
+      },
+      {
+        "id": "s_e317",
+        "minLevel": 317,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的晨星号被修复了，陈列在联邦中央博物馆。每一处伤痕都被原样保留。"
+      },
+      {
+        "id": "s_e318",
+        "minLevel": 318,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "人类和光灵共同建造了一座纪念碑，形状是一棵发光的树。树根扎入大地，树冠指向星空。"
+      },
+      {
+        "id": "s_e319",
+        "minLevel": 319,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "每年拓荒者日，人们会在树下点起蓝色的灯。整棵树就像晨星号跃迁时的光芒。"
+      },
+      {
+        "id": "s_e320",
+        "minLevel": 320,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦科学院将你发现的极端微生物命名为初航者菌。它帮助人类在更多恶劣星球上定居。"
+      },
+      {
+        "id": "s_e321",
+        "minLevel": 321,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "林小星老了。但他还在飞。他说老头子能飞多久，他就飞多久。"
+      },
+      {
+        "id": "s_e322",
+        "minLevel": 322,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的雕像被竖立在望乡基地的原址上。你面朝星空，手里拿着一卷星图。"
+      },
+      {
+        "id": "s_e323",
+        "minLevel": 323,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的话被刻在了联邦航天中心的大门上：做你认为对的事，然后接受结果。"
+      },
+      {
+        "id": "s_e324",
+        "minLevel": 324,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一艘来自遥远星系的飞船抵达了新地球。船上的使者说，他们的祖先也听过你的名字。"
+      },
+      {
+        "id": "s_e325",
+        "minLevel": 325,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的名字被刻在了月球纪念碑上。旁边是你最崇拜的那些探索者的名字。"
+      },
+      {
+        "id": "s_e326",
+        "minLevel": 326,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦科学院宣布成功破解了光灵的全部科技。人类正式步入了星际文明时代。"
+      },
+      {
+        "id": "s_e327",
+        "minLevel": 327,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你日记中的一页被单独展示在博物馆里。上面写着：今天发现了一颗行星，有蓝色的天空。"
+      },
+      {
+        "id": "s_e328",
+        "minLevel": 328,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "暗裔的威胁已经成为了历史课本中的一页。但你没有忘记。你的精神永远在警醒着后人。"
+      },
+      {
+        "id": "s_e329",
+        "minLevel": 329,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "诗人以你的故事写了一首长诗。诗名叫《从地球到星海》。结尾是：他从未停下脚步。"
+      },
+      {
+        "id": "s_e330",
+        "minLevel": 330,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "跨星系高速航路网建成。第一条航线就是从地球到新地球，叫做初航者航线。"
+      },
+      {
+        "id": "s_e331",
+        "minLevel": 331,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的手印被铸在了联邦先驱广场的地面上。手旁边刻着你第一次跃迁的日期。"
+      },
+      {
+        "id": "s_e332",
+        "minLevel": 332,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "新地球的图书馆里有一面墙，上面全是关于你的书。各种语言，各种版本。"
+      },
+      {
+        "id": "s_e333",
+        "minLevel": 333,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "光灵的城市向人类开放了。你可以去那里旅行。最受欢迎的导游词开头是：很久以前有一个人类来过这里。"
+      },
+      {
+        "id": "s_e334",
+        "minLevel": 334,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那本旧星图被复制了无数份。无数拓荒者带着它的复印本出发。"
+      },
+      {
+        "id": "s_e335",
+        "minLevel": 335,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个孩子写信到联邦广播台。信上说，谢谢那个第一次走出地球的人。"
+      },
+      {
+        "id": "s_e336",
+        "minLevel": 336,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦的国庆日定在了春天。正好是你第一次踏上异星土地的那一天。"
+      },
+      {
+        "id": "s_e337",
+        "minLevel": 337,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你已经成为了一个符号。勇敢、好奇、坚韧。你的故事被一代代人传颂。"
+      },
+      {
+        "id": "s_e338",
+        "minLevel": 338,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦通过法案，每一座新建的殖民城市都必须建一个探索者公园。公园中心要有一棵地球的树。"
+      },
+      {
+        "id": "s_e339",
+        "minLevel": 339,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那棵拓荒者之树被雷劈了一次，但它活下来了。树干上有一道深深的伤疤，像你的性格。"
+      },
+      {
+        "id": "s_e340",
+        "minLevel": 340,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "教科书换了新版本。你的故事从最后一章移到了第一章。那是一切的开始。"
+      },
+      {
+        "id": "s_e341",
+        "minLevel": 341,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个旅行者来到拓荒者之树下说，在我来的星球上，每个人都知道你的名字。"
+      },
+      {
+        "id": "s_e342",
+        "minLevel": 342,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "艾琳也走了。她被葬在那棵树下，就在你旁边。两棵树的枝条在空中交握在一起。"
+      },
+      {
+        "id": "s_e343",
+        "minLevel": 343,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "第一艘飞出银河系的飞船出发了。船舱里放着你那本星图的数字化副本。"
+      },
+      {
+        "id": "s_e344",
+        "minLevel": 344,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一种新型合金以你的名字命名，用于建造深空飞船的外壳。"
+      },
+      {
+        "id": "s_e345",
+        "minLevel": 345,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "人们在望乡基地的旧仓库里发现了一个箱子，里面是你年轻时写的家信。"
+      },
+      {
+        "id": "s_e346",
+        "minLevel": 346,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "信上的字迹还很清晰。你在信里说，妈妈，这里的天是紫色的，但我想念蓝色的天空。"
+      },
+      {
+        "id": "s_e347",
+        "minLevel": 347,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那些家信被陈列在博物馆里。每一个读到它们的人都会安静很久。"
+      },
+      {
+        "id": "s_e348",
+        "minLevel": 348,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个女孩在征文比赛中写了你的故事。她说，我也想成为一个让宇宙记住的人。"
+      },
+      {
+        "id": "s_e349",
+        "minLevel": 349,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦人口突破了一千亿。你当年从地球出发时，人类还只困在太阳系里。"
+      },
+      {
+        "id": "s_e350",
+        "minLevel": 350,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那棵树的枝条垂得很低。孩子伸手就能碰到叶子。叶子是心形的，和地球上的树一样。"
+      },
+      {
+        "id": "s_e351",
+        "minLevel": 351,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事被做成了全息互动游戏。孩子们可以在虚拟世界里和你一起探索星空。"
+      },
+      {
+        "id": "s_e352",
+        "minLevel": 352,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "科学家在一条新发现的航道上检测到了你当年留下的跃迁痕迹。它还在那里。"
+      },
+      {
+        "id": "s_e353",
+        "minLevel": 353,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一种以你命名的花在联邦各殖民星球上广泛种植。蓝色，耐旱，花期长。像你。"
+      },
+      {
+        "id": "s_e354",
+        "minLevel": 354,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦和多个外星文明签署了星际和平宪章。第一句话引用的是你在联邦成立仪式上的致辞。"
+      },
+      {
+        "id": "s_e355",
+        "minLevel": 355,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一座新城以你的名字命名，建在你当年第一个测绘的星球上。"
+      },
+      {
+        "id": "s_e356",
+        "minLevel": 356,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "当年和你一起出发的老拓荒者们大多已经不在了。但他们的名字都被刻在了同一面墙上。"
+      },
+      {
+        "id": "s_e357",
+        "minLevel": 357,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那棵树长出了新枝。林业专家说，以它的品种和生长条件，它还能活几千年。"
+      },
+      {
+        "id": "s_e358",
+        "minLevel": 358,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦议会大厦前立了一块石碑。碑文只有一行字：他从这里出发，改变了人类。"
+      },
+      {
+        "id": "s_e359",
+        "minLevel": 359,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个音乐家创作了一首交响乐，叫《星海之旅》。第一乐章的名字就是拓荒者。"
+      },
+      {
+        "id": "s_e360",
+        "minLevel": 360,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦设立了探索者勇气勋章。勋章上刻着一艘小飞船和一颗星星。"
+      },
+      {
+        "id": "s_e361",
+        "minLevel": 361,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那棵树的种子被带上了星际飞船，在零重力环境中发了芽。生命总是能找到出路。"
+      },
+      {
+        "id": "s_e362",
+        "minLevel": 362,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "电视台制作了一百集的纪录片，叫《群星之路》。第一集讲的就是你。"
+      },
+      {
+        "id": "s_e363",
+        "minLevel": 363,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "又一年春天。蓝色的花瓣铺满了树下的草地，像一层薄薄的地毯。"
+      },
+      {
+        "id": "s_e364",
+        "minLevel": 364,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有一首童谣歌词很简单：小飞船，快快飞，带着梦想去找谁。"
+      },
+      {
+        "id": "s_e365",
+        "minLevel": 365,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "以你命名的星际环境保护法案正式生效。你在日志中关于保护外星生态的呼吁变成了法律。"
+      },
+      {
+        "id": "s_e366",
+        "minLevel": 366,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个孩子在树下埋了时间胶囊。里面有一张纸条，画着一艘飞船和一颗蓝色的星球。"
+      },
+      {
+        "id": "s_e367",
+        "minLevel": 367,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "晨星号的复制品在主题公园里运行，每天载着游客做模拟跃迁体验。"
+      },
+      {
+        "id": "s_e368",
+        "minLevel": 368,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦建立了第一所星际探索学院。校训只有三个字：去探索。"
+      },
+      {
+        "id": "s_e369",
+        "minLevel": 369,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "跨星际客运航线开通。第一艘星际邮轮命名为初航者号。船头有一艘小飞船的标志。"
+      },
+      {
+        "id": "s_e370",
+        "minLevel": 370,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的名字成了一个形容词。拓荒精神，代表勇气和探索未知的决心。"
+      },
+      {
+        "id": "s_e371",
+        "minLevel": 371,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦年度报告说，人类已经在五百个星系中建立了殖民据点。你出发时，只有一个地球。"
+      },
+      {
+        "id": "s_e372",
+        "minLevel": 372,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "每天都有年轻的志愿者来到新地球，在望乡林里种下一棵新的树。"
+      },
+      {
+        "id": "s_e373",
+        "minLevel": 373,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一颗以你命名的恒星是一颗稳定的主序星。天文学家说，和你一样可靠。"
+      },
+      {
+        "id": "s_e374",
+        "minLevel": 374,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "老师在课堂上讲你的故事。她对孩子们说，你们也可以成为这样的人。"
+      },
+      {
+        "id": "s_e375",
+        "minLevel": 375,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的小屋前永远有人放花。冬天的时候放的是手工折的纸花，五颜六色的。"
+      },
+      {
+        "id": "s_e376",
+        "minLevel": 376,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那句名言被刻在了联邦太空港的入口处：宇宙很危险，但值得。"
+      },
+      {
+        "id": "s_e377",
+        "minLevel": 377,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "第一棵从拓荒者之树上嫁接的树苗被送到了另一个星系。它在那边也活得很好。"
+      },
+      {
+        "id": "s_e378",
+        "minLevel": 378,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "晨星号上的一个零件被拍卖了，所得全部捐给了星际探索教育基金。"
+      },
+      {
+        "id": "s_e379",
+        "minLevel": 379,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一种新型飞船引擎以你的名字命名。它最大的特点就是可靠，从来不会在半路熄火。"
+      },
+      {
+        "id": "s_e380",
+        "minLevel": 380,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "第一届星际探索节种下了上亿棵树。覆盖了十几颗荒芜星球的大气层。"
+      },
+      {
+        "id": "s_e381",
+        "minLevel": 381,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个盲人来到拓荒者之树下。他抚摸着粗糙的树皮说，这棵树一定见过很多星星。"
+      },
+      {
+        "id": "s_e382",
+        "minLevel": 382,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的小屋换了一个新的管理员。他是林小星的孙子。他说，我会像爷爷一样照顾好这里。"
+      },
+      {
+        "id": "s_e383",
+        "minLevel": 383,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "博物馆开设了你的特展。第一个展品是你用过的那本旧星图，封面已经磨损得看不清了。"
+      },
+      {
+        "id": "s_e384",
+        "minLevel": 384,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "光灵的人工智能系统分析了你的全部资料。它说，你代表了最优的探索方案。"
+      },
+      {
+        "id": "s_e385",
+        "minLevel": 385,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "树下的果实落在地上。一颗新的树苗从泥土中钻了出来。生命就是这样延续的。"
+      },
+      {
+        "id": "s_e386",
+        "minLevel": 386,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "孩子们都会唱那首关于你的歌。歌词里有一句：他种下的是明天。"
+      },
+      {
+        "id": "s_e387",
+        "minLevel": 387,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一只蓝色的鸟在拓荒者之树的枝头筑了巢。每天清晨它都会唱歌，歌声很好听。"
+      },
+      {
+        "id": "s_e388",
+        "minLevel": 388,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的生日被定为联邦星际探索日。那天全联邦的学校都会讲你的故事。"
+      },
+      {
+        "id": "s_e389",
+        "minLevel": 389,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的雕像矗立在联邦的各个殖民星球上。每一座都面向星空，手里拿着一卷星图。"
+      },
+      {
+        "id": "s_e390",
+        "minLevel": 390,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "来自银河系外的信号被接收到了。破译后第一句话是：向探索者致敬。"
+      },
+      {
+        "id": "s_e391",
+        "minLevel": 391,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的名字成为了星际通用语中的一个词汇，意思是勇气和希望的源头。"
+      },
+      {
+        "id": "s_e392",
+        "minLevel": 392,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的传记被拍成了全息电影。饰演你的演员说他为了这个角色瘦了十公斤，只为了更像你。"
+      },
+      {
+        "id": "s_e393",
+        "minLevel": 393,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "拓荒者之树的年轮已经很密了。每一圈都是一年，每一圈都见证着人类文明在宇宙中的茁壮成长。"
+      },
+      {
+        "id": "s_e394",
+        "minLevel": 394,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "诗人在树下朗诵了新作。风吹动树叶沙沙作响，像在鼓掌。"
+      },
+      {
+        "id": "s_e395",
+        "minLevel": 395,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "跨星系移民计划全面启动。每一艘移民船上都印着你的那句话。"
+      },
+      {
+        "id": "s_e396",
+        "minLevel": 396,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你当年在望乡基地用过的那把扳手被发现了。在博物馆里展出时，它被放在最显眼的位置。"
+      },
+      {
+        "id": "s_e397",
+        "minLevel": 397,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "新的一代人不知道地球是什么样子。他们的地球就是新地球。但他们都记得你的故乡叫地球。"
+      },
+      {
+        "id": "s_e398",
+        "minLevel": 398,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的精神被提炼成了一门课程。从小学到大学，每个学生都要学习拓荒者精神。"
+      },
+      {
+        "id": "s_e399",
+        "minLevel": 399,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "拓荒者之树的种子被存在星际种子银行里。编号是S000001。"
+      },
+      {
+        "id": "s_e400",
+        "minLevel": 400,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "星际和平奖以你命名。第一届获奖者是一个在荒芜星球上坚持种了三十年树的人。"
+      },
+      {
+        "id": "s_e401",
+        "minLevel": 401,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你日记中的一页被单独展出。上面写着：今天发现了一颗有海洋的星球。很简单的一句话。"
+      },
+      {
+        "id": "s_e402",
+        "minLevel": 402,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "第一艘飞出银河系的飞船已经航行了十年。它发回的数据显示，宇宙比我们想象的更大。"
+      },
+      {
+        "id": "s_e403",
+        "minLevel": 403,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "孩子问妈妈，那个人真的存在吗。妈妈说，存在，他还活在这棵树的每一片叶子里。"
+      },
+      {
+        "id": "s_e404",
+        "minLevel": 404,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "星际联盟总部前种了一棵和拓荒者之树同品种的树。是从新地球移植过去的。"
+      },
+      {
+        "id": "s_e405",
+        "minLevel": 405,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "科学家宣布已经发现了三千颗宜居行星。你当年发现第一颗的时候，整个人类都在欢呼。"
+      },
+      {
+        "id": "s_e406",
+        "minLevel": 406,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事被编入了星际飞船的数据库。任何文明发现这些飞船，都会知道地球上曾经有过你这样的人。"
+      },
+      {
+        "id": "s_e407",
+        "minLevel": 407,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的名字成为了一个精神象征。人们在遇到困难时会想，如果是他，他会怎么做。"
+      },
+      {
+        "id": "s_e408",
+        "minLevel": 408,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "拓荒者之树下成了著名的求婚地点。他们说在这里许下的愿望一定会实现。"
+      },
+      {
+        "id": "s_e409",
+        "minLevel": 409,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一种科学方法论以你命名。拓荒者推演法——在未知中找到规律，在困境中找到出路。"
+      },
+      {
+        "id": "s_e410",
+        "minLevel": 410,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦第一座全生态星际城市建成了。城市中心是一棵巨大的橡树，来自地球的品种。"
+      },
+      {
+        "id": "s_e411",
+        "minLevel": 411,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一片新发现的星云以你命名。从某个角度看，它的形状像一艘扬帆的飞船。"
+      },
+      {
+        "id": "s_e412",
+        "minLevel": 412,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "另一颗宜居星球上种下了第一棵地球的树。从拓荒者之树的种子培育的。它活下来了。"
+      },
+      {
+        "id": "s_e413",
+        "minLevel": 413,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的头像被印在了联邦纪念币上。你一定想不到，你只是拿着旧星图出发的普通人。"
+      },
+      {
+        "id": "s_e414",
+        "minLevel": 414,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "树周围建起了大型纪念公园。人们在这里散步、野餐、读书、仰望星空。"
+      },
+      {
+        "id": "s_e415",
+        "minLevel": 415,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个遥远星系的国家把你的生日定为探索节。那天全民放假，一起看星空。"
+      },
+      {
+        "id": "s_e416",
+        "minLevel": 416,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "望乡基地登录为星际文化遗产。各地的人排着队来参观，想看看一切开始的地方。"
+      },
+      {
+        "id": "s_e417",
+        "minLevel": 417,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "每一艘远航的星际飞船上都有一个温室，里面种着来自地球的植物。这个传统始于你。"
+      },
+      {
+        "id": "s_e418",
+        "minLevel": 418,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "研究发现，你的故事在宇宙各个文明中都能找到共鸣。人类需要这样的探索者。"
+      },
+      {
+        "id": "s_e419",
+        "minLevel": 419,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "树下多了一张长椅。铭牌上写着：走累了就坐一会儿。就像他当年在旅途中做的那样。"
+      },
+      {
+        "id": "s_e420",
+        "minLevel": 420,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "母亲对孩子说，那棵树的根扎得很深，就像他的信念一样坚定，多大的风也吹不倒。"
+      },
+      {
+        "id": "s_e421",
+        "minLevel": 421,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦最大的数字图书馆里有一个专区，收集了所有关于你的资料，数以亿计的文件。"
+      },
+      {
+        "id": "s_e422",
+        "minLevel": 422,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "全息动画片里出现了一个总是望着星空的老人。孩子们都说，那是他。"
+      },
+      {
+        "id": "s_e423",
+        "minLevel": 423,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦发行了一套纪念邮票，一套十二张。第一张是你站在地球轨道站的舷窗前。"
+      },
+      {
+        "id": "s_e424",
+        "minLevel": 424,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事被翻译成了多种外星语言。虽然和那些文明的交流还很有限，但他们都理解了。"
+      },
+      {
+        "id": "s_e425",
+        "minLevel": 425,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "拓荒者之树下出现了一道彩虹。不，是阳光透过某种外星植物的花粉折射出来的。很美。"
+      },
+      {
+        "id": "s_e426",
+        "minLevel": 426,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "科学家说你和那棵树没有生物学上的关系。但所有人都笑了。我们都知道有更深的关系。"
+      },
+      {
+        "id": "s_e427",
+        "minLevel": 427,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "音乐家们在树下举办了一场星际音乐会。乐器是各个星球特色的改造品。声音出奇地和谐。"
+      },
+      {
+        "id": "s_e428",
+        "minLevel": 428,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一种教育方法以你命名。拓荒者教学法——在实践中学习，在探索中成长。"
+      },
+      {
+        "id": "s_e429",
+        "minLevel": 429,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "科学家培育出了一种能在多种大气成分中生长的超级植物。名字就叫初航者。"
+      },
+      {
+        "id": "s_e430",
+        "minLevel": 430,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "孩子们在树下画了一幅巨大的画。画的是未来的宇宙，有飞船、有星球、有笑容。"
+      },
+      {
+        "id": "s_e431",
+        "minLevel": 431,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "外星飞船收到了人类的广播信号。信号的主要内容是一个人在星空中探索的故事。"
+      },
+      {
+        "id": "s_e432",
+        "minLevel": 432,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事在宇宙中传播。每一个收到它的文明都被触动了。"
+      },
+      {
+        "id": "s_e433",
+        "minLevel": 433,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "新公民的入籍仪式上有一个环节——种一棵树。这个传统源于你。"
+      },
+      {
+        "id": "s_e434",
+        "minLevel": 434,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "拓荒者之树的根系比它的树冠还要宽。林业专家说，就像你当年的影响力一样深广。"
+      },
+      {
+        "id": "s_e435",
+        "minLevel": 435,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "星际探索指数成为衡量一个文明进步程度的标准。这个指数就是你创造的。"
+      },
+      {
+        "id": "s_e436",
+        "minLevel": 436,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "人类的活动范围已经覆盖了上千个星系。你出发时的那个小舱室，就是这一切的起点。"
+      },
+      {
+        "id": "s_e437",
+        "minLevel": 437,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "人类学会了与外星文明和平共处。代价是无数次的尝试，但最终找到了正确的路。"
+      },
+      {
+        "id": "s_e438",
+        "minLevel": 438,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "哲学家说，文明的核心是一个普通人愿意踏上未知旅程的勇气。"
+      },
+      {
+        "id": "s_e439",
+        "minLevel": 439,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事被刻在了一块钛合金板上，由星际飞船带往宇宙深处。它可保存十亿年。"
+      },
+      {
+        "id": "s_e440",
+        "minLevel": 440,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "春天又来了。拓荒者之树的枝条伸向天空，像要拥抱整个宇宙。"
+      },
+      {
+        "id": "s_e441",
+        "minLevel": 441,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "外星访客参观了你的博物馆后说，你们人类有一种独特的能力——在未知中找到希望。"
+      },
+      {
+        "id": "s_e442",
+        "minLevel": 442,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的雕像被立在了遥远星系的殖民星球上。雕像旁边种了一棵从新地球带去的树。"
+      },
+      {
+        "id": "s_e443",
+        "minLevel": 443,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "各地都有人自发地踏上探索之旅。他们说不为别的，就因为你做过同样的事。"
+      },
+      {
+        "id": "s_e444",
+        "minLevel": 444,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你日记中那句最简单的话被单独送上了太空：今天又发现了一颗新星星。真好。"
+      },
+      {
+        "id": "s_e445",
+        "minLevel": 445,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个老人坐在树下对孙子说，我很小的时候这树没这么高。现在我老了，它还年轻。"
+      },
+      {
+        "id": "s_e446",
+        "minLevel": 446,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "星际联盟宣布人类文明进入星际扩张期。第一次不是因为战争，而是因为探索。"
+      },
+      {
+        "id": "s_e447",
+        "minLevel": 447,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "拓荒者之树被评定为活着的星际遗产。不是因为它稀有，而是因为它见证了一切。"
+      },
+      {
+        "id": "s_e448",
+        "minLevel": 448,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一艘来自银河系边缘的飞船带来了消息。在很远很远的地方，也有人听说过你的故事。"
+      },
+      {
+        "id": "s_e449",
+        "minLevel": 449,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "拓荒者之树成为了一个象征——只要还有一个人愿意出发，人类的征程就不会停止。"
+      },
+      {
+        "id": "s_e450",
+        "minLevel": 450,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "每年春天人们来到树下。不说话，只是静静地站一会儿。像在和一位老朋友打招呼。"
+      },
+      {
+        "id": "s_e451",
+        "minLevel": 451,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事被刻在联邦最坚固的材料上。科学家说它可以保存十亿年以上。"
+      },
+      {
+        "id": "s_e452",
+        "minLevel": 452,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "第一个外星文明与联邦建立了大使级外交关系。对方说，你们的拓荒者故事很动人。"
+      },
+      {
+        "id": "s_e453",
+        "minLevel": 453,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "外星孩子问妈妈，那个探索星空的人还活着吗。妈妈说，他活在每一艘出发的飞船里。"
+      },
+      {
+        "id": "s_e454",
+        "minLevel": 454,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你第一次离开地球的那一天被定为出发节。每到这一天，人们都会抬头看一眼天空。"
+      },
+      {
+        "id": "s_e455",
+        "minLevel": 455,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "所有学校的第一课仍然是你的故事。老师写下你的名字，对孩子们说，记住他。"
+      },
+      {
+        "id": "s_e456",
+        "minLevel": 456,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "拓荒者之树的种子被撒向太空。它们将在宇宙中漂流，也许会在另一个星球上生根。"
+      },
+      {
+        "id": "s_e457",
+        "minLevel": 457,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的手印被铸在了星际和平纪念碑上。手上有老茧，是劳动者的手，也是领航者的手。"
+      },
+      {
+        "id": "s_e458",
+        "minLevel": 458,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "最后一艘殖民飞船的燃料舱上刻着你的话。它们驶向深空，带着你的精神和勇气。"
+      },
+      {
+        "id": "s_e459",
+        "minLevel": 459,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "拓荒者之树在一个暴风雨夜被雷劈中。但它没有倒下，第二年春天照样发了新芽。"
+      },
+      {
+        "id": "s_e460",
+        "minLevel": 460,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "今天被定为星际团结日。因为在很久以前，有一个人义无反顾地走向了星空。"
+      },
+      {
+        "id": "s_e461",
+        "minLevel": 461,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事被翻译成了宇宙通用语。每一个有星际通信能力的文明都能读懂。"
+      },
+      {
+        "id": "s_e462",
+        "minLevel": 462,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "研究团队用超级计算机模拟了你的一生。结论是，一个人的勇气可以改变文明的轨迹。"
+      },
+      {
+        "id": "s_e463",
+        "minLevel": 463,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "树下多了一块小石碑。不知道是谁放的，只刻着一个字：谢。"
+      },
+      {
+        "id": "s_e464",
+        "minLevel": 464,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一种哲学流派以你命名。它主张探索大于安逸，行动大于空谈。"
+      },
+      {
+        "id": "s_e465",
+        "minLevel": 465,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "第一个星际环境保护法庭的标志是一棵蓝色的树。以你的名字命名。"
+      },
+      {
+        "id": "s_e466",
+        "minLevel": 466,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "外星代表团访问人类世界。他们第一个要求参观的地方是拓荒者之树。"
+      },
+      {
+        "id": "s_e467",
+        "minLevel": 467,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "树上的果实被做成了果酱。味道有点酸，但每个人都说是吃过的最珍贵的东西。"
+      },
+      {
+        "id": "s_e468",
+        "minLevel": 468,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个星系以你命名。殖民者说，每当仰望星空就会想起你的故事。"
+      },
+      {
+        "id": "s_e469",
+        "minLevel": 469,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "地球和新地球之间有了定期航班。第一趟航班的纪念登机牌上印着你的头像。"
+      },
+      {
+        "id": "s_e470",
+        "minLevel": 470,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "全联邦的孩子都会唱一首关于你的歌。歌词只有三句：一颗星，一艘船，一个人。"
+      },
+      {
+        "id": "s_e471",
+        "minLevel": 471,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "科学家发现你的基因组中有一段与好奇心相关的序列特别活跃。他们说，这就是天生的探索者。"
+      },
+      {
+        "id": "s_e472",
+        "minLevel": 472,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦的未探索区域面积首次小于已探索区域。报告特别提到了你的开拓性贡献。"
+      },
+      {
+        "id": "s_e473",
+        "minLevel": 473,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "晨星号的舰长座椅被修复了。修复师说这是他接过的最有意义的工作。"
+      },
+      {
+        "id": "s_e474",
+        "minLevel": 474,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "探险队在你当年标记过的一个坐标上发现了一片新的星域。那里有更古老文明留下的遗迹。"
+      },
+      {
+        "id": "s_e475",
+        "minLevel": 475,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "拓荒者之树成为了朝圣地。每年有无数人从各个星系来参观。他们安静地走过。"
+      },
+      {
+        "id": "s_e476",
+        "minLevel": 476,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "火星上建立了第一座永久城市。城市中央种着一棵从拓荒者之树上嫁接的树。"
+      },
+      {
+        "id": "s_e477",
+        "minLevel": 477,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "宇航员在深空中被问到最喜欢人类的什么成就。他说，那个人的旅程。"
+      },
+      {
+        "id": "s_e478",
+        "minLevel": 478,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦最大的数据库里有一条最短的记录：他出发了。"
+      },
+      {
+        "id": "s_e479",
+        "minLevel": 479,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "艺术家用落在拓荒者之树周围的叶子和花瓣做了一幅拼贴画。画的是你站在晨星号旁边。"
+      },
+      {
+        "id": "s_e480",
+        "minLevel": 480,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "人类与多个外星文明签订了星际和平条约。签约仪式在拓荒者之树下举行。"
+      },
+      {
+        "id": "s_e481",
+        "minLevel": 481,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一种教育基金以你命名。无数受益者说，谢谢那个教会我们仰望星空的人。"
+      },
+      {
+        "id": "s_e482",
+        "minLevel": 482,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "拓荒者之树的叶子在秋天变成金色。阳光照在上面，整棵树都在发光。"
+      },
+      {
+        "id": "s_e483",
+        "minLevel": 483,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "历史学家说，从文明的长河来看，你是人类历史上最重要的转折点之一。"
+      },
+      {
+        "id": "s_e484",
+        "minLevel": 484,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个以你命名的奖项颁给了普通星际公民——那些默默探索、不求回报的人。"
+      },
+      {
+        "id": "s_e485",
+        "minLevel": 485,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的名字和历史上最伟大的探索者们刻在了一起。你属于他们中的一员。"
+      },
+      {
+        "id": "s_e486",
+        "minLevel": 486,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人写了一部关于你的幻想小说。你在书里和光灵一起在星云中飞翔。你会喜欢这个故事的。"
+      },
+      {
+        "id": "s_e487",
+        "minLevel": 487,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦宣布最后一片未知星域将被纳入探索计划。你面对过的那片黑暗即将被全部点亮。"
+      },
+      {
+        "id": "s_e488",
+        "minLevel": 488,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "拓荒者之树的果实在星际博览会展出。旁边的说明牌上写着：一个文明的起点。"
+      },
+      {
+        "id": "s_e489",
+        "minLevel": 489,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个高智能机器人学习了你的全部资料后说，我理解了什么叫探索精神。"
+      },
+      {
+        "id": "s_e490",
+        "minLevel": 490,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "联邦博物馆举办了你的百年纪念特展。每一步探索都有详细的记录和展示。"
+      },
+      {
+        "id": "s_e491",
+        "minLevel": 491,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "外星文明的历史书中也有一个类似的故事。在黑暗中出发的人，最终找到了光明。"
+      },
+      {
+        "id": "s_e492",
+        "minLevel": 492,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "宇宙的各个角落都有人在以你为榜样出发。你就是星海中的灯塔。"
+      },
+      {
+        "id": "s_e493",
+        "minLevel": 493,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那颗以你命名的星星有一颗行星。也许那里也会有一个人仰望星空，然后出发。"
+      },
+      {
+        "id": "s_e494",
+        "minLevel": 494,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个古老的文明发来消息说，他们也经历过类似的探索时代。你们的故事并不孤独。"
+      },
+      {
+        "id": "s_e495",
+        "minLevel": 495,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "人类历史上的最后一个未知坐标被标记了。从你开始，到无数后继者，终于完成了这张星图。"
+      },
+      {
+        "id": "s_e496",
+        "minLevel": 496,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "拓荒者之树迎来了第一百个春天。枝条上挂满了彩色的飘带。孩子们在树下唱歌。"
+      },
+      {
+        "id": "s_e497",
+        "minLevel": 497,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "星际联盟宣布人类文明进入了星际黄金时代。从你第一次跃迁开始，到如今遍布星海。"
+      },
+      {
+        "id": "s_e498",
+        "minLevel": 498,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "拓荒者之树被选为宇宙中最受尊敬的生命之一。它是一封信，写给未来的信。"
+      },
+      {
+        "id": "s_e499",
+        "minLevel": 499,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个孩子在树下埋了一个新的时间胶囊。信上写着：如果你还在这里，请记得我们还在探索。"
+      },
+      {
+        "id": "s_e500",
+        "minLevel": 500,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "晨星号的航行日志最后一页留着一行字，那是所有人都会背的一句话：星辰大海，等着你。"
+      }
+    ],
+    "holidayEvents": [
+      {
+        "holidayId": "new_year",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "星舰上的日历翻到了最后一页。你把旧年的航行日志整理好，准备迎接新的一年。"
+      },
+      {
+        "holidayId": "new_year",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "新年的第一缕星光透过舷窗洒进舱室。你在日志上写下：新的一年，继续向前。"
+      },
+      {
+        "holidayId": "valentine",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在空间站的通讯站收到了一封匿名情书。没有落款，但字体很好看。你把它收了起来。"
+      },
+      {
+        "holidayId": "valentine",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "情人节。你在晨星号的驾驶台上放了一朵从外星采来的蓝色小花。没有人知道是给谁的。"
+      },
+      {
+        "holidayId": "women_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "艾琳在筹备一场关于女性在星际探索中贡献的讲座。你帮她整理了幻灯片。"
+      },
+      {
+        "holidayId": "women_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "妇女节。基地的女性拓荒者们组织了一场星空下的茶话会。你远远看着，没有打扰。"
+      },
+      {
+        "holidayId": "white_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在星际集市上找到了一颗会发光的石头。你把它打磨成心形，准备送给一个特别的人。"
+      },
+      {
+        "holidayId": "white_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "白色情人节。你把那颗发光的石头放在了艾琳的实验台旁边。她看到后愣了一下，然后笑了。"
+      },
+      {
+        "holidayId": "april_fools",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "明天是愚人节。林小星在策划一个恶作剧——在你的飞船系统里加一个假的跃迁警报。"
+      },
+      {
+        "holidayId": "april_fools",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的生命维持系统突然报警说氧气泄漏。你冷静检查了半天，发现是一张贴纸盖住了传感器。"
+      },
+      {
+        "holidayId": "earth_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在新地球上清理了一片被污染物覆盖的土地。虽然辛苦，但你知道地球日就是要做这些事。"
+      },
+      {
+        "holidayId": "earth_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "地球日。你在新地球的海滩上种下一排树苗。海风吹来，树苗轻轻摇晃，像在感谢你。"
+      },
+      {
+        "holidayId": "labor_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "明天是劳动节，基地安排了大扫除和设备检修。你和大家一起擦洗了穹顶的太阳能板。"
+      },
+      {
+        "holidayId": "labor_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "劳动节。你亲手修好了基地的净水系统。老工程师说这比过节还让人高兴。"
+      },
+      {
+        "holidayId": "childrens_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你从补给物资里翻出了一盒彩色的画笔。你决定明天送给新地球上的孩子们。"
+      },
+      {
+        "holidayId": "childrens_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "孩子们在基地的空地上用彩色笔画画。画的是飞船和星球。你蹲在旁边看了很久。"
+      },
+      {
+        "holidayId": "environment_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你注意到新地球的天空变得更蓝了。大气改造工程的效果正在显现。"
+      },
+      {
+        "holidayId": "environment_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "环境日。你参加了星球生态监测志愿活动。数据显示新地球的氧含量正在稳步上升。"
+      },
+      {
+        "holidayId": "peace_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "星际航线上难得平静的一天，没有警报和异常信号。你在晨星号甲板上喝了一杯茶。"
+      },
+      {
+        "holidayId": "peace_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "和平日。联邦各个殖民星球同时放飞了蓝色的气球。你站在新地球海边仰头看着天空。"
+      },
+      {
+        "holidayId": "halloween",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人在基地门口放了一个用废铁做的南瓜灯。灯光是蓝色的，看起来又滑稽又有点吓人。"
+      },
+      {
+        "holidayId": "halloween",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "万圣节。孩子们穿着用旧宇航服改的奇装异服在基地里跑来跑去。你给他们发了糖果。"
+      },
+      {
+        "holidayId": "christmas_eve",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你用从外星采集的发光苔藓装饰了小屋的门口。光线柔和，像地球节日的彩灯。"
+      },
+      {
+        "holidayId": "christmas_eve",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "平安夜。你坐在小屋窗前看新地球的星空。远处的镇上传来隐约的音乐声。"
+      },
+      {
+        "holidayId": "christmas",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你准备了一份礼物——一块从流浪行星上带回来的陨石，用透明树脂封好了。"
+      },
+      {
+        "holidayId": "christmas",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "圣诞节。你收到了许多来自各星系的贺卡。最特别的一张是光灵发来的全息影像。"
+      },
+      {
+        "holidayId": "new_year_eve",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你翻出了最后一瓶从地球带来的酒。你决定在跨年夜打开它，和几个老朋友一起喝掉。"
+      },
+      {
+        "holidayId": "new_year_eve",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "午夜。新地球的各个殖民点同时燃放起了生物荧光烟花。你在海边看着满天星光和彩光。"
+      },
+      {
+        "holidayId": "spring_festival",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你用水晶玻璃做了几个灯笼，里面放上发光苔藓。红彤彤的，像回到了地球的春节。"
+      },
+      {
+        "holidayId": "spring_festival",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "春节。基地的华人拓荒者们聚在一起包饺子。馅是用外星蔬菜和地球面粉做的。味道很特别。"
+      },
+      {
+        "holidayId": "lantern_festival",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你用飞船剩余的金属片做了一盏灯笼的骨架。你决定在上面画一颗蓝色的地球。"
+      },
+      {
+        "holidayId": "lantern_festival",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "元宵节。你和大家一起放飞的灯笼飘向星空，像一条发光的河流。有人唱起了故乡的歌。"
+      },
+      {
+        "holidayId": "dragon_boat",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在新地球的河里发现了一种像芦苇的外星植物。你突发奇想，可以做一条小船。"
+      },
+      {
+        "holidayId": "dragon_boat",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "端午节。你用那种外星植物包了粽子。糯米是从地球带来的珍贵存货，每人只分到一个。"
+      },
+      {
+        "holidayId": "qixi",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "星际间流传着一个浪漫的故事：一对恋人分别驻守在两个遥远的殖民星，每晚用激光通信。"
+      },
+      {
+        "holidayId": "qixi",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "七夕。你看到林小星用飞船的探照灯在夜空中画了一个心形。基地里一片欢呼和口哨声。"
+      },
+      {
+        "holidayId": "zhongyuan",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "新地球上空的星云最近变得很浓。老人们说中元节快到了，亡魂会在星际间游荡。"
+      },
+      {
+        "holidayId": "zhongyuan",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "中元节。你在海边点燃了几盏浮灯，祭奠那些在星际探索中没能回来的人。"
+      },
+      {
+        "holidayId": "mid_autumn",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "新地球的卫星今晚格外明亮。你站在穹顶下仰头看着，想起了地球的中秋节。"
+      },
+      {
+        "holidayId": "mid_autumn",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "中秋节。你把从地球带来的月饼切成小块，每人分到一口。大家说这是最好吃的月饼。"
+      },
+      {
+        "holidayId": "double_ninth",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你爬上基地最高的观测塔，视野开阔。新地球的壮丽景色尽收眼底。"
+      },
+      {
+        "holidayId": "double_ninth",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "重阳节。你登高望远，看到远处的地平线上有一片新的定居点正在建设中。"
+      },
+      {
+        "holidayId": "qingming",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始整理那些在星际拓荒中牺牲的老朋友的遗物。一张照片，一枚徽章，一封信。"
+      },
+      {
+        "holidayId": "qingming",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "清明。你在拓荒者之树下放了几朵花，祭奠那些没能看到星海的人。雨下了起来。"
+      },
+      {
+        "holidayId": "easter",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "基地附近出现了一种会下蛋的外星生物。孩子们兴奋地到处找它们的巢穴。"
+      },
+      {
+        "holidayId": "easter",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "复活节。你真的在灌木丛里找到了那些彩色的蛋。你帮孩子们把蛋涂上了更鲜艳的颜色。"
+      },
+      {
+        "holidayId": "mothers_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你想起了地球上的母亲。你用新地球特有的蓝色水晶做了一枚吊坠。"
+      },
+      {
+        "holidayId": "mothers_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "母亲节。你把吊坠寄回了地球。你在附言里写了六个字：妈，我在星空里。"
+      },
+      {
+        "holidayId": "fathers_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你修好了晨星号上那把老旧的座椅，想起了父亲以前总喜欢修东西的样子。"
+      },
+      {
+        "holidayId": "fathers_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "父亲节。你教林小星的孩子用飞船废料做了一艘小模型船。就像当年你教他那样。"
+      },
+      {
+        "holidayId": "thanksgiving",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你清点了基地的物资储备。新地球的收成很好，仓库里堆满了外星谷物。值得感恩。"
+      },
+      {
+        "holidayId": "thanksgiving",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "感恩节。你和基地的拓荒者们一起分享了丰收宴。每个人轮流说了一件最感恩的事。"
+      }
+    ],
+    "achievements": [
+      {
+        "id": "s_a001",
+        "name": "第一步",
+        "desc": "达到等级 5",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 5
+        }
+      },
+      {
+        "id": "s_a002",
+        "name": "初航者",
+        "desc": "达到等级 10",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 10
+        }
+      },
+      {
+        "id": "s_a003",
+        "name": "星际旅人",
+        "desc": "达到等级 25",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 25
+        }
+      },
+      {
+        "id": "s_a004",
+        "name": "探索者",
+        "desc": "达到等级 50",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 50
+        }
+      },
+      {
+        "id": "s_a005",
+        "name": "前哨奠基",
+        "desc": "达到等级 80",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 80
+        }
+      },
+      {
+        "id": "s_a006",
+        "name": "星系领主",
+        "desc": "达到等级 120",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 120
+        }
+      },
+      {
+        "id": "s_a007",
+        "name": "星海砥柱",
+        "desc": "达到等级 160",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 160
+        }
+      },
+      {
+        "id": "s_a008",
+        "name": "光灵之友",
+        "desc": "达到等级 200",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 200
+        }
+      },
+      {
+        "id": "s_a009",
+        "name": "传奇船长",
+        "desc": "达到等级 250",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 250
+        }
+      },
+      {
+        "id": "s_a010",
+        "name": "星河主宰",
+        "desc": "达到等级 300",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 300
+        }
+      },
+      {
+        "id": "s_a011",
+        "name": "星海传说",
+        "desc": "达到等级 350",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 350
+        }
+      },
+      {
+        "id": "s_a012",
+        "name": "永恒星灵",
+        "desc": "达到等级 400",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 400
+        }
+      },
+      {
+        "id": "s_a013",
+        "name": "超越星辰",
+        "desc": "达到等级 500",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 500
+        }
+      },
+      {
+        "id": "s_a014",
+        "name": "第一小时",
+        "desc": "运行满 1 小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 3600000
+        }
+      },
+      {
+        "id": "s_a015",
+        "name": "半日值守",
+        "desc": "运行满 12 小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 43200000
+        }
+      },
+      {
+        "id": "s_a016",
+        "name": "老练",
+        "desc": "运行满 24 小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 86400000
+        }
+      },
+      {
+        "id": "s_a017",
+        "name": "两天两夜",
+        "desc": "运行满 48 小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 172800000
+        }
+      },
+      {
+        "id": "s_a018",
+        "name": "三日坚守",
+        "desc": "运行满 72 小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 259200000
+        }
+      },
+      {
+        "id": "s_a019",
+        "name": "一周守望",
+        "desc": "运行满 7 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 604800000
+        }
+      },
+      {
+        "id": "s_a020",
+        "name": "半月",
+        "desc": "运行满 14 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 1209600000
+        }
+      },
+      {
+        "id": "s_a021",
+        "name": "月度探险家",
+        "desc": "运行满 30 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 2592000000
+        }
+      },
+      {
+        "id": "s_a022",
+        "name": "两月",
+        "desc": "运行满 60 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 5184000000
+        }
+      },
+      {
+        "id": "s_a023",
+        "name": "季度",
+        "desc": "运行满 90 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 7776000000
+        }
+      },
+      {
+        "id": "s_a024",
+        "name": "五个月",
+        "desc": "运行满 150 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 12960000000
+        }
+      },
+      {
+        "id": "s_a025",
+        "name": "半年守望",
+        "desc": "运行满 180 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 15552000000
+        }
+      },
+      {
+        "id": "s_a026",
+        "name": "初探",
+        "desc": "触发 5 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 5
+        }
+      },
+      {
+        "id": "s_a027",
+        "name": "故事收集者",
+        "desc": "触发 10 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 10
+        }
+      },
+      {
+        "id": "s_a028",
+        "name": "听闻",
+        "desc": "触发 15 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 15
+        }
+      },
+      {
+        "id": "s_a029",
+        "name": "探索者的耳语",
+        "desc": "触发 25 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 25
+        }
+      },
+      {
+        "id": "s_a030",
+        "name": "星际见闻",
+        "desc": "触发 35 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 35
+        }
+      },
+      {
+        "id": "s_a031",
+        "name": "记录者",
+        "desc": "触发 50 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 50
+        }
+      },
+      {
+        "id": "s_a032",
+        "name": "故事猎人",
+        "desc": "触发 75 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 75
+        }
+      },
+      {
+        "id": "s_a033",
+        "name": "历史见证者",
+        "desc": "触发 100 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 100
+        }
+      },
+      {
+        "id": "s_a034",
+        "name": "百事通",
+        "desc": "触发 130 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 130
+        }
+      },
+      {
+        "id": "s_a035",
+        "name": "史诗记录",
+        "desc": "触发 180 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 180
+        }
+      },
+      {
+        "id": "s_a036",
+        "name": "星海记忆",
+        "desc": "触发 250 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 250
+        }
+      },
+      {
+        "id": "s_a037",
+        "name": "往事如烟",
+        "desc": "触发 350 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 350
+        }
+      },
+      {
+        "id": "s_a038",
+        "name": "初露锋芒",
+        "desc": "解锁 3 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 3
+        }
+      },
+      {
+        "id": "s_a039",
+        "name": "五重荣耀",
+        "desc": "解锁 5 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 5
+        }
+      },
+      {
+        "id": "s_a040",
+        "name": "八面威风",
+        "desc": "解锁 8 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 8
+        }
+      },
+      {
+        "id": "s_a041",
+        "name": "名满星海",
+        "desc": "解锁 10 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 10
+        }
+      },
+      {
+        "id": "s_a042",
+        "name": "称号收藏家",
+        "desc": "解锁 12 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 12
+        }
+      },
+      {
+        "id": "s_a043",
+        "name": "星际名门",
+        "desc": "解锁 15 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 15
+        }
+      },
+      {
+        "id": "s_a044",
+        "name": "威名远扬",
+        "desc": "解锁 18 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 18
+        }
+      },
+      {
+        "id": "s_a045",
+        "name": "二十冠冕",
+        "desc": "解锁 20 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 20
+        }
+      },
+      {
+        "id": "s_a046",
+        "name": "传奇之名",
+        "desc": "解锁 22 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 22
+        }
+      },
+      {
+        "id": "s_a047",
+        "name": "不朽之名",
+        "desc": "解锁 25 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 25
+        }
+      },
+      {
+        "id": "s_a048",
+        "name": "群星加冕",
+        "desc": "解锁 27 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 27
+        }
+      },
+      {
+        "id": "s_a049",
+        "name": "星海之名",
+        "desc": "解锁 28 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 28
+        }
+      },
+      {
+        "id": "s_a050",
+        "name": "全部称号",
+        "desc": "解锁全部 30 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 30
+        }
+      }
+    ]
+  },
+  {
     "id": "wasteland",
     "name": "Wasteland",
     "name_cn": "废土",
