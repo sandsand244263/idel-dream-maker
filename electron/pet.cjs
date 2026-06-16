@@ -97,7 +97,7 @@ function sendToPet(channel, data) {
 function createPetWindow(app) {
   if (petWindow && !petWindow.isDestroyed()) return petWindow;
 
-  petWindow = new BrowserWindow({
+  const petOpts = {
     width: 192,
     height: 210,
     frame: false,
@@ -112,7 +112,12 @@ function createPetWindow(app) {
       nodeIntegration: false,
       enablePreferredSizeMode: true,
     },
-  });
+  };
+  if (process.platform === 'darwin') {
+    petOpts.type = 'panel';
+    petOpts.acceptFirstMouse = true;
+  }
+  petWindow = new BrowserWindow(petOpts);
 
   petWindow.loadFile(path.join(__dirname, '..', 'pet', 'index.html'));
 

@@ -24,7 +24,7 @@ function initSelector(app, petWin) {
   appRef = app;
   petWindowRef = petWin;
 
-  selectorWindow = new BrowserWindow({
+  const selOpts = {
     width: 180,
     height: 200,
     frame: false,
@@ -39,7 +39,9 @@ function initSelector(app, petWin) {
       contextIsolation: true,
       nodeIntegration: false,
     },
-  });
+  };
+  if (process.platform === 'darwin') { selOpts.type = 'panel'; selOpts.acceptFirstMouse = true; }
+  selectorWindow = new BrowserWindow(selOpts);
 
   selectorWindow.loadFile(path.join(__dirname, '..', 'pet-selector', 'index.html'));
 

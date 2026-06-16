@@ -1,22 +1,30 @@
 const { BrowserWindow } = require('electron');
 const path = require('path');
 
+const isMac = process.platform === 'darwin';
+
 let mainWindow = null;
 
 function createMainWindow(preloadPath) {
-  mainWindow = new BrowserWindow({
+  const winOpts = {
     width: 320,
     height: 840,
     minWidth: 280,
     minHeight: 400,
-    frame: false,
     show: false,
     webPreferences: {
       preload: preloadPath,
       contextIsolation: true,
       nodeIntegration: false,
     },
-  });
+  };
+  if (isMac) {
+    winOpts.titleBarStyle = 'hidden';
+    winOpts.trafficLightPosition = { x: 10, y: 10 };
+  } else {
+    winOpts.frame = false;
+  }
+  mainWindow = new BrowserWindow(winOpts);
 
   mainWindow.on('close', (e) => {
     if (!mainWindow._isQuitting) {

@@ -23,7 +23,7 @@ function initBubble(app, petWin) {
   appRef = app;
   petWindowRef = petWin;
 
-  bubbleWindow = new BrowserWindow({
+  const bubbleOpts = {
     width: 260,
     height: 100,
     frame: false,
@@ -38,7 +38,9 @@ function initBubble(app, petWin) {
       contextIsolation: true,
       nodeIntegration: false,
     },
-  });
+  };
+  if (process.platform === 'darwin') { bubbleOpts.type = 'panel'; bubbleOpts.acceptFirstMouse = true; }
+  bubbleWindow = new BrowserWindow(bubbleOpts);
 
   bubbleWindow.loadFile(path.join(__dirname, '..', 'pet-bubble', 'index.html'));
 

@@ -1,4 +1,4 @@
-const { app, ipcMain } = require('electron');
+const { app, ipcMain, Menu } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -10,6 +10,48 @@ const { getTodaysHolidayId, getUpcomingHolidayId, getHolidayName, getHolidayIcon
 let mainWindow = null;
 let tray = null;
 let isQuitting = false;
+
+const isMac = process.platform === 'darwin';
+
+function setupAppMenu() {
+  const template = [
+    ...(isMac ? [{
+      label: app.name,
+      submenu: [
+        { role: 'about', label: '关于 Idel-DreamMaker' },
+        { type: 'separator' },
+        { role: 'quit', label: '退出' },
+      ],
+    }] : []),
+    {
+      label: '文件',
+      submenu: [
+        { role: 'quit', label: '退出' },
+      ],
+    },
+    {
+      label: '编辑',
+      submenu: [
+        { role: 'undo', label: '撤销' },
+        { role: 'redo', label: '重做' },
+        { type: 'separator' },
+        { role: 'cut', label: '剪切' },
+        { role: 'copy', label: '复制' },
+        { role: 'paste', label: '粘贴' },
+      ],
+    },
+    {
+      label: '视图',
+      submenu: [
+        { role: 'toggleDevTools', label: '开发者工具' },
+        { type: 'separator' },
+        { role: 'reload', label: '重新加载' },
+      ],
+    },
+  ];
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
+}
 
 const APP_VERSION = (() => {
   try {
@@ -726,6 +768,7 @@ app.whenReady().then(() => {
 
   hubLevel = calcLevel(gameState.hubTotalExp);
 
+  setupAppMenu();
   createWindow();
 
   // Restore window position from save
@@ -784,5 +827,7 @@ app.on('before-quit', () => {
 });
 
 app.on('window-all-closed', () => {
-  // Don't quit on window close (tray-based app)
+  // Mac convention: don't quit when all windows are closed
+  if (isMac) return;
+  // Other platforms: keep running in tray
 });

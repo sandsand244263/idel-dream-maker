@@ -1,6 +1,8 @@
 const { Tray, Menu, nativeImage } = require('electron');
 const path = require('path');
 
+const isMac = process.platform === 'darwin';
+
 let tray = null;
 
 function createTray(mainWindow) {
@@ -36,6 +38,7 @@ function createTray(mainWindow) {
   tray.setToolTip('Idel-DreamMaker');
   tray.setContextMenu(contextMenu);
 
+  // On Mac, left-click should toggle window without interfering with menu
   tray.on('click', () => {
     if (mainWindow.isVisible()) { mainWindow.hide(); }
     else { mainWindow.show(); mainWindow.focus(); }

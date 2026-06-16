@@ -16,7 +16,7 @@ function initContextMenu(app, petWin) {
   appRef = app;
   petWindowRef = petWin;
 
-  contextWindow = new BrowserWindow({
+  const ctxOpts = {
     width: 170,
     height: 240,
     frame: false,
@@ -31,7 +31,9 @@ function initContextMenu(app, petWin) {
       contextIsolation: true,
       nodeIntegration: false,
     },
-  });
+  };
+  if (process.platform === 'darwin') { ctxOpts.type = 'panel'; ctxOpts.acceptFirstMouse = true; }
+  contextWindow = new BrowserWindow(ctxOpts);
 
   contextWindow.loadFile(path.join(__dirname, '..', 'pet-context-menu', 'index.html'));
 
