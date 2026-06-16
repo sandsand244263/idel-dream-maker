@@ -126,6 +126,7 @@ function calcExpForLevel(lv){if(lv<=1)return 0;return 100*(lv-1)*(lv-1);}
 
 function loadSpritesheet(b64,ext,cfg){
   if(!b64||b64.length<100)return;
+  try{localStorage.setItem('debug_sprite',JSON.stringify({b64:b64,ext:ext}));}catch(e){}
   const img=new Image();
   img.onload=()=>{
     const iw=img.naturalWidth,ih=img.naturalHeight;

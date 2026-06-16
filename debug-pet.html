@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Pet Animation Debug</title></head>
+<body style="background:#111;color:#0f0;font-family:monospace;padding:20px">
+<h2 style="color:#0f0">Pet Animation Debug</h2>
+<p id="load-status" style="color:#ff0">等待精灵图加载...</p>
+
+<canvas id="c" width="120" height="140" style="border:1px solid #0f0;display:block;margin:20px 0;image-rendering:pixelated"></canvas>
+
+<div style="margin:10px 0">
+  <button onclick="runAnim('review')">Run Review</button>
+  <button onclick="runAnim('wave')">Run Wave</button>
+  <button onclick="runAnim('jump')">Run Jump</button>
+  <button onclick="runAnim('failed')">Run Failed</button>
+  <button onclick="runAnim('idle')">Run Idle</button>
+  <button onclick="stopAll()">Stop</button>
+  <button onclick="logEl.textContent=''">Clear Log</button>
+</div>
+
+<p style="color:#888;font-size:12px">操作说明：<br>
+1. 用 electron 启动游戏<br>
+2. 在宠物窗口按 Ctrl+Shift+I 打开 DevTools<br>
+3. Console 输入: localStorage.getItem('debug_sprite')<br>
+4. 把结果复制到下面输入框，点"加载"</p>
+
+<textarea id="sprite-input" rows="4" cols="60" placeholder="粘贴 localStorage.getItem('debug_sprite') 的结果到这里" style="background:#222;color:#0f0;border:1px solid #0f0;width:100%;font-family:monospace;font-size:12px"></textarea>
+<button onclick="loadFromInput()">加载精灵图</button>
+
+<div style="margin-top:10px;color:#888;font-size:12px">
+  或者在 pet.js 的 loadSpritesheet 里加一行：<br>
+  <code style="background:#222;padding:2px 4px">localStorage.setItem('debug_sprite', JSON.stringify({b64, ext}));</code>
+  <br>然后刷新宠物窗口，点击按钮测试
+</div>
+
+<pre id="log" style="margin-top:20px;background:#000;padding:10px;border:1px solid #0f0;min-height:200px;overflow:auto"></pre>
+
+<script>
+const canvas=document.getElementById('c');
+const ctx=canvas.getContext('2d');
+ctx.imageSmoothingEnabled=false;
+const logEl=document.getElementById('log');
+const loadStatus=document.getElementById('load-status');
+const FW=192,FH=208;
+
+const DEFAULT_STATES={
+  idle:{row:0,frames:6,dur:140,firstMult:2,lastMult:2.3},
+  wave:{row:1,frames:4,dur:140,firstMult:2,lastMult:2},
+  run:{row:2,frames:8,dur:120,firstMult:1.5,lastMult:1.8},
+  failed:{row:3,frames:8,dur:140,firstMult:1.5,lastMult:1.7},
+  review:{row:4,frames:6,dur:150,firstMult:1.5,lastMult:1.8},
+  jump:{row:5,frames:5,dur:140,firstMult:2,lastMult:2},
+  extra1:{row:6,frames:6,dur:140,firstMult:1.5,lastMult:1.8},
+  extra2:{row:7,frames:6,dur:140,firstMult:1.5,lastMult:1.8},
+  extra3:{row:8,frames:6,dur:140,firstMult:1.5,lastMult:1.8},
+};
+
+let spritesheet=null,frameList=[],frameIdx=0,animFrameId=null,curState='idle',lastFrameTime=0;
+let cycleCount=0;
+
+function log(msg){logEl.textContent+=msg+'\n';console.log(msg);}
+
+function loadStateCfg(s){return DEFAULT_STATES[s]||DEFAULT_STATES.idle;}
+function buildFrames(s){
+  const c=loadStateCfg(s),n=c.frames,b=c.dur,f=[];
+  for(let i=0;i<n;i++){
+    let d=b;
+    if(i===0)d*=c.firstMult||2;
+    else if(i===n-1)d*=c.lastMult||2;
+    f.push({c:i,r:c.row,d});
+  }
+  return f;
+}
+function drawSprite(col,row){
+  if(!spritesheet)return;
+  ctx.clearRect(0,0,120,140);
+  ctx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,120,140);
+}
+function stopAnim(){
+  if(animFrameId){cancelAnimationFrame(animFrameId);animFrameId=null;}
+}
+
+function animLoop(now){
+  if(!animFrameId)return;
+  const elapsed=now-lastFrameTime;
+  const dur=frameList[frameIdx]?frameList[frameIdx].d:140;
+  if(elapsed>=dur){
+    if(frameIdx===frameList.length-1){
+      cycleCount++;
+      log(`[${curState}] 第 ${cycleCount} 轮播完，帧 ${frameIdx} → 回到帧 0 (进入第 ${cycleCount+1} 轮)`);
+    }else{
+      log(`[${curState}] 帧 ${frameIdx} → ${(frameIdx+1) % frameList.length} (${elapsed.toFixed(0)}ms)`);
+    }
+    frameIdx=(frameIdx+1)%frameList.length;
+    lastFrameTime=now;
+  }
+  drawSprite(frameList[frameIdx].c,frameList[frameIdx].r);
+  animFrameId=requestAnimationFrame(animLoop);
+}
+
+function play(s){
+  stopAnim();
+  curState=s;
+  frameList=buildFrames(s);
+  const totalMs=frameList.reduce((sf,fd)=>sf+fd.d,0);
+  log(`=== ${s} ===`);
+  log(`帧数: ${frameList.length}, 每帧(ms): [${frameList.map(f=>f.d).join(', ')}], 总计: ${totalMs}ms`);
+  if(!frameList.length)return;
+  frameIdx=0;cycleCount=0;
+  drawSprite(frameList[0].c,frameList[0].r);
+  if(frameList.length===1)return;
+  lastFrameTime=performance.now();
+  animFrameId=requestAnimationFrame(animLoop);
+}
+
+function runAnim(s){
+  stopAll();
+  setTimeout(()=>play(s),100);
+}
+
+function stopAll(){
+  stopAnim();
+  if(window.rt){clearTimeout(window.rt);window.rt=null;}
+}
+
+function loadFromInput(){
+  const val=document.getElementById('sprite-input').value.trim();
+  if(!val){log('请输入精灵图数据');return;}
+  try{
+    const d=JSON.parse(val);
+    loadSpritesheetFromBase64(d.b64,d.ext);
+  }catch(e){
+    log('解析失败: '+e.message);
+  }
+}
+
+function loadSpritesheetFromBase64(b64,ext){
+  if(!b64||b64.length<100){log('数据太短，无效');return;}
+  const img=new Image();
+  img.onload=()=>{
+    const oc=document.createElement('canvas');
+    oc.width=img.naturalWidth;oc.height=img.naturalHeight;
+    const octx=oc.getContext('2d');
+    octx.drawImage(img,0,0);
+    const d=octx.getImageData(0,0,oc.width,oc.height);
+    for(let i=3;i<d.data.length;i+=4){if(d.data[i]>0&&d.data[i]<24)d.data[i]=0;}
+    octx.putImageData(d,0,0);
+    spritesheet=oc;
+    loadStatus.textContent='精灵图已加载 ('+oc.width+'x'+oc.height+')';
+    log('精灵图加载成功 '+oc.width+'x'+oc.height);
+  };
+  img.onerror=()=>{log('图片加载失败');};
+  img.src='data:image/'+(ext||'png')+';base64,'+b64;
+}
+
+log('=== Pet Animation Debug 已启动 ===');
+log('请加载精灵图后点击按钮测试');
+
+// Auto-load from localStorage if available
+try{
+  const saved=localStorage.getItem('debug_sprite');
+  if(saved){
+    const d=JSON.parse(saved);
+    loadSpritesheetFromBase64(d.b64,d.ext);
+  }
+}catch(e){}
+</script>
+</body>
+</html>
