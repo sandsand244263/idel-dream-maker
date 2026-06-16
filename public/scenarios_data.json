@@ -1,5 +1,5168 @@
 [
   {
+    "id": "hermit",
+    "name": "Hermit",
+    "name_cn": "世外高人",
+    "description": "深山幽谷，一庐一人。从避世少年到一代隐者，以山水为伴，以琴茶为友，在寂静中修得大自在。",
+    "player_title": "避世客",
+    "titles": [
+      {
+        "level": 1,
+        "name": "避世客",
+        "color": "#888888",
+        "desc": "厌倦尘嚣，独自走入深山"
+      },
+      {
+        "level": 2,
+        "name": "寻幽者",
+        "color": "#7A7A7A",
+        "desc": "在山林中寻找安身之所"
+      },
+      {
+        "level": 3,
+        "name": "茅庐主",
+        "color": "#AAAAAA",
+        "desc": "搭起了山中第一间小屋"
+      },
+      {
+        "level": 6,
+        "name": "山间樵夫",
+        "color": "#4CAF50",
+        "desc": "学会了砍柴生火，自给自足"
+      },
+      {
+        "level": 8,
+        "name": "采药人",
+        "color": "#66BB6A",
+        "desc": "识得山中百草，能治小病"
+      },
+      {
+        "level": 10,
+        "name": "听松客",
+        "color": "#2196F3",
+        "desc": "常在松树下静坐，听风过松针"
+      },
+      {
+        "level": 15,
+        "name": "抚琴者",
+        "color": "#FF9800",
+        "desc": "用山中老木制成一张古琴"
+      },
+      {
+        "level": 20,
+        "name": "种茶人",
+        "color": "#795548",
+        "desc": "在屋前种下几株野茶苗"
+      },
+      {
+        "level": 23,
+        "name": "驯鹤翁",
+        "color": "#8D6E63",
+        "desc": "一只受伤的白鹤不再离开"
+      },
+      {
+        "level": 26,
+        "name": "观云士",
+        "color": "#9C27B0",
+        "desc": "学会了从云的形状判断天气"
+      },
+      {
+        "level": 33,
+        "name": "棋中客",
+        "color": "#F44336",
+        "desc": "以石为棋，与自己对弈"
+      },
+      {
+        "level": 40,
+        "name": "书墨者",
+        "color": "#E91E63",
+        "desc": "用松烟制墨，抄写经卷"
+      },
+      {
+        "level": 44,
+        "name": "山居贤",
+        "color": "#EC407A",
+        "desc": "山外的读书人开始慕名来访"
+      },
+      {
+        "level": 48,
+        "name": "雪中友",
+        "color": "#FF5722",
+        "desc": "大雪封山时仍有旧友来访"
+      },
+      {
+        "level": 56,
+        "name": "知天命",
+        "color": "#00BCD4",
+        "desc": "看透了四季轮回，人生起伏"
+      },
+      {
+        "level": 65,
+        "name": "山间师",
+        "color": "#673AB7",
+        "desc": "开始指点有缘人的修行"
+      },
+      {
+        "level": 70,
+        "name": "静心者",
+        "color": "#7E57C2",
+        "desc": "心如山涧清泉，不起波澜"
+      },
+      {
+        "level": 75,
+        "name": "松下仙",
+        "color": "#FFEB3B",
+        "desc": "常有人在山下看到松树下的身影"
+      },
+      {
+        "level": 85,
+        "name": "山水客",
+        "color": "#FF9800",
+        "desc": "足迹踏遍周围的山川溪涧"
+      },
+      {
+        "level": 100,
+        "name": "听风者",
+        "color": "#00E676",
+        "desc": "能从风中听出远方的消息"
+      },
+      {
+        "level": 110,
+        "name": "山灵友",
+        "color": "#69F0AE",
+        "desc": "山中的生灵已视你为同类"
+      },
+      {
+        "level": 120,
+        "name": "忘年翁",
+        "color": "#E040FB",
+        "desc": "不知自己多大年纪，山中不计年"
+      },
+      {
+        "level": 130,
+        "name": "逍遥子",
+        "color": "#EA80FC",
+        "desc": "真正的逍遥，不在远方，在心"
+      },
+      {
+        "level": 150,
+        "name": "传灯人",
+        "color": "#FF6D00",
+        "desc": "将一身的技艺传给有缘之人"
+      },
+      {
+        "level": 175,
+        "name": "守山人",
+        "color": "#FF8A65",
+        "desc": "是山的一部分，是林的守护者"
+      },
+      {
+        "level": 200,
+        "name": "山中仙",
+        "color": "#FF1744",
+        "desc": "外面的世界已将你当作传说"
+      },
+      {
+        "level": 250,
+        "name": "坐忘者",
+        "color": "#FF4081",
+        "desc": "坐忘之间，已不知我是山还是山是我"
+      },
+      {
+        "level": 300,
+        "name": "归元",
+        "color": "#00E5FF",
+        "desc": "回归本真，如初生之婴"
+      },
+      {
+        "level": 400,
+        "name": "化境",
+        "color": "#B388FF",
+        "desc": "已入化境，与天地同息"
+      },
+      {
+        "level": 500,
+        "name": "???",
+        "color": "#FFFFFF",
+        "desc": "山中再无此人，鹤在空中盘旋"
+      }
+    ],
+    "events": [
+      {
+        "id": "h_e001",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你走在进山的路上。身后的城镇越来越远，头顶的天空越来越开阔。你没有回头。"
+      },
+      {
+        "id": "h_e002",
+        "minLevel": 2,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在山间走了三天，终于找到一处幽谷。一条溪水从崖上落下，汇成清潭。你决定就在这里住下。"
+      },
+      {
+        "id": "h_e003",
+        "minLevel": 3,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你用山中的树木和竹子搭起了一间简陋的茅屋。屋顶漏光，但能遮雨。你满意地看了很久。"
+      },
+      {
+        "id": "h_e004",
+        "minLevel": 4,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你生起了第一堆火。火光照亮了茅屋的四壁。你坐在火堆旁，第一次感到安心的孤独。"
+      },
+      {
+        "id": "h_e005",
+        "minLevel": 5,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你学会了辨别山中的野果。哪些能吃，哪些有毒。你摘了些野莓，酸得你直皱眉。"
+      },
+      {
+        "id": "h_e006",
+        "minLevel": 6,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你用溪边的石头垒了一个灶台。虽然歪歪扭扭的，但能用。你煮了第一锅粥。"
+      },
+      {
+        "id": "h_e007",
+        "minLevel": 7,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你发现了一棵野茶树，长在崖壁上。你小心翼翼地爬上去摘了些嫩芽，焙干后泡了一杯。很苦，但你喝了三杯。"
+      },
+      {
+        "id": "h_e008",
+        "minLevel": 8,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一只松鼠跑进了你的茅屋，翻找你的干粮。你没有赶它，只是看着它拖走了一块饼。"
+      },
+      {
+        "id": "h_e009",
+        "minLevel": 9,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你学会了用藤条编筐。第一个筐编得歪歪扭扭的，但装柴火没问题。你把它挂在屋檐下。"
+      },
+      {
+        "id": "h_e010",
+        "minLevel": 10,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "夜里下了一场大雨。茅屋漏得厉害，你抱着被褥躲在角落里。天亮后你重新修补了屋顶。"
+      },
+      {
+        "id": "h_e011",
+        "minLevel": 11,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在溪水里发现了一种细鳞鱼。你花了三天做了一个鱼笼。第三天你捕到了第一条鱼，烤来吃了。"
+      },
+      {
+        "id": "h_e012",
+        "minLevel": 12,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山中起雾了。浓雾弥漫了三天三夜。你在雾中能听到各种声音，却什么也看不见。"
+      },
+      {
+        "id": "h_e013",
+        "minLevel": 13,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始听懂鸟的叫声。它们在不同的时间唱不同的歌。清晨的鸟鸣和黄昏的不是同一首。"
+      },
+      {
+        "id": "h_e014",
+        "minLevel": 14,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你找到了一块平整的大石头，把它当作了书桌。你在上面铺开纸，研墨提笔，却不知道写什么。"
+      },
+      {
+        "id": "h_e015",
+        "minLevel": 15,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你写下进山以来的第一首诗。只有四句，写的是云雾和溪水。你读了几遍，觉得还不错。"
+      },
+      {
+        "id": "h_e016",
+        "minLevel": 16,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在石缝中发现了一株兰花。它开着一朵淡紫色的花。你把它移栽到茅屋门口。"
+      },
+      {
+        "id": "h_e017",
+        "minLevel": 17,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你砍了一些竹子，在茅屋旁搭了一个凉亭。你坐在亭子里看雨，觉得雨声是最好听的音乐。"
+      },
+      {
+        "id": "h_e018",
+        "minLevel": 18,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山下的樵夫上山砍柴，看到了你的茅屋。他放下担子，坐在你的凉亭里喝了一碗水。你们没有说话。"
+      },
+      {
+        "id": "h_e019",
+        "minLevel": 19,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "樵夫下次上山时给你带了一袋盐。你不知怎么谢他，采了一把山菌塞给他。"
+      },
+      {
+        "id": "h_e020",
+        "minLevel": 20,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你用山中的泥土做了一只陶碗，烧制时裂了。第二只好了一些。第三只终于像样了。"
+      },
+      {
+        "id": "h_e021",
+        "minLevel": 21,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在溪边看到一只白鹤，翅膀上带着箭伤。你靠近时它没有飞走。你把它抱回了茅屋。"
+      },
+      {
+        "id": "h_e022",
+        "minLevel": 22,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你给白鹤处理了伤口。它很安静，只是用黑色的眼睛看着你。你在它旁边坐了一整夜。"
+      },
+      {
+        "id": "h_e023",
+        "minLevel": 23,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "白鹤的伤好了。但它没有飞走。每天清晨它都站在茅屋顶上，等你起来。"
+      },
+      {
+        "id": "h_e024",
+        "minLevel": 24,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始教白鹤一些把戏。它很聪明，学会了用喙敲门。你笑着说，你是成精了。"
+      },
+      {
+        "id": "h_e025",
+        "minLevel": 25,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "秋天来了。山上的叶子红了。你坐在凉亭里看满山红叶，泡了一杯野茶。白鹤站在你旁边。"
+      },
+      {
+        "id": "h_e026",
+        "minLevel": 26,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在山中发现了一个山洞。洞壁上有古老的壁画，画的是一个人在山中打坐。你看了很久。"
+      },
+      {
+        "id": "h_e027",
+        "minLevel": 27,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在洞中找到了一卷残破的古书。书页已经发黄，但上面的字还能辨认。是一本琴谱。"
+      },
+      {
+        "id": "h_e028",
+        "minLevel": 28,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你按照琴谱上的记载，用山中老桐木试着做一张琴。木头的纹理很美，你舍不得多削。"
+      },
+      {
+        "id": "h_e029",
+        "minLevel": 29,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "琴做好了。你调了三天弦才调准音。你弹了一下，琴声在山谷中回荡。白鹤仰头长鸣。"
+      },
+      {
+        "id": "h_e030",
+        "minLevel": 30,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你学会了第一首曲子。曲名是秋风词。你弹了一遍又一遍，直到十指发麻。"
+      },
+      {
+        "id": "h_e031",
+        "minLevel": 31,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "冬天来了。第一场雪下了一整夜。你早上推开门，世界一片洁白。白鹤在雪地上踩出竹叶般的脚印。"
+      },
+      {
+        "id": "h_e032",
+        "minLevel": 32,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "大雪封山了。你储备的干粮够吃一个冬天。你在屋里生起火，在火光中读那卷琴谱。"
+      },
+      {
+        "id": "h_e033",
+        "minLevel": 33,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在雪地里发现了一串脚印。不是野兽的。你顺着脚印走了很远，看到了山腰的另一间茅屋。"
+      },
+      {
+        "id": "h_e034",
+        "minLevel": 34,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那间茅屋住着一个老人。你敲门时他正在煮茶。他请你在火炉边坐下，给你倒了一杯热茶。"
+      },
+      {
+        "id": "h_e035",
+        "minLevel": 35,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "老人话不多。你问他在这里住了多久。他说，不记得了。山里的时间不算时间。"
+      },
+      {
+        "id": "h_e036",
+        "minLevel": 36,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "老人教你下棋。他用黑白石子做棋子，在木板上画了棋盘。你输了三局。第四局终于赢了半目。"
+      },
+      {
+        "id": "h_e037",
+        "minLevel": 37,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "雪停了。你告别了老人。他说，有空再来。你走出很远回头，他的茅屋已经和雪融在了一起。"
+      },
+      {
+        "id": "h_e038",
+        "minLevel": 38,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你回到自己的茅屋，在门口堆了一个雪人。白鹤好奇地用喙啄了啄它。"
+      },
+      {
+        "id": "h_e039",
+        "minLevel": 39,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "冬天漫长而安静。你在屋里抄写那卷琴谱，一笔一画都很认真。字比以前好看了。"
+      },
+      {
+        "id": "h_e040",
+        "minLevel": 40,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "除夕夜。你煮了一锅素饺子，给白鹤也盛了一碗。你在门口点了一盏灯，照亮下山的路。"
+      },
+      {
+        "id": "h_e041",
+        "minLevel": 41,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "春天来了。冰雪融化，溪水重新流淌。山上的野花一夜之间开了。你深深吸了一口气。"
+      },
+      {
+        "id": "h_e042",
+        "minLevel": 42,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在屋前开了一片菜地。翻土、播种、浇水。你看着种子发芽，心里有一种说不出的喜悦。"
+      },
+      {
+        "id": "h_e043",
+        "minLevel": 43,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山上来了一个迷路的书生。他带着书箱，衣服被树枝刮破了。你收留了他一夜。"
+      },
+      {
+        "id": "h_e044",
+        "minLevel": 44,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "书生看到你的琴和棋，眼睛亮了。他问你从哪学的。你说，自己学的。他感叹说，山中真有高人。"
+      },
+      {
+        "id": "h_e045",
+        "minLevel": 45,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "书生下山前给你留了一本诗集。你翻了翻，有些句子写得很美。你把它放在了书架上。"
+      },
+      {
+        "id": "h_e046",
+        "minLevel": 46,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你重新修整了茅屋，加了半间作为书房。你把收集来的书和琴谱都放在了里面。"
+      },
+      {
+        "id": "h_e047",
+        "minLevel": 47,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "白鹤最近总往山里飞。每次回来脚上都沾着不同颜色的泥土。你猜它去了很远的地方。"
+      },
+      {
+        "id": "h_e048",
+        "minLevel": 48,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你跟着白鹤走了一次。它带着你穿过一片密林，到了一处山泉。泉水从石缝中涌出，清冽甘甜。"
+      },
+      {
+        "id": "h_e049",
+        "minLevel": 49,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在山泉边坐下来弹琴。琴声和水声混在一起。白鹤站在水中，一动不动地听。"
+      },
+      {
+        "id": "h_e050",
+        "minLevel": 50,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在山中住了整整一年。四季都见过了一遍。你觉得这里就是你的家了。"
+      },
+      {
+        "id": "h_e051",
+        "minLevel": 51,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山下的村童偶尔会上山来玩。他们好奇地围着你的茅屋转。你给他们每人分了一块麦芽糖。"
+      },
+      {
+        "id": "h_e052",
+        "minLevel": 52,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个村童摔伤了膝盖。你采了草药帮他敷上。他破涕为笑。从此他叫你山中医伯。"
+      },
+      {
+        "id": "h_e053",
+        "minLevel": 53,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始认真研究草药。山中百草皆有性味。你每天尝一味，记在纸上。"
+      },
+      {
+        "id": "h_e054",
+        "minLevel": 54,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你发现了一种可以解蛇毒的草药。你把它晒干磨粉，用小瓷瓶装好，随身带着。"
+      },
+      {
+        "id": "h_e055",
+        "minLevel": 55,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "夏天到了。山中凉爽，你在凉亭里铺了一张竹席，午睡时能听到蝉鸣和溪水声。"
+      },
+      {
+        "id": "h_e056",
+        "minLevel": 56,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在溪边捡到一块奇石，形状像一座山。你把它放在书桌上，每天用毛笔蘸清水在上面写字，字迹很快消失。"
+      },
+      {
+        "id": "h_e057",
+        "minLevel": 57,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始写字。用竹笔蘸清水在石板上练。一篇兰亭序写了一百遍，每一遍都有不同的心境。"
+      },
+      {
+        "id": "h_e058",
+        "minLevel": 58,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山下的老人托樵夫带信给你，说村里有孩子生了怪病。你带着草药下山去看了。"
+      },
+      {
+        "id": "h_e059",
+        "minLevel": 59,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "孩子的病好了。村里人感激你，凑钱给你做了一身新衣裳。你推辞不掉，只好收下。"
+      },
+      {
+        "id": "h_e060",
+        "minLevel": 60,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的名气渐渐传开了。附近山民有个头疼脑热，都会上山来找你。你从不收钱。"
+      },
+      {
+        "id": "h_e061",
+        "minLevel": 61,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的菜地丰收了。南瓜长得比脸盆还大。你摘了一个送给山下的老人。他高兴得合不拢嘴。"
+      },
+      {
+        "id": "h_e062",
+        "minLevel": 62,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在山中找到了一棵老梅树。冬天时它开满红花，在雪地里格外鲜艳。你常坐在树下发呆。"
+      },
+      {
+        "id": "h_e063",
+        "minLevel": 63,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你用梅枝做了一支笛子。吹出的声音清亮悠远。白鹤听到笛声就会飞回来。"
+      },
+      {
+        "id": "h_e064",
+        "minLevel": 64,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你越来越习惯山中的寂静。有时候一整天不说话也不会觉得闷。你发现寂静其实是一种声音。"
+      },
+      {
+        "id": "h_e065",
+        "minLevel": 65,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个年轻人背着行囊上山来。他说想拜你为师。你看了他一眼，说，先帮我浇三天菜地。"
+      },
+      {
+        "id": "h_e066",
+        "minLevel": 66,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "年轻人浇了三天菜地。手上起了水泡，但他没有抱怨。你让他再劈七天柴。"
+      },
+      {
+        "id": "h_e067",
+        "minLevel": 67,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他劈了七天柴。堆满了屋檐。你点点头，说，留下来吧。他差点哭出来。"
+      },
+      {
+        "id": "h_e068",
+        "minLevel": 68,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你给徒弟取了一个号，叫云生。你说，云生于山，山不留云。他不太明白，但记住了。"
+      },
+      {
+        "id": "h_e069",
+        "minLevel": 69,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你教云生认草药。他记性不如你好，但很勤快。你把每一种草药都编成了口诀。"
+      },
+      {
+        "id": "h_e070",
+        "minLevel": 70,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生问你来山之前是做什么的。你沉默了一会儿说，不记得了。他识趣地没有再问。"
+      },
+      {
+        "id": "h_e071",
+        "minLevel": 71,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始教云生弹琴。他第一首学的也是秋风词。弹得磕磕绊绊的，但你很有耐心。"
+      },
+      {
+        "id": "h_e072",
+        "minLevel": 72,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你带着云生去拜访山腰的老人。老人已经不在茅屋了。桌上留着一盘未下完的棋。你坐下，对着空椅下完了一局。"
+      },
+      {
+        "id": "h_e073",
+        "minLevel": 73,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "老人再也没有回来。你成了那间茅屋的常客。你每次去都替他打扫一下。"
+      },
+      {
+        "id": "h_e074",
+        "minLevel": 74,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生问你，那位老人去哪里了。你说，去他该去的地方了。"
+      },
+      {
+        "id": "h_e075",
+        "minLevel": 75,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始写一本山居笔记。把山中见闻、草药方子、琴谱心得全部记下来。"
+      },
+      {
+        "id": "h_e076",
+        "minLevel": 76,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "秋天又来了。你带着云生去看满山红叶。他感叹说好美。你说，明年会更美。"
+      },
+      {
+        "id": "h_e077",
+        "minLevel": 77,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你酿了一坛山果酒。埋在梅树下。你对云生说，等你出师那天我们再喝。"
+      },
+      {
+        "id": "h_e078",
+        "minLevel": 78,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生学会了你的全部草药知识。但你告诉他，医者不光要懂药，更要懂人心。"
+      },
+      {
+        "id": "h_e079",
+        "minLevel": 79,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山下有人送了一张宣纸来，说是好纸。你舍不得用，把它压在书桌下，偶尔拿出来摸一摸。"
+      },
+      {
+        "id": "h_e080",
+        "minLevel": 80,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在山泉边练剑。不是用来伤人的剑，是用来活动筋骨的。云生也学着你的样子比划。"
+      },
+      {
+        "id": "h_e081",
+        "minLevel": 81,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的剑法有了新的领悟。轻而不浮，柔而不弱。就像山中的溪水一样。"
+      },
+      {
+        "id": "h_e082",
+        "minLevel": 82,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你画了一幅画。画的是你的茅屋和那棵梅树。山在远处，鹤在近处。你觉得这幅画可以留着。"
+      },
+      {
+        "id": "h_e083",
+        "minLevel": 83,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生的琴弹得越来越好了。他已经能弹出曲中的意境。你坐在凉亭里听着，轻轻打着拍子。"
+      },
+      {
+        "id": "h_e084",
+        "minLevel": 84,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你发现自己的头发白了几根。你对着溪水看了看，笑了。岁月不饶人，但你也不饶岁月。"
+      },
+      {
+        "id": "h_e085",
+        "minLevel": 85,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你带着云生走遍了周围的山头。教他看山脉走势，教他听风辨向。"
+      },
+      {
+        "id": "h_e086",
+        "minLevel": 86,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有一次你们迷路了。在雾中走了半天。你没有慌张，反而觉得很有趣。云生急得满头大汗。"
+      },
+      {
+        "id": "h_e087",
+        "minLevel": 87,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你告诉云生，迷路的时候不要慌。停下来，听一听。山会告诉你方向。"
+      },
+      {
+        "id": "h_e088",
+        "minLevel": 88,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "自从那次迷路后，云生学会了看苔藓认方向。你夸他学得快。他不好意思地笑了。"
+      },
+      {
+        "id": "h_e089",
+        "minLevel": 89,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一位远方的文人慕名来访。他带了一坛好酒和一肚子的问题。你觉得酒不错，问题太多。"
+      },
+      {
+        "id": "h_e090",
+        "minLevel": 90,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "文人问你如何才能达到你的境界。你说，你坐在山上，山也在坐你。文人若有所思。"
+      },
+      {
+        "id": "h_e091",
+        "minLevel": 91,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "文人下山后写了一篇游记，提到了山中的隐者。你的名字第一次出现在山外人的文字里。"
+      },
+      {
+        "id": "h_e092",
+        "minLevel": 92,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "来访的人渐渐多了。你不胜其烦。云生帮你挡了很多，说师父在闭关。你暗笑。"
+      },
+      {
+        "id": "h_e093",
+        "minLevel": 93,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始教云生下棋。他的棋风很保守，不敢进攻。你说，有时候退一步是为了进三步。"
+      },
+      {
+        "id": "h_e094",
+        "minLevel": 94,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生的棋进步了。他开始学会布局。你们一局棋能下三天。白鹤在旁边看着，歪着头。"
+      },
+      {
+        "id": "h_e095",
+        "minLevel": 95,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "白鹤老了。它飞得不如以前高了。你不再让它跟着你走远路。它似乎不太高兴。"
+      },
+      {
+        "id": "h_e096",
+        "minLevel": 96,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你给白鹤搭了一个窝，就在你的窗边。冬天时窝里铺了干草和羽毛。它晚上睡得很安稳。"
+      },
+      {
+        "id": "h_e097",
+        "minLevel": 97,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你教云生吹笛子。他用梅枝自己削了一支。吹出来的声音断断续续的，像小鸭子在叫。你笑出了声。"
+      },
+      {
+        "id": "h_e098",
+        "minLevel": 98,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生的笛子进步了。虽然还比不上你的琴声，但已经能合奏了。你们偶尔会在黄昏时一起合奏一曲。"
+      },
+      {
+        "id": "h_e099",
+        "minLevel": 99,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在山居笔记中写下了一句话：山中无甲子，寒尽不知年。云生看到后沉默了很久。"
+      },
+      {
+        "id": "h_e100",
+        "minLevel": 100,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你越来越喜欢一个人坐在溪边听水声。什么也不想，什么也不做。只是听着。"
+      },
+      {
+        "id": "h_e101",
+        "minLevel": 101,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生开始独立给山民看病。你看他诊脉问诊，手法已经像模像样了。你站在远处没有打扰。"
+      },
+      {
+        "id": "h_e102",
+        "minLevel": 102,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个村民治好了病，给云生送了一只母鸡。云生不知如何处理，跑来问你。你说，养着吧。"
+      },
+      {
+        "id": "h_e103",
+        "minLevel": 103,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "母鸡开始下蛋了。每天早上云生都能在鸡窝里摸到一个温热的蛋。他兴高采烈地煮给你吃。"
+      },
+      {
+        "id": "h_e104",
+        "minLevel": 104,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你已经有三年没有下过山了。山下的一切都已经陌生。但山上的每一寸土地你都很熟悉。"
+      },
+      {
+        "id": "h_e105",
+        "minLevel": 105,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在屋后种了一片竹子。竹笋长得很快。你每天都能听到竹笋拔节的声音。"
+      },
+      {
+        "id": "h_e106",
+        "minLevel": 106,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你用新长成的竹子做了一个书架。你所有的书终于有了整齐的安放之处。"
+      },
+      {
+        "id": "h_e107",
+        "minLevel": 107,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的视力不如从前了。看小字时要凑得很近。你让云生帮你多抄了一份琴谱，字写得大一些。"
+      },
+      {
+        "id": "h_e108",
+        "minLevel": 108,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生现在每天除了干活，还要给你读书。你闭着眼睛听。有时候听着听着就睡着了。"
+      },
+      {
+        "id": "h_e109",
+        "minLevel": 109,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你教云生另一种功夫——静坐。云生坐不住，腿麻了就想动。你说，麻了就让它麻。"
+      },
+      {
+        "id": "h_e110",
+        "minLevel": 110,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生终于能静坐半个时辰了。他说他什么也没想。你说，那就是对了。"
+      },
+      {
+        "id": "h_e111",
+        "minLevel": 111,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始把自己这些年写的诗整理成集。大约有百来首。你挑了一些满意的，其他的烧掉了。"
+      },
+      {
+        "id": "h_e112",
+        "minLevel": 112,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在整理时发现了一首年轻时候写的诗。那时你还在山下，满心的不甘和愤怒。你笑了笑。"
+      },
+      {
+        "id": "h_e113",
+        "minLevel": 113,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你把那首年轻时的诗也烧掉了。不是因为它不好，而是你不再需要它了。"
+      },
+      {
+        "id": "h_e114",
+        "minLevel": 114,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个远方的学者来信，想请你出山讲学。你回信说，山中走不开，菜地需要浇水。"
+      },
+      {
+        "id": "h_e115",
+        "minLevel": 115,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "学者又来信说可以等。你没回第二封。云生问你怎么不回。你说，不回就是回答。"
+      },
+      {
+        "id": "h_e116",
+        "minLevel": 116,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "雨季来了。山中湿气重，你的关节开始疼。云生给你煮了祛湿的汤药。你喝了一碗。"
+      },
+      {
+        "id": "h_e117",
+        "minLevel": 117,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在雨季里画了一幅烟雨图。山在雨中若隐若现，像一幅水墨画。你觉得这是你画得最好的一幅。"
+      },
+      {
+        "id": "h_e118",
+        "minLevel": 118,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "雨季过后，山中长出了很多蘑菇。你带着云生去采，教他分辨可食和有毒。"
+      },
+      {
+        "id": "h_e119",
+        "minLevel": 119,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你们采了满满一篮蘑菇。晚上煮了一锅蘑菇汤。鲜得你连喝了两碗。白鹤也分到了一些。"
+      },
+      {
+        "id": "h_e120",
+        "minLevel": 120,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始教云生品茶。从分辨水温到感受回甘。云生说，原来喝茶有这么多讲究。"
+      },
+      {
+        "id": "h_e121",
+        "minLevel": 121,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你把那棵崖壁上的野茶树嫁接了几株到屋前。活了。你对云生说，等它们长大了，你就有自己的茶了。"
+      },
+      {
+        "id": "h_e122",
+        "minLevel": 122,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个老和尚路过。在你这里借宿了一晚。你们下了一盘棋，喝了一壶茶。谁也没有问谁从哪里来。"
+      },
+      {
+        "id": "h_e123",
+        "minLevel": 123,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "老和尚走时说了一句话：你这里很好，比我那里好。你挥了挥手，没有起身送。"
+      },
+      {
+        "id": "h_e124",
+        "minLevel": 124,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你有时会想，那些山下的人过着什么样的生活。也只是想一想而已。你不羡慕。"
+      },
+      {
+        "id": "h_e125",
+        "minLevel": 125,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你给云生讲你年轻时的一些事。讲那些你放下的东西。云生听得很认真。"
+      },
+      {
+        "id": "h_e126",
+        "minLevel": 126,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你说，放下不是放弃。放下是把东西轻轻放在地上。放弃是把东西摔在地上。"
+      },
+      {
+        "id": "h_e127",
+        "minLevel": 127,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生似懂非懂。你没有再多解释。有些事要自己去体会。别人的话只是种子。"
+      },
+      {
+        "id": "h_e128",
+        "minLevel": 128,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在石板上练的字越来越有风骨了。云生说，师父的字像山里的松树。你说，还差得远。"
+      },
+      {
+        "id": "h_e129",
+        "minLevel": 129,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你用山泉水泡了一壶茶。茶香和着草木的气息。你对云生说，这就是山水的味道。"
+      },
+      {
+        "id": "h_e130",
+        "minLevel": 130,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山中起了山火。远远的西山头冒起了浓烟。你带着云生和村民们一起去扑火，忙了一整天。"
+      },
+      {
+        "id": "h_e131",
+        "minLevel": 131,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "火扑灭了。烧了一片林子。你看着焦黑的山坡，没有说话。第二天你带着树苗去补种。"
+      },
+      {
+        "id": "h_e132",
+        "minLevel": 132,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你种下的树苗活了大半。你每天绕路去看它们。云生说，师父，它们会长大的。你说，我知道。"
+      },
+      {
+        "id": "h_e133",
+        "minLevel": 133,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的山居笔记已经写了厚厚的三本。你翻看前面的内容，有些想法已经和现在不一样了。"
+      },
+      {
+        "id": "h_e134",
+        "minLevel": 134,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "时间改变了你。你也改变了这座山。你曾在的地方，已经和从前完全不同了。"
+      },
+      {
+        "id": "h_e135",
+        "minLevel": 135,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山下来了几个自称求道的人。穿着道袍，手持拂尘。你让云生告诉他们，你不在家。"
+      },
+      {
+        "id": "h_e136",
+        "minLevel": 136,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "求道的人在山下等了三天。你始终没有见。他们留下一封信走了。你没有拆开，放在了一边。"
+      },
+      {
+        "id": "h_e137",
+        "minLevel": 137,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生问你为什么不见他们。你说，求道不在别处，在他们自己身上。"
+      },
+      {
+        "id": "h_e138",
+        "minLevel": 138,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你教云生用竹根雕刻。他雕了一只在吃松果的松鼠，活灵活现的。你夸他手巧。"
+      },
+      {
+        "id": "h_e139",
+        "minLevel": 139,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你们用竹根雕了很多小动物，摆在书架上。白鹤有时会用喙啄它们，以为是真的。"
+      },
+      {
+        "id": "h_e140",
+        "minLevel": 140,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的膝盖越来越不好了。走路时要拄一根竹杖。云生给你削了一根，长短正好。"
+      },
+      {
+        "id": "h_e141",
+        "minLevel": 141,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你拄着竹杖去看了那棵老梅树。它还在，花开得比去年更多。你在树下站了很久。"
+      },
+      {
+        "id": "h_e142",
+        "minLevel": 142,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "白鹤也很老了。它不再飞上屋顶了，只是每天在院子里慢慢踱步。你看着它，像看着自己。"
+      },
+      {
+        "id": "h_e143",
+        "minLevel": 143,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始把山居笔记重新誊抄一遍。字写得大一些，工整一些。留给云生以后看。"
+      },
+      {
+        "id": "h_e144",
+        "minLevel": 144,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生最近练琴练得很晚。琴声在夜空中传得很远。你躺在床上听着，觉得他弹得越来越好了。"
+      },
+      {
+        "id": "h_e145",
+        "minLevel": 145,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在梦中回到了年轻时候。那些你以为已经忘记的人，在梦里又见到了。醒来时天还没亮。"
+      },
+      {
+        "id": "h_e146",
+        "minLevel": 146,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你没有再睡。披衣起来坐在门口等天亮。星星很亮。山中夜晚的星空，比山下清晰得多。"
+      },
+      {
+        "id": "h_e147",
+        "minLevel": 147,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "天亮了。你看到朝阳从山的那一边升起来。金色的光线穿透晨雾。你深吸了一口气。"
+      },
+      {
+        "id": "h_e148",
+        "minLevel": 148,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你对云生说，今天的天气很好。云生说，山里的天气每天都很好。你笑了笑，说，是啊。"
+      },
+      {
+        "id": "h_e149",
+        "minLevel": 149,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你不再弹琴了。不是因为弹不动了，而是更喜欢听了。听云生弹，听风声，听溪水声。"
+      },
+      {
+        "id": "h_e150",
+        "minLevel": 150,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你觉得这一生能在这座山里度过，是一件很幸运的事。你没有什么遗憾了。"
+      },
+      {
+        "id": "h_e151",
+        "minLevel": 151,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山下有人送来了一封信。是当年那位书生的孙子写的。信上说，书生的晚年一直想念山中的那一夜。"
+      },
+      {
+        "id": "h_e152",
+        "minLevel": 152,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你回了一封短信：山中依旧，茶还温着。"
+      },
+      {
+        "id": "h_e153",
+        "minLevel": 153,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生问你，什么时候想下山看看。你说，这座山就是我的世界，不需要去别处了。"
+      },
+      {
+        "id": "h_e154",
+        "minLevel": 154,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在溪边捡了很多圆润的卵石，用它们在院子里铺了一条小径。踩上去很舒服。"
+      },
+      {
+        "id": "h_e155",
+        "minLevel": 155,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在小径旁种了一些野花。没有刻意安排位置，随它们自己生长。花开的时候五彩斑斓。"
+      },
+      {
+        "id": "h_e156",
+        "minLevel": 156,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生的医术已经超过了你。你看他给病人开方子，有些方子你都没见过。你很欣慰。"
+      },
+      {
+        "id": "h_e157",
+        "minLevel": 157,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你对云生说，你可以出师了。云生跪下来给你磕了三个头。你扶起他，说，别这样。"
+      },
+      {
+        "id": "h_e158",
+        "minLevel": 158,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生没有离开。他说，这里就是他的家。你没有说话，但心里很高兴。"
+      },
+      {
+        "id": "h_e159",
+        "minLevel": 159,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在屋前种了一棵银杏。你告诉云生，这棵树会长得很大。你也许看不到那一天了。"
+      },
+      {
+        "id": "h_e160",
+        "minLevel": 160,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生说，我替你看着。你拍了拍他的手。"
+      },
+      {
+        "id": "h_e161",
+        "minLevel": 161,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的胃口变差了。云生变着法子给你做好吃的。你吃不下太多，但每一口都吃得很认真。"
+      },
+      {
+        "id": "h_e162",
+        "minLevel": 162,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有一天你坐在凉亭里，突然想听一首曲子。云生坐下来，弹了你教他的第一首秋风词。"
+      },
+      {
+        "id": "h_e163",
+        "minLevel": 163,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你听着听着，眼前好像看到了初入山时的自己。那个背着行囊的年轻人，现在已经是白发老翁了。"
+      },
+      {
+        "id": "h_e164",
+        "minLevel": 164,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "曲子弹完了。你拍了拍云生的肩膀，说，弹得好。"
+      },
+      {
+        "id": "h_e165",
+        "minLevel": 165,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始把一些用不到的东西送给山下的村民。衣服、器具、藏书。每送一件，就轻松一分。"
+      },
+      {
+        "id": "h_e166",
+        "minLevel": 166,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你最后只留下了一张琴、一把壶、一卷琴谱。够了。"
+      },
+      {
+        "id": "h_e167",
+        "minLevel": 167,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你去看了一眼那棵梅树。它在雪地里开得很好。你摸摸它的树干，像在和老朋友告别。"
+      },
+      {
+        "id": "h_e168",
+        "minLevel": 168,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你去看了一眼那片菜地。云生打理得很好。冬天的白菜长得结实。你拔了一棵，说，今晚吃这个。"
+      },
+      {
+        "id": "h_e169",
+        "minLevel": 169,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "白鹤在一个清晨没有醒来。你把它埋在梅树下。你在埋它的地方放了一块小石头。"
+      },
+      {
+        "id": "h_e170",
+        "minLevel": 170,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你很久没有去过山泉边了。有一天你让云生扶你去。泉水还在流，声音和当年一样。"
+      },
+      {
+        "id": "h_e171",
+        "minLevel": 171,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你坐在泉边听了一整个下午。直到夕阳把泉水染成金色。你说，够了，我们回去吧。"
+      },
+      {
+        "id": "h_e172",
+        "minLevel": 172,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的身体越来越弱了。但你头脑清晰。你对云生交代了很多事情，像是怕来不及。"
+      },
+      {
+        "id": "h_e173",
+        "minLevel": 173,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你交代完后觉得轻松了。你躺在竹椅上，看着屋顶的茅草。阳光从缝隙里洒下来。"
+      },
+      {
+        "id": "h_e174",
+        "minLevel": 174,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生守在你身边。他给你泡了最后一壶茶。是你屋前那棵野茶树上的叶子。"
+      },
+      {
+        "id": "h_e175",
+        "minLevel": 175,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你喝了一口。味道和多年前你爬上崖壁摘下的第一把野茶一模一样。"
+      },
+      {
+        "id": "h_e176",
+        "minLevel": 176,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你闭上了眼睛。山中的风声、溪水声、鸟鸣声，都还在。你听得到。"
+      },
+      {
+        "id": "h_e177",
+        "minLevel": 177,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的呼吸变得很轻。嘴角带着一丝微笑。你走得很安详。"
+      },
+      {
+        "id": "h_e178",
+        "minLevel": 178,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生把你留下的那张琴放在了你身边。他在你面前磕了三个头。"
+      },
+      {
+        "id": "h_e179",
+        "minLevel": 179,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山下的村民自发上山来送你。他们站满了院子。没有人说话，只有风穿过竹林的声音。"
+      },
+      {
+        "id": "h_e180",
+        "minLevel": 180,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你被埋在梅树下，和白鹤在一起。云生在石碑上只刻了一个字：隐。"
+      },
+      {
+        "id": "h_e181",
+        "minLevel": 181,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生继承了你的茅屋和医术。他继续给山民看病。他把你的笔记抄了一份，原稿放在你的书架上。"
+      },
+      {
+        "id": "h_e182",
+        "minLevel": 182,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那棵银杏长高了一截。云生每天给它浇水。他说，这是师父留给我的。"
+      },
+      {
+        "id": "h_e183",
+        "minLevel": 183,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山下来了一个孩子，想学医。云生收了他做徒弟。教他的第一课，是先浇三天菜地。"
+      },
+      {
+        "id": "h_e184",
+        "minLevel": 184,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的诗在世间流传开了。人们说，山中那位隐者是真正的得道之人。"
+      },
+      {
+        "id": "h_e185",
+        "minLevel": 185,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生把你的琴谱重新整理了一遍，加了注解，刊印了若干册。山外的人争相求购。"
+      },
+      {
+        "id": "h_e186",
+        "minLevel": 186,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那棵梅树每年冬天都开花。有人路过时会在树下站一会儿，像是想听到什么。"
+      },
+      {
+        "id": "h_e187",
+        "minLevel": 187,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的山居笔记被人发现了。他们把它当作宝物。但对于你来说，那只是一本普通的日记。"
+      },
+      {
+        "id": "h_e188",
+        "minLevel": 188,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生老了。他坐在你当年坐的凉亭里，泡了一壶茶。风吹过来，他好像听到了一声叹息。"
+      },
+      {
+        "id": "h_e189",
+        "minLevel": 189,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生收了三个徒弟。他把你知道的和自己领悟的都教给了他们。薪火相传。"
+      },
+      {
+        "id": "h_e190",
+        "minLevel": 190,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人在溪边建了一座小亭子。匾额上写着你的号。你生前并没有号。但他们给你取了一个。"
+      },
+      {
+        "id": "h_e191",
+        "minLevel": 191,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那棵银杏树已经很高了。秋天时叶子金黄。人们说，那是这座山最漂亮的树。"
+      },
+      {
+        "id": "h_e192",
+        "minLevel": 192,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "越来越多的人知道这里曾经住过一位隐者。有人来寻找你的足迹，有人来寻找内心的安宁。"
+      },
+      {
+        "id": "h_e193",
+        "minLevel": 193,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的茅屋被保留了下来。云生说，它应该保持原样。雨漏了，又修好了。周而复始。"
+      },
+      {
+        "id": "h_e194",
+        "minLevel": 194,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个年轻人来到你的墓前。他说，他读了你的诗，决定也到山里住一段时间。"
+      },
+      {
+        "id": "h_e195",
+        "minLevel": 195,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那棵老梅树被雷劈了一次，但没有死。第二年春天它又开花了。人们说，那是你的意志。"
+      },
+      {
+        "id": "h_e196",
+        "minLevel": 196,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生走的那天，他坐在凉亭里，手里握着你的那截竹杖。他像你一样安静地离开了。"
+      },
+      {
+        "id": "h_e197",
+        "minLevel": 197,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "云生也被埋在梅树下。你的旁边。两棵草的根在地下握在了一起。"
+      },
+      {
+        "id": "h_e198",
+        "minLevel": 198,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的琴被收藏在镇上的书院里。偶尔有人会弹奏它。琴声和几百年前一样。"
+      },
+      {
+        "id": "h_e199",
+        "minLevel": 199,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的诗集被刻成了木版。一印再印。时间磨平了字迹，但磨不平人们心中的那个形象。"
+      },
+      {
+        "id": "h_e200",
+        "minLevel": 200,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山还在那里。溪水还在流。茅屋还在。只是再也没有人能弹出你那样的曲子了。"
+      },
+      {
+        "id": "h_e201",
+        "minLevel": 201,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的名字成了一个符号。人们提到山居隐逸时，总会想起你。你成了一代人的精神慰藉。"
+      },
+      {
+        "id": "h_e202",
+        "minLevel": 202,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人按照你的山居笔记复原了你的茶方。野茶、泉水、梅枝炭火。他们说喝到了山中的味道。"
+      },
+      {
+        "id": "h_e203",
+        "minLevel": 203,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山脚下的村子因为你的故事吸引了不少过客。茶馆里常年有人谈论你的传说。"
+      },
+      {
+        "id": "h_e204",
+        "minLevel": 204,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个画家来山中住了半年。他画了一幅长卷，画的是山居四时。你不在画中，但处处都是你。"
+      },
+      {
+        "id": "h_e205",
+        "minLevel": 205,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那棵银杏被列为古树。树下立了一块牌子，写着你的名字和简单的一句话。"
+      },
+      {
+        "id": "h_e206",
+        "minLevel": 206,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有位乐师根据你的秋风词改编了一首琴曲。他给它取名为山居吟。曲子传到了很远的地方。"
+      },
+      {
+        "id": "h_e207",
+        "minLevel": 207,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那方砚台被人收藏了。收藏者说，每次研墨时都能闻到一丝松烟的香气。"
+      },
+      {
+        "id": "h_e208",
+        "minLevel": 208,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的茅屋经过几次翻修，但格局从未变过。后来的人说，走进来就能感受到一种安静的力量。"
+      },
+      {
+        "id": "h_e209",
+        "minLevel": 209,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个迷路的人在茅屋中借宿了一晚。他说那是他几年来睡得最安稳的一觉。"
+      },
+      {
+        "id": "h_e210",
+        "minLevel": 210,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的弟子辈已经在山下开了一间小小的医馆。门上挂着你的名字。你说过，医者仁心。"
+      },
+      {
+        "id": "h_e211",
+        "minLevel": 211,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那棵梅树下总有人放花。有时是一束野花，有时是一枚果子。不知道是谁放的。"
+      },
+      {
+        "id": "h_e212",
+        "minLevel": 212,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在泉边坐过的那块石头被人称为坐忘石。常有人坐在那里发呆。发完呆后下山去了。"
+      },
+      {
+        "id": "h_e213",
+        "minLevel": 213,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的字被刻在了山门入口的石壁上。那是一个静字。每个进山的人都会看到。"
+      },
+      {
+        "id": "h_e214",
+        "minLevel": 214,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人收集了你散落的诗作，编成了一本薄薄的诗集。书名就叫《山中集》。"
+      },
+      {
+        "id": "h_e215",
+        "minLevel": 215,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你当年写的那些草药口诀被编成了歌谣。山里的孩子都会唱。他们一边唱一边采药。"
+      },
+      {
+        "id": "h_e216",
+        "minLevel": 216,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山中的那条小径被后人称为隐者路。路边种满了你喜欢的野花。春天时一路芬芳。"
+      },
+      {
+        "id": "h_e217",
+        "minLevel": 217,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个读书人考了多年不中，来山中住了三个月。下山后他说，我找到了比功名更重要的东西。"
+      },
+      {
+        "id": "h_e218",
+        "minLevel": 218,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那把竹杖被放在书院里。杖身已经被摩挲得十分光滑。每一个触摸它的人都能感到一种温度。"
+      },
+      {
+        "id": "h_e219",
+        "minLevel": 219,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山下的老人们在讲故事时总会提到你。他们说，那个人啊，是真的活得通透。"
+      },
+      {
+        "id": "h_e220",
+        "minLevel": 220,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一场山洪冲垮了溪上的木桥。村里人按照你当年画过的图纸重新建了一座。更结实了。"
+      },
+      {
+        "id": "h_e221",
+        "minLevel": 221,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的养生之法被编成了一本小册子。内容无非是早睡、素食、常走路。但能做到的人不多。"
+      },
+      {
+        "id": "h_e222",
+        "minLevel": 222,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你留下的那卷琴谱被人破译了最后一页。上面画着一座山和一道流水。没有人知道该怎么弹。"
+      },
+      {
+        "id": "h_e223",
+        "minLevel": 223,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人在山中看到了一只白鹤。它独自站在溪水里。走近时它飞走了，消失在云雾中。"
+      },
+      {
+        "id": "h_e224",
+        "minLevel": 224,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你当年种下的那片竹子已经长成了竹林。风穿过时会发出簌簌的声音。像在说话。"
+      },
+      {
+        "id": "h_e225",
+        "minLevel": 225,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "竹林里不知何时多了一座小小的竹亭。亭柱上刻着一行字：清风来故人。"
+      },
+      {
+        "id": "h_e226",
+        "minLevel": 226,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个失意的琴师来到山中。他对着溪水弹了一天一夜。走的时候他放下了他的琴。"
+      },
+      {
+        "id": "h_e227",
+        "minLevel": 227,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那把琴被挂在了茅屋的墙上。和你的琴并排放着。没有人去动它们。"
+      },
+      {
+        "id": "h_e228",
+        "minLevel": 228,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人说在山中听到了两个人的琴声。一唱一和。但山里只有他一个人。"
+      },
+      {
+        "id": "h_e229",
+        "minLevel": 229,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那棵银杏的种子被人带到了很远的地方。在另一片土地上生根发芽。你的故事也随之而去。"
+      },
+      {
+        "id": "h_e230",
+        "minLevel": 230,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一位将军路过此地。他进山看了看你的茅屋。出来时他对副将说，这里比战场更难征服。"
+      },
+      {
+        "id": "h_e231",
+        "minLevel": 231,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "将军在溪边坐了一夜。第二天天没亮就下山了。没有人知道他在想什么。"
+      },
+      {
+        "id": "h_e232",
+        "minLevel": 232,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的画像被挂在村口的祠堂里。画上的你坐在梅树下，膝上放着一张琴。"
+      },
+      {
+        "id": "h_e233",
+        "minLevel": 233,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "画像上的你永远是中年时的样子。其实你离开时已经很老了。但人们更喜欢记住你最好的模样。"
+      },
+      {
+        "id": "h_e234",
+        "minLevel": 234,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的忌讳很少。但你最不喜欢被人称作隐士。你说，我只是住在这里而已。"
+      },
+      {
+        "id": "h_e235",
+        "minLevel": 235,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "每年秋天，山上的红叶最好看的时候，会有人来你的墓前放一壶酒。"
+      },
+      {
+        "id": "h_e236",
+        "minLevel": 236,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那壶酒第二天就不见了。有人说是你喝了。有人说是山里的野鹿喝了。"
+      },
+      {
+        "id": "h_e237",
+        "minLevel": 237,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你留下的东西越来越少。但这座山因为你变得不同了。它不再是普通的山。"
+      },
+      {
+        "id": "h_e238",
+        "minLevel": 238,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人说你根本没有死。只是换了一个地方隐居。这种说法流传了很久。"
+      },
+      {
+        "id": "h_e239",
+        "minLevel": 239,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "不管你在不在，山都在那里。溪水都在流。你的故事都已经融进了这座山的草木之中。"
+      },
+      {
+        "id": "h_e240",
+        "minLevel": 240,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个少年读了你的诗，背起行囊进山了。他找了三天三夜，没有找到你的茅屋。"
+      },
+      {
+        "id": "h_e241",
+        "minLevel": 241,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "少年下山后对人说，他虽然没有找到茅屋，但他在山里听到了琴声。没有人相信他。"
+      },
+      {
+        "id": "h_e242",
+        "minLevel": 242,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "但少年从此变了一个人。不再浮躁了。他开始读书，开始安静地生活。"
+      },
+      {
+        "id": "h_e243",
+        "minLevel": 243,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人说，那琴声是真的。因为每一个真正想寻找你的人，都能在山中听到若有若无的曲子。"
+      },
+      {
+        "id": "h_e244",
+        "minLevel": 244,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的事迹被收录进了地方志。篇幅不长。编撰者说，这个人一生没做什么大事。但他活成了一座山。"
+      },
+      {
+        "id": "h_e245",
+        "minLevel": 245,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你被刻在了那座山崖上。不是你的名字，是你画过的一幅山水。风雨侵蚀后，越来越像真的山了。"
+      },
+      {
+        "id": "h_e246",
+        "minLevel": 246,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山下的村子改了一个名字。改名为梅溪村。因为村后的山上有梅树和溪水。"
+      },
+      {
+        "id": "h_e247",
+        "minLevel": 247,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "梅溪村的孩子们从小就听着你的故事长大。每个孩子都知道山上有过一个弹琴的人。"
+      },
+      {
+        "id": "h_e248",
+        "minLevel": 248,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有一个孩子真的学会了弹琴。他用的就是你的曲子。他第一次弹的时候，整个村子都安静了下来。"
+      },
+      {
+        "id": "h_e249",
+        "minLevel": 249,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那孩子后来成了有名的琴师。他说，他的师父没有教过他一天琴。他只是听过大山里的曲子。"
+      },
+      {
+        "id": "h_e250",
+        "minLevel": 250,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那座凉亭被山风吹倒了。村里人又原地重建了一座。木料更新了，样式和从前一样。"
+      },
+      {
+        "id": "h_e251",
+        "minLevel": 251,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人提议在山上建一座庙来纪念你。村里老人说，不必了。他若在，会不高兴的。"
+      },
+      {
+        "id": "h_e252",
+        "minLevel": 252,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那些诗被谱成了曲。没有琴，只是用口哨吹。在山谷中回荡时，别有一番味道。"
+      },
+      {
+        "id": "h_e253",
+        "minLevel": 253,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人用你教的草药方子治好了多年的顽疾。他逢人便说，山中的那位是真神医。"
+      },
+      {
+        "id": "h_e254",
+        "minLevel": 254,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你那个静字的石刻在风化了。字迹越来越淡。有人想重新描一遍，又怕描坏了。"
+      },
+      {
+        "id": "h_e255",
+        "minLevel": 255,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "最后决定不描了。就让它在风中慢慢消失。你说过，什么都不必刻意留下。"
+      },
+      {
+        "id": "h_e256",
+        "minLevel": 256,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个诗人来到山中。他住了一个月。临走时写下了一首诗。诗里有一句：此山无主人，草木皆故人。"
+      },
+      {
+        "id": "h_e257",
+        "minLevel": 257,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那首诗成了新的名篇。很多人因为这首诗来到了这座山。"
+      },
+      {
+        "id": "h_e258",
+        "minLevel": 258,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山中的一切都没有变。变的只是来看山的人。你如果还在，大概会说，来不来都一样。"
+      },
+      {
+        "id": "h_e259",
+        "minLevel": 259,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你当年那把茶壶被一个收藏家买走了。他把它供在玻璃柜里。你若是知道，大概会笑出声来。"
+      },
+      {
+        "id": "h_e260",
+        "minLevel": 260,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那棵梅树还在。树干已经空了，但每年冬天依然开花。人们说这是奇迹。"
+      },
+      {
+        "id": "h_e261",
+        "minLevel": 261,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "生物学家说这很正常。村民们说，你不懂。"
+      },
+      {
+        "id": "h_e262",
+        "minLevel": 262,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事传到京城去了。皇帝听说后赞叹了一声。但也只是赞叹了一声。"
+      },
+      {
+        "id": "h_e263",
+        "minLevel": 263,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "皇帝想赐你一个谥号。但你已经不需要了。你的名字本身就是最好的称号。"
+      },
+      {
+        "id": "h_e264",
+        "minLevel": 264,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山中的那条溪水被检测出富含多种矿物质。有人说这是你的功劳。你活着的时候就已经知道了。"
+      },
+      {
+        "id": "h_e265",
+        "minLevel": 265,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你喝了一辈子的山泉水。这是你最奢侈的享受。"
+      },
+      {
+        "id": "h_e266",
+        "minLevel": 266,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那条竹杖被一代代传了下去。每一个接手的人都会抚摸它很久。它能感受到手掌的温度。"
+      },
+      {
+        "id": "h_e267",
+        "minLevel": 267,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的棋谱被发现了。夹在山居笔记的封皮里。最后一局是你和山腰老人的那盘残局。"
+      },
+      {
+        "id": "h_e268",
+        "minLevel": 268,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有棋手研究了一生也没有破解那局棋。后来有人发现，那局棋根本就没有下完。它不需要被下完。"
+      },
+      {
+        "id": "h_e269",
+        "minLevel": 269,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个远方的访客来到茅屋。他看到了墙上那把琴。他问能不能弹一下。管理员摇了摇头。"
+      },
+      {
+        "id": "h_e270",
+        "minLevel": 270,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "访客没有弹到琴，但他坐在琴前闭着眼睛坐了一会儿。他说，我听到了。"
+      },
+      {
+        "id": "h_e271",
+        "minLevel": 271,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那幅烟雨图被鉴定为真迹。它被小心地裱起来，在博物馆里展出。你画它的时候只是随手之作。"
+      },
+      {
+        "id": "h_e272",
+        "minLevel": 272,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在画上题了一句诗：山在烟雨中，人在山水中。这句话被很多人引用。"
+      },
+      {
+        "id": "h_e273",
+        "minLevel": 273,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事被编入了课本。孩子们在课堂上学习你的诗。老师问，你觉得他为什么住在山里。"
+      },
+      {
+        "id": "h_e274",
+        "minLevel": 274,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "每个孩子的答案都不一样。老师说，都对。"
+      },
+      {
+        "id": "h_e275",
+        "minLevel": 275,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个百岁老人说，他小时候见过你。那时你已经很老了。他说你给过他一块麦芽糖。"
+      },
+      {
+        "id": "h_e276",
+        "minLevel": 276,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他记得你的笑容。他说，那个人的眼睛很干净，像山里的溪水。"
+      },
+      {
+        "id": "h_e277",
+        "minLevel": 277,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的茅屋每年都有人来修葺。换几片瓦，补一补墙。没有人愿意让它倒塌。"
+      },
+      {
+        "id": "h_e278",
+        "minLevel": 278,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "四季在你曾经走过的地方流转。春天野花，夏天蝉鸣，秋天红叶，冬天雪。"
+      },
+      {
+        "id": "h_e279",
+        "minLevel": 279,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一只新的白鹤住进了山谷。它在溪边筑了巢。没有人知道它从哪里来。"
+      },
+      {
+        "id": "h_e280",
+        "minLevel": 280,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "它不怕人。有时会走近茅屋，伸长脖子往里看。管理员说，它在找人。"
+      },
+      {
+        "id": "h_e281",
+        "minLevel": 281,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的琴谱被翻译成了多种文字。外国人看了之后说，这不仅是琴谱，这是哲学。"
+      },
+      {
+        "id": "h_e282",
+        "minLevel": 282,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "外国人来到山中寻找你住过的地方。他们不太理解为什么一个人可以在一个地方待一辈子。"
+      },
+      {
+        "id": "h_e283",
+        "minLevel": 283,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "但他们在溪边坐了一会儿之后，好像有一点明白了。山不需要理由。"
+      },
+      {
+        "id": "h_e284",
+        "minLevel": 284,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事被拍成了纪录片。导演尽量拍得朴素。你是不会喜欢花哨的东西的。"
+      },
+      {
+        "id": "h_e285",
+        "minLevel": 285,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "纪录片播出后，进山的人多了几倍。管理员不得不在路口设了一个牌子：请安静。"
+      },
+      {
+        "id": "h_e286",
+        "minLevel": 286,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有些人在山中大声喧哗。管理员说，如果他在，大概会把你们赶下山去。"
+      },
+      {
+        "id": "h_e287",
+        "minLevel": 287,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "大多数人还是安静的。他们坐在溪边，坐在凉亭里，什么也不做。"
+      },
+      {
+        "id": "h_e288",
+        "minLevel": 288,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "进山的人越来越多。但山还是那座山。它见过很多人，也送走了很多人。"
+      },
+      {
+        "id": "h_e289",
+        "minLevel": 289,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那座凉亭被坐得发亮的木凳见证了无数人的沉思。它沉默不语。"
+      },
+      {
+        "id": "h_e290",
+        "minLevel": 290,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个年轻人在这里坐了一整天。太阳落山时他站起来，给凉亭鞠了一躬。"
+      },
+      {
+        "id": "h_e291",
+        "minLevel": 291,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那把竹杖被一个作家借去。他用它写了一本书。书里说，这根竹子曾经撑起过一个世界。"
+      },
+      {
+        "id": "h_e292",
+        "minLevel": 292,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人说你并没有留下什么。但更多人觉得你已经留下了一切。"
+      },
+      {
+        "id": "h_e293",
+        "minLevel": 293,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你弹过的曲子被录了下来。那是一个安静的午后，有人用现代设备重新录制了秋风词。"
+      },
+      {
+        "id": "h_e294",
+        "minLevel": 294,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "听过录音的人说，那不仅仅是琴声。那是山的声音。"
+      },
+      {
+        "id": "h_e295",
+        "minLevel": 295,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "城里的一个抑郁症患者被家人送到了山中。他在茅屋旁边住了半个月。"
+      },
+      {
+        "id": "h_e296",
+        "minLevel": 296,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他离开时说，这里有一种说不出的治愈力。管理员说，是的，他一直在这里。"
+      },
+      {
+        "id": "h_e297",
+        "minLevel": 297,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的山居笔记出版了。编辑保留了原汁原味，连那些错字都没改。"
+      },
+      {
+        "id": "h_e298",
+        "minLevel": 298,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "读者来信说，读完这本书，好像也住在山里了一段时间。"
+      },
+      {
+        "id": "h_e299",
+        "minLevel": 299,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在笔记里写过一个方子，治疗失眠的。很简单：热水泡脚，听溪水声。"
+      },
+      {
+        "id": "h_e300",
+        "minLevel": 300,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "很多失眠的人试了。大部分都说有效。其实有效的不是方子，是安静下来的心。"
+      },
+      {
+        "id": "h_e301",
+        "minLevel": 301,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山上的野茶树被繁殖了很多。你当年的那几株茶苗，现在已经遍布了整片山坡。"
+      },
+      {
+        "id": "h_e302",
+        "minLevel": 302,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "村里用这些茶叶做了一款茶，叫隐者茶。你没有给它取过名字，但这个名字也不错。"
+      },
+      {
+        "id": "h_e303",
+        "minLevel": 303,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "喝过的人说，这茶有一股松烟味。有人说那就是山的气息。"
+      },
+      {
+        "id": "h_e304",
+        "minLevel": 304,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那块坐忘石被越坐越光滑了。坐在上面很舒服。有人一坐就是一天。"
+      },
+      {
+        "id": "h_e305",
+        "minLevel": 305,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个道士来到坐忘石上打坐。他说这里的气很好。你如果在，大概会说，气一直都在。"
+      },
+      {
+        "id": "h_e306",
+        "minLevel": 306,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你用过的那方砚台被研墨师修复了。它又能研出很好的墨了。"
+      },
+      {
+        "id": "h_e307",
+        "minLevel": 307,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "研墨师说，这块砚台里有山魂。他舍不得卖。把它留在了自己的书桌上。"
+      },
+      {
+        "id": "h_e308",
+        "minLevel": 308,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "每年清明都有人来你的墓前扫墓。不是你的后人。是一些不认识但记得你的人。"
+      },
+      {
+        "id": "h_e309",
+        "minLevel": 309,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他们也不做什么。拔拔草，擦擦石头，放一束花。然后站在墓前沉默一会儿。"
+      },
+      {
+        "id": "h_e310",
+        "minLevel": 310,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "银杏树的叶子被孩子们捡去做书签。他们把叶子夹在课本里，读书时能闻到一丝清香。"
+      },
+      {
+        "id": "h_e311",
+        "minLevel": 311,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那首秋风词被改编成了合唱曲。在学校里演出时，很多家长听红了眼眶。"
+      },
+      {
+        "id": "h_e312",
+        "minLevel": 312,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "没有一个学生理解这首曲子为什么让人想哭。但他们都认真唱完了。"
+      },
+      {
+        "id": "h_e313",
+        "minLevel": 313,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个作家住在你的茅屋里写了一部小说。小说里的隐者不是你，但每个人都说那就是你。"
+      },
+      {
+        "id": "h_e314",
+        "minLevel": 314,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "小说很畅销。作家把一部分版税捐给了村子，用来维护那座茅屋。"
+      },
+      {
+        "id": "h_e315",
+        "minLevel": 315,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "村里的孩子在学校里学到的一首古诗就是你写的。老师问作者是谁，孩子们异口同声说出了你的名字。"
+      },
+      {
+        "id": "h_e316",
+        "minLevel": 316,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那只白鹤又出现了。这次它带着一只小白鹤。它们一起在溪边散步。"
+      },
+      {
+        "id": "h_e317",
+        "minLevel": 317,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "村里人说，那是你的鹤回来了。没有人反驳。有些事不需要证据。"
+      },
+      {
+        "id": "h_e318",
+        "minLevel": 318,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你当年写在石板上的字被拓印了下来。字迹已经很淡了。但风骨还在。"
+      },
+      {
+        "id": "h_e319",
+        "minLevel": 319,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "拓片被装裱后挂在县衙的大堂里。县太爷说，每次看到这几个字，心就会静下来。"
+      },
+      {
+        "id": "h_e320",
+        "minLevel": 320,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的草药方子被整理成了册。村医说你留下的方子比任何医书都实用。"
+      },
+      {
+        "id": "h_e321",
+        "minLevel": 321,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "城里的大医院也引用了你的几个方子。他们用现代科技验证后说，确实有效。"
+      },
+      {
+        "id": "h_e322",
+        "minLevel": 322,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你没有行医执照。但你治好了很多人。他们说，你的药里有一味东西是买不到的。"
+      },
+      {
+        "id": "h_e323",
+        "minLevel": 323,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那种东西叫用心。你给每个人看病时都很用心。"
+      },
+      {
+        "id": "h_e324",
+        "minLevel": 324,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的医术被写进了地方医学史。篇幅不多。但提到你时用了大医精诚四个字。"
+      },
+      {
+        "id": "h_e325",
+        "minLevel": 325,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "村里的老人说，你当年救过一个难产的妇人。用了一味很普通的草药，但火候掌握得恰到好处。"
+      },
+      {
+        "id": "h_e326",
+        "minLevel": 326,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那个妇人的孙子后来成了村里的医生。他说，我爷爷的命是山上那位救的。"
+      },
+      {
+        "id": "h_e327",
+        "minLevel": 327,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事被画成了连环画。孩子们很喜欢看。画里的你总是坐在梅树下。"
+      },
+      {
+        "id": "h_e328",
+        "minLevel": 328,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "连环画的最后一页是你站在山巅望着远方。配文是：他去了更远的地方。"
+      },
+      {
+        "id": "h_e329",
+        "minLevel": 329,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个外国的哲学家来到山中。他在茅屋里住了一周。走时他说，这里有一种他寻找了很久的东西。"
+      },
+      {
+        "id": "h_e330",
+        "minLevel": 330,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他问管理员那东西叫什么。管理员想了想说，叫平常心。"
+      },
+      {
+        "id": "h_e331",
+        "minLevel": 331,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你留下的那把茶壶被复制了很多。仿品遍布全国。但据说只有原壶泡出的茶有松烟香。"
+      },
+      {
+        "id": "h_e332",
+        "minLevel": 332,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "科学无法解释这件事。人们也不想解释。有些东西本来就不需要解释。"
+      },
+      {
+        "id": "h_e333",
+        "minLevel": 333,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那把琴被专家鉴定为唐代古木所制。你当年削它的时候以为只是普通桐木。"
+      },
+      {
+        "id": "h_e334",
+        "minLevel": 334,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你用一把唐代古木做的琴弹了一辈子秋风词。琴不在乎，你也不在乎。"
+      },
+      {
+        "id": "h_e335",
+        "minLevel": 335,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那根竹杖被一个著名收藏家出高价收购。村里拒绝了。他们说这是山里的东西。"
+      },
+      {
+        "id": "h_e336",
+        "minLevel": 336,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "竹杖被放在了村博物馆里。玻璃柜中的它看起来就像一根普通的竹杖。但它不是。"
+      },
+      {
+        "id": "h_e337",
+        "minLevel": 337,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个盲人来到博物馆，请求摸了摸那根竹杖。他摸着摸着就哭了。"
+      },
+      {
+        "id": "h_e338",
+        "minLevel": 338,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他说，这根竹杖知道路。人们没有说话。他们知道他在说什么。"
+      },
+      {
+        "id": "h_e339",
+        "minLevel": 339,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那棵梅树被列为国家保护植物。不是因为品种稀有，是因为它见证了一段时光。"
+      },
+      {
+        "id": "h_e340",
+        "minLevel": 340,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "保护牌上写着树龄。但那不是真实的年龄。它在你的故事里活了更久。"
+      },
+      {
+        "id": "h_e341",
+        "minLevel": 341,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有商人想开发这座山做旅游区。村民们集体反对。他们说，山上的那个人不会答应的。"
+      },
+      {
+        "id": "h_e342",
+        "minLevel": 342,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "开发计划被搁置了。山还是那座山。路还是那条路。你住过的地方还是安静的。"
+      },
+      {
+        "id": "h_e343",
+        "minLevel": 343,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "村里人自发组织了护山队。他们的职责不是巡逻。是劝阻大声喧哗的人。"
+      },
+      {
+        "id": "h_e344",
+        "minLevel": 344,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "护山队的成员都是从小听你故事长大的。他们说，这是我们的责任。"
+      },
+      {
+        "id": "h_e345",
+        "minLevel": 345,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的名字被刻在一块粗糙的石头上。石头在山路旁。不仔细看就错过了。"
+      },
+      {
+        "id": "h_e346",
+        "minLevel": 346,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "但每一个看到它的人都会停下来。好像听到了一声遥远的招呼。"
+      },
+      {
+        "id": "h_e347",
+        "minLevel": 347,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个年轻人在这里停下来大哭了一场。没有人去打扰他。山包容了一切。"
+      },
+      {
+        "id": "h_e348",
+        "minLevel": 348,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "后来他成了一个安静的人。他每年都来山里住几天。他说，这是充电。"
+      },
+      {
+        "id": "h_e349",
+        "minLevel": 349,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事里从来没有激烈的冲突。但你的人生让很多人感到了力量。"
+      },
+      {
+        "id": "h_e350",
+        "minLevel": 350,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那种力量不是从斗争中来的。是从放下中来的。你什么都没做，却改变了很多。"
+      },
+      {
+        "id": "h_e351",
+        "minLevel": 351,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你留下的那卷琴谱被印成了书。序言里写着一句话：他弹的不是琴，是山。"
+      },
+      {
+        "id": "h_e352",
+        "minLevel": 352,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人在网上发帖说，这座山改变了我的人生。底下有很多人回复说，我也是。"
+      },
+      {
+        "id": "h_e353",
+        "minLevel": 353,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你如果在世大概不会上网。但你如果在世也不需要上网。你已经有了最好的生活。"
+      },
+      {
+        "id": "h_e354",
+        "minLevel": 354,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山林里的动物越来越多。白鹤又来了。这次它带了一群同伴。它们在溪水里排成一排。"
+      },
+      {
+        "id": "h_e355",
+        "minLevel": 355,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人说，那是你回来了。管理员笑了笑说，他一直都在。"
+      },
+      {
+        "id": "h_e356",
+        "minLevel": 356,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的铜像被立在了山口。不是政府立的。是受过你帮助的村民们集资立的。"
+      },
+      {
+        "id": "h_e357",
+        "minLevel": 357,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "铜像不大。你坐在石头上，膝盖上放着一卷书。神态安详。"
+      },
+      {
+        "id": "h_e358",
+        "minLevel": 358,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "铜像的底座上刻着一行字：他在这里住过。没有名字。不需要名字。"
+      },
+      {
+        "id": "h_e359",
+        "minLevel": 359,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "每天都有游客和铜像合影。你在的话应该会躲开。但你走不了。你已经是山的一部分了。"
+      },
+      {
+        "id": "h_e360",
+        "minLevel": 360,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那棵银杏的叶子被收集起来，做成了一幅巨大的拼贴画。画的是你的背影。"
+      },
+      {
+        "id": "h_e361",
+        "minLevel": 361,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那幅画挂在村委会的大厅里。来访的人都问，这是谁。村里人说，山上住过的人。"
+      },
+      {
+        "id": "h_e362",
+        "minLevel": 362,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那座凉亭被画进了很多人的画里。每一个画家的风格不同，但亭子永远是那个亭子。"
+      },
+      {
+        "id": "h_e363",
+        "minLevel": 363,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人把凉亭画成了红色。但你的凉亭是原木色的。画家说，那是他心里的颜色。"
+      },
+      {
+        "id": "h_e364",
+        "minLevel": 364,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你住过的茅屋被收录进了中国民居图鉴。照片里的茅屋很朴素。和你的性格一样。"
+      },
+      {
+        "id": "h_e365",
+        "minLevel": 365,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的诗被翻译成了英文。外国读者说，这是一个中国版瓦尔登湖的故事。"
+      },
+      {
+        "id": "h_e366",
+        "minLevel": 366,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "但你没有读过瓦尔登湖。你读的只是山和溪水和那卷古琴谱。"
+      },
+      {
+        "id": "h_e367",
+        "minLevel": 367,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个外国女孩来到山中，在那棵梅树下拉了一首小提琴曲。琴声和你的琴声混在了一起。"
+      },
+      {
+        "id": "h_e368",
+        "minLevel": 368,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "她拉完后说，这里有一种说不清的东西。管理员说，他听到了。"
+      },
+      {
+        "id": "h_e369",
+        "minLevel": 369,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事被做成了一款手机应用。内容是每天推送一句你的诗。下载量很大。"
+      },
+      {
+        "id": "h_e370",
+        "minLevel": 370,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你如果在世肯定不用手机。但你的诗能让人暂时放下手机，这也许是好事。"
+      },
+      {
+        "id": "h_e371",
+        "minLevel": 371,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "村里建了一间小小的书院。书架上全是你的书和关于你的书。读者可以随便取阅。"
+      },
+      {
+        "id": "h_e372",
+        "minLevel": 372,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "书院里有一面留言墙。上面写满了来访者的感受。最多的两个字是谢谢。"
+      },
+      {
+        "id": "h_e373",
+        "minLevel": 373,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那把竹杖被借走了很多次。但每次都会回来。它会陪伴需要它的人一段路。"
+      },
+      {
+        "id": "h_e374",
+        "minLevel": 374,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个作家在茅屋里完成了一本书。他说，这里的安静让他的文字变得干净了。"
+      },
+      {
+        "id": "h_e375",
+        "minLevel": 375,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他在书的扉页写了一句：献给山中的那个人。"
+      },
+      {
+        "id": "h_e376",
+        "minLevel": 376,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山里的小溪被检测出含有某种稀有的矿物质。专家说这可能就是长寿的秘诀。"
+      },
+      {
+        "id": "h_e377",
+        "minLevel": 377,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "村民笑了。他们说，不是因为水好。是因为这里没有让人烦恼的事。"
+      },
+      {
+        "id": "h_e378",
+        "minLevel": 378,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你留下的那方砚台在拍卖会上拍出了高价。买家把它捐给了博物馆。"
+      },
+      {
+        "id": "h_e379",
+        "minLevel": 379,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "博物馆的说明牌上写着：此砚台曾为山中隐者所用。简洁。像你的风格。"
+      },
+      {
+        "id": "h_e380",
+        "minLevel": 380,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那座山被评为了国家森林公园。不是因为风景特别美。是因为这里有一种特别的气息。"
+      },
+      {
+        "id": "h_e381",
+        "minLevel": 381,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "评审专家说，这里的能量场很平和。他一进来就感觉到了。"
+      },
+      {
+        "id": "h_e382",
+        "minLevel": 382,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你如果在世大概会对这些称号一笑了之。山不需要被评定。山就是山。"
+      },
+      {
+        "id": "h_e383",
+        "minLevel": 383,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "但在你的影响下，这座山被保护得很好。没有人敢在这里乱砍乱伐。"
+      },
+      {
+        "id": "h_e384",
+        "minLevel": 384,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山上的古树越来越多。它们安静地生长。像你当年一样。"
+      },
+      {
+        "id": "h_e385",
+        "minLevel": 385,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事被一个有名的导演看中。他想拍一部电影。村民说，别拍得太热闹了。"
+      },
+      {
+        "id": "h_e386",
+        "minLevel": 386,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "导演答应了。他的电影拍得很安静。全片没有几句台词。但放映时观众都很安静。"
+      },
+      {
+        "id": "h_e387",
+        "minLevel": 387,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "电影获奖了。导演在领奖时说，感谢那座山和山上住过的人。"
+      },
+      {
+        "id": "h_e388",
+        "minLevel": 388,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "更多人因为电影来到了这座山。但他们都遵守着山里的规矩：安静地来，安静地去。"
+      },
+      {
+        "id": "h_e389",
+        "minLevel": 389,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那只白鹤又生了几只小白鹤。它们在溪水里学捕鱼。像你当年学生活一样笨拙。"
+      },
+      {
+        "id": "h_e390",
+        "minLevel": 390,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "新来的白鹤一点也不怕人。它们已经习惯了这座山上的安静访客。"
+      },
+      {
+        "id": "h_e391",
+        "minLevel": 391,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的梅树在一场暴风雨中被吹断了一根大枝。但它活过来了。第二年伤口处长出了新芽。"
+      },
+      {
+        "id": "h_e392",
+        "minLevel": 392,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "村民们把那根断枝做成了几支笔。笔杆上刻着你的名字。写出的字仿佛也有了几分风骨。"
+      },
+      {
+        "id": "h_e393",
+        "minLevel": 393,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的琴谱被现代音乐家重新演绎了。用交响乐的方式。你如果听到也许会觉得太吵。"
+      },
+      {
+        "id": "h_e394",
+        "minLevel": 394,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "但有一个乐章是寂静。那一分钟里什么乐器都没有。只有呼吸声。那是整部曲子最好的部分。"
+      },
+      {
+        "id": "h_e395",
+        "minLevel": 395,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那座山被收录进了一本世界静修圣地指南。和它并列的是各地的寺庙和道场。"
+      },
+      {
+        "id": "h_e396",
+        "minLevel": 396,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "指南上写：这不是宗教场所。这是一个人的家。他在这里度过了平静的一生。"
+      },
+      {
+        "id": "h_e397",
+        "minLevel": 397,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个压力巨大的企业家来到山中。他在你的墓前坐了一个下午。下山时他把手机留在了山里。"
+      },
+      {
+        "id": "h_e398",
+        "minLevel": 398,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他说，他不准备回去了。他在山脚下开了一间茶馆。过起了半隐居的生活。"
+      },
+      {
+        "id": "h_e399",
+        "minLevel": 399,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "茶馆里的茶是你当年喝的那种野茶。他把茶卖给过往的客人。故事讲给愿意听的人。"
+      },
+      {
+        "id": "h_e400",
+        "minLevel": 400,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "茶馆的墙上挂着一幅字，是你写的：吃茶去。那是一句很平常的话。但每个看到的人都会安静一会儿。"
+      },
+      {
+        "id": "h_e401",
+        "minLevel": 401,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那座山已经成为了一个象征。但山自己并不知道。它已经被你影响了太多。"
+      },
+      {
+        "id": "h_e402",
+        "minLevel": 402,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的铜像前经常有人放一枚松果。不知道是孩子们放的还是松鼠放的。"
+      },
+      {
+        "id": "h_e403",
+        "minLevel": 403,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个青年画家在山上画了一整年。他画了春夏秋冬四幅长卷。每一幅里都有一个弹琴的人影。"
+      },
+      {
+        "id": "h_e404",
+        "minLevel": 404,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人问他那个人影是谁。他说，谁知道呢。也许是我自己。"
+      },
+      {
+        "id": "h_e405",
+        "minLevel": 405,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那条隐者路两旁的野花越来越多。每年春天像一条彩色的河流淌在山间。"
+      },
+      {
+        "id": "h_e406",
+        "minLevel": 406,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个植物学家说这不符合自然分布规律。村民说，我们这里的事情不能用规律解释。"
+      },
+      {
+        "id": "h_e407",
+        "minLevel": 407,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那把古琴被列入国家一级文物。知道后你一定很不自在。它只是一把琴而已。"
+      },
+      {
+        "id": "h_e408",
+        "minLevel": 408,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "但琴说不了话。它只能安静地待在玻璃柜里。等着下一个能弹响它的人。"
+      },
+      {
+        "id": "h_e409",
+        "minLevel": 409,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的山居笔记被反复出版。每一版都有不同的序言。你如果在世大概只会说，不要写那么多。"
+      },
+      {
+        "id": "h_e410",
+        "minLevel": 410,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "但人们愿意写。因为你的文字确实给了一些人安慰。像山中溪水一样。"
+      },
+      {
+        "id": "h_e411",
+        "minLevel": 411,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一位将军退休后来到了山中。他在你住过的地方结庐而居。人们称他为第二任山主。"
+      },
+      {
+        "id": "h_e412",
+        "minLevel": 412,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "将军说，他打了一辈子仗，最后在这里找到了平静。他很感激你。"
+      },
+      {
+        "id": "h_e413",
+        "minLevel": 413,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "将军学会了弹琴。他弹的也是秋风词。只是总也弹不出你那个味道。"
+      },
+      {
+        "id": "h_e414",
+        "minLevel": 414,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他说，不是你弹得好。是你活得好。"
+      },
+      {
+        "id": "h_e415",
+        "minLevel": 415,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "将军在山上住了十年。他走后也埋在了梅树下。那棵梅树下的空间越来越小了。"
+      },
+      {
+        "id": "h_e416",
+        "minLevel": 416,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "村里人说，梅树下的位置是留给真正的山居者的。不是每个人都能埋在那里。"
+      },
+      {
+        "id": "h_e417",
+        "minLevel": 417,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的名字被用于命名了一条小行星。天文台说，那颗星很安静，不和其他星体争辉。"
+      },
+      {
+        "id": "h_e418",
+        "minLevel": 418,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你成了一颗星星。但你知道自己只是一粒尘埃。不过是一粒自由自在的尘埃。"
+      },
+      {
+        "id": "h_e419",
+        "minLevel": 419,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "茅屋旁边那棵银杏已经需要好几个人才能合抱了。它的树冠覆盖了半个院子。"
+      },
+      {
+        "id": "h_e420",
+        "minLevel": 420,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "秋天时满地金黄的落叶。管理员舍不得扫。那是山一年中最美的时刻。"
+      },
+      {
+        "id": "h_e421",
+        "minLevel": 421,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的诗集被翻译成几十种语言。一个外国读者说，她读完后辞掉了工作，去乡下种地了。"
+      },
+      {
+        "id": "h_e422",
+        "minLevel": 422,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人骂你的诗教人逃避。但更多的人说，逃避和选择是不一样的。你是选择了另一种生活。"
+      },
+      {
+        "id": "h_e423",
+        "minLevel": 423,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个教授写了一本关于你生活哲学的专著。你如果读到大概会打瞌睡。生活不需要被研究。"
+      },
+      {
+        "id": "h_e424",
+        "minLevel": 424,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "但教授的书很有用。帮助了很多困在都市里的人。虽然是间接的。"
+      },
+      {
+        "id": "h_e425",
+        "minLevel": 425,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山中的泉水被装瓶出售了。名字就叫山居。瓶子上印着一句你的诗。"
+      },
+      {
+        "id": "h_e426",
+        "minLevel": 426,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "公司给你所谓的版权费。村里代你收下了。用于维护山上的步道和凉亭。"
+      },
+      {
+        "id": "h_e427",
+        "minLevel": 427,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你当年随手画的一幅兰花图被鉴定了。是真的。它在拍卖会上被拍出了天价。"
+      },
+      {
+        "id": "h_e428",
+        "minLevel": 428,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你如果知道自己的随手之作值这么多钱，大概会再多画几张。用来修路。"
+      },
+      {
+        "id": "h_e429",
+        "minLevel": 429,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山里来了一个年轻人。他带着一把和二胡。他说他想在这里拉一首曲子给你听。"
+      },
+      {
+        "id": "h_e430",
+        "minLevel": 430,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他在梅树下拉了一首二泉映月。凄美动人。拉完后他哭了很久。"
+      },
+      {
+        "id": "h_e431",
+        "minLevel": 431,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "后来他每年都来。梅树下成了他的专属演奏台。听众多是山中的飞鸟和走兽。"
+      },
+      {
+        "id": "h_e432",
+        "minLevel": 432,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人问他为什么哭。他说，他也不知道。就是觉得这座山懂他。"
+      },
+      {
+        "id": "h_e433",
+        "minLevel": 433,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那块坐忘石被磨出了一个人形的凹痕。那是无数人坐过的痕迹。"
+      },
+      {
+        "id": "h_e434",
+        "minLevel": 434,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "每一个坐上去的人都感觉它正好契合自己的身体。像是为你量身定做的。"
+      },
+      {
+        "id": "h_e435",
+        "minLevel": 435,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那是山用时间做成的椅子。你坐了。他也坐了。它还会坐很久。"
+      },
+      {
+        "id": "h_e436",
+        "minLevel": 436,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那座山被列入世界文化遗产预备名录。理由不是风景，是文化意义。"
+      },
+      {
+        "id": "h_e437",
+        "minLevel": 437,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你说过，山不需要被记住。但人们需要记住一种活着的方式。"
+      },
+      {
+        "id": "h_e438",
+        "minLevel": 438,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事被写进了当地的乡土教材。每个孩子都要读。他们读的时候，山就在窗外。"
+      },
+      {
+        "id": "h_e439",
+        "minLevel": 439,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "教材的最后一课是课后作业：去山上坐一会儿。什么也不用想。"
+      },
+      {
+        "id": "h_e440",
+        "minLevel": 440,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山中的溪水依然在流。和你在的时候一样。和你不在了以后也一样。它还会流很久。"
+      },
+      {
+        "id": "h_e441",
+        "minLevel": 441,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "白鹤的后代已经不知道这里曾经住过一个弹琴的人。它们只是习惯性地走近茅屋。"
+      },
+      {
+        "id": "h_e442",
+        "minLevel": 442,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "也许它们能感觉到什么。动物比人敏感。它们能闻到和平的味道。"
+      },
+      {
+        "id": "h_e443",
+        "minLevel": 443,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那句吃茶去被刻在了茶壶上。很多茶壶。每个喝茶的人都能看到。"
+      },
+      {
+        "id": "h_e444",
+        "minLevel": 444,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个满腹心事的人看到后放下了茶杯。他说，是啊，先吃茶。"
+      },
+      {
+        "id": "h_e445",
+        "minLevel": 445,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那把竹杖又回来了。这次是一个年轻人送回来的。他说他走过了很多路，最后还是觉得这根竹杖最合手。"
+      },
+      {
+        "id": "h_e446",
+        "minLevel": 446,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他把竹杖放回了原处。他走的时候步履轻快。他不再需要它了。"
+      },
+      {
+        "id": "h_e447",
+        "minLevel": 447,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "梅树在一年春天突然没有开花。村民们很担心。林业专家说它太老了。"
+      },
+      {
+        "id": "h_e448",
+        "minLevel": 448,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "但第二年春天，它又开花了。比以往任何一年都茂盛。专家无法解释。"
+      },
+      {
+        "id": "h_e449",
+        "minLevel": 449,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "村民们说，它只是在休息。它又不是人，不需要每年都开花。"
+      },
+      {
+        "id": "h_e450",
+        "minLevel": 450,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山中的一切都在继续。你走了以后，山还是山。但山已经不再是原来的山了。"
+      },
+      {
+        "id": "h_e451",
+        "minLevel": 451,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事已经被传了很多代。有些细节变了。但核心没有变。一个普通人住在一座普通的山里。"
+      },
+      {
+        "id": "h_e452",
+        "minLevel": 452,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "人们需要这样的故事。在纷乱的世界上，知道还有人过着另一种生活。"
+      },
+      {
+        "id": "h_e453",
+        "minLevel": 453,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个离开山村多年的游子回来了。他在你的铜像前站了很久。他说，谢谢你还在这里。"
+      },
+      {
+        "id": "h_e454",
+        "minLevel": 454,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他在外面打拼累了。回到山里开了一家民宿。他说，我想让你当年接待迷路书生的温暖继续下去。"
+      },
+      {
+        "id": "h_e455",
+        "minLevel": 455,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "民宿的院子里也种了一棵梅树。他说，等你开花的时候，记得叫我来喝茶。"
+      },
+      {
+        "id": "h_e456",
+        "minLevel": 456,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那句名言被刻在了村口的牌坊上：心静自然凉。夏天时很多人看着它，好像真的凉快了一些。"
+      },
+      {
+        "id": "h_e457",
+        "minLevel": 457,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一间茶室以你的号命名。茶室不卖茶。茶免费。只收故事。"
+      },
+      {
+        "id": "h_e458",
+        "minLevel": 458,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "老板说，你当年也没有收过诊金。他也不想收茶钱。故事是最好的报酬。"
+      },
+      {
+        "id": "h_e459",
+        "minLevel": 459,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人讲了一个关于你的新故事。说你曾经救过一只坠崖的幼鹿。没有人知道真假。但大家愿意相信是真的。"
+      },
+      {
+        "id": "h_e460",
+        "minLevel": 460,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "关于你的故事越来越多。有些你听了都会惊讶。但都是善意的。所以你不介意。"
+      },
+      {
+        "id": "h_e461",
+        "minLevel": 461,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个作家在山中住了一年。他写了一本书叫《山中无日月》。副标题是：和他做邻居的日子。"
+      },
+      {
+        "id": "h_e462",
+        "minLevel": 462,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "书里写的大部分是想象。但读的人都觉得十分真实。也许真正的你没有那么重要。重要的是每个人心中的你。"
+      },
+      {
+        "id": "h_e463",
+        "minLevel": 463,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "梅树下的那壶酒又被放了一壶。这次是一个年轻人放的。他考上大学后特意回来感谢你。"
+      },
+      {
+        "id": "h_e464",
+        "minLevel": 464,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他在压力最大的时候来过一次山里。回去后他学会了调整自己的节奏。他说是你教他的。"
+      },
+      {
+        "id": "h_e465",
+        "minLevel": 465,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山中的雾气依然变幻莫测。有些人走进雾里就再也没有出来。他们不是迷路了。是留下来了。"
+      },
+      {
+        "id": "h_e466",
+        "minLevel": 466,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山上多了一个新的茅屋。是一对年轻夫妇建的。他们说想过你那样的生活。哪怕只有一年。"
+      },
+      {
+        "id": "h_e467",
+        "minLevel": 467,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他们真的住了一年。每天种菜、砍柴、弹琴。一年后他们下山了。带着山里的气息。"
+      },
+      {
+        "id": "h_e468",
+        "minLevel": 468,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他们说，这一年比他们过去十年都活得充实。山教会了他们一些东西。"
+      },
+      {
+        "id": "h_e469",
+        "minLevel": 469,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他们下山后开了一家工作室。教人做木工和陶艺。手艺是在山上自学的。"
+      },
+      {
+        "id": "h_e470",
+        "minLevel": 470,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他们的工作室里放着一把琴。是根据你的琴谱做的。他们说，是山给了他们灵感。"
+      },
+      {
+        "id": "h_e471",
+        "minLevel": 471,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事传到了海外。一个外国画家专程飞来。在茅屋前画了三天。他画的是茅屋上空的那片云。"
+      },
+      {
+        "id": "h_e472",
+        "minLevel": 472,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他说，这片云在他来之前就已经等他很久了。他相信这是真的。"
+      },
+      {
+        "id": "h_e473",
+        "minLevel": 473,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那座凉亭被换过一次柱子。新柱子和旧柱子看起来一样。但摸上去的温度不同。"
+      },
+      {
+        "id": "h_e474",
+        "minLevel": 474,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "老柱子被做成了几块小木牌。上面刻着山居两个字。游客可以请一块回家。"
+      },
+      {
+        "id": "h_e475",
+        "minLevel": 475,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那些木牌被带到了世界各地。每一块都带着一点山的气息。"
+      },
+      {
+        "id": "h_e476",
+        "minLevel": 476,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一位老奶奶在生命的最后几个月里来到了山里。她每天坐在凉亭里看云。"
+      },
+      {
+        "id": "h_e477",
+        "minLevel": 477,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "她说，她年轻时就想来山里住。但一直没来。现在终于来了。"
+      },
+      {
+        "id": "h_e478",
+        "minLevel": 478,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "她在山上度过了最后的日子。安详得像一片落叶。家人在梅树下撒了她的一部分骨灰。"
+      },
+      {
+        "id": "h_e479",
+        "minLevel": 479,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "现在梅树下不仅有隐者和将军。还有一个终于实现了愿望的老奶奶。"
+      },
+      {
+        "id": "h_e480",
+        "minLevel": 480,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那棵梅树的根已经扎得很深很深。它连接着那些安睡在它脚下的人。"
+      },
+      {
+        "id": "h_e481",
+        "minLevel": 481,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的山居笔记中有一页写的是：今天无事。这是最好的一天。"
+      },
+      {
+        "id": "h_e482",
+        "minLevel": 482,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那一页被单独拍了下来。很多人用它做手机壁纸。提醒自己今天无事。"
+      },
+      {
+        "id": "h_e483",
+        "minLevel": 483,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山中的发展很慢。这是村民们刻意保持的。你当年走过的路还是那条路。"
+      },
+      {
+        "id": "h_e484",
+        "minLevel": 484,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "路边新长了一棵小树。不知道是什么品种。它自己决定要在那里生长的。"
+      },
+      {
+        "id": "h_e485",
+        "minLevel": 485,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个孩子问，山上那位老爷爷去哪里了。大人说，他没有走。他在山里。"
+      },
+      {
+        "id": "h_e486",
+        "minLevel": 486,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "孩子不太明白。但他每次上山时都会大声喊一句：我来了。好像在跟你打招呼。"
+      },
+      {
+        "id": "h_e487",
+        "minLevel": 487,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你如果在世大概会对他笑笑。然后继续喝你的茶。"
+      },
+      {
+        "id": "h_e488",
+        "minLevel": 488,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山中的时间过得很慢。这里的一天好像比山外的一天长一些。也许是因为安静。"
+      },
+      {
+        "id": "h_e489",
+        "minLevel": 489,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的故事还会被传下去。传给你不认识的人。传到你去不了的地方。"
+      },
+      {
+        "id": "h_e490",
+        "minLevel": 490,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "这就是一个人在世上留下最好的方式。不是被记住。是被活出来。"
+      },
+      {
+        "id": "h_e491",
+        "minLevel": 491,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你生前没有留下什么豪言壮语。但你留下了一座山。和一座山的生活方式。"
+      },
+      {
+        "id": "h_e492",
+        "minLevel": 492,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人在山中迷失后又找到了自己。有人说这里治愈了他们的焦虑。你只是安静地存在着。"
+      },
+      {
+        "id": "h_e493",
+        "minLevel": 493,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "不需要做任何事。存在本身就已经足够。"
+      },
+      {
+        "id": "h_e494",
+        "minLevel": 494,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山中的溪水依然在石头上流过。如果你把耳朵贴上去，能听到它在低语。"
+      },
+      {
+        "id": "h_e495",
+        "minLevel": 495,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "它的低语会被风带进茅屋。如果茅屋空着，它就在空椅子上打个转。然后离开。"
+      },
+      {
+        "id": "h_e496",
+        "minLevel": 496,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那间茅屋偶尔会有琴声传出来。不是真的有人弹琴。是风穿过琴弦的声音。"
+      },
+      {
+        "id": "h_e497",
+        "minLevel": 497,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "但路过的人都说，那是山在弹琴。他们停下脚步听完一曲。然后继续走自己的路。"
+      },
+      {
+        "id": "h_e498",
+        "minLevel": 498,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的那把琴已经很久没有被人弹过了。它习惯了沉默。沉默也是一种音乐。"
+      },
+      {
+        "id": "h_e499",
+        "minLevel": 499,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "梅树今年又开了花。一朵朵粉白色的花在枝头。没有人折。它们会自己落下来。"
+      },
+      {
+        "id": "h_e500",
+        "minLevel": 500,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "花瓣落在溪水上，顺着水流飘走。飘到山外去了。山里的消息，就这样被带到了远方。"
+      }
+    ],
+    "holidayEvents": [
+      {
+        "holidayId": "new_year",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山下传来隐约的爆竹声。你才想起又到了一年的尽头。你在门上贴了一张红纸，上面写了一个福字。"
+      },
+      {
+        "holidayId": "new_year",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "新年的第一缕阳光照进茅屋。你煮了一壶新茶，对着朝阳举了举杯。"
+      },
+      {
+        "holidayId": "valentine",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你发现山下的镇上今天格外热闹。年轻男女都在买花。你在山中采了一束野花，插在陶瓶里。"
+      },
+      {
+        "holidayId": "valentine",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "情人节。你给白鹤编了一个花环戴在它脖子上。它走起路来昂首挺胸的。"
+      },
+      {
+        "holidayId": "women_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你想起了山下的那些妇女。她们坚韧得像山上的野花。你采了些草要，准备明天送给村中的老妇人。"
+      },
+      {
+        "holidayId": "women_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "妇女节。你把采来的草药分给了村里的妇女们。她们笑着说，山中的先生最体贴人。"
+      },
+      {
+        "holidayId": "white_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你用山中的白石头磨了一枚小小的平安扣。准备送给常来看你的那个孩子。"
+      },
+      {
+        "holidayId": "white_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "白色情人节。你把平安扣挂在了那孩子的脖子上。他高兴地跑下山去，像一阵风。"
+      },
+      {
+        "holidayId": "april_fools",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "明天是愚人节。你那顽皮的徒弟说要跟你开一个玩笑。你假装没听见，嘴角却忍不住上扬。"
+      },
+      {
+        "holidayId": "april_fools",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的茶壶里被人换成了盐水。你喝了一口，面不改色地说，今年的新茶味道很特别。徒弟憋不住先笑了。"
+      },
+      {
+        "holidayId": "earth_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你清理了溪水中的一些枯枝败叶。让水流通得更顺畅。你对山说，不客气。"
+      },
+      {
+        "holidayId": "earth_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "地球日。你在院子里种了一棵新的小树。你对它说，好好长。"
+      },
+      {
+        "holidayId": "labor_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "明天是劳动节。你开始修整菜地的篱笆。该换的换，该补的补。"
+      },
+      {
+        "holidayId": "labor_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "劳动节。你在菜地里忙了一整天。傍晚时坐在凉亭里喝了一碗绿豆汤。舒畅。"
+      },
+      {
+        "holidayId": "childrens_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在山上采了一些野果，用竹篮装好。准备明天送给村里的孩子们。"
+      },
+      {
+        "holidayId": "childrens_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "孩子们收到野果高兴得不得了。他们围着你叫山爷爷。你摸摸他们的头，心里暖暖的。"
+      },
+      {
+        "holidayId": "environment_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你注意到山上的鸟儿比去年多了。生态在变好。你非常高兴。"
+      },
+      {
+        "holidayId": "environment_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "环境日。你沿着山路捡了一天的垃圾。下山时手中的袋子装满了。"
+      },
+      {
+        "holidayId": "peace_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山中日日都是和平的。但你还是在门前挂了一串风铃。风来时叮叮当当的，像在祈福。"
+      },
+      {
+        "holidayId": "peace_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "和平日。你弹了一首和平颂。琴声在山谷中回荡。白鹤和松鼠都安静地听着。"
+      },
+      {
+        "holidayId": "halloween",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山下的孩子在准备一个奇怪的节日。你不太懂，但他们看起来很高兴。"
+      },
+      {
+        "holidayId": "halloween",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "几个孩子穿着奇装异服上山来要糖。你给他们每人分了一块麦芽糖。他们欢呼着跑下山去。"
+      },
+      {
+        "holidayId": "christmas_eve",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你听说山外的人在过一个叫平安夜的节日。你在屋前点了一盏油灯。照亮夜路。"
+      },
+      {
+        "holidayId": "christmas_eve",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "平安夜。你在灯下抄写了一卷心经。不是为了祈福。只是觉得这样的夜晚适合写字。"
+      },
+      {
+        "holidayId": "christmas",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你用松枝编了一个花环，挂在门上。山中的节日不需要太多装饰。一点绿意就够了。"
+      },
+      {
+        "holidayId": "christmas",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "圣诞节。你收到了一张从山外寄来的贺卡。是一个你曾治过病的人寄的。你把它夹在了书里。"
+      },
+      {
+        "holidayId": "new_year_eve",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你打扫了茅屋，把一年的灰尘都扫出门外。旧的一年即将过去。"
+      },
+      {
+        "holidayId": "new_year_eve",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "跨年夜。山下灯火通明。你在山顶上看着那些光。然后转身回屋，关上了门。"
+      },
+      {
+        "holidayId": "spring_festival",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你磨了一方新墨，裁了几张红纸。准备写几副春联。字虽然不怎么样，心意是好的。"
+      },
+      {
+        "holidayId": "spring_festival",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "春节。你给茅屋贴上了春联。上联是山青水秀，下联是心静人安。横批：自在。"
+      },
+      {
+        "holidayId": "lantern_festival",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你用竹篾和宣纸做了一盏灯笼。画了一枝梅花在上面。"
+      },
+      {
+        "holidayId": "lantern_festival",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "元宵节。你提着灯笼在山路上走了一圈。远远看去，像一颗移动的星星。"
+      },
+      {
+        "holidayId": "dragon_boat",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山下的河边在准备龙舟赛。你站在高处远远看了一眼。喧闹是你的，你只要安静。"
+      },
+      {
+        "holidayId": "dragon_boat",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "端午节。你用山中的箬叶包了粽子，馅是红豆和野栗子。简单。好吃。"
+      },
+      {
+        "holidayId": "qixi",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "夜空中银河横贯。你坐在凉亭里看着牛郎织女星。一年一会。比人间的缘分长久多了。"
+      },
+      {
+        "holidayId": "qixi",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "七夕。你采了两朵并蒂的野花，放在溪水里。让它们顺着水流漂向远方。"
+      },
+      {
+        "holidayId": "zhongyuan",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山中的雾气在傍晚格外重。你点了一盏灯，放在溪边。为那些找不到路的人。"
+      },
+      {
+        "holidayId": "zhongyuan",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "中元节。你烧了一些纸钱。不是给谁的。只是觉得这个节日应该做这件事。"
+      },
+      {
+        "holidayId": "mid_autumn",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "月亮一天比一天圆。你每晚都会在院子里看一会儿。等它最圆的那天。"
+      },
+      {
+        "holidayId": "mid_autumn",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "中秋节。你在院子里摆了一壶茶和一块月饼。月亮很圆。你对着月亮敬了一杯茶。"
+      },
+      {
+        "holidayId": "double_ninth",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你爬上最高的那座山头。视野开阔。秋高气爽。你深吸了一口气。"
+      },
+      {
+        "holidayId": "double_ninth",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "重阳节。你登高望远。看到远处的山峦层层叠叠。你想起很多年前你也这样看过。"
+      },
+      {
+        "holidayId": "qingming",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你整理了一下白鹤的墓。拔了拔周围的杂草。春天到了。万物复苏。"
+      },
+      {
+        "holidayId": "qingming",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "清明。你给梅树下的故人们摆了一壶茶。雨丝细细地飘下来。你在雨中站了一会儿。"
+      },
+      {
+        "holidayId": "easter",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山中的野兔多了起来。你在菜地周围加固了篱笆。不是为了防它们，是防自己不小心踩到它们的窝。"
+      },
+      {
+        "holidayId": "easter",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "复活节。你在草丛中发现了一窝野兔崽。你轻轻地用干草盖好它们。生命总是让人感动。"
+      },
+      {
+        "holidayId": "mothers_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你想起了你的母亲。她在你很小的时候就走了。你在梅树下放了一朵花。"
+      },
+      {
+        "holidayId": "mothers_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "母亲节。你给山下的那位老母亲送了一包补药。她握着你的手，说了很多感谢的话。"
+      },
+      {
+        "holidayId": "fathers_day",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你修好了茅屋的窗户。父亲教过你一些木工活。你一边修一边想起他的样子。"
+      },
+      {
+        "holidayId": "fathers_day",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "父亲节。你坐在凉亭里，给自己倒了一杯酒。敬了敬天上的父亲。"
+      },
+      {
+        "holidayId": "thanksgiving",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你清点了今年的收成。菜地、野茶、柴火。够过冬了。你心怀感激。"
+      },
+      {
+        "holidayId": "thanksgiving",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 1,
+        "once": true,
+        "text": "感恩节。你坐在院子里晒着太阳。你数了数这一年的好日子。发现每一天都挺好的。"
+      }
+    ],
+    "achievements": [
+      {
+        "id": "h_a001",
+        "name": "入山",
+        "desc": "达到等级 5",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 5
+        }
+      },
+      {
+        "id": "h_a002",
+        "name": "寻幽",
+        "desc": "达到等级 10",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 10
+        }
+      },
+      {
+        "id": "h_a003",
+        "name": "安居",
+        "desc": "达到等级 20",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 20
+        }
+      },
+      {
+        "id": "h_a004",
+        "name": "山居客",
+        "desc": "达到等级 40",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 40
+        }
+      },
+      {
+        "id": "h_a005",
+        "name": "茅庐主",
+        "desc": "达到等级 60",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 60
+        }
+      },
+      {
+        "id": "h_a006",
+        "name": "山中贤",
+        "desc": "达到等级 90",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 90
+        }
+      },
+      {
+        "id": "h_a007",
+        "name": "抚琴人",
+        "desc": "达到等级 120",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 120
+        }
+      },
+      {
+        "id": "h_a008",
+        "name": "采药翁",
+        "desc": "达到等级 160",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 160
+        }
+      },
+      {
+        "id": "h_a009",
+        "name": "世外高人",
+        "desc": "达到等级 200",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 200
+        }
+      },
+      {
+        "id": "h_a010",
+        "name": "逍遥子",
+        "desc": "达到等级 250",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 250
+        }
+      },
+      {
+        "id": "h_a011",
+        "name": "山中仙",
+        "desc": "达到等级 300",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 300
+        }
+      },
+      {
+        "id": "h_a012",
+        "name": "归元",
+        "desc": "达到等级 400",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 400
+        }
+      },
+      {
+        "id": "h_a013",
+        "name": "化境",
+        "desc": "达到等级 500",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 500
+        }
+      },
+      {
+        "id": "h_a014",
+        "name": "第一时辰",
+        "desc": "运行满 1 小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 3600000
+        }
+      },
+      {
+        "id": "h_a015",
+        "name": "半日闲",
+        "desc": "运行满 12 小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 43200000
+        }
+      },
+      {
+        "id": "h_a016",
+        "name": "山中一日",
+        "desc": "运行满 24 小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 86400000
+        }
+      },
+      {
+        "id": "h_a017",
+        "name": "两日静坐",
+        "desc": "运行满 48 小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 172800000
+        }
+      },
+      {
+        "id": "h_a018",
+        "name": "三日忘归",
+        "desc": "运行满 72 小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 259200000
+        }
+      },
+      {
+        "id": "h_a019",
+        "name": "七日禅",
+        "desc": "运行满 7 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 604800000
+        }
+      },
+      {
+        "id": "h_a020",
+        "name": "半月居",
+        "desc": "运行满 14 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 1209600000
+        }
+      },
+      {
+        "id": "h_a021",
+        "name": "月度山民",
+        "desc": "运行满 30 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 2592000000
+        }
+      },
+      {
+        "id": "h_a022",
+        "name": "两月尘外",
+        "desc": "运行满 60 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 5184000000
+        }
+      },
+      {
+        "id": "h_a023",
+        "name": "季中客",
+        "desc": "运行满 90 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 7776000000
+        }
+      },
+      {
+        "id": "h_a024",
+        "name": "五季",
+        "desc": "运行满 150 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 12960000000
+        }
+      },
+      {
+        "id": "h_a025",
+        "name": "半年山中",
+        "desc": "运行满 180 天",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 15552000000
+        }
+      },
+      {
+        "id": "h_a026",
+        "name": "初闻",
+        "desc": "触发 5 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 5
+        }
+      },
+      {
+        "id": "h_a027",
+        "name": "山间偶拾",
+        "desc": "触发 10 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 10
+        }
+      },
+      {
+        "id": "h_a028",
+        "name": "听闻",
+        "desc": "触发 15 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 15
+        }
+      },
+      {
+        "id": "h_a029",
+        "name": "谷中回声",
+        "desc": "触发 25 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 25
+        }
+      },
+      {
+        "id": "h_a030",
+        "name": "林间知音",
+        "desc": "触发 35 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 35
+        }
+      },
+      {
+        "id": "h_a031",
+        "name": "山中见闻",
+        "desc": "触发 50 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 50
+        }
+      },
+      {
+        "id": "h_a032",
+        "name": "采风者",
+        "desc": "触发 75 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 75
+        }
+      },
+      {
+        "id": "h_a033",
+        "name": "山中日记",
+        "desc": "触发 100 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 100
+        }
+      },
+      {
+        "id": "h_a034",
+        "name": "百事知",
+        "desc": "触发 130 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 130
+        }
+      },
+      {
+        "id": "h_a035",
+        "name": "山水长卷",
+        "desc": "触发 180 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 180
+        }
+      },
+      {
+        "id": "h_a036",
+        "name": "山居笔记",
+        "desc": "触发 250 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 250
+        }
+      },
+      {
+        "id": "h_a037",
+        "name": "山中岁月",
+        "desc": "触发 350 个不同事件",
+        "icon": "★",
+        "condition": {
+          "type": "events",
+          "value": 350
+        }
+      },
+      {
+        "id": "h_a038",
+        "name": "初入山门",
+        "desc": "解锁 3 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 3
+        }
+      },
+      {
+        "id": "h_a039",
+        "name": "五重山径",
+        "desc": "解锁 5 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 5
+        }
+      },
+      {
+        "id": "h_a040",
+        "name": "林间漫步",
+        "desc": "解锁 8 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 8
+        }
+      },
+      {
+        "id": "h_a041",
+        "name": "十步一景",
+        "desc": "解锁 10 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 10
+        }
+      },
+      {
+        "id": "h_a042",
+        "name": "山居收藏",
+        "desc": "解锁 12 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 12
+        }
+      },
+      {
+        "id": "h_a043",
+        "name": "隐者留名",
+        "desc": "解锁 15 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 15
+        }
+      },
+      {
+        "id": "h_a044",
+        "name": "山巅之上",
+        "desc": "解锁 18 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 18
+        }
+      },
+      {
+        "id": "h_a045",
+        "name": "二十峰",
+        "desc": "解锁 20 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 20
+        }
+      },
+      {
+        "id": "h_a046",
+        "name": "寻隐者",
+        "desc": "解锁 22 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 22
+        }
+      },
+      {
+        "id": "h_a047",
+        "name": "山中无甲子",
+        "desc": "解锁 25 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 25
+        }
+      },
+      {
+        "id": "h_a048",
+        "name": "松下问童子",
+        "desc": "解锁 27 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 27
+        }
+      },
+      {
+        "id": "h_a049",
+        "name": "云深不知处",
+        "desc": "解锁 28 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 28
+        }
+      },
+      {
+        "id": "h_a050",
+        "name": "只在此山中",
+        "desc": "解锁全部 30 个称号",
+        "icon": "★",
+        "condition": {
+          "type": "titles",
+          "value": 30
+        }
+      }
+    ]
+  },
+  {
     "id": "starfield",
     "name": "Starfield",
     "name_cn": "星际拓荒",
