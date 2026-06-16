@@ -96,6 +96,14 @@ function registerSelectorIpcHandlers(app) {
   });
 
   ipcMain.handle('get-initial-state', () => {
+    // Refresh pet list from pet.cjs before returning
+    try {
+      const petModule = require('./pet.cjs');
+      if (petModule && petModule.refreshPetList) {
+        const result = petModule.refreshPetList(appRef);
+        return result;
+      }
+    } catch {}
     return { pets: currentPetList, selected: selectedPetIndex };
   });
 

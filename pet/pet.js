@@ -150,7 +150,11 @@ function loadSpritesheet(b64,ext,cfg){
   img.src=`data:image/${ext==='.png'?'png':'webp'};base64,${b64}`;
 }
 function loadPet(idx){
-  if(idx<0||idx>=pets.length)return;
+  if(idx<0||idx>=pets.length){
+    spritesheet=null;
+    infoText.textContent='暂无宠物，请放入精灵图';
+    return;
+  }
   window.pet.invoke('get-pet-spritesheet',{index:idx}).then(r=>{if(r)loadSpritesheet(r.data,r.ext,r.config||null);}).catch(()=>{});
 }
 
@@ -165,6 +169,7 @@ function updateExpBar(){
   expDetail.textContent=`${Math.floor(e)} / ${nr} (${rounded}%)`;
 }
 function updateInfoBar(){
+  if(!spritesheet){infoText.textContent='暂无宠物，请放入精灵图';return;}
   const title=gameInfo.title&&gameInfo.title!=='—'?gameInfo.title:'';
   const dl=gameInfo.isInHub?(gameInfo.hubLevel||1):(gameInfo.level||1);
   infoText.textContent=title?`${gameInfo.scenario} | LV.${dl} | ${title}`:`${gameInfo.scenario} | LV.${dl}`;
@@ -189,7 +194,8 @@ document.addEventListener('mousemove',e=>{if(!dragging)return;const dx=Math.abs(
 document.addEventListener('mouseup',()=>{if(dragging){dragging=false;window.pet.invoke('pet-drag-end').catch(()=>{});}});
 
 // ── Interactions ──
-canvas.addEventListener('click',()=>{if(!dragMoved)transitionTo('wave');});
+const CLICK_ANIMS=['wave','review','extra1','extra2'];
+canvas.addEventListener('click',()=>{if(!dragMoved)transitionTo(CLICK_ANIMS[Math.floor(Math.random()*CLICK_ANIMS.length)]);});
 canvas.addEventListener('dblclick',e=>{e.preventDefault();if(!dragMoved){transitionTo('jump');window.pet.invoke('toggle-main-window').catch(()=>{});}});
 canvas.addEventListener('contextmenu',e=>{e.preventDefault();window.pet.invoke('show-context-menu').catch(()=>{});});
 
@@ -246,10 +252,11 @@ window.pet.invoke('pet-get-state').then(()=>updateInfoBar()).catch(()=>{});
 let expRafId=null;
 function expLoop(){updateExpBar();expRafId=requestAnimationFrame(expLoop);}
 expRafId=requestAnimationFrame(expLoop);
-// Random idle animation every 60s (10% chance)
+const IDLE_ANIMS=['failed','review','extra1','extra2'];
+// Random idle animation every 20s (30% chance)
 setInterval(() => {
-  if (curState === 'idle' && Math.random() < 0.1) {
-    transitionTo(Math.random() < 0.5 ? 'failed' : 'extra2');
+  if (curState === 'idle' && Math.random() < 0.3) {
+    transitionTo(IDLE_ANIMS[Math.floor(Math.random()*IDLE_ANIMS.length)]);
   }
-}, 60000);
+}, 20000);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='h')window.pet.invoke('hide-pet-window').catch(()=>{});});

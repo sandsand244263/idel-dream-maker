@@ -257,7 +257,14 @@ function initPet(app, selectedIndex) {
   initBubble(app, win);
   initContextMenu(app, win);
   sendToPet('pet-list', { pets: currentPetList, selected: selectedPetIndex });
+  sendToSelector('pet-list', { pets: currentPetList, selected: selectedPetIndex });
   return win;
+}
+
+function refreshPetList(app) {
+  scanPets(app);
+  sendToSelector('pet-list', { pets: currentPetList, selected: selectedPetIndex });
+  return { pets: currentPetList, selected: selectedPetIndex };
 }
 
 function broadcastTheme(theme, customTheme) {
@@ -270,4 +277,4 @@ function broadcastTheme(theme, customTheme) {
 
 function getSelectedPetIndex() { return selectedPetIndex; }
 
-module.exports = { scanPets, registerPetIpcHandlers, forwardToPet, showPetWindow, getPetWindow, togglePetWindow, initPet, broadcastTheme, getSelectedPetIndex, setOnPetSelected };
+module.exports = { scanPets, registerPetIpcHandlers, forwardToPet, showPetWindow, getPetWindow, togglePetWindow, initPet, refreshPetList, broadcastTheme, getSelectedPetIndex, setOnPetSelected };
