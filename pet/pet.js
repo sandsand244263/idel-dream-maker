@@ -102,7 +102,8 @@ offCtx.imageSmoothingEnabled = false;
 
 function drawSprite(col,row){
   if(!spritesheet)return;
-  offCtx.clearRect(0,0,120,140);
+  offCtx.fillStyle = '#0a0a0a';
+  offCtx.fillRect(0,0,120,140);
   offCtx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,120,140);
   ctx.drawImage(offscreen,0,0);
 }
