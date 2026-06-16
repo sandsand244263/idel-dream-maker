@@ -4132,6 +4132,7 @@
     "holidayEvents": [
       {
         "holidayId": "new_year",
+        "type": "day",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
@@ -4140,6 +4141,7 @@
       },
       {
         "holidayId": "valentine",
+        "type": "day",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
@@ -4148,6 +4150,7 @@
       },
       {
         "holidayId": "april_fools",
+        "type": "day",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
@@ -4156,6 +4159,7 @@
       },
       {
         "holidayId": "halloween",
+        "type": "day",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
@@ -4164,6 +4168,7 @@
       },
       {
         "holidayId": "christmas",
+        "type": "day",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
@@ -4172,6 +4177,7 @@
       },
       {
         "holidayId": "mid_autumn",
+        "type": "day",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
@@ -4180,6 +4186,7 @@
       },
       {
         "holidayId": "lantern_festival",
+        "type": "day",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,
@@ -4188,6 +4195,7 @@
       },
       {
         "holidayId": "childrens_day",
+        "type": "day",
         "minLevel": 1,
         "minHours": 0,
         "weight": 1,

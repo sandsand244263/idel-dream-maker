@@ -19,5 +19,8 @@
     "vite": "^6",
     "wait-on": "^8",
     "yaml": "^2.9.0"
+  },
+  "dependencies": {
+    "chinese-lunar-calendar": "^1.0.1"
   }
 }

@@ -173,12 +173,14 @@ function parseHolidayEvents(bodyLines) {
   const minhoursIdx = headers.indexOf('minhours');
   const weightIdx = headers.indexOf('weight');
   const onceIdx = headers.indexOf('once');
+  const typeIdx = headers.indexOf('type');
 
   const events = [];
   for (const row of rows.slice(1)) {
     if (row.length <= holidayIdIdx || row.length <= textIdx) continue;
     events.push({
       holidayId: row[holidayIdIdx].trim(),
+      type: typeIdx !== -1 ? row[typeIdx].trim().toLowerCase() : 'day',
       minLevel: minlevelIdx !== -1 ? parseInt(row[minlevelIdx], 10) || 1 : 1,
       minHours: minhoursIdx !== -1 ? parseInt(row[minhoursIdx], 10) || 0 : 0,
       weight: weightIdx !== -1 ? parseInt(row[weightIdx], 10) || 5 : 5,

@@ -5,7 +5,7 @@ const fs = require('fs');
 const { createMainWindow, getMainWindow } = require('./windows.cjs');
 const { createTray, setToolTip, getTray } = require('./tray.cjs');
 const { registerPetIpcHandlers, forwardToPet, initPet, broadcastTheme, setOnPetSelected } = require('./pet.cjs');
-const { getTodaysHolidayId, getHolidayName, getHolidayIcon, getHolidayEventFromScenario, getRandomHolidayEvent } = require('./holiday.cjs');
+const { getTodaysHolidayId, getUpcomingHolidayId, getHolidayName, getHolidayIcon, getHolidayEventFromScenario, getRandomHolidayEvent } = require('./holiday.cjs');
 
 let mainWindow = null;
 let tray = null;
@@ -178,11 +178,22 @@ function checkAndTriggerEvent() {
   else prob = 0.15;
 
   if (Math.random() < prob) {
-    // Check holiday events first
-    const holidayId = getTodaysHolidayId();
-    if (holidayId && Math.random() < 0.5) {
-      const he = getHolidayEventFromScenario(currentScenario, holidayId);
-      if (he) return { id: 'holiday_' + holidayId, title: he.holidayName, color: '#FFD700', text: he.text, isHoliday: true };
+    // Check holiday: 当天 first, then 临近
+    const todayHoliday = getTodaysHolidayId();
+    const upcomingHoliday = !todayHoliday ? getUpcomingHolidayId() : null;
+    const holidayInfo = todayHoliday || upcomingHoliday;
+
+    if (holidayInfo) {
+      const he = getHolidayEventFromScenario(currentScenario, holidayInfo.id, holidayInfo.type);
+      if (he) {
+        return {
+          id: 'holiday_' + holidayInfo.id,
+          title: he.holidayName,
+          color: '#FFD700',
+          text: he.text,
+          isHoliday: true,
+        };
+      }
     }
 
     const pool = currentScenario.events.filter(e => {
