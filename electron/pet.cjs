@@ -101,7 +101,7 @@ function createPetWindow(app) {
     width: 192,
     height: 210,
     frame: false,
-    backgroundColor: '#0a0a0a',
+    transparent: true,
     alwaysOnTop: true,
     show: true,
     resizable: true,
