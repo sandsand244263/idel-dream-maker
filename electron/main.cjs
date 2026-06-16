@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 const { createMainWindow, getMainWindow } = require('./windows.cjs');
-const { createTray, setToolTip, getTray } = require('./tray.cjs');
+const { createTray, setToolTip, getTray, updateMenu } = require('./tray.cjs');
 const { registerPetIpcHandlers, forwardToPet, initPet, broadcastTheme, setOnPetSelected } = require('./pet.cjs');
 const { getTodaysHolidayId, getUpcomingHolidayId, getHolidayName, getHolidayIcon, getHolidayEventFromScenario, getRandomHolidayEvent } = require('./holiday.cjs');
 
@@ -82,7 +82,7 @@ function createWindow() {
 } 
 
 function setupTray() {
-  tray = createTray(mainWindow);
+  tray = createTray(mainWindow, () => gameState.language);
 }
 
 function getAppDataPath() {
@@ -563,6 +563,8 @@ function registerIpcHandlers() {
 
   ipcMain.handle('set-language', (_, { lang }) => {
     gameState.language = lang;
+    forwardToPet('language-changed', { lang });
+    if (getTray) updateMenu();
     return true;
   });
 

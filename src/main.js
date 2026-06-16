@@ -2,48 +2,102 @@
 
 const LANG = {
   zh: {
+    // Hub
     hubWelcome: '欢迎回来', hubLevel: '大厅 Lv.', drawBtn: '+ 抽取副本',
-    drawPrompt: '抽到「{0}」— 输入该副本内的名称（留空用默认）',
-    enterPrompt: '进入「{0}」— 输入该副本内的名称（留空用默认）',
+    noScenarios: '暂无可用的副本', hubEmptyHint: '点击下方 [副本] 或 [+ 抽取副本] 开始，点击 [教程] 查看操作说明',
+    // Buttons
     btnMini: '宠物', btnBack: '大厅', btnScenario: '副本', btnTitles: '称号',
-    btnStatus: '状态', btnSettings: '设置', btnHide: '隐藏',
-    panelScenario: '副本选择', panelTitles: '称号一览', panelSettings: '设置', panelAbout: '状态',
-    labelVersion: '版本', labelPlayer: '玩家', labelScenario: '副本', labelLevel: '等级',
-    labelHubLevel: '大厅等级', labelTitle: '称号', labelRuntime: '时长', labelAchievement: '成就',
-    labelName: '名称', labelTheme: '主题', labelLanguage: '界面语言', labelAILanguage: 'AI 语言',
-    btnSave: '保存', eventHeader: '事件', achievementHeader: '成就解锁',
-    hubTitleEmpty: '尚无解锁称号', systemLoaded: '加载完成', systemInitFail: '初始化失败',
-    systemEnterFail: '进入副本失败', systemDrawFail: '抽取失败', systemBackFail: '返回失败',
+    btnSettings: '设置', btnTutorial: '教程',
+    // Panels
+    panelScenario: '副本选择', panelTitles: '称号一览', panelSettings: '设置',
+    // Settings
+    labelName: '名称', labelTheme: '主题', labelLanguage: '界面语言',
+    settingsSave: '保存', settingsThemeTitle: '主题', ctSave: '应用自定义配色',
+    // Events & Achievements
+    eventHeader: '事件', achievementHeader: '成就解锁',
+    // System messages
+    systemInitFail: '初始化失败', systemEnterFail: '进入副本失败',
+    systemDrawFail: '抽取失败', systemBackFail: '返回失败',
     systemLevelUp: '等级 {0}！{1}',
     systemEntered: '进入: {0}', systemDrew: '抽到并进入: {0}', systemBack: '返回大厅 — 大厅 Lv.{0}',
-    logStartHub: '启动完成',
-    logStartScenario: '已挂机 {0}，等级 {1}',
-    scenarioEvent: '事件', scenarioAchievement: '成就', statusHub: '（大厅）', statusNone: '-',
+    systemTitleEquipFail: '佩戴称号失败', systemTitleFetchFail: '获取大厅称号失败',
+    systemDetailFail: '获取副本详情失败', systemThemeFail: '切换主题失败',
+    // Log
+    logStartHub: '启动完成', logStartScenario: '已挂机 {0}，等级 {1}',
+    // Scenario cards
+    scenarioEvent: '事件', scenarioAchievement: '成就',
+    // Hub titles
+    hubTitleEmpty: '尚无解锁称号',
+    // Alias modal
     aliasTitle: '进入副本', aliasPlaceholder: '输入名称（留空用默认）',
+    enterPrompt: '进入「{0}」— 输入名称（留空用默认）',
     aliasCancel: '取消', aliasConfirm: '进入',
-    noScenarios: '暂无可用的副本',
+    // Confirm modal
+    confirmTitle: '返回大厅', confirmDesc: '确定返回大厅吗？副本进度将保留，经验累入全局等级。',
+    confirmCancel: '取消', confirmOk: '确定',
+    // Onboarding
+    obWelcome: '欢迎来到', obSubtitle: 'Idel-DreamMaker',
+    obDesc1: '藏在系统托盘里的宠物陪伴应用', obDesc2: '挂机升级 · 解锁称号与成就',
+    obDesc3: '触发故事事件——陪你度过每一刻',
+    obHow: '如何开始：', obStep1: '点击 [副本] 或 [+ 抽取副本] 选择一个故事世界',
+    obStep2: '进入后自动挂机，经验随时间增长', obStep3: '升级解锁称号，随机弹出故事事件',
+    obStep4: '随时点击 [大厅] 退出，经验累入全局等级',
+    obTip: '提示：宠物窗口常驻桌面，点击宠物可交互',
+    obName: '你的名称', obNamePlaceholder: '输入名称', obStart: '开始冒险',
+    // Debug panel
+    dbgEvent: '触发事件', dbgLevelup: '+10 级', dbgAchievement: '解锁成就',
+    dbgRuntime: '+1h', dbgHoliday: '节日事件',
+    // Status bar
+    statusHub: '（大厅）', statusNone: '-',
   },
   en: {
+    // Hub
     hubWelcome: 'Welcome back', hubLevel: 'Hub Lv.', drawBtn: '+ Draw Scenario',
-    drawPrompt: 'Drew "{0}" — Enter a name (leave empty for default)',
-    enterPrompt: 'Enter "{0}" — Enter a name (leave empty for default)',
+    noScenarios: 'No scenarios available', hubEmptyHint: 'Click [Scenarios] or [+ Draw Scenario] to start, click [Tutorial] for help',
+    // Buttons
     btnMini: 'Pet', btnBack: 'Hub', btnScenario: 'Scenarios', btnTitles: 'Titles',
-    btnStatus: 'Status', btnSettings: 'Settings', btnHide: 'Hide',
-    panelScenario: 'Scenarios', panelTitles: 'Titles', panelSettings: 'Settings', panelAbout: 'Status',
-    labelVersion: 'Version', labelPlayer: 'Player', labelScenario: 'Scenario', labelLevel: 'Level',
-    labelHubLevel: 'Hub Level', labelTitle: 'Title', labelRuntime: 'Runtime', labelAchievement: 'Achievements',
-    labelName: 'Name', labelTheme: 'Theme', labelLanguage: 'Language', labelAILanguage: 'AI Language',
-    btnSave: 'Save', eventHeader: 'Event', achievementHeader: 'Achievement',
-    hubTitleEmpty: 'No titles yet', systemLoaded: 'Ready', systemInitFail: 'Init failed',
-    systemEnterFail: 'Failed to enter', systemDrawFail: 'Draw failed', systemBackFail: 'Failed to return',
+    btnSettings: 'Settings', btnTutorial: 'Tutorial',
+    // Panels
+    panelScenario: 'Scenarios', panelTitles: 'Titles', panelSettings: 'Settings',
+    // Settings
+    labelName: 'Name', labelTheme: 'Theme', labelLanguage: 'Language',
+    settingsSave: 'Save', settingsThemeTitle: 'Theme', ctSave: 'Apply Custom Theme',
+    // Events & Achievements
+    eventHeader: 'Event', achievementHeader: 'Achievement',
+    // System messages
+    systemInitFail: 'Init failed', systemEnterFail: 'Failed to enter',
+    systemDrawFail: 'Draw failed', systemBackFail: 'Failed to return',
     systemLevelUp: 'Level {0}! {1}',
     systemEntered: 'Entered: {0}', systemDrew: 'Drew & entered: {0}', systemBack: 'Back to Hub — Hub Lv.{0}',
-    logStartHub: 'Ready',
-    logStartScenario: 'Running {0}, level {1}',
-    scenarioEvent: 'Events', scenarioAchievement: 'Achievements', statusHub: '(Hub)', statusNone: '-',
+    systemTitleEquipFail: 'Failed to equip title', systemTitleFetchFail: 'Failed to fetch titles',
+    systemDetailFail: 'Failed to load details', systemThemeFail: 'Failed to switch theme',
+    // Log
+    logStartHub: 'Ready', logStartScenario: 'Running {0}, level {1}',
+    // Scenario cards
+    scenarioEvent: 'Events', scenarioAchievement: 'Achievements',
+    // Hub titles
+    hubTitleEmpty: 'No titles yet',
+    // Alias modal
     aliasTitle: 'Enter Scenario', aliasPlaceholder: 'Enter a name (leave empty for default)',
+    enterPrompt: 'Enter "{0}" — Enter a name (leave empty for default)',
     aliasCancel: 'Cancel', aliasConfirm: 'Enter',
-    noScenarios: 'No scenarios available',
+    // Confirm modal
+    confirmTitle: 'Back to Hub', confirmDesc: 'Return to hub? Progress will be saved, exp added to global level.',
+    confirmCancel: 'Cancel', confirmOk: 'OK',
+    // Onboarding
+    obWelcome: 'Welcome to', obSubtitle: 'Idel-DreamMaker',
+    obDesc1: 'A desktop pet companion in your system tray', obDesc2: 'Idle · Level up · Unlock titles & achievements',
+    obDesc3: 'Trigger story events — accompany you every moment',
+    obHow: 'How to start:', obStep1: 'Click [Scenarios] or [+ Draw Scenario] to choose a world',
+    obStep2: 'Auto-idle once inside, EXP grows over time', obStep3: 'Level up to unlock titles and story events',
+    obStep4: 'Click [Hub] anytime to exit, exp adds to global level',
+    obTip: 'Tip: Pet window stays on desktop, click to interact',
+    obName: 'Your name', obNamePlaceholder: 'Enter name', obStart: 'Start Adventure',
+    // Debug panel
+    dbgEvent: 'Trigger Event', dbgLevelup: '+10 Lv', dbgAchievement: 'Unlock Achievement',
+    dbgRuntime: '+1h', dbgHoliday: 'Holiday',
+    // Status bar
+    statusHub: '(Hub)', statusNone: '-',
   },
 };
 
@@ -217,7 +271,7 @@ function renderHubCards() {
   if (!scenarioList) return;
   hubScenarioList.innerHTML = '';
   if (!scenarioList || scenarioList.length === 0) {
-    hubScenarioList.innerHTML = `<div class="hub-empty"><div class="hub-empty-icon">[ ~ ~ ]</div><div class="hub-empty-text">${t('noScenarios')}</div><div class="hub-empty-hint">点击下方 [副本] 或 [+ 抽取副本] 开始，点击 [教程] 查看操作说明</div></div>`;
+    hubScenarioList.innerHTML = `<div class="hub-empty"><div class="hub-empty-icon">[ ~ ~ ]</div><div class="hub-empty-text">${t('noScenarios')}</div><div class="hub-empty-hint">${t('hubEmptyHint')}</div></div>`;
     return;
   }
   scenarioList.forEach(s => {
@@ -236,7 +290,7 @@ hubDrawBtn.addEventListener('click', async () => {
 });
 
 btnBackHub.addEventListener('click', async () => {
-  const ok = await showConfirmModal('确定返回大厅吗？副本进度将保存，本次新增经验累入全局等级。');
+  const ok = await showConfirmModal(t('confirmDesc'));
   if (!ok) return;
   try { const r = await window.electron.invoke('exit-to-hub'); gameState.hub_total_exp = r.hubTotalExp; hubLevel = r.hubLevel; gameState.is_in_hub = true; switchView(true); renderHubView(); renderHubCards(); addLog('info', tf('systemBack', hubLevel)); updateUI(); lastRuntime = 0; } catch (e) { showToast(t('systemBackFail'), 'error'); }
 });
@@ -270,7 +324,7 @@ function updatePermaStatus() {
   const sc = currentScenario?.nameCN || 'Hub';
   const dl = gameState.is_in_hub ? `Hub Lv.${hubLevel}` : `Lv.${gameState.level}`;
   const title = currentTitle?.name || '?';
-  if (permaText) permaText.innerHTML = `${appVersion} | ${sc}<br>${dl} | ${title} | ${rt} | 成就:${ach}`;
+  if (permaText) permaText.innerHTML = `${appVersion} | ${sc}<br>${dl} | ${title} | ${rt} | ${t('scenarioAchievement')}:${ach}`;
 }
 
 let saveDotTimer = null;
@@ -324,7 +378,7 @@ achievementOverlay.addEventListener('animationend', () => {
 });
 achievementOverlay.addEventListener('click', () => { dismissAchievementOverlay(); if (achievementDismissTimer) clearTimeout(achievementDismissTimer); });
 
-btnScenario.addEventListener('click', async () => { try { scenarioList = await window.electron.invoke('get-scenario-list'); } catch (e) { showToast(`获取副本列表失败`, 'error'); } renderScenarioPanel(); scenarioPanel.classList.remove('hidden'); });
+btnScenario.addEventListener('click', async () => { try { scenarioList = await window.electron.invoke('get-scenario-list'); } catch (e) { showToast(t('systemDetailFail'), 'error'); } renderScenarioPanel(); scenarioPanel.classList.remove('hidden'); });
 btnTitles.addEventListener('click', () => { renderTitlesPanel(); titlesPanel.classList.remove('hidden'); });
 btnSettings.addEventListener('click', () => {
   settingsName.value = gameState?.player_name || '';
@@ -343,8 +397,8 @@ btnSettings.addEventListener('click', () => {
   settingsPanel.classList.remove('hidden');
 });
 settingsClose.addEventListener('click', () => settingsPanel.classList.add('hidden'));
-settingsNameSave.addEventListener('click', async () => { const n = settingsName.value.trim(); if (!n) return; try { await window.electron.invoke('set-player-name', { name: n }); if (gameState) gameState.player_name = n; renderHubView(); updateUI(); } catch (e) { showToast('保存名称失败', 'error'); } });
-settingsLanguage.addEventListener('change', async () => { const v = settingsLanguage.value; try { await window.electron.invoke('set-language', { lang: v }); if (gameState) gameState.language = v; applyLanguage(); renderHubView(); } catch (e) { showToast('切换语言失败', 'error'); } });
+settingsNameSave.addEventListener('click', async () => { const n = settingsName.value.trim(); if (!n) return; try { await window.electron.invoke('set-player-name', { name: n }); if (gameState) gameState.player_name = n; renderHubView(); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); } });
+settingsLanguage.addEventListener('change', async () => { const v = settingsLanguage.value; try { await window.electron.invoke('set-language', { lang: v }); if (gameState) gameState.language = v; applyLanguage(); renderHubView(); } catch (e) { showToast(t('systemInitFail'), 'error'); } });
 document.getElementById('btn-tutorial').addEventListener('click', async () => {
   if (onboardingInput) onboardingInput.value = gameState?.player_name || '';
   if (onboardingModal) onboardingModal.classList.remove('hidden');
@@ -412,7 +466,7 @@ async function selectTheme(id) {
     document.getElementById('ct-dim').value = t.dim; document.getElementById('ct-dim-text').value = t.dim;
     document.getElementById('ct-border').value = t.dim; document.getElementById('ct-border-text').value = t.dim;
   }
-  try { await window.electron.invoke('set-font-theme', { theme: id }); if (gameState) gameState.selected_font_theme = id; applyTheme(id); renderThemeSwatches(); } catch (e) { showToast('切换主题失败', 'error'); }
+  try { await window.electron.invoke('set-font-theme', { theme: id }); if (gameState) gameState.selected_font_theme = id; applyTheme(id); renderThemeSwatches(); } catch (e) { showToast(t('systemThemeFail'), 'error'); }
 }
 
 document.getElementById('ct-save').addEventListener('click', async () => {
@@ -420,7 +474,7 @@ document.getElementById('ct-save').addEventListener('click', async () => {
   const bg = document.getElementById('ct-bg-text').value;
   const dim = document.getElementById('ct-dim-text').value;
   const border = document.getElementById('ct-border-text').value;
-  try { await window.electron.invoke('set-custom-theme', { fg, bg, dim, border }); if (gameState) { gameState.selected_font_theme = 'custom'; } applyTheme('custom'); renderThemeSwatches(); } catch (e) { showToast('应用自定义主题失败', 'error'); }
+  try { await window.electron.invoke('set-custom-theme', { fg, bg, dim, border }); if (gameState) { gameState.selected_font_theme = 'custom'; } applyTheme('custom'); renderThemeSwatches(); } catch (e) { showToast(t('systemThemeFail'), 'error'); }
 });
 
 function applyTheme(id) {
@@ -433,7 +487,10 @@ function applyTheme(id) {
     document.documentElement.style.setProperty('--border', ct.border || ct.dim);
   }
 }
-function applyLanguage() { document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); }); }
+function applyLanguage() {
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+}
 
 function renderScenarioPanel() {
   scenarioListEl.innerHTML = ''; const cid = gameState?.scenario_id;
@@ -450,17 +507,17 @@ titlesClose.addEventListener('click', () => titlesPanel.classList.add('hidden'))
 async function renderTitlesPanel() {
   titlesListEl.innerHTML = '';
   if (gameState?.is_in_hub) {
-    try { const ht = await window.electron.invoke('get-hub-titles'); ht.forEach(s => { const g = document.createElement('div'); g.className = 'hub-title-group'; const sm = document.createElement('div'); sm.className = 'hub-title-summary'; sm.innerHTML = `▶ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>`; const bd = document.createElement('div'); bd.className = 'hub-title-body hidden'; (s.unlockedTitles.length ? s.unlockedTitles : [t('hubTitleEmpty')]).forEach(n => { const it = document.createElement('div'); it.className = 'title-item'; it.innerHTML = `<span class="title-name" style="color:var(--fg)">${n}</span>`; bd.appendChild(it); }); sm.addEventListener('click', () => { bd.classList.toggle('hidden'); sm.innerHTML = bd.classList.contains('hidden') ? `▶ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>` : `▼ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>`; }); g.appendChild(sm); g.appendChild(bd); titlesListEl.appendChild(g); }); } catch (e) { showToast('获取大厅称号失败', 'error'); } return;
+    try { const ht = await window.electron.invoke('get-hub-titles'); ht.forEach(s => { const g = document.createElement('div'); g.className = 'hub-title-group'; const sm = document.createElement('div'); sm.className = 'hub-title-summary'; sm.innerHTML = `▶ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>`; const bd = document.createElement('div'); bd.className = 'hub-title-body hidden'; (s.unlockedTitles.length ? s.unlockedTitles : [t('hubTitleEmpty')]).forEach(n => { const it = document.createElement('div'); it.className = 'title-item'; it.innerHTML = `<span class="title-name" style="color:var(--fg)">${n}</span>`; bd.appendChild(it); }); sm.addEventListener('click', () => { bd.classList.toggle('hidden'); sm.innerHTML = bd.classList.contains('hidden') ? `▶ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>` : `▼ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>`; }); g.appendChild(sm); g.appendChild(bd); titlesListEl.appendChild(g); }); } catch (e) { showToast(t('systemTitleFetchFail'), 'error'); } return;
   }
-  try { const d = await window.electron.invoke('get-scenario-detail', { id: gameState?.scenario_id }); const cur = gameState?.equipped_title_index ?? 0; d.titles.forEach((t, idx) => { const u = t.level <= gameState.level; const eq = u && idx === cur; const it = document.createElement('div'); it.className = `title-item${u ? '' : ' locked'}${eq ? ' equipped' : ''}`; it.innerHTML = `<span class="title-level">Lv.${t.level}</span><span class="title-name" style="color:${u ? t.color : 'var(--dim)'}">${u ? t.name : '???'}</span><span class="title-desc">${u ? t.desc : '???'}</span>`; if (u) { it.style.cursor = 'pointer'; it.addEventListener('click', async () => { try { await window.electron.invoke('set-title', { index: idx }); if (gameState) gameState.equipped_title_index = idx; currentTitle = { name: t.name, color: t.color, desc: t.desc }; updateUI(); renderTitlesPanel(); } catch (e) { showToast('佩戴称号失败', 'error'); } }); } titlesListEl.appendChild(it); }); } catch (e) { showToast('获取副本详情失败', 'error'); }
+  try { const d = await window.electron.invoke('get-scenario-detail', { id: gameState?.scenario_id }); const cur = gameState?.equipped_title_index ?? 0; d.titles.forEach((t, idx) => { const u = t.level <= gameState.level; const eq = u && idx === cur; const it = document.createElement('div'); it.className = `title-item${u ? '' : ' locked'}${eq ? ' equipped' : ''}`; it.innerHTML = `<span class="title-level">Lv.${t.level}</span><span class="title-name" style="color:${u ? t.color : 'var(--dim)'}">${u ? t.name : '???'}</span><span class="title-desc">${u ? t.desc : '???'}</span>`; if (u) { it.style.cursor = 'pointer'; it.addEventListener('click', async () => { try { await window.electron.invoke('set-title', { index: idx }); if (gameState) gameState.equipped_title_index = idx; currentTitle = { name: t.name, color: t.color, desc: t.desc }; updateUI(); renderTitlesPanel(); } catch (e) { showToast(t('systemTitleEquipFail'), 'error'); } }); } titlesListEl.appendChild(it); }); } catch (e) { showToast(t('systemDetailFail'), 'error'); }
 }
 
 async function updateTooltip() {
   if (!gameState) return;
   const rt = formatRuntime(gameState.total_runtime_ms);
   const title = currentTitle?.name || '?';
-  const lv = gameState.is_in_hub ? `大厅 Lv.${hubLevel}` : `Lv.${gameState.level}`;
-  const sc = currentScenario?.nameCN || (gameState.is_in_hub ? '大厅' : '?');
+  const lv = gameState.is_in_hub ? `${t('hubLevel')}${hubLevel}` : `Lv.${gameState.level}`;
+  const sc = currentScenario?.nameCN || (gameState.is_in_hub ? t('statusHub') : '?');
   try { await window.electron.invoke('update-tooltip', { text: `${gameState.player_name} | ${sc}\n${lv} | ${title} | ${rt}` }); } catch (e) {}
 }
 

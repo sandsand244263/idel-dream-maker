@@ -137,6 +137,8 @@ function createPetWindow(app) {
   }
 
   petWindow.on('closed', () => { petWindow = null; });
+  petWindow.on('show', () => { try { require('./tray.cjs').updateMenu(); } catch {} });
+  petWindow.on('hide', () => { try { require('./tray.cjs').updateMenu(); } catch {} });
   return petWindow;
 }
 
@@ -234,6 +236,10 @@ function showPetWindow() {
   if (petWindow && !petWindow.isDestroyed()) petWindow.show();
 }
 
+function getPetWindow() {
+  return petWindow && !petWindow.isDestroyed() ? petWindow : null;
+}
+
 function togglePetWindow() {
   if (petWindow && !petWindow.isDestroyed()) {
     if (petWindow.isVisible()) { petWindow.hide(); }
@@ -264,4 +270,4 @@ function broadcastTheme(theme, customTheme) {
 
 function getSelectedPetIndex() { return selectedPetIndex; }
 
-module.exports = { scanPets, registerPetIpcHandlers, forwardToPet, showPetWindow, togglePetWindow, initPet, broadcastTheme, getSelectedPetIndex, setOnPetSelected };
+module.exports = { scanPets, registerPetIpcHandlers, forwardToPet, showPetWindow, getPetWindow, togglePetWindow, initPet, broadcastTheme, getSelectedPetIndex, setOnPetSelected };

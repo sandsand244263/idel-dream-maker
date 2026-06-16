@@ -1,40 +1,45 @@
-const titleEl = document.getElementById('bubble-title');
-const textEl = document.getElementById('bubble-text');
+const LANG = {
+  zh: { event: '事件' },
+  en: { event: 'Event' },
+};
+let currentLang = 'zh';
 
-function applyTheme(theme, customTheme) {
-  document.body.className = '';
-  if (customTheme) {
-    document.body.style.setProperty('--fg', customTheme.fg);
-    document.body.style.setProperty('--bg', customTheme.bg);
-    document.body.style.setProperty('--dim', customTheme.dim);
-    document.body.style.setProperty('--border', customTheme.border || customTheme.dim);
-  } else if (theme && theme !== 'green') {
-    document.body.classList.add('theme-' + theme);
-  }
+function t(key) { return (LANG[currentLang] && LANG[currentLang][key]) || LANG.zh[key] || key; }
+
+function applyLanguage() {
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
 }
 
-function update(data) {
-  titleEl.textContent = data.title || '事件';
-  titleEl.style.color = data.color || '#00BFFF';
+window.bubble.on('show-bubble', (data) => {
+  if (!data) return;
+  applyLanguage();
+  const titleEl = document.getElementById('bubble-title');
+  const textEl = document.getElementById('bubble-text');
+  if (data.title) titleEl.textContent = data.title;
   textEl.textContent = data.text || '';
-  if (data.type === 'achievement') {
-    document.getElementById('bubble').style.borderLeftColor = '#FFD700';
-    titleEl.style.color = '#FFD700';
-  } else if (data.type === 'levelup') {
-    document.getElementById('bubble').style.borderLeftColor = '#00FF00';
-    titleEl.style.color = '#00FF00';
-  } else {
-    document.getElementById('bubble').style.borderLeftColor = '#00BFFF';
-    titleEl.style.color = '#00BFFF';
-  }
-}
-
-window.petBubble.on('show-bubble', (d) => { update(d); });
-window.petBubble.on('hide-bubble', () => { window.petBubble.invoke('close-bubble').catch(() => {}); });
-
-document.getElementById('bubble').addEventListener('click', () => {
-  window.petBubble.invoke('close-bubble').catch(() => {});
+  document.getElementById('bubble').style.display = 'block';
 });
 
-window.petBubble.invoke('get-current-theme').then(r => { if (r) applyTheme(r.theme, r.customTheme); }).catch(() => {});
-window.petBubble.on('theme-changed', (d) => { if (d) applyTheme(d.theme, d.customTheme); });
+window.bubble.invoke('get-current-theme').then(r => {
+  if (r) {
+    document.body.className = r.theme && r.theme !== 'green' ? 'theme-' + r.theme : '';
+    if (r.customTheme) {
+      document.body.style.setProperty('--fg', r.customTheme.fg);
+      document.body.style.setProperty('--bg', r.customTheme.bg);
+      document.body.style.setProperty('--dim', r.customTheme.dim);
+      document.body.style.setProperty('--border', r.customTheme.border || r.customTheme.dim);
+    }
+  }
+}).catch(() => {});
+window.bubble.on('theme-changed', (d) => {
+  if (d) {
+    document.body.className = d.theme && d.theme !== 'green' ? 'theme-' + d.theme : '';
+    if (d.customTheme) {
+      document.body.style.setProperty('--fg', d.customTheme.fg);
+      document.body.style.setProperty('--bg', d.customTheme.bg);
+      document.body.style.setProperty('--dim', d.customTheme.dim);
+      document.body.style.setProperty('--border', d.customTheme.border || d.customTheme.dim);
+    }
+  }
+});
+window.bubble.on('language-changed', (d) => { if (d && d.lang) { currentLang = d.lang; applyLanguage(); } });

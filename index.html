@@ -37,12 +37,12 @@
 
     <main id="hub-view">
       <div id="hub-welcome">
-        <div id="hub-greeting">欢迎回来</div>
+        <div id="hub-greeting" data-i18n="hubWelcome">欢迎回来</div>
         <div id="hub-player-name">Worker</div>
         <div id="hub-level-display">大厅 Lv.1</div>
       </div>
       <div id="hub-scenario-list"></div>
-      <button id="hub-draw-btn">+ 抽取副本</button>
+      <button id="hub-draw-btn" data-i18n="drawBtn">+ 抽取副本</button>
     </main>
 
     <main id="log-area" class="hidden">
@@ -54,50 +54,50 @@
 
     <div id="perma-status"><span id="perma-text">Worker | Hub Lv.1 | ? | — | 成就:0</span><span id="save-dot" class="hidden">●</span></div>
     <footer id="button-bar">
-      <button id="btn-mini" class="bar-btn">宠物</button>
-      <button id="btn-backhub" class="bar-btn hidden">大厅</button>
-      <button id="btn-scenario" class="bar-btn">副本</button>
-      <button id="btn-titles" class="bar-btn">称号</button>
+      <button id="btn-mini" class="bar-btn" data-i18n="btnMini">宠物</button>
+      <button id="btn-backhub" class="bar-btn hidden" data-i18n="btnBack">大厅</button>
+      <button id="btn-scenario" class="bar-btn" data-i18n="btnScenario">副本</button>
+      <button id="btn-titles" class="bar-btn" data-i18n="btnTitles">称号</button>
 
-      <button id="btn-settings" class="bar-btn">设置</button>
-      <button id="btn-tutorial" class="bar-btn">教程</button>
+      <button id="btn-settings" class="bar-btn" data-i18n="btnSettings">设置</button>
+      <button id="btn-tutorial" class="bar-btn" data-i18n="btnTutorial">教程</button>
     </footer>
   </div>
 
   <div id="confirm-modal" class="hidden">
     <div id="confirm-overlay"></div>
     <div id="confirm-box">
-      <div id="confirm-title">返回大厅</div>
-      <div id="confirm-desc">确定返回大厅吗？副本进度将保留，经验累入全局等级。</div>
+      <div id="confirm-title" data-i18n="confirmTitle">返回大厅</div>
+      <div id="confirm-desc" data-i18n="confirmDesc">确定返回大厅吗？副本进度将保留，经验累入全局等级。</div>
       <div id="confirm-buttons">
-        <button id="confirm-cancel">取消</button>
-        <button id="confirm-ok">确定</button>
+        <button id="confirm-cancel" data-i18n="confirmCancel">取消</button>
+        <button id="confirm-ok" data-i18n="confirmOk">确定</button>
       </div>
     </div>
   </div>
   <div id="alias-modal" class="hidden">
     <div id="alias-overlay"></div>
     <div id="alias-box">
-      <div id="alias-title">进入副本</div>
+      <div id="alias-title" data-i18n="aliasTitle">进入副本</div>
       <div id="alias-desc"></div>
-      <input type="text" id="alias-input" placeholder="输入名称（留空用默认）" spellcheck="false" />
+      <input type="text" id="alias-input" data-i18n-placeholder="aliasPlaceholder" placeholder="输入名称（留空用默认）" spellcheck="false" />
       <div id="alias-buttons">
-        <button id="alias-cancel">取消</button>
-        <button id="alias-confirm">进入</button>
+        <button id="alias-cancel" data-i18n="aliasCancel">取消</button>
+        <button id="alias-confirm" data-i18n="aliasConfirm">进入</button>
       </div>
     </div>
   </div>
 
   <div id="event-overlay" class="hidden">
     <div id="event-box">
-      <div id="event-header"><span id="event-title">事件</span></div>
+      <div id="event-header"><span id="event-title" data-i18n="eventHeader">事件</span></div>
       <div id="event-body"><p id="event-text"></p></div>
     </div>
   </div>
 
   <div id="achievement-overlay" class="hidden">
     <div id="achievement-box">
-      <div id="achievement-header">成就解锁</div>
+      <div id="achievement-header" data-i18n="achievementHeader">成就解锁</div>
       <div id="achievement-body">
         <span id="achievement-icon">★</span>
         <div id="achievement-info">
@@ -109,29 +109,29 @@
   </div>
 
   <div id="scenario-panel" class="hidden">
-    <div id="scenario-panel-header"><span>副本选择</span><button id="scenario-close">✕</button></div>
+    <div id="scenario-panel-header"><span data-i18n="panelScenario">副本选择</span><button id="scenario-close">✕</button></div>
     <div id="scenario-list"></div>
   </div>
 
   <div id="settings-panel" class="hidden">
-    <div id="settings-header"><span>设置</span><button id="settings-close">✕</button></div>
+    <div id="settings-header"><span data-i18n="panelSettings">设置</span><button id="settings-close">✕</button></div>
     <div id="settings-body">
-      <div class="setting-row"><label>名称</label><input type="text" id="settings-name" /><button id="settings-name-save">保存</button></div>
-      <div class="setting-row"><label>语言</label><select id="settings-language"><option value="zh">中文</option><option value="en">English</option></select></div>
-      <div class="settings-section-title">主题</div>
+      <div class="setting-row"><label data-i18n="labelName">名称</label><input type="text" id="settings-name" /><button id="settings-name-save" data-i18n="settingsSave">保存</button></div>
+      <div class="setting-row"><label data-i18n="labelLanguage">界面语言</label><select id="settings-language"><option value="zh">中文</option><option value="en">English</option></select></div>
+      <div class="settings-section-title" data-i18n="settingsThemeTitle">主题</div>
       <div id="theme-swatches"></div>
       <div id="custom-theme" class="hidden">
         <div class="ct-row"><span class="ct-label">fg</span><label class="ct-swatch" style="background:#00FF00"><input type="color" id="ct-fg" value="#00FF00"></label><input class="ct-text" type="text" id="ct-fg-text" value="#00FF00"></div>
         <div class="ct-row"><span class="ct-label">bg</span><label class="ct-swatch" style="background:#0A0A0A"><input type="color" id="ct-bg" value="#0A0A0A"></label><input class="ct-text" type="text" id="ct-bg-text" value="#0A0A0A"></div>
         <div class="ct-row"><span class="ct-label">dim</span><label class="ct-swatch" style="background:#00AA00"><input type="color" id="ct-dim" value="#00AA00"></label><input class="ct-text" type="text" id="ct-dim-text" value="#00AA00"></div>
         <div class="ct-row"><span class="ct-label">bd</span><label class="ct-swatch" style="background:#00FF00"><input type="color" id="ct-border" value="#00FF00"></label><input class="ct-text" type="text" id="ct-border-text" value="#00FF00"></div>
-        <button id="ct-save">应用自定义配色</button>
+        <button id="ct-save" data-i18n="ctSave">应用自定义配色</button>
       </div>
     </div>
   </div>
 
   <div id="titles-panel" class="hidden">
-    <div id="titles-panel-header"><span>称号一览</span><button id="titles-close">✕</button></div>
+    <div id="titles-panel-header"><span data-i18n="panelTitles">称号一览</span><button id="titles-close">✕</button></div>
     <div id="titles-list"></div>
   </div>
 
@@ -139,36 +139,36 @@
   <div id="onboarding-modal" class="hidden">
     <div id="onboarding-overlay"></div>
     <div id="onboarding-box">
-      <div id="onboarding-title">欢迎来到</div>
+      <div id="onboarding-title" data-i18n="obWelcome">欢迎来到</div>
       <div id="onboarding-subtitle">Idel-DreamMaker</div>
       <div id="onboarding-body">
-        <p>藏在系统托盘里的宠物陪伴应用</p>
-        <p>挂机升级 · 解锁称号与成就</p>
-        <p>触发故事事件——陪你度过每一刻</p>
+        <p data-i18n="obDesc1">藏在系统托盘里的宠物陪伴应用</p>
+        <p data-i18n="obDesc2">挂机升级 · 解锁称号与成就</p>
+        <p data-i18n="obDesc3">触发故事事件——陪你度过每一刻</p>
         <div class="ob-separator"></div>
-        <div id="onboarding-name-row"><label>你的名称</label><input type="text" id="onboarding-name" placeholder="输入名称" spellcheck="false" /></div>
+        <div id="onboarding-name-row"><label data-i18n="obName">你的名称</label><input type="text" id="onboarding-name" data-i18n-placeholder="obNamePlaceholder" placeholder="输入名称" spellcheck="false" /></div>
         <div class="ob-separator"></div>
-        <p><b>如何开始：</b></p>
+        <p data-i18n="obHow"><b>如何开始：</b></p>
         <div class="ob-list-left">
-          <p>1. 点击 <b>[副本]</b> 或 <b>[+ 抽取副本]</b> 选择一个故事世界</p>
-          <p>2. 进入后自动挂机，经验随时间增长</p>
-          <p>3. 升级解锁称号，随机弹出故事事件</p>
-          <p>4. 随时点击 <b>[大厅]</b> 退出，经验累入全局等级</p>
+          <p data-i18n="obStep1">1. 点击 [副本] 或 [+ 抽取副本] 选择一个故事世界</p>
+          <p data-i18n="obStep2">2. 进入后自动挂机，经验随时间增长</p>
+          <p data-i18n="obStep3">3. 升级解锁称号，随机弹出故事事件</p>
+          <p data-i18n="obStep4">4. 随时点击 [大厅] 退出，经验累入全局等级</p>
         </div>
         <div class="ob-separator"></div>
-        <p style="color:var(--dim);font-size:11px">提示：宠物窗口常驻桌面，点击宠物可交互</p>
+        <p style="color:var(--dim);font-size:11px" data-i18n="obTip">提示：宠物窗口常驻桌面，点击宠物可交互</p>
       </div>
-      <button id="onboarding-ok">开始冒险</button>
+      <button id="onboarding-ok" data-i18n="obStart">开始冒险</button>
     </div>
   </div>
   <div id="debug-panel" class="hidden">
     <div id="debug-header"><span>Debug</span><button id="debug-close">✕</button></div>
     <div id="debug-toolbar">
-      <button id="dbg-event">触发事件</button>
-      <button id="dbg-levelup">+10 级</button>
-      <button id="dbg-achievement">解锁成就</button>
-      <button id="dbg-runtime">+1h</button>
-      <button id="dbg-holiday">节日事件</button>
+      <button id="dbg-event" data-i18n="dbgEvent">触发事件</button>
+      <button id="dbg-levelup" data-i18n="dbgLevelup">+10 级</button>
+      <button id="dbg-achievement" data-i18n="dbgAchievement">解锁成就</button>
+      <button id="dbg-runtime" data-i18n="dbgRuntime">+1h</button>
+      <button id="dbg-holiday" data-i18n="dbgHoliday">节日事件</button>
     </div>
     <pre id="debug-content"></pre>
   </div>

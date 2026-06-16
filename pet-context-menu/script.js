@@ -1,3 +1,11 @@
+const LANG = {
+  zh: { selectPet:'选择宠物', border:'显示边框', infobar:'信息栏', expbar:'进度条', hide:'隐藏' },
+  en: { selectPet:'Select Pet', border:'Border', infobar:'Info Bar', expbar:'EXP Bar', hide:'Hide' },
+};
+let currentLang = 'zh';
+
+function t(key) { return (LANG[currentLang] && LANG[currentLang][key]) || LANG.zh[key] || key; }
+
 function setToggle(key, val) { localStorage.setItem('pet_' + key, val); }
 function getToggle(key, def) { const v = localStorage.getItem('pet_' + key); return v !== null ? v === 'true' : def; }
 
@@ -13,22 +21,25 @@ function applyTheme(theme, customTheme) {
   }
 }
 
+function applyLanguage() {
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+}
+
 function updateUI() {
+  applyLanguage();
   ['border','infobar','expbar'].forEach(k => {
     const el = document.getElementById('ctx-toggle-' + k);
     const on = getToggle('show' + k.charAt(0).toUpperCase() + k.slice(1), true);
-    el.textContent = (on ? '\u2713 ' : '\u2717 ') + (k === 'infobar' ? '信息栏' : k === 'expbar' ? '进度条' : '显示边框');
+    el.childNodes[0].textContent = on ? '\u2713 ' : '\u2717 ';
     el.className = 'ctx-item ctx-toggle' + (on ? ' ctx-on' : ' ctx-off');
   });
 }
 
-// 选择宠物 → 打开 pet-selector 窗口
 document.getElementById('ctx-select-pet').addEventListener('click', () => {
   window.ctxMenu.invoke('show-pet-selector').catch(() => {});
   window.ctxMenu.invoke('close-menu').catch(() => {});
 });
 
-// 开关控制 → IPC 转发到主进程 → 主进程转发到宠物窗口
 ['border','infobar','expbar'].forEach(k => {
   document.getElementById('ctx-toggle-' + k).addEventListener('click', () => {
     const key = 'show' + k.charAt(0).toUpperCase() + k.slice(1);
@@ -44,7 +55,6 @@ document.getElementById('ctx-close').addEventListener('click', () => {
   window.ctxMenu.invoke('close-menu').catch(() => {});
 });
 
-// 初始化
 window.ctxMenu.invoke('get-toggle-state').then(r => {
   if (r) {
     ['border','infobar','expbar'].forEach(k => {
@@ -55,12 +65,10 @@ window.ctxMenu.invoke('get-toggle-state').then(r => {
   updateUI();
 }).catch(() => { updateUI(); });
 
-// 空白点击关闭
 document.addEventListener('click', (e) => {
   if (e.target === document.body) window.ctxMenu.invoke('close-menu').catch(() => {});
 });
 
-// 窗口显示时重放入场动效
-// 初始化
 window.ctxMenu.invoke('get-current-theme').then(r => { if (r) applyTheme(r.theme, r.customTheme); }).catch(() => {});
 window.ctxMenu.on('theme-changed', (d) => { if (d) applyTheme(d.theme, d.customTheme); });
+window.ctxMenu.on('language-changed', (d) => { if (d && d.lang) { currentLang = d.lang; updateUI(); } });
