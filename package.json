@@ -32,8 +32,9 @@
     ],
     "icon": "icons/icon.png",
     "win": {
-      "icon": "icons/icon.png",
-      "target": "nsis"
+      "icon": "icons/icon.ico",
+      "target": "portable",
+      "signAndEditExecutable": false
     },
     "mac": {
       "icon": "icons/icon.png",
@@ -49,6 +50,8 @@
     "concurrently": "^9",
     "electron": "^34.5.8",
     "electron-builder": "^25",
+    "icojs": "^0.23.0",
+    "jimp": "^1.6.1",
     "vite": "^6",
     "wait-on": "^8",
     "yaml": "^2.9.0"
