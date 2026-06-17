@@ -78,7 +78,6 @@ const btnBackHub = document.getElementById('btn-backhub');
 const btnScenario = document.getElementById('btn-scenario');
 const btnTitles = document.getElementById('btn-titles');
 const btnSettings = document.getElementById('btn-settings');
-const btnHide = document.getElementById('btn-hide');
 const permaStatus = document.getElementById('perma-status');
 const permaText = document.getElementById('perma-text');
 const saveDot = document.getElementById('save-dot');

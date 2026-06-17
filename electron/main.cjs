@@ -12,6 +12,7 @@ let tray = null;
 let isQuitting = false;
 
 const isMac = process.platform === 'darwin';
+const SAVE_VERSION = 1;
 
 function setupAppMenu() {
   const template = [
@@ -96,12 +97,23 @@ function readSave() {
   try {
     const sp = path.join(getAppDataPath(), 'save.json');
     if (!fs.existsSync(sp)) return null;
-    return JSON.parse(fs.readFileSync(sp, 'utf-8'));
+    const gameState = JSON.parse(fs.readFileSync(sp, 'utf-8'));
+    // Version migration
+    if (!gameState._version || gameState._version < SAVE_VERSION) {
+      if (!gameState._version) {
+        // v1 migration: add filler-related fields
+        if (gameState.lastLoginDay === undefined) gameState.lastLoginDay = '';
+        if (gameState.fillerCountToday === undefined) gameState.fillerCountToday = 0;
+      }
+      gameState._version = SAVE_VERSION;
+    }
+    return gameState;
   } catch { return null; }
 }
 
 function writeSave(data) {
   try {
+    data._version = SAVE_VERSION;
     const dir = getAppDataPath();
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, 'save.json'), JSON.stringify(data, null, 2), 'utf-8');
