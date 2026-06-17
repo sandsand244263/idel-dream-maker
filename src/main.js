@@ -3,7 +3,7 @@
 const LANG = {
   hubWelcome: '欢迎回来', hubLevel: '大厅 Lv.', drawBtn: '+ 抽取副本',
   noScenarios: '暂无可用的副本', hubEmptyHint: '点击下方 [副本] 或 [+ 抽取副本] 开始，点击 [教程] 查看操作说明',
-  btnMini: '宠物', btnBack: '大厅', btnScenario: '副本', btnTitles: '称号',
+  btnBack: '大厅', btnScenario: '副本', btnTitles: '称号',
   btnSettings: '设置', btnTutorial: '教程',
   panelScenario: '副本选择', panelTitles: '称号一览', panelAchievement: '成就一览', panelSettings: '设置',
   labelName: '名称',
@@ -126,11 +126,6 @@ function showAliasModal(sn) {
 aliasCancel.addEventListener('click', () => { aliasModal.classList.add('hidden'); if (aliasResolver) { aliasResolver(null); aliasResolver = null; } });
 aliasConfirm.addEventListener('click', () => { aliasModal.classList.add('hidden'); if (aliasResolver) { aliasResolver(aliasInput.value.trim() || ''); aliasResolver = null; } });
 aliasInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') aliasConfirm.click(); if (e.key === 'Escape') aliasCancel.click(); });
-
-// ── Pet Window Toggle ──
-btnMini.addEventListener('click', () => {
-  window.electron.invoke('toggle-pet-window').catch(() => {});
-});
 
 function getTitleByIndex(idx) {
   if (!currentScenario?.titles) return null;
@@ -489,7 +484,7 @@ async function renderAchievementPanel() {
   try {
     const d = await window.electron.invoke('get-scenario-detail', { id });
     if (!d || !d.achievements) return;
-    const unlocked = gameState?.unlocked_achievements || [];
+    const unlocked = gameState?.unlockedAchievements || [];
     d.achievements.forEach(a => {
       const u = unlocked.includes(a.id);
       const it = document.createElement('div'); it.className = `title-item${u ? '' : ' locked'}`;
