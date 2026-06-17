@@ -97,35 +97,6 @@ function showConfirmModal(desc) {
 confirmOk.addEventListener('click', () => { confirmModal.classList.add('hidden'); if (confirmResolver) { confirmResolver(true); confirmResolver = null; } });
 confirmCancel.addEventListener('click', () => { confirmModal.classList.add('hidden'); if (confirmResolver) { confirmResolver(false); confirmResolver = null; } });
 
-const aliasModal = document.getElementById('alias-modal');
-const aliasTitle = document.getElementById('alias-title');
-const aliasDesc = document.getElementById('alias-desc');
-const aliasInput = document.getElementById('alias-input');
-const aliasCancel = document.getElementById('alias-cancel');
-const aliasConfirm = document.getElementById('alias-confirm');
-let aliasResolver = null;
-
-// ── Titlebar ──
-document.getElementById('titlebar-drag').addEventListener('mousedown', (e) => {
-  if (e.target.closest('#titlebar-btns')) return;
-  window.electron.invoke('start-dragging').catch(() => {});
-});
-document.getElementById('btn-close').addEventListener('click', () => { window.electron.invoke('hide-window').catch(() => {}); });
-
-// ── Alias Modal ──
-function showAliasModal(sn) {
-  return new Promise((resolve) => {
-    aliasTitle.textContent = t('aliasTitle'); aliasDesc.textContent = tf('enterPrompt', sn);
-    aliasInput.placeholder = t('aliasPlaceholder'); aliasCancel.textContent = t('aliasCancel');
-    aliasConfirm.textContent = t('aliasConfirm'); aliasInput.value = '';
-    aliasModal.classList.remove('hidden'); aliasResolver = resolve;
-    setTimeout(() => aliasInput.focus(), 100);
-  });
-}
-aliasCancel.addEventListener('click', () => { aliasModal.classList.add('hidden'); if (aliasResolver) { aliasResolver(null); aliasResolver = null; } });
-aliasConfirm.addEventListener('click', () => { aliasModal.classList.add('hidden'); if (aliasResolver) { aliasResolver(aliasInput.value.trim() || ''); aliasResolver = null; } });
-aliasInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') aliasConfirm.click(); if (e.key === 'Escape') aliasCancel.click(); });
-
 function getTitleByIndex(idx) {
   if (!currentScenario?.titles) return null;
   const t = currentScenario.titles[idx]; return t ? { name: t.name, color: t.color, desc: t.desc } : null;
@@ -216,15 +187,14 @@ function renderHubCards() {
     const card = document.createElement('div'); card.className = 'hub-card';
     card.innerHTML = `<div class="hub-card-name">${s.nameCN} (${s.name})</div><div class="hub-card-desc">${s.description}</div><div class="hub-card-meta">${s.eventCount} ${t('scenarioEvent')} · ${s.achievementCount} ${t('scenarioAchievement')}</div>`;
     card.addEventListener('click', async () => {
-      const alias = await showAliasModal(s.nameCN); if (alias === null) return;
-      try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); }
+      try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); }
     });
     hubScenarioList.appendChild(card);
   });
 }
 
 hubDrawBtn.addEventListener('click', async () => {
-  try { const s = await window.electron.invoke('draw-scenario'); if (!s) return; const alias = await showAliasModal(s.nameCN); if (alias === null) return; const r = await window.electron.invoke('select-scenario', { id: s.id, alias }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemDrew', currentScenario.nameCN)); updateUI(); } catch (e) { showToast(t('systemDrawFail'), 'error'); }
+  try { const s = await window.electron.invoke('draw-scenario'); if (!s) return; const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemDrew', currentScenario.nameCN)); updateUI(); } catch (e) { showToast(t('systemDrawFail'), 'error'); }
 });
 
 btnBackHub.addEventListener('click', async () => {
@@ -433,7 +403,7 @@ function renderScenarioPanel() {
   scenarioList.forEach(s => {
     const card = document.createElement('div'); card.className = `scenario-card${s.id === cid ? ' active' : ''}`;
     card.innerHTML = `<div class="scenario-name" style="color:${s.id === cid ? '#0F0' : '#888'}">${s.nameCN} (${s.name})</div><div class="scenario-desc">${s.description}</div><div class="scenario-stats"><span>${s.eventCount} ${t('scenarioEvent')}</span><span>${s.achievementCount} ${t('scenarioAchievement')}</span></div>`;
-    card.addEventListener('click', async () => { const alias = await showAliasModal(s.nameCN); if (alias === null) return; try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); scenarioPanel.classList.add('hidden'); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); } });
+    card.addEventListener('click', async () => { try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); scenarioPanel.classList.add('hidden'); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); } });
     scenarioListEl.appendChild(card);
   });
 }
