@@ -757,6 +757,39 @@ function registerIpcHandlers() {
     forwardToPet('event-triggered', evPayload);
     return { text: he.text, holiday: he.holidayName };
   });
+
+  ipcMain.handle('dev-trigger-story', () => {
+    if (!currentScenario || gameState.isInHub) return null;
+    const event = findUnusedEvent('story', gameState.level);
+    if (!event) return null;
+    gameState.triggeredEvents.push(event.id);
+    const evPayload = { id: event.id, title: '故事', color: '#FFA500', text: event.text };
+    try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
+    forwardToPet('event-triggered', evPayload);
+    return { text: event.text };
+  });
+
+  ipcMain.handle('dev-trigger-filler', () => {
+    if (!currentScenario || gameState.isInHub) return null;
+    const event = findUnusedEvent('filler', gameState.level);
+    if (!event) return null;
+    gameState.triggeredEvents.push(event.id);
+    const evPayload = { id: event.id, title: '日常', color: '#FFA500', text: event.text };
+    try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
+    forwardToPet('event-triggered', evPayload);
+    return { text: event.text };
+  });
+
+  ipcMain.handle('dev-reset-daily', () => {
+    gameState.lastLoginDay = '';
+    gameState.fillerCountToday = 0;
+    return true;
+  });
+
+  ipcMain.handle('dev-hourly-chime', () => {
+    forwardToPet('hourly-chime', {});
+    return true;
+  });
 }
 
 // ── App Lifecycle ──

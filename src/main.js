@@ -543,6 +543,24 @@ document.getElementById('dbg-holiday').addEventListener('click', async () => {
   const r = await window.electron.invoke('dev-force-holiday-event').catch(()=>null);
   if (r) addLog('event', `[节日] ${r.holiday}: ${r.text}`);
 });
+document.getElementById('dbg-story').addEventListener('click', async () => {
+  const r = await window.electron.invoke('dev-trigger-story').catch(()=>null);
+  if (r) addLog('event', `[story] ${r.text}`);
+  else addLog('system', '[story] 无可用 story 事件');
+});
+document.getElementById('dbg-filler').addEventListener('click', async () => {
+  const r = await window.electron.invoke('dev-trigger-filler').catch(()=>null);
+  if (r) addLog('event', `[filler] ${r.text}`);
+  else addLog('system', '[filler] 无可用 filler 事件');
+});
+document.getElementById('dbg-reset-daily').addEventListener('click', async () => {
+  await window.electron.invoke('dev-reset-daily').catch(()=>{});
+  addLog('system', '[DEV] 每日状态已重置');
+});
+document.getElementById('dbg-chime').addEventListener('click', async () => {
+  await window.electron.invoke('dev-hourly-chime').catch(()=>{});
+  addLog('system', '[DEV] 整点报时');
+});
 document.addEventListener('keydown', (e) => {
   if (e.ctrlKey && e.shiftKey && e.key === 'D') {
     e.preventDefault();

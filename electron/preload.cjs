@@ -13,6 +13,7 @@ contextBridge.exposeInMainWorld('electron', {
       'get-scenario-detail', 'set-scenario-progress',
       'hide-pet-window', 'toggle-pet-window', 'toggle-main-window',
       'dev-trigger-event', 'dev-force-trigger-event', 'dev-level-up', 'dev-achievement', 'dev-runtime', 'dev-force-holiday-event',
+      'dev-trigger-story', 'dev-trigger-filler', 'dev-reset-daily', 'dev-hourly-chime',
     ];
     if (validChannels.includes(channel)) {
       return ipcRenderer.invoke(channel, ...args);

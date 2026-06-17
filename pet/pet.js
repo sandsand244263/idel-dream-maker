@@ -269,6 +269,13 @@ window.pet.on('event-triggered',d=>{transitionTo('run');nq.enqueue({text:d.text,
 window.pet.on('level-up',d=>{gameInfo.title=d.title||gameInfo.title;transitionTo(Math.random()<0.5?'jump':'extra3');nq.enqueue({text:`升级! Lv.${d.level}`,title:'等级提升',type:'levelup'},2);});
 window.pet.on('achievement-unlocked',d=>{transitionTo(Math.random()<0.5?'review':'extra1');nq.enqueue({text:`${d.icon||'★'} ${d.name}`,title:'成就解锁',type:'achievement'},3);});
 window.pet.on('main-shown',()=>{nq.clearQueue();});
+window.pet.on('hourly-chime',()=>{
+  if(!spritesheet)return;
+  transitionTo('extra1');
+  const h=new Date().getHours();
+  infoText.textContent=('0'+h).slice(-2)+':00 | 整点报时';
+  setTimeout(()=>updateInfoBar(),3000);
+});
 
 window.pet.invoke('scan-pets').then(r=>{pets=r.pets||[];selIdx=r.selected||0;loadPet(selIdx);applyPetSettings();}).catch(()=>{});
 window.pet.invoke('pet-get-state').then(()=>updateInfoBar()).catch(()=>{});
