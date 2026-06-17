@@ -133,14 +133,14 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #achievement-desc { color: var(--dim); font-size: 10px; }
 
 /* ── Scenario / Settings / Titles Panels ── */
-#scenario-panel, #settings-panel, #titles-panel { position: fixed; top: 0; right: 0; width: 280px; height: 100vh; background: var(--bg); border: 1px solid var(--dim); border-radius: 8px; z-index: 200; display: flex; flex-direction: column; animation: panelSlideIn 0.15s ease-out; }
+#scenario-panel, #settings-panel, #titles-panel, #achievement-panel { position: fixed; top: 0; right: 0; width: 280px; height: 100vh; background: var(--bg); border: 1px solid var(--dim); border-radius: 8px; z-index: 200; display: flex; flex-direction: column; animation: panelSlideIn 0.15s ease-out; }
 @keyframes panelSlideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-#scenario-panel.hidden, #settings-panel.hidden, #titles-panel.hidden { display: none; }
-#scenario-panel-header, #settings-header, #titles-panel-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--dim); font-weight: bold; font-size: 12px; letter-spacing: 1px; }
-#scenario-panel-header button, #settings-header button, #titles-panel-header button { background: transparent; border: none; color: var(--dim); font-size: 16px; cursor: pointer; }
-#scenario-panel-header button:hover, #settings-header button:hover, #titles-panel-header button:hover { color: var(--fg); }
-#scenario-panel-header button:active, #settings-header button:active, #titles-panel-header button:active { transform:scale(0.9); }
-#scenario-list, #titles-list { flex: 1; overflow-y: auto; padding: 6px; }
+#scenario-panel.hidden, #settings-panel.hidden, #titles-panel.hidden, #achievement-panel.hidden { display: none; }
+#scenario-panel-header, #settings-header, #titles-panel-header, #achievement-panel-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--dim); font-weight: bold; font-size: 12px; letter-spacing: 1px; }
+#scenario-panel-header button, #settings-header button, #titles-panel-header button, #achievement-panel-header button { background: transparent; border: none; color: var(--dim); font-size: 16px; cursor: pointer; }
+#scenario-panel-header button:hover, #settings-header button:hover, #titles-panel-header button:hover, #achievement-panel-header button:hover { color: var(--fg); }
+#scenario-panel-header button:active, #settings-header button:active, #titles-panel-header button:active, #achievement-panel-header button:active { transform:scale(0.9); }
+#scenario-list, #titles-list, #achievement-list { flex: 1; overflow-y: auto; padding: 6px; }
 .scenario-card { border: 1px solid var(--dim); border-radius: 4px; padding: 8px 10px; margin-bottom: 6px; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
 .scenario-card:hover { border-color: var(--fg); background: rgba(0,255,0,0.04); }
 .scenario-card.active { border-color: var(--fg); background: rgba(0,255,0,0.06); }
@@ -245,6 +245,6 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 .theme-black { --fg: #CDD6F4; --bg: #11111B; --dim: #585B70; --g1: #000000; --g2: #11111B; }
 .theme-white { --fg: #4C4F69; --bg: #EFF1F5; --dim: #9CA0B0; --g1: #C0C0C0; --g2: #EFF1F5; }
 
-@media (max-width: 420px) { #event-overlay { width: calc(100% - 10px); right: 5px; } #scenario-panel, #settings-panel, #titles-panel { width: 100%; } }
+@media (max-width: 420px) { #event-overlay { width: calc(100% - 10px); right: 5px; } #scenario-panel, #settings-panel, #titles-panel, #achievement-panel { width: 100%; } }
 @media (prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;}}
 .hidden { display: none !important; }

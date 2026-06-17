@@ -22,6 +22,7 @@ const COL_NORM = {
   'icon': 'icon', '图标': 'icon',
   'conditiontype': 'conditiontype', '条件类型': 'conditiontype', 'condition_type': 'conditiontype', 'conditionType': 'conditiontype',
   'conditionvalue': 'conditionvalue', '条件值': 'conditionvalue', 'condition_value': 'conditionvalue', 'conditionValue': 'conditionvalue',
+  'type': 'type', '类型': 'type',
   'holidayid': 'holidayid', 'holiday_id': 'holidayid', 'holidayId': 'holidayid', '节日id': 'holidayid',
 };
 
@@ -136,6 +137,7 @@ function parseEvents(bodyLines) {
   const minhoursIdx = headers.indexOf('minhours');
   const weightIdx = headers.indexOf('weight');
   const onceIdx = headers.indexOf('once');
+  const typeIdx = headers.indexOf('type');
 
   const events = [];
   const ids = new Set();
@@ -146,6 +148,7 @@ function parseEvents(bodyLines) {
     ids.add(id);
     events.push({
       id,
+      type: typeIdx !== -1 ? row[typeIdx].trim().toLowerCase() : 'story',
       minLevel: minlevelIdx !== -1 ? parseInt(row[minlevelIdx], 10) || 1 : 1,
       minHours: minhoursIdx !== -1 ? parseInt(row[minhoursIdx], 10) || 0 : 0,
       weight: weightIdx !== -1 ? parseInt(row[weightIdx], 10) || 5 : 5,

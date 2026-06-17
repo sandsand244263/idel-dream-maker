@@ -284,3 +284,15 @@ setInterval(() => {
   }
 }, 20000);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='h')window.pet.invoke('hide-pet-window').catch(()=>{});});
+
+// Hourly chime
+let lastChimeHour=-1;
+setInterval(()=>{
+  const h=new Date().getHours();
+  if(h!==lastChimeHour&&spritesheet){
+    lastChimeHour=h;
+    transitionTo('extra1');
+    infoText.textContent=('0'+h).slice(-2)+':00 | 整点报时';
+    setTimeout(()=>updateInfoBar(),3000);
+  }
+},60000);

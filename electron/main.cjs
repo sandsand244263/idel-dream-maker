@@ -210,7 +210,19 @@ function exitToHub() {
   hubLevel = calcLevel(gameState.hubTotalExp);
 }
 
-function checkAndTriggerEvent() {
+function findUnusedEvent(type, level) {
+  if (!currentScenario || !currentScenario.events || gameState.isInHub) return null;
+  const pool = currentScenario.events.filter(e => {
+    if (e.type && e.type !== type) return false;
+    if (e.minLevel && e.minLevel > level) return false;
+    if (e.once && gameState.triggeredEvents.includes(e.id)) return false;
+    return true;
+  });
+  if (pool.length === 0) return null;
+  return pool[0];
+}
+
+function checkAndTriggerEvent(typeFilter) {
   if (!currentScenario || !currentScenario.events || gameState.isInHub) return;
 
   const runtimeHours = gameState.totalRuntimeMs / 3600000;
@@ -244,11 +256,14 @@ function checkAndTriggerEvent() {
     }
 
     const pool = currentScenario.events.filter(e => {
+      if (typeFilter && e.type && e.type !== typeFilter) return false;
       if (e.minLevel && e.minLevel > gameState.level) return false;
       if (e.minHours && e.minHours > runtimeHours) return false;
       if (e.once && gameState.triggeredEvents.includes(e.id)) return false;
       return true;
     });
+    // Filler daily cap: max 8 per day (excludes login trigger)
+    if (typeFilter === 'filler' && (gameState.fillerCountToday || 0) >= 7) return null;
 
     if (pool.length > 0) {
       const totalWeight = pool.reduce((sum, e) => sum + (e.weight || 1), 0);
@@ -336,29 +351,48 @@ function startGameLoop() {
     gameState.exp += expGain;
     gameState.totalExpEarned += expGain;
 
-    // Level up check
+    // Level up check — merge with story event
     const oldLevel = gameState.level;
     gameState.level = calcLevel(gameState.totalExpEarned);
     if (gameState.level > oldLevel) {
       const title = getCurrentTitle(currentScenario, gameState.level);
+      const storyEvent = findUnusedEvent('story', gameState.level);
+      if (storyEvent) gameState.triggeredEvents.push(storyEvent.id);
       if (title) {
         currentTitle = title;
         gameState.equippedTitleIndex = currentScenario.titles.indexOf(title);
-        const luPayload = { level: gameState.level, title: title.name, titleColor: title.color, titleDesc: title.desc };
+        const luPayload = { level: gameState.level, title: title.name, titleColor: title.color, titleDesc: title.desc, eventText: storyEvent ? storyEvent.text : null };
         try { mainWindow.webContents.send('level-up', luPayload); } catch {}
         forwardToPet('level-up', luPayload);
       } else {
-        try { mainWindow.webContents.send('level-up', { level: gameState.level, title: null, titleColor: null, titleDesc: null }); } catch {}
+        try { mainWindow.webContents.send('level-up', { level: gameState.level, title: null, titleColor: null, titleDesc: null, eventText: storyEvent ? storyEvent.text : null }); } catch {}
       }
     }
 
-    // Event check (every ~60s)
+    // Event check — filler only (every ~60s)
     if (Math.random() < delta / 60000) {
-      const event = checkAndTriggerEvent();
+      const event = checkAndTriggerEvent('filler');
       if (event) {
         const evPayload = { id: event.id, title: event.title || '事件', color: event.color || '#FFA500', text: event.text };
         try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
         forwardToPet('event-triggered', evPayload);
+      }
+    }
+
+    // Daily login filler check (once per day)
+    if (!gameState.isInHub && currentScenario) {
+      const today = new Date().toISOString().slice(0, 10);
+      if (gameState.lastLoginDay !== today) {
+        gameState.lastLoginDay = today;
+        gameState.fillerCountToday = 0;
+        const filler = findUnusedEvent('filler', gameState.level);
+        if (filler) {
+          gameState.triggeredEvents.push(filler.id);
+          gameState.fillerCountToday++;
+          const evPayload = { id: filler.id, title: '日常', color: '#FFA500', text: filler.text };
+          try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
+          forwardToPet('event-triggered', evPayload);
+        }
       }
     }
 
@@ -754,6 +788,8 @@ app.whenReady().then(() => {
       unlockedAchievements: [],
       petSelectedIndex: 0,
       hasSeenOnboarding: false,
+      lastLoginDay: '',
+      fillerCountToday: 0,
     };
   }
 

@@ -5,7 +5,7 @@ const LANG = {
   noScenarios: '暂无可用的副本', hubEmptyHint: '点击下方 [副本] 或 [+ 抽取副本] 开始，点击 [教程] 查看操作说明',
   btnMini: '宠物', btnBack: '大厅', btnScenario: '副本', btnTitles: '称号',
   btnSettings: '设置', btnTutorial: '教程',
-  panelScenario: '副本选择', panelTitles: '称号一览', panelSettings: '设置',
+  panelScenario: '副本选择', panelTitles: '称号一览', panelAchievement: '成就一览', panelSettings: '设置',
   labelName: '名称',
   settingsSave: '保存', settingsThemeTitle: '主题', ctSave: '应用自定义配色',
   eventHeader: '事件', achievementHeader: '成就解锁',
@@ -71,8 +71,10 @@ const settingsTheme = document.getElementById('theme-swatches');
 const titlesPanel = document.getElementById('titles-panel');
 const titlesClose = document.getElementById('titles-close');
 const titlesListEl = document.getElementById('titles-list');
+const achievementPanel = document.getElementById('achievement-panel');
+const achievementClose = document.getElementById('achievement-close');
+const achievementListEl = document.getElementById('achievement-list');
 const btnBackHub = document.getElementById('btn-backhub');
-const btnMini = document.getElementById('btn-mini');
 const btnScenario = document.getElementById('btn-scenario');
 const btnTitles = document.getElementById('btn-titles');
 const btnSettings = document.getElementById('btn-settings');
@@ -157,7 +159,15 @@ async function init() {
     }
   });
   window.electron.on('event-triggered', (event) => { addLog('event', event.text); showEventOverlay(event.title, event.color, event.text); });
-  window.electron.on('level-up', (event) => { currentTitle = { name: event.title, color: event.titleColor, desc: event.titleDesc }; addLog('levelup', tf('systemLevelUp', event.level, event.title)); updateUI(); });
+  window.electron.on('level-up', (event) => {
+    currentTitle = { name: event.title, color: event.titleColor, desc: event.titleDesc };
+    addLog('levelup', tf('systemLevelUp', event.level, event.title));
+    // If merged with story event text, show combined notification
+    if (event.eventText) {
+      showEventOverlay(`Lv.${event.level} — ${event.title || ''}`, event.titleColor || '#FFA500', event.eventText);
+    }
+    updateUI();
+  });
   window.electron.on('achievement-unlocked', (event) => { const { name, desc, icon } = event; addLog('achievement', `${name}: ${desc}`); showAchievementOverlay(icon, name, desc); gameState?.unlockedAchievements.push(event.id); updateUI(); });
   window.electron.on('scenario-changed', (event) => { gameState = event.game; currentScenario = event.scenario; currentTitle = { name: event.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); });
   window.electron.on('auto-save', () => { flashSaveDot(); });
@@ -436,12 +446,58 @@ function renderScenarioPanel() {
 scenarioClose.addEventListener('click', () => scenarioPanel.classList.add('hidden'));
 titlesClose.addEventListener('click', () => titlesPanel.classList.add('hidden'));
 
+const btnAchievement = document.getElementById('btn-achievement');
+btnAchievement.addEventListener('click', () => { renderAchievementPanel(); achievementPanel.classList.remove('hidden'); });
+achievementClose.addEventListener('click', () => achievementPanel.classList.add('hidden'));
+
 async function renderTitlesPanel() {
   titlesListEl.innerHTML = '';
   if (gameState?.is_in_hub) {
-    try { const ht = await window.electron.invoke('get-hub-titles'); ht.forEach(s => { const g = document.createElement('div'); g.className = 'hub-title-group'; const sm = document.createElement('div'); sm.className = 'hub-title-summary'; sm.innerHTML = `▶ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>`; const bd = document.createElement('div'); bd.className = 'hub-title-body hidden'; (s.unlockedTitles.length ? s.unlockedTitles : [t('hubTitleEmpty')]).forEach(n => { const it = document.createElement('div'); it.className = 'title-item'; it.innerHTML = `<span class="title-name" style="color:var(--fg)">${n}</span>`; bd.appendChild(it); }); sm.addEventListener('click', () => { bd.classList.toggle('hidden'); sm.innerHTML = bd.classList.contains('hidden') ? `▶ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>` : `▼ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>`; }); g.appendChild(sm); g.appendChild(bd); titlesListEl.appendChild(g); }); } catch (e) { showToast(t('systemTitleFetchFail'), 'error'); } return;
+    try {
+      const ht = await window.electron.invoke('get-hub-titles');
+      for (const s of ht) {
+        const g = document.createElement('div'); g.className = 'hub-title-group';
+        const sm = document.createElement('div'); sm.className = 'hub-title-summary';
+        sm.innerHTML = `▶ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>`;
+        const bd = document.createElement('div'); bd.className = 'hub-title-body hidden';
+        if (s.unlockedTitles.length) {
+          for (const n of s.unlockedTitles) {
+            const it = document.createElement('div'); it.className = 'title-item';
+            it.innerHTML = `<span class="title-name" style="color:var(--fg)">${n}</span>`;
+            it.style.cursor = 'pointer';
+            it.addEventListener('click', async () => {
+              try { await window.electron.invoke('set-title', { index: s.unlockedTitles.indexOf(n), scenarioId: s.id }); } catch(e) {}
+              renderTitlesPanel();
+            });
+            bd.appendChild(it);
+          }
+        } else {
+          bd.innerHTML = `<div class="title-item"><span class="title-name" style="color:var(--dim)">${t('hubTitleEmpty')}</span></div>`;
+        }
+        sm.addEventListener('click', () => { bd.classList.toggle('hidden'); sm.innerHTML = bd.classList.contains('hidden') ? `▶ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>` : `▼ <span class="hub-title-scenario">${s.nameCN}</span> <span class="hub-title-count">${s.unlockedCount}/${s.totalCount}</span>`; });
+        g.appendChild(sm); g.appendChild(bd); titlesListEl.appendChild(g);
+      }
+    } catch (e) { showToast(t('systemTitleFetchFail'), 'error'); } return;
   }
   try { const d = await window.electron.invoke('get-scenario-detail', { id: gameState?.scenario_id }); const cur = gameState?.equipped_title_index ?? 0; d.titles.forEach((t, idx) => { const u = t.level <= gameState.level; const eq = u && idx === cur; const it = document.createElement('div'); it.className = `title-item${u ? '' : ' locked'}${eq ? ' equipped' : ''}`; it.innerHTML = `<span class="title-level">Lv.${t.level}</span><span class="title-name" style="color:${u ? t.color : 'var(--dim)'}">${u ? t.name : '???'}</span><span class="title-desc">${u ? t.desc : '???'}</span>`; if (u) { it.style.cursor = 'pointer'; it.addEventListener('click', async () => { try { await window.electron.invoke('set-title', { index: idx }); if (gameState) gameState.equipped_title_index = idx; currentTitle = { name: t.name, color: t.color, desc: t.desc }; updateUI(); renderTitlesPanel(); } catch (e) { showToast(t('systemTitleEquipFail'), 'error'); } }); } titlesListEl.appendChild(it); }); } catch (e) { showToast(t('systemDetailFail'), 'error'); }
+}
+
+async function renderAchievementPanel() {
+  achievementListEl.innerHTML = '';
+  const id = gameState?.scenario_id;
+  if (!id) { achievementListEl.innerHTML = '<div class="hub-empty-text">请先进入副本</div>'; return; }
+  try {
+    const d = await window.electron.invoke('get-scenario-detail', { id });
+    if (!d || !d.achievements) return;
+    const unlocked = gameState?.unlocked_achievements || [];
+    d.achievements.forEach(a => {
+      const u = unlocked.includes(a.id);
+      const it = document.createElement('div'); it.className = `title-item${u ? '' : ' locked'}`;
+      const condStr = a.condition.type === 'level' ? `Lv.${a.condition.value}` : a.condition.type === 'runtime' ? `挂机测试` : a.condition.type === 'events' ? `触发${a.condition.value}事件` : `解锁${a.condition.value}称号`;
+      it.innerHTML = `<span class="title-name" style="color:${u ? 'var(--fg)' : 'var(--dim)'}">${u ? a.name : '???'}</span><span class="title-desc">${u ? a.desc : condStr}</span>`;
+      achievementListEl.appendChild(it);
+    });
+  } catch (e) { showToast(t('systemDetailFail'), 'error'); }
 }
 
 async function updateTooltip() {
