@@ -176,10 +176,25 @@ function loadSpritesheet(b64,ext,cfg){
 function loadPet(idx){
   if(idx<0||idx>=pets.length){
     spritesheet=null;
-    infoText.textContent='暂无宠物，前往 petdex.dev 下载精灵图';
+    drawNoPetHint();
     return;
   }
   window.pet.invoke('get-pet-spritesheet',{index:idx}).then(r=>{if(r)loadSpritesheet(r.data,r.ext,r.config||null);}).catch(()=>{});
+}
+
+function drawNoPetHint(){
+  if(!ctx)return;
+  ctx.clearRect(0,0,120,140);
+  ctx.fillStyle='rgba(10,10,10,0.7)';
+  ctx.fillRect(10,45,100,50);
+  ctx.fillStyle='#ffd564';
+  ctx.font='11px MapleMonoNFCN,Courier New,monospace';
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.fillText('暂无宠物',60,65);
+  ctx.font='9px MapleMonoNFCN,Courier New,monospace';
+  ctx.fillStyle='#aaa';
+  ctx.fillText('前往 petdex.dev',60,83);
 }
 
 function updateExpBar(){
@@ -193,7 +208,7 @@ function updateExpBar(){
   expDetail.textContent=`${Math.floor(e)} / ${nr} (${rounded}%)`;
 }
 function updateInfoBar(){
-  if(!spritesheet){infoText.textContent='暂无宠物，前往 petdex.dev 下载精灵图';return;}
+  if(!spritesheet){drawNoPetHint();return;}
   const title=gameInfo.title&&gameInfo.title!=='—'?gameInfo.title:'';
   const dl=gameInfo.isInHub?(gameInfo.hubLevel||1):(gameInfo.level||1);
   infoText.textContent=title?`${gameInfo.scenario} | LV.${dl} | ${title}`:`${gameInfo.scenario} | LV.${dl}`;

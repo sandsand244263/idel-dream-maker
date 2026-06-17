@@ -216,6 +216,10 @@ function registerPetIpcHandlers(mainWindow, app) {
     const dir = getPetsDir(require('electron').app);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     shell.openPath(dir);
+    // Refresh pet list after opening folder
+    scanPets(app);
+    sendToPet('pet-list', { pets: currentPetList, selected: selectedPetIndex });
+    sendToSelector('pet-list', { pets: currentPetList, selected: selectedPetIndex });
     return true;
   });
 

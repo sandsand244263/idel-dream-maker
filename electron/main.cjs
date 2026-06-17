@@ -802,6 +802,16 @@ function registerIpcHandlers() {
     forwardToPet('hourly-chime', {});
     return true;
   });
+
+  ipcMain.handle('dev-reset-save', () => {
+    try {
+      const sp = path.join(getAppDataPath(), 'save.json');
+      if (fs.existsSync(sp)) fs.unlinkSync(sp);
+    } catch {}
+    app.relaunch();
+    app.exit();
+    return true;
+  });
 }
 
 // ── App Lifecycle ──

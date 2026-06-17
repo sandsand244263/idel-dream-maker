@@ -50,8 +50,15 @@ function rebuildMenu() {
 function createTray(mainWindow) {
   mainWindowRef = mainWindow;
 
-  const iconPath = path.join(__dirname, '..', 'icons', '32x32.png');
-  const icon = nativeImage.createFromPath(iconPath);
+  let iconPath, icon;
+  if (isMac) {
+    iconPath = path.join(__dirname, '..', 'icons', 'trayTemplate.png');
+    icon = nativeImage.createFromPath(iconPath);
+    icon.setTemplateImage(true);
+  } else {
+    iconPath = path.join(__dirname, '..', 'icons', '32x32.png');
+    icon = nativeImage.createFromPath(iconPath);
+  }
   tray = new Tray(icon);
 
   tray.setToolTip('Idel-DreamMaker');

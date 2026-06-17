@@ -555,6 +555,11 @@ document.getElementById('dbg-chime').addEventListener('click', async () => {
   await window.electron.invoke('dev-hourly-chime').catch(()=>{});
   addLog('system', '[DEV] 整点报时');
 });
+document.getElementById('dbg-reset-save').addEventListener('click', async () => {
+  if (confirm('确定要重置存档吗？此操作不可逆。')) {
+    await window.electron.invoke('dev-reset-save').catch(()=>{});
+  }
+});
 document.addEventListener('keydown', (e) => {
   if (e.ctrlKey && e.shiftKey && e.key === 'D') {
     e.preventDefault();
