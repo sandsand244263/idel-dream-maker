@@ -669,3 +669,4 @@ npx electron-builder   # 打包验证
 | 3 | **format-rules.md 重写** — 新密度表/周目分节/防重复5条规范/Action列 | `references/format-rules.md` | ✅ |
 | 4 | **SKILL.md 更新** — 数据规格/生成流程/filler规范/检查清单 | `SKILL.md` | ✅ |
 | 5 | **CLAUDE.md 数据对齐** — 事件文本数更新/skill 引擎说明 | `CLAUDE.md` | ✅ |
+| 6 | **completion_title 通关称号** — gameState 存储 + 通关自动解锁 + IPC 装备/取消 + 前端面板（大厅称号/通关称号/副本称号三级） | `electron/main.cjs`, `electron/preload.cjs`, `src/main.js` | ✅ |
