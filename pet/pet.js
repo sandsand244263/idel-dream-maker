@@ -130,7 +130,7 @@ function transitionTo(s){
 }
 function animToIdle(){if(curState!=='idle')play('idle');}
 
-function calcExpForLevel(lv){if(lv<=1)return 0;return 100*(lv-1)*(lv-1);}
+function calcExpForLevel(lv){if(lv<=1)return 0;if(lv<=100)return 100*(lv-1)*(lv-1);return 980100+(lv-100)*30000;}
 
 function loadSpritesheet(b64,ext,cfg){
   if(!b64||b64.length<100)return;
@@ -293,7 +293,7 @@ window.pet.on('hourly-chime',()=>{
   if(!spritesheet)return;
   const now=new Date();
   const h=now.getHours(),m=now.getMinutes()>=30?'30':'00';
-  nq.enqueue({text:('0'+h).slice(-2)+':'+m,title:'报时',type:'chime'},0);
+  nq.enqueue({text:('0'+h).slice(-2)+':'+m,title:'报时',type:'chime'},0.5);
 });
 
 window.pet.on('bubble-closed',()=>{nq.close();});
@@ -321,6 +321,6 @@ setInterval(()=>{
   if(block!==lastChimeBlock&&spritesheet){
     lastChimeBlock=block;
     const h=now.getHours(),m=now.getMinutes()>=30?'30':'00';
-    nq.enqueue({text:('0'+h).slice(-2)+':'+m,title:'报时',type:'chime'},0);
+    nq.enqueue({text:('0'+h).slice(-2)+':'+m,title:'报时',type:'chime'},0.5);
   }
 },30000);

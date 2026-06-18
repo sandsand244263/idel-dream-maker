@@ -185,12 +185,15 @@ let tooltipInterval = null;
 // ── Game Logic ──
 
 function calcLevel(exp) {
-  return exp <= 0 ? 1 : Math.floor(Math.sqrt(exp / 100)) + 1;
+  if (exp <= 0) return 1;
+  if (exp <= 980100) return Math.floor(Math.sqrt(exp / 100)) + 1;  // LV1-100 原公式
+  return 100 + Math.floor((exp - 980100) / 30000);                  // LV100+ 线性加速
 }
 
 function calcExpForLevel(level) {
   if (level <= 1) return 0;
-  return 100 * (level - 1) * (level - 1);
+  if (level <= 100) return 100 * (level - 1) * (level - 1);
+  return 980100 + (level - 100) * 30000;  // LV100+ 线性段反推
 }
 
 function getCurrentTitle(scenario, level) {

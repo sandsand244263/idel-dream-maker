@@ -2,12 +2,14 @@ const isNode = typeof process !== 'undefined' && process.versions && process.ver
 
 export function calculateLevel(totalExpEarned) {
   if (totalExpEarned <= 0) return 1;
-  return Math.floor(Math.sqrt(totalExpEarned / 100)) + 1;
+  if (totalExpEarned <= 980100) return Math.floor(Math.sqrt(totalExpEarned / 100)) + 1;
+  return 100 + Math.floor((totalExpEarned - 980100) / 30000);
 }
 
 export function calcExpForLevel(level) {
   if (level <= 1) return 0;
-  return 100 * (level - 1) * (level - 1);
+  if (level <= 100) return 100 * (level - 1) * (level - 1);
+  return 980100 + (level - 100) * 30000;
 }
 
 export function getCurrentTitle(scenario, level) {

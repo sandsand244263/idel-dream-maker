@@ -151,8 +151,12 @@ function switchView(inHub) {
   btnBackHub.classList.toggle('hidden', inHub); btnScenario.classList.toggle('hidden', inHub);
 }
 
-function calcLevel(exp) { return exp <= 0 ? 1 : Math.floor(Math.sqrt(exp / 100)) + 1; }
-function calcExpForLevel(level) { if (level <= 1) return 0; return 100 * (level - 1) * (level - 1); }
+function calcLevel(exp) {
+  if (exp <= 0) return 1;
+  if (exp <= 980100) return Math.floor(Math.sqrt(exp / 100)) + 1;
+  return 100 + Math.floor((exp - 980100) / 30000);
+}
+function calcExpForLevel(level) { if (level <= 1) return 0; if (level <= 100) return 100 * (level - 1) * (level - 1); return 980100 + (level - 100) * 30000; }
 function formatRuntime(ms) { const s = Math.floor(ms / 1000); const h = Math.floor(s / 3600); const m = Math.floor((s % 3600) / 60); const sec = s % 60; return `${h}h${m}m${sec}s`; }
 function pad(n) { return n.toString().padStart(2, '0'); }
 
