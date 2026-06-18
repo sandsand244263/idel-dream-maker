@@ -24,7 +24,7 @@ body { font-family:var(--font); color:var(--fg); }
 
 /* Info bar — 默认淡显示，悬浮宠物窗口时清晰 */
 #info-bar { text-align:center;height:20px;display:flex;align-items:center;justify-content:center;pointer-events:none;flex-shrink:0;opacity:0.3;transition:opacity 0.2s ease; }
-#info-text { font-size:11px;color:color-mix(in srgb,var(--fg) 70%,transparent);white-space:nowrap;text-shadow:0 0 4px rgba(0,0,0,0.6); }
+#info-text { font-size:11px;color:color-mix(in srgb,var(--fg) 70%,transparent);white-space:nowrap;text-shadow:0 1px 1px rgba(0,0,0,0.9); }
 
 /* Canvas wrap */
 #canvas-wrap { position:relative;width:120px;height:140px;flex-shrink:0; }
@@ -53,7 +53,7 @@ body { font-family:var(--font); color:var(--fg); }
 @keyframes shimmer { 0% { background-position:200% 0; } 100% { background-position:-200% 0; } }
 
 #exp-pct { display:none; }
-#exp-detail { font-size:10px;color:color-mix(in srgb,var(--fg) 50%,transparent);line-height:1;text-shadow:0 0 4px rgba(0,0,0,0.6); }
+#exp-detail { font-size:10px;color:color-mix(in srgb,var(--fg) 50%,transparent);line-height:1;text-shadow:0 1px 1px rgba(0,0,0,0.9); }
 
 .hidden { display:none !important; }
 @media (prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;}}
