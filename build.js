@@ -18,6 +18,7 @@ const COL_NORM = {
   'minhours': 'minhours', '最低挂机小时数': 'minhours', 'min_hours': 'minhours', 'minHours': 'minhours',
   'weight': 'weight', '权重': 'weight',
   'once': 'once', '只触发一次': 'once',
+  'minrebirth': 'minrebirth', 'min_rebirth': 'minrebirth', 'minRebirth': 'minrebirth', '最低重生': 'minrebirth',
   'text': 'text', '事件文本': 'text',
   'icon': 'icon', '图标': 'icon',
   'conditiontype': 'conditiontype', '条件类型': 'conditiontype', 'condition_type': 'conditiontype', 'conditionType': 'conditiontype',
@@ -137,6 +138,7 @@ function parseEvents(bodyLines) {
   const minhoursIdx = headers.indexOf('minhours');
   const weightIdx = headers.indexOf('weight');
   const onceIdx = headers.indexOf('once');
+  const minRebirthIdx = headers.indexOf('minrebirth');
   const typeIdx = headers.indexOf('type');
 
   const events = [];
@@ -151,6 +153,7 @@ function parseEvents(bodyLines) {
       type: typeIdx !== -1 ? row[typeIdx].trim().toLowerCase() : 'story',
       minLevel: minlevelIdx !== -1 ? parseInt(row[minlevelIdx], 10) || 1 : 1,
       minHours: minhoursIdx !== -1 ? parseInt(row[minhoursIdx], 10) || 0 : 0,
+      minRebirth: minRebirthIdx !== -1 ? parseInt(row[minRebirthIdx], 10) || 0 : 0,
       weight: weightIdx !== -1 ? parseInt(row[weightIdx], 10) || 5 : 5,
       once: onceIdx !== -1 ? parseBool(row[onceIdx]) : false,
       text: row[textIdx],
@@ -293,6 +296,10 @@ function parseScenarioMd(content) {
     name_cn: meta.name_cn,
     description: meta.description,
     player_title: meta.player_title,
+    mechanic: meta.mechanic || 'standard',
+    max_rebirth: meta.max_rebirth || 0,
+    unlock_requirement: meta.unlock_requirement || {},
+    completion_title: meta.completion_title || '',
     titles,
     events,
     holidayEvents,

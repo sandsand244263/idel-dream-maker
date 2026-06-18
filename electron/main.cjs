@@ -14,6 +14,74 @@ let isQuitting = false;
 const isMac = process.platform === 'darwin';
 const SAVE_VERSION = 1;
 
+const HUB_TITLES = [
+  { level: 1, name: '新人', desc: '刚踏上旅途' },
+  { level: 5, name: '初学者', desc: '略有经历' },
+  { level: 10, name: '行者', desc: '步履初启' },
+  { level: 15, name: '探索者', desc: '开始见识世界' },
+  { level: 20, name: '寻路人', desc: '有了方向' },
+  { level: 30, name: '漫游者', desc: '走过几段路' },
+  { level: 40, name: '远行客', desc: '脚步渐远' },
+  { level: 50, name: '冒险家', desc: '已非新人' },
+  { level: 70, name: '历练者', desc: '阅历渐深' },
+  { level: 90, name: '跋涉者', desc: '行路万里' },
+  { level: 110, name: '见闻广博者', desc: '见过许多世界' },
+  { level: 130, name: '行万里路者', desc: '脚印遍布' },
+  { level: 150, name: '传奇行者', desc: '传说的开始' },
+  { level: 180, name: '传奇', desc: '传奇进行时' },
+  { level: 200, name: '传奇冒险家', desc: '传奇已成' },
+  { level: 250, name: '不朽行者', desc: '时光难掩' },
+  { level: 300, name: '永恒', desc: '超越岁月' },
+  { level: 350, name: '超越者', desc: '超越了旅程' },
+  { level: 400, name: '归来者', desc: '千帆过尽' },
+  { level: 500, name: '万界漫游者', desc: '漫游万千世界' },
+];
+
+const HUB_ACHIEVEMENTS = [
+  { id: 'hub_lv50', name: '初出茅庐', desc: '大厅等级达到 50', condition: { type: 'hub_level', value: 50 } },
+  { id: 'hub_lv100', name: '百级之路', desc: '大厅等级达到 100', condition: { type: 'hub_level', value: 100 } },
+  { id: 'hub_lv200', name: '两百之巅', desc: '大厅等级达到 200', condition: { type: 'hub_level', value: 200 } },
+  { id: 'hub_lv300', name: '三百之峰', desc: '大厅等级达到 300', condition: { type: 'hub_level', value: 300 } },
+  { id: 'hub_complete3', name: '集邮者', desc: '通关 3 个不同副本', condition: { type: 'completions', value: 3 } },
+  { id: 'hub_half', name: '半数圆满', desc: '通关当前一半副本', condition: { type: 'completions_half', value: 0 } },
+  { id: 'hub_all', name: '大圆满', desc: '通关所有副本', condition: { type: 'completions_all', value: 0 } },
+  { id: 'hub_rebirth1', name: '重生者', desc: '任意副本重生 1 次', condition: { type: 'rebirths', value: 1 } },
+  { id: 'hub_rebirth3', name: '轮回者', desc: '任意副本重生 3 次', condition: { type: 'rebirths', value: 3 } },
+  { id: 'hub_complete5', name: '万界旅人', desc: '通关 5 个不同副本', condition: { type: 'completions', value: 5 } },
+];
+
+function getHubTitle(level) {
+  let best = HUB_TITLES[0];
+  for (const t of HUB_TITLES) {
+    if (t.level <= level) best = t;
+  }
+  return best;
+}
+
+function checkHubAchievements() {
+  if (!gameState) return [];
+  const unlocked = [];
+  const completionCount = (gameState.gameCompletions || []).filter((c, i, arr) => arr.findIndex(x => x.scenarioId === c.scenarioId) === i).length;
+  const totalScenarios = allScenarios.length;
+  const maxRebirth = Math.max(0, ...Object.values(gameState.rebirthCounts || {}));
+  for (const a of HUB_ACHIEVEMENTS) {
+    if (gameState.unlockedAchievements.includes(a.id)) continue;
+    let met = false;
+    switch (a.condition.type) {
+      case 'hub_level': met = hubLevel >= a.condition.value; break;
+      case 'completions': met = completionCount >= a.condition.value; break;
+      case 'completions_half': met = totalScenarios > 0 && completionCount >= Math.ceil(totalScenarios / 2); break;
+      case 'completions_all': met = totalScenarios > 0 && completionCount >= totalScenarios; break;
+      case 'rebirths': met = maxRebirth >= a.condition.value; break;
+    }
+    if (met) {
+      gameState.unlockedAchievements.push(a.id);
+      unlocked.push(a);
+    }
+  }
+  return unlocked;
+}
+
 function setupAppMenu() {
   const template = [
     ...(isMac ? [{
@@ -145,6 +213,11 @@ function readSave() {
         if (gameState.lastLoginDay === undefined) gameState.lastLoginDay = '';
         if (gameState.fillerCountToday === undefined) gameState.fillerCountToday = 0;
         if (gameState.hubEquippedTitles === undefined) gameState.hubEquippedTitles = {};
+        if (gameState.dailyBonus === undefined) gameState.dailyBonus = false;
+        if (gameState.rebirthCounts === undefined) gameState.rebirthCounts = {};
+        if (gameState.rebirthExpBonus === undefined) gameState.rebirthExpBonus = 0;
+        if (gameState.fillerRebirthBonus === undefined) gameState.fillerRebirthBonus = 0;
+        if (gameState.gameCompletions === undefined) gameState.gameCompletions = [];
       }
       gameState._version = SAVE_VERSION;
     }
@@ -278,9 +351,11 @@ function exitToHub() {
 
 function findUnusedEvent(type, level) {
   if (!currentScenario || !currentScenario.events || gameState.isInHub) return null;
+  const currentRebirth = (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0;
   const pool = currentScenario.events.filter(e => {
     if (e.type && e.type !== type) return false;
     if (e.minLevel && e.minLevel > level) return false;
+    if (e.minRebirth && e.minRebirth > currentRebirth) return false;
     if (e.once && gameState.triggeredEvents.includes(e.id)) return false;
     return true;
   });
@@ -325,11 +400,13 @@ function checkAndTriggerEvent(typeFilter) {
       if (typeFilter && e.type && e.type !== typeFilter) return false;
       if (e.minLevel && e.minLevel > gameState.level) return false;
       if (e.minHours && e.minHours > runtimeHours) return false;
+      if (e.minRebirth && e.minRebirth > ((gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0)) return false;
       if (e.once && gameState.triggeredEvents.includes(e.id)) return false;
       return true;
     });
-    // Filler daily cap: max 8 per day (excludes login trigger)
-    if (typeFilter === 'filler' && (gameState.fillerCountToday || 0) >= 8) return null;
+    // Filler daily cap: dynamic — 8 + floor(挂机小时/4) + 每日仪式 2 + 重生加成
+    const fillerCap = 8 + Math.floor(runtimeHours / 4) + (gameState.dailyBonus ? 2 : 0) + (gameState.fillerRebirthBonus || 0);
+    if (typeFilter === 'filler' && (gameState.fillerCountToday || 0) >= fillerCap) return null;
 
     if (pool.length > 0) {
       const totalWeight = pool.reduce((sum, e) => sum + (e.weight || 1), 0);
@@ -341,6 +418,28 @@ function checkAndTriggerEvent(typeFilter) {
           return e;
         }
       }
+    }
+  }
+  return null;
+}
+
+const MILESTONES = [
+  { ms: 3600000,      id: 'ms_1h',   text: '你已经挂机1小时了。' },
+  { ms: 21600000,     id: 'ms_6h',   text: '半天过去了，你继续着自己的事。' },
+  { ms: 86400000,     id: 'ms_24h',  text: '满一天了，时间过得真快。' },
+  { ms: 259200000,    id: 'ms_3d',   text: '已经三天了，你渐渐习惯了这样的生活。' },
+  { ms: 604800000,    id: 'ms_7d',   text: '满一周了，七天已成周。' },
+  { ms: 2592000000,   id: 'ms_30d',  text: '一个月了，你还在这里。' },
+  { ms: 8640000000,   id: 'ms_100d', text: '一百天了，百日如百载。' },
+  { ms: 31536000000,  id: 'ms_365d', text: '一年了，感谢你的陪伴。' },
+];
+
+function checkMilestones() {
+  if (!currentScenario || gameState.isInHub) return null;
+  for (const m of MILESTONES) {
+    if (gameState.totalRuntimeMs >= m.ms && !gameState.triggeredEvents.includes(m.id)) {
+      gameState.triggeredEvents.push(m.id);
+      return { id: m.id, title: '里程碑', color: '#FFD700', text: m.text };
     }
   }
   return null;
@@ -403,6 +502,9 @@ function startGameLoop() {
       theme: gameState.selectedFontTheme || 'green',
       custom_theme: gameState.customTheme || null,
       hub_level: calcLevel(gameState.hubTotalExp),
+      rebirth_count: (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0,
+      mechanic: currentScenario ? (currentScenario.mechanic || 'standard') : 'standard',
+      hub_title: getHubTitle(hubLevel).name,
     };
     try { mainWindow.webContents.send('game-tick', payload); } catch {}
     forwardToPet('game-tick', payload);
@@ -415,7 +517,41 @@ function startGameLoop() {
     lastTick = now;
 
     gameState.totalRuntimeMs += delta;
-    const expGain = delta / 1000;
+    let expMultiplier = 1;
+    const mechanic = currentScenario?.mechanic || 'standard';
+    if (mechanic === 'cultivation') {
+      const hour = new Date().getHours();
+      expMultiplier = (hour >= 6 && hour < 18) ? 1.5 : 0.7;
+    } else if (mechanic === 'cyber') {
+      // 5% 概率故障：每 10 分钟检查一次
+      const tenMinBlock = Math.floor(gameState.totalRuntimeMs / 600000);
+      const cyberKey = 'cyber_fault_' + tenMinBlock;
+      if (!gameState.triggeredEvents.includes(cyberKey) && Math.random() < 0.05) {
+        gameState.triggeredEvents.push(cyberKey);
+        gameState.cyberFaultUntil = Date.now() + 30000;  // 暂停 30 秒
+      }
+      if (gameState.cyberFaultUntil && Date.now() < gameState.cyberFaultUntil) {
+        expMultiplier = 0;  // 故障中
+      } else if (gameState.cyberFaultUntil && Date.now() >= gameState.cyberFaultUntil) {
+        gameState.cyberCompensateUntil = Date.now() + 60000;  // 补偿 60 秒 2x
+        gameState.cyberFaultUntil = null;
+      }
+      if (gameState.cyberCompensateUntil && Date.now() < gameState.cyberCompensateUntil) {
+        expMultiplier = 2;
+      } else if (gameState.cyberCompensateUntil) {
+        gameState.cyberCompensateUntil = null;
+      }
+    } else if (mechanic === 'tide') {
+      // 每 6 小时周期，前 10 分钟 2x
+      const sixHourBlock = Math.floor(gameState.totalRuntimeMs / 21600000);
+      const blockProgress = gameState.totalRuntimeMs % 21600000;
+      if (blockProgress < 600000) expMultiplier = 2;  // 前 10 分钟
+    } else if (mechanic === 'polar') {
+      // 现实季节：夏季正常，冬季 0.5x
+      const month = new Date().getMonth();
+      if (month >= 11 || month <= 2) expMultiplier = 0.5;  // 12-2 月冬季
+    }
+    const expGain = (delta / 1000) * expMultiplier * (1 + (gameState.rebirthExpBonus || 0));
     gameState.exp += expGain;
     gameState.totalExpEarned += expGain;
 
@@ -435,6 +571,43 @@ function startGameLoop() {
       forwardToPet('level-up', luPayload);
     }
 
+    // Ending check — LV500 triggers scenario ending
+    if (gameState.level >= 500 && !gameState.triggeredEvents.includes('scenario_ending_' + gameState.scenarioId)) {
+      gameState.triggeredEvents.push('scenario_ending_' + gameState.scenarioId);
+      const storyEvents = currentScenario.events.filter(e => e.type === 'story');
+      const endingEvent = storyEvents[storyEvents.length - 1];
+      const endingPayload = {
+        scenarioId: gameState.scenarioId,
+        scenarioName: currentScenario.name_cn || currentScenario.nameCN || currentScenario.name,
+        text: endingEvent ? endingEvent.text : '你的旅程已达终点。',
+      };
+      try { mainWindow.webContents.send('scenario-ending', endingPayload); } catch {}
+      // 首次通关解锁永久成就
+      const completionAchId = 'completion_' + gameState.scenarioId;
+      if (!gameState.unlockedAchievements.includes(completionAchId)) {
+        gameState.unlockedAchievements.push(completionAchId);
+        const achPayload = { id: completionAchId, name: '圆满', desc: (currentScenario.name_cn || currentScenario.nameCN) + '·圆满', icon: '★' };
+        try { mainWindow.webContents.send('achievement-unlocked', achPayload); } catch {}
+        forwardToPet('achievement-unlocked', achPayload);
+      }
+      // 记录通关
+      if (!gameState.gameCompletions) gameState.gameCompletions = [];
+      const existingIdx = gameState.gameCompletions.findIndex(c => c.scenarioId === gameState.scenarioId);
+      if (existingIdx === -1) {
+        gameState.gameCompletions.push({ scenarioId: gameState.scenarioId, date: new Date().toISOString().slice(0,10), rebirthCount: (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0 });
+      }
+      // 检查大厅成就
+      checkHubAchievements();
+    }
+
+    // Milestone check
+    const milestone = checkMilestones();
+    if (milestone) {
+      const evPayload = { id: milestone.id, title: milestone.title, color: milestone.color, text: milestone.text };
+      try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
+      forwardToPet('event-triggered', evPayload);
+    }
+
     // Event check — filler only (every ~60s)
     if (Math.random() < delta / 60000) {
       const event = checkAndTriggerEvent('filler');
@@ -446,20 +619,21 @@ function startGameLoop() {
       }
     }
 
-    // Daily login filler check (once per day)
+    // Daily login ritual (once per day)
     if (!gameState.isInHub && currentScenario) {
       const today = new Date().toISOString().slice(0, 10);
       if (gameState.lastLoginDay !== today) {
         gameState.lastLoginDay = today;
         gameState.fillerCountToday = 0;
-        const filler = findUnusedEvent('filler', gameState.level);
-        if (filler) {
-          gameState.triggeredEvents.push(filler.id);
-          gameState.fillerCountToday++;
-          const evPayload = { id: filler.id, title: '日常', color: '#FFA500', text: filler.text };
-          try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
-          forwardToPet('event-triggered', evPayload);
-        }
+        gameState.dailyBonus = true;
+        const ritualPayload = {
+          id: 'daily_ritual_' + today,
+          title: '新的一日',
+          color: '#FFD700',
+          text: '新的一天开始了。你抖落身上的尘土，准备继续你的旅程。',
+        };
+        try { mainWindow.webContents.send('event-triggered', ritualPayload); } catch {}
+        forwardToPet('event-triggered', ritualPayload);
       }
     }
 
@@ -467,6 +641,14 @@ function startGameLoop() {
     const newAchievements = checkAchievements();
     for (const a of newAchievements) {
       const achPayload = { id: a.id, name: a.name, desc: a.desc, icon: a.icon || '★' };
+      try { mainWindow.webContents.send('achievement-unlocked', achPayload); } catch {}
+      forwardToPet('achievement-unlocked', achPayload);
+    }
+
+    // Hub achievement check
+    const hubAchievements = checkHubAchievements();
+    for (const a of hubAchievements) {
+      const achPayload = { id: a.id, name: a.name, desc: a.desc, icon: '★' };
       try { mainWindow.webContents.send('achievement-unlocked', achPayload); } catch {}
       forwardToPet('achievement-unlocked', achPayload);
     }
@@ -909,6 +1091,83 @@ function registerIpcHandlers() {
   ipcMain.handle('get-log-entries', (_, { date }) => {
     return getLogEntries(date);
   });
+
+  // ── Rebirth ──
+  ipcMain.handle('rebirth-scenario', (_, { scenarioId }) => {
+    const sid = scenarioId || gameState.scenarioId;
+    if (!sid) return { success: false, error: '无副本ID' };
+    // 增加重生次数
+    if (!gameState.rebirthCounts) gameState.rebirthCounts = {};
+    gameState.rebirthCounts[sid] = (gameState.rebirthCounts[sid] || 0) + 1;
+    // 计算总重生次数（所有副本）
+    const totalRebirths = Object.values(gameState.rebirthCounts).reduce((a, b) => a + b, 0);
+    // 经验加成：每次 +10%，封顶 +50%
+    gameState.rebirthExpBonus = Math.min(0.5, totalRebirths * 0.1);
+    // filler 上限加成：每次 +5，封顶 +25
+    gameState.fillerRebirthBonus = Math.min(25, totalRebirths * 5);
+    // 清空该副本进度
+    if (gameState.scenarioProgress) delete gameState.scenarioProgress[sid];
+    // 清空通关记录中该副本的（保留成就）
+    if (gameState.gameCompletions) {
+      gameState.gameCompletions = gameState.gameCompletions.filter(c => c.scenarioId !== sid);
+    }
+    // 返回大厅
+    gameState.scenarioId = '';
+    gameState.isInHub = true;
+    currentScenario = null;
+    currentTitle = null;
+    hubLevel = calcLevel(gameState.hubTotalExp);
+    writeSave(gameState);
+    return { success: true, hubLevel, rebirthExpBonus: gameState.rebirthExpBonus };
+  });
+
+  // ── Hub titles ──
+  ipcMain.handle('get-hub-title', () => {
+    return getHubTitle(hubLevel);
+  });
+
+  // ── Hub achievements list ──
+  ipcMain.handle('get-hub-achievements', () => {
+    const unlocked = gameState?.unlockedAchievements || [];
+    return HUB_ACHIEVEMENTS.map(a => ({
+      id: a.id,
+      name: a.name,
+      desc: a.desc,
+      icon: '★',
+      unlocked: unlocked.includes(a.id),
+      condition: a.condition,
+    }));
+  });
+
+  // ── Hub stats ──
+  ipcMain.handle('get-hub-stats', () => {
+    const completions = (gameState.gameCompletions || []).filter((c, i, arr) => arr.findIndex(x => x.scenarioId === c.scenarioId) === i);
+    return {
+      hubLevel,
+      hubTitle: getHubTitle(hubLevel),
+      completionCount: completions.length,
+      totalScenarios: allScenarios.length,
+      completions: completions,
+    };
+  });
+
+  // ── Scenario unlock check ──
+  ipcMain.handle('get-scenario-unlocks', () => {
+    const completionCount = (gameState.gameCompletions || []).filter((c, i, arr) => arr.findIndex(x => x.scenarioId === c.scenarioId) === i).length;
+    return allScenarios.map(s => {
+      const req = s.unlock_requirement || {};
+      const hubOk = !req.hub_level || hubLevel >= req.hub_level;
+      const compOk = !req.completions || completionCount >= req.completions;
+      const unlocked = hubOk && compOk;
+      return {
+        id: s.id,
+        unlocked,
+        requirement: req,
+        hubLevel: hubLevel,
+        completionCount,
+      };
+    });
+  });
 }
 
 // ── App Lifecycle ──
@@ -943,6 +1202,11 @@ app.whenReady().then(() => {
       lastLoginDay: '',
       fillerCountToday: 0,
       hubEquippedTitles: {},
+      dailyBonus: false,
+      rebirthCounts: {},
+      rebirthExpBonus: 0,
+      fillerRebirthBonus: 0,
+      gameCompletions: [],
     };
   }
 
