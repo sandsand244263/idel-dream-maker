@@ -133,7 +133,7 @@ async function init() {
     }
     updateUI();
   });
-  window.electron.on('achievement-unlocked', (event) => { const { name, desc, icon } = event; addLog('achievement', `${name}: ${desc}`); showAchievementOverlay(icon, name, desc); gameState?.unlockedAchievements.push(event.id); updateUI(); });
+  window.electron.on('achievement-unlocked', (event) => { console.log(`[PROBE] FE received achievement-unlocked id=${event.id} name=${event.name}`); const { name, desc, icon } = event; addLog('achievement', `${name}: ${desc}`); showAchievementOverlay(icon, name, desc); gameState?.unlockedAchievements.push(event.id); updateUI(); });
   window.electron.on('scenario-changed', (event) => { gameState = event.game; currentScenario = event.scenario; currentTitle = { name: event.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); });
   window.electron.on('auto-save', () => { flashSaveDot(); });
 }
@@ -276,10 +276,12 @@ function dismissAchievementOverlay() {
   achievementOverlay.classList.add('closing');
 }
 function showAchievementOverlay(icon, name, desc) {
+  console.log(`[PROBE] showAchievementOverlay CALLED icon=${icon} name=${name} desc=${desc}`);
   if (achievementDismissTimer) clearTimeout(achievementDismissTimer);
   achievementOverlay.classList.remove('closing');
   achievementIcon.textContent = icon; achievementName.textContent = name; achievementDesc.textContent = desc;
   achievementOverlay.classList.remove('hidden'); achievementDismissTimer = setTimeout(() => dismissAchievementOverlay(), 8000);
+  console.log(`[PROBE] showAchievementOverlay DONE hidden=${achievementOverlay.classList.contains('hidden')} classes=${achievementOverlay.className}`);
 }
 achievementOverlay.addEventListener('animationend', () => {
   if (achievementOverlay.classList.contains('closing')) { achievementOverlay.classList.add('hidden'); achievementOverlay.classList.remove('closing'); }
