@@ -593,9 +593,4 @@ npx electron-builder   # 打包验证
 | 3 | **日志持久化** — 事件写入按日文件，启动加载今日事件 | `electron/main.cjs`, `electron/preload.cjs`, `src/main.js` | ✅ |
 | 4 | **log-area** — 取消500条上限；事件写入文件；启动恢复今日事件 | `src/main.js` | ✅ |
 | 5 | **滚动条统一** — 所有面板补 `::-webkit-scrollbar` 样式 | `src/style.css`, `pet-context-menu/style.css` | ✅ |
-
-### 待解决
-
-| # | 问题 | 状态 |
-|:-:|:-----|:----:|
-| 1 | pet通知队列：多消息时圆点无计数、level-up handler报错保护 | 待加探针测试 |
+| 6 | **pet通知队列** — 排队机制+bubble-closed触发下一条 | `pet/pet.js`, `pet-bubble.cjs`, `pet-bubble/script.js`, `pet-preload.cjs` | ✅ |

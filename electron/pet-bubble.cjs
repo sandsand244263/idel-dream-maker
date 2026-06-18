@@ -17,6 +17,9 @@ function hideBubble() {
   if (!bubbleWindow || bubbleWindow.isDestroyed()) return;
   bubbleWindow.setBounds({ x: HIDE_POS.x, y: HIDE_POS.y, width: 260, height: 100 });
   bubbleWindow.setOpacity(0);
+  if (petWindowRef && !petWindowRef.isDestroyed()) {
+    try { petWindowRef.webContents.send('bubble-closed', {}); } catch {}
+  }
 }
 
 function initBubble(app, petWin) {

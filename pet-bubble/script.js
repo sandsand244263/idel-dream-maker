@@ -7,6 +7,10 @@ window.petBubble.on('show-bubble', (data) => {
   document.getElementById('bubble').style.display = 'block';
 });
 
+document.getElementById('bubble').addEventListener('click', () => {
+  window.petBubble.invoke('close-bubble').catch(() => {});
+});
+
 window.petBubble.invoke('get-current-theme').then(r => {
   if (r) {
     document.body.className = r.theme && r.theme !== 'green' ? 'theme-' + r.theme : '';

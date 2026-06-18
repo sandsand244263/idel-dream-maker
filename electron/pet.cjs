@@ -228,11 +228,6 @@ function registerPetIpcHandlers(mainWindow, app) {
     return true;
   });
 
-  ipcMain.handle('pet-log', (_, { msg }) => {
-    console.log(msg);
-    return true;
-  });
-
   registerSelectorIpcHandlers(app);
   registerBubbleIpcHandlers(app);
   registerContextMenuIpcHandlers();

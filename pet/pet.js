@@ -14,9 +14,6 @@ canvas.height = 140;
 canvas.style.width = '120px';
 canvas.style.height = '140px';
 
-function petLog(msg) { window.pet.invoke('pet-log', { msg }).catch(() => {}); }
-petLog('[PET] script loaded');
-
 let FW = 192, FH = 208;
 
 const DEFAULT_STATES = {
@@ -36,20 +33,12 @@ let displayExp=0,dragMoved=false;
 class NotificationQueue{
   constructor(){this.q=[];this.current=null;}
   enqueue(item,priority){
-    petLog(`[PET] nq.enqueue type=${item.type} text=${(item.text||'').slice(0,30)} hasCurrent=${!!this.current} qLen=${this.q.length}`);
-    if (this.current) {
-      this.current = item;
-      this.q = [];
-      this.showDotOnly();
-      return;
-    }
     item.prio=priority;
     let i=0;while(i<this.q.length&&this.q[i].prio>=priority)i++;
     this.q.splice(i,0,item);
     if(!this.current)this.next();
   }
   next(){
-    petLog(`[PET] nq.next qLen=${this.q.length}`);
     if(this.q.length===0){this.current=null;dotEl.className='dot-none';dotSymbol.textContent='○';return;}
     this.current=this.q.shift();
     this.showDotOnly();
@@ -294,23 +283,21 @@ window.pet.on('pet-state',d=>{
 });
 window.pet.on('event-triggered',d=>{transitionTo('run');nq.enqueue({text:d.text,title:d.title||'事件',type:'event'},1);});
 window.pet.on('level-up',d=>{
-  petLog(`[PET] level-up received level=${d.level} hasEventText=${!!d.eventText} eventText=${(d.eventText||'').slice(0,30)}`);
-  try {
-    gameInfo.title=d.title||gameInfo.title;
-    transitionTo(Math.random()<0.5?'jump':'extra3');
-    const txt=d.eventText?`Lv.${d.level} — ${d.eventText}`:`升级! Lv.${d.level}`;
-    nq.enqueue({text:txt,title:'等级提升',type:'levelup'},2);
-  } catch(e){petLog('[PET] level-up ERROR: '+e.message);}
+  gameInfo.title=d.title||gameInfo.title;
+  transitionTo(Math.random()<0.5?'jump':'extra3');
+  const txt=d.eventText?`Lv.${d.level} — ${d.eventText}`:`升级! Lv.${d.level}`;
+  nq.enqueue({text:txt,title:'等级提升',type:'levelup'},2);
 });
 window.pet.on('achievement-unlocked',d=>{transitionTo(Math.random()<0.5?'review':'extra1');nq.enqueue({text:`${d.icon||'★'} ${d.name}`,title:'成就解锁',type:'achievement'},3);});
 
 window.pet.on('hourly-chime',()=>{
-  petLog(`[PET] hourly-chime IPC received spritesheet=${!!spritesheet}`);
   if(!spritesheet)return;
   const now=new Date();
   const h=now.getHours(),m=now.getMinutes()>=30?'30':'00';
   nq.enqueue({text:('0'+h).slice(-2)+':'+m,title:'报时',type:'chime'},4);
 });
+
+window.pet.on('bubble-closed',()=>{nq.close();});
 
 window.pet.invoke('scan-pets').then(r=>{pets=r.pets||[];selIdx=r.selected||0;loadPet(selIdx);applyPetSettings();}).catch(()=>{});
 window.pet.invoke('pet-get-state').then(()=>updateInfoBar()).catch(()=>{});
@@ -329,11 +316,9 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='h')window.
 
 // Half-hourly chime (checks every 30s)
 let lastChimeBlock=new Date().getHours()*2+(new Date().getMinutes()>=30?1:0);
-petLog(`[PET] chime init lastChimeBlock=${lastChimeBlock}`);
 setInterval(()=>{
   const now=new Date();
   const block=now.getHours()*2+(now.getMinutes()>=30?1:0);
-  petLog(`[PET] chime check block=${block} last=${lastChimeBlock} spritesheet=${!!spritesheet} same=${block===lastChimeBlock}`);
   if(block!==lastChimeBlock&&spritesheet){
     lastChimeBlock=block;
     const h=now.getHours(),m=now.getMinutes()>=30?'30':'00';
