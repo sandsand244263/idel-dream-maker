@@ -39,12 +39,14 @@
 ```css
 background: color-mix(in srgb, var(--fg) 8%, transparent);
 border-bottom: 1px solid color-mix(in srgb, var(--fg) 4%, transparent);
+color: color-mix(in srgb, var(--fg) 65%, transparent);  /* 正文次级文本 */
 ```
 
 **禁止 ❌**
 ```css
 background: rgba(0,255,0,0.08);         /* 固定绿色，不跟随主题 */
 border-bottom: 1px solid rgba(255,255,255,0.04);  /* 固定白色，不跟随主题 */
+color: #E0E0E0;                         /* 固定灰色，不跟随主题 */
 ```
 
 ### 1.4 语义色（固定，不随主题变化）
@@ -59,7 +61,6 @@ border-bottom: 1px solid rgba(255,255,255,0.04);  /* 固定白色，不跟随主
 | `#FFEB3B` 黄 | 升级日志前缀 `[UP]` | 升级标记 |
 | `#00BFFF` 天蓝 | 事件通知圆点、气泡 header | 事件标记 |
 | `#FF9E64` 橙 | 报时通知圆点 | 报时标记 |
-| `#E0E0E0` 浅灰 | 气泡窗口正文文本 | 可读性 |
 
 ---
 
