@@ -587,3 +587,37 @@ npx electron-builder   # 打包验证
 | 6 | **pet通知队列** — 排队机制+bubble-closed触发下一条 | `pet/pet.js`, `pet-bubble.cjs`, `pet-bubble/script.js`, `pet-preload.cjs` | ✅ |
 | 7 | **样式规范文档** — `themes/style-guide.md` 完整样式规范 | `themes/style-guide.md` | ✅ |
 | 8 | **CSS统一** — `--border`变量/`color-mix`替换固定rgba/动画规范/`:active`统一/关闭按钮统一/字体变量统一/透明度统一 | `src/style.css`, `pet-bubble/style.css`, `pet-context-menu/style.css`, `pet-selector/style.css` | ✅ |
+
+## v2.7.0 — 游戏架构大升级
+
+> **当前阶段：v2.7.0（已完成）**
+>
+> 等级曲线分段加速 + filler动态上限 + 8条里程碑事件 + 每日仪式 + 副本结局+重生 + 5种挂机变体机制 + 重生番外框架 + 20个大厅称号 + 10个大厅成就 + 副本解锁框架 + 结局收藏面板 + ScenarioWriter skill完整升级。
+>
+> 核心目标：架构一次性搭好，后续增长靠作者用 skill 产副本内容，不需要改代码。
+
+| # | 内容 | 涉及文件 | 状态 |
+|:-:|:-----|:---------|:----:|
+| 1 | **chime报时优先级 0→0.5** — 空队列可显示 | `pet/pet.js` | ✅ |
+| 2 | **等级曲线分段加速** — LV100+线性，LV500从864天→117天 | `electron/main.cjs`, `src/main.js`, `src/scenario.js`, `pet/pet.js` | ✅ |
+| 3 | **filler动态上限** — 8+floor(挂机h/4)+每日仪式2+重生加成 | `electron/main.cjs` | ✅ |
+| 4 | **里程碑事件** — 8条白话文本(1h/6h/24h/3d/7d/30d/100d/365d)，只触发一次 | `electron/main.cjs` | ✅ |
+| 5 | **每日仪式** — 固定文本，当日filler+2 | `electron/main.cjs` | ✅ |
+| 6 | **副本结局+重生** — LV500自动弹特殊弹窗；永久成就「圆满」首次解锁；无限重生；经验+10%封顶+50%；filler+5封顶+25 | `electron/main.cjs`, `src/main.js`, `src/style.css`, `index.html` | ✅ |
+| 7 | **副本机制框架** — 5种挂机变体(standard/cultivation/cyber/tide/polar) | `electron/main.cjs`, `build.js` | ✅ |
+| 8 | **重生番外框架** — Events表MinRebirth列+findUnusedEvent检查+max_rebirth限制 | `electron/main.cjs`, `build.js` | ✅ |
+| 9 | **大厅解锁框架** — unlock_requirement字段+锁定副本灰色UI | `electron/main.cjs`, `build.js`, `src/main.js`, `src/style.css` | ✅ |
+| 10 | **结局收藏册框架** — 通关记录存档+历程菜单第4项 | `electron/main.cjs`, `src/main.js`, `index.html` | ✅ |
+| 11 | **大厅专属称号** — 20个等级称号(代码内置LV1-500)+通关称号(.md字段)+面板分组+大厅信息补充 | `electron/main.cjs`, `src/main.js`, `index.html` | ✅ |
+| 12 | **大厅专属成就** — 10个(等级类+通关数量类+重生类)+面板分组 | `electron/main.cjs`, `src/main.js` | ✅ |
+| 13 | **历程菜单扩展** — 4项(称号/成就/事件/结局) | `index.html`, `src/main.js` | ✅ |
+| 14 | **状态栏重生标识** — 副本内LV后加(R1)/(R2) | `src/main.js` | ✅ |
+| 15 | **CLAUDE.md长期规划章节** — 架构能力/挂机变体/副本增长路线/解锁曲线/大厅称号/大厅成就/UI规划/skill增长引擎 | `CLAUDE.md` | ✅ |
+| 16 | **ScenarioWriter skill完整升级** — 四周目结构+5种机制推荐+游戏机制说明+MinRebirth列+新frontmatter字段 | `skills/ScenarioWriter/SKILL.md`, `skills/ScenarioWriter/references/format-rules.md` | ✅ |
+
+### 后续待办（作者执行，非 AI 任务）
+
+| # | 内容 | 说明 |
+|:-:|:-----|:-----|
+| - | 用升级后的 skill 重新生成 3 个副本 | 现有废土/星空/隐士缺新字段，需重新生成才能用上新功能。注意：不能同时删所有副本，先生成1个再删旧的 |
+| - | 持续产新副本 | 每周 1-2 个，架构已就位，放进 scenarios/ 即可 |
