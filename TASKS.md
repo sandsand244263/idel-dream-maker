@@ -543,6 +543,21 @@ npx electron-builder   # 打包验证
 | Mac 适配 | Electron 天然支持，待测试并修复 |
 | Steam 上架 | Electron 版本打包后上架 |
 
+## v2.5.0 — story/filler 双轨事件 + 成就面板 + 整点报时
+
+> **当前阶段：v2.5.0（已完成）**
+>
+> story/filler 双轨事件（升级触发 story，时间驱动 filler）、成就面板、大厅称号可佩戴、整点报时、浮动待机、存档版本号、禁用代码签名、macOS 托盘图标、canvas 无宠物提示、去除别名输入。
+
+### 已知问题（待新对话修复）
+
+| # | 问题 | 根因 | 涉及文件 |
+|:-:|:----|:-----|:---------|
+| 1 | 关闭按钮 [x] 无反应 | 删除别名弹窗时误删标题栏事件绑定 | `src/main.js` |
+| 2 | 升级不合并 story 事件 | `findUnusedEvent` 可能返回空，需加 debug 探针定位 | `electron/main.cjs` |
+| 3 | 成就气泡未弹出 | `showAchievementOverlay` 被调用但覆盖层未渲染，需加日志排查 | `src/main.js` |
+| 4 | 整点报时改为弹气泡 | 未决策 | `pet/pet.js` + `electron/main.cjs` |
+
 ---
 
 ## 已废弃计划
