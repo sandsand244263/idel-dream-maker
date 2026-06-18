@@ -264,7 +264,6 @@ window.pet.on('toggle-feature', d => {
   applyPetSettings();
 });
 window.pet.on('game-tick',d=>{
-  console.log('PET TICK:', d.is_in_hub, d.hub_level, d.level);
   gameInfo.level=d.level||1;gameInfo.exp=d.total_exp_earned||0;
   gameInfo.hubLevel=d.hub_level||1;
   gameInfo.isInHub=d.is_in_hub!==false;
@@ -294,7 +293,7 @@ window.pet.on('hourly-chime',()=>{
   if(!spritesheet)return;
   const now=new Date();
   const h=now.getHours(),m=now.getMinutes()>=30?'30':'00';
-  nq.enqueue({text:('0'+h).slice(-2)+':'+m,title:'报时',type:'chime'},4);
+  nq.enqueue({text:('0'+h).slice(-2)+':'+m,title:'报时',type:'chime'},0);
 });
 
 window.pet.on('bubble-closed',()=>{nq.close();});
@@ -322,6 +321,6 @@ setInterval(()=>{
   if(block!==lastChimeBlock&&spritesheet){
     lastChimeBlock=block;
     const h=now.getHours(),m=now.getMinutes()>=30?'30':'00';
-    nq.enqueue({text:('0'+h).slice(-2)+':'+m,title:'报时',type:'chime'},4);
+    nq.enqueue({text:('0'+h).slice(-2)+':'+m,title:'报时',type:'chime'},0);
   }
 },30000);

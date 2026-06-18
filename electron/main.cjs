@@ -325,7 +325,7 @@ function checkAndTriggerEvent(typeFilter) {
       return true;
     });
     // Filler daily cap: max 8 per day (excludes login trigger)
-    if (typeFilter === 'filler' && (gameState.fillerCountToday || 0) >= 7) return null;
+    if (typeFilter === 'filler' && (gameState.fillerCountToday || 0) >= 8) return null;
 
     if (pool.length > 0) {
       const totalWeight = pool.reduce((sum, e) => sum + (e.weight || 1), 0);
@@ -425,18 +425,17 @@ function startGameLoop() {
       if (title) {
         currentTitle = title;
         gameState.equippedTitleIndex = currentScenario.titles.indexOf(title);
-        const luPayload = { level: gameState.level, title: title.name, titleColor: title.color, titleDesc: title.desc, eventText: storyEvent ? storyEvent.text : null };
-        try { mainWindow.webContents.send('level-up', luPayload); } catch {}
-        forwardToPet('level-up', luPayload);
-      } else {
-        try { mainWindow.webContents.send('level-up', { level: gameState.level, title: null, titleColor: null, titleDesc: null, eventText: storyEvent ? storyEvent.text : null }); } catch {}
       }
+      const luPayload = { level: gameState.level, title: title ? title.name : null, titleColor: title ? title.color : null, titleDesc: title ? title.desc : null, eventText: storyEvent ? storyEvent.text : null };
+      try { mainWindow.webContents.send('level-up', luPayload); } catch {}
+      forwardToPet('level-up', luPayload);
     }
 
     // Event check — filler only (every ~60s)
     if (Math.random() < delta / 60000) {
       const event = checkAndTriggerEvent('filler');
       if (event) {
+        gameState.fillerCountToday = (gameState.fillerCountToday || 0) + 1;
         const evPayload = { id: event.id, title: event.title || '事件', color: event.color || '#FFA500', text: event.text };
         try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
         forwardToPet('event-triggered', evPayload);
@@ -649,13 +648,41 @@ function registerIpcHandlers() {
     });
   });
 
-  ipcMain.handle('set-title', (_, { index }) => {
-    if (!currentScenario || !currentScenario.titles || index >= currentScenario.titles.length) {
+  ipcMain.handle('set-title', (_, { index, scenarioId, name }) => {
+    // Resolve target scenario: current scenario in-run, or specified scenario from hub titles
+    let scenario = currentScenario;
+    if (scenarioId) {
+      scenario = findScenarioById(scenarioId) || scenario;
+    }
+    if (!scenario || !scenario.titles) {
+      throw new Error('当前无副本，无法佩戴称号');
+    }
+    let realIndex = index;
+    if (name !== undefined && name !== null) {
+      // Hub title click passes name (not the real index in titles[])
+      realIndex = scenario.titles.findIndex(t => t.name === name);
+      if (realIndex === -1) throw new Error(`称号 '${name}' 未找到`);
+    } else if (realIndex === undefined || realIndex === null || realIndex >= scenario.titles.length) {
       throw new Error('Title index out of bounds');
     }
-    gameState.equippedTitleIndex = index;
-    currentTitle = currentScenario.titles[index];
-    return true;
+    // Only allow equipping unlocked titles
+    const target = scenario.titles[realIndex];
+    if (target.level > gameState.level && !gameState.isInHub) {
+      throw new Error('称号尚未解锁');
+    }
+    if (scenarioId && gameState.isInHub) {
+      // Hub wearing: equip for that scenario, session-only (not persisted to save.json equippedTitleIndex)
+      if (!gameState.unlockedTitleSets) gameState.unlockedTitleSets = {};
+      const unlocked = (gameState.unlockedTitleSets[scenarioId] || []);
+      if (!unlocked.includes(target.name)) throw new Error('称号尚未解锁');
+      // Remember hub-equipped title name for this scenario (session)
+      if (!gameState.hubEquippedTitles) gameState.hubEquippedTitles = {};
+      gameState.hubEquippedTitles[scenarioId] = target.name;
+    } else if (scenario === currentScenario) {
+      gameState.equippedTitleIndex = realIndex;
+      currentTitle = target;
+    }
+    return { name: target.name, color: target.color, desc: target.desc };
   });
 
   ipcMain.handle('set-onboarding-seen', () => {

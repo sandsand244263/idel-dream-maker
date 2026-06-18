@@ -36,7 +36,7 @@ const LANG = {
   dbgRuntime: '+1h', dbgHoliday: '节日事件',
   statusHub: '（大厅）', statusNone: '-',
   eventToday: '今天',
-  eventDate: '{0}月{1}日 · {2}条',
+  eventDate: '{0}月{1}日',
 };
 
 function t(key) { return LANG[key] || key; }
@@ -141,7 +141,7 @@ async function init() {
     }
     updateUI();
   });
-  window.electron.on('achievement-unlocked', (event) => { const { name, desc, icon } = event; addLog('achievement', `${name}: ${desc}`); showAchievementOverlay(icon, name, desc); gameState?.unlockedAchievements.push(event.id); updateUI(); });
+  window.electron.on('achievement-unlocked', (event) => { const { name, desc, icon } = event; addLog('achievement', `${name}: ${desc}`); showAchievementOverlay(icon, name, desc); updateUI(); });
   window.electron.on('scenario-changed', (event) => { gameState = event.game; currentScenario = event.scenario; currentTitle = { name: event.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); });
   window.electron.on('auto-save', () => { flashSaveDot(); });
 }
@@ -455,7 +455,10 @@ async function renderTitlesPanel() {
             it.innerHTML = `<span class="title-name" style="color:var(--fg)">${n}</span>`;
             it.style.cursor = 'pointer';
             it.addEventListener('click', async () => {
-              try { await window.electron.invoke('set-title', { index: s.unlockedTitles.indexOf(n), scenarioId: s.id }); } catch(e) {}
+              try {
+                const r = await window.electron.invoke('set-title', { name: n, scenarioId: s.id });
+                if (r) { currentTitle = { name: r.name, color: r.color, desc: r.desc }; updateUI(); }
+              } catch(e) { showToast(t('systemTitleEquipFail'), 'error'); }
               renderTitlesPanel();
             });
             bd.appendChild(it);
@@ -468,7 +471,7 @@ async function renderTitlesPanel() {
       }
     } catch (e) { showToast(t('systemTitleFetchFail'), 'error'); } return;
   }
-  try { const d = await window.electron.invoke('get-scenario-detail', { id: gameState?.scenario_id }); const cur = gameState?.equipped_title_index ?? 0; d.titles.forEach((t, idx) => { const u = t.level <= gameState.level; const eq = u && idx === cur; const it = document.createElement('div'); it.className = `title-item${u ? '' : ' locked'}${eq ? ' equipped' : ''}`; it.innerHTML = `<span class="title-level">Lv.${t.level}</span><span class="title-name" style="color:${u ? t.color : 'var(--dim)'}">${u ? t.name : '???'}</span><span class="title-desc">${u ? t.desc : '???'}</span>`; if (u) { it.style.cursor = 'pointer'; it.addEventListener('click', async () => { try { await window.electron.invoke('set-title', { index: idx }); if (gameState) gameState.equipped_title_index = idx; currentTitle = { name: t.name, color: t.color, desc: t.desc }; updateUI(); renderTitlesPanel(); } catch (e) { showToast(t('systemTitleEquipFail'), 'error'); } }); } titlesListEl.appendChild(it); }); } catch (e) { showToast(t('systemDetailFail'), 'error'); }
+  try { const d = await window.electron.invoke('get-scenario-detail', { id: gameState?.scenario_id }); const cur = gameState?.equipped_title_index ?? 0; d.titles.forEach((t, idx) => { const u = t.level <= gameState.level; const eq = u && idx === cur; const it = document.createElement('div'); it.className = `title-item${u ? '' : ' locked'}${eq ? ' equipped' : ''}`; it.innerHTML = `<span class="title-level">Lv.${t.level}</span><span class="title-name" style="color:${u ? t.color : 'var(--dim)'}">${u ? t.name : '???'}</span><span class="title-desc">${u ? t.desc : '???'}</span>`; if (u) { it.style.cursor = 'pointer'; it.addEventListener('click', async () => { try { const r = await window.electron.invoke('set-title', { index: idx }); if (gameState) gameState.equipped_title_index = idx; if (r) currentTitle = { name: r.name, color: r.color, desc: r.desc }; updateUI(); renderTitlesPanel(); } catch (e) { showToast(t('systemTitleEquipFail'), 'error'); } }); } titlesListEl.appendChild(it); }); } catch (e) { showToast(t('systemDetailFail'), 'error'); }
 }
 
 async function renderAchievementPanel() {
@@ -494,7 +497,7 @@ function dayLabel(d) {
   const today = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
   if (d === today) return t('eventToday');
   const p = d.split('-');
-  return tf('eventDate', parseInt(p[1]), parseInt(p[2]), 0);
+  return tf('eventDate', parseInt(p[1]), parseInt(p[2]));
 }
 
 async function renderEventPanel() {
@@ -638,7 +641,7 @@ init().then(() => {
   window.electron.invoke('get-log-entries', { date: today }).then(entries => {
     if (entries && entries.length > 0) {
       entries.forEach(e => {
-        const entry = document.createElement('div'); entry.className = `log-entry event`;
+        const entry = document.createElement('div'); entry.className = `log-entry ${e.ty || 'event'}`;
         const ts = document.createElement('span'); ts.className = 'ts';
         ts.textContent = `[${e.t}]`;
         const msg = document.createElement('span'); msg.className = 'msg'; msg.textContent = e.m;
