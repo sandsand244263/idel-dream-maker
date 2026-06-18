@@ -653,3 +653,15 @@ npx electron-builder   # 打包验证
 | 4 | **骨架屏加载** — 事件历史面板/结局列表加载时显示呼吸闪烁占位条 | `src/style.css`, `src/main.js` | ✅ |
 | 5 | **动画元素 will-change** — 7 组动画元素补 will-change 声明，减少掉帧 | `src/style.css` | ✅ |
 | 6 | **font-display: swap** — 5 个 HTML 的 @font-face 补策略，避免字体加载时空白 | `index.html`, `pet/index.html`, `pet-context-menu/index.html`, `pet-selector/index.html`, `pet-bubble/index.html` | ✅ |
+
+## v2.7.3 — Bug修复：等级曲线系数
+
+> **当前阶段：v2.7.3（已完成）**
+>
+> 修复等级曲线 LV100+ 段 EXP 系数 30000→6000，对齐文档设计目标"LV500约117天（8h/天）"。旧值 30000 实际需要约 450 天，修正后匹配 117 天。同步修复前端和共享模块。
+
+| # | 内容 | 涉及文件 | 状态 |
+|:-:|:-----|:---------|:----:|
+| 1 | **electron/main.cjs** — calcLevel 260行 30000→6000，calcExpForLevel 269行 30000→6000 | `electron/main.cjs` | ✅ |
+| 2 | **src/main.js** — calcLevel 212行 30000→6000，calcExpForLevel 214行 30000→6000 | `src/main.js` | ✅ |
+| 3 | **src/scenario.js** — calculateLevel 6行 30000→6000，calcExpForLevel 12行 30000→6000 | `src/scenario.js` | ✅ |
