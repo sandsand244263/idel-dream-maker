@@ -37,6 +37,12 @@ class NotificationQueue{
   constructor(){this.q=[];this.current=null;}
   enqueue(item,priority){
     petLog(`[PET] nq.enqueue type=${item.type} text=${(item.text||'').slice(0,30)} hasCurrent=${!!this.current} qLen=${this.q.length}`);
+    if (this.current) {
+      this.current = item;
+      this.q = [];
+      this.showDotOnly();
+      return;
+    }
     item.prio=priority;
     let i=0;while(i<this.q.length&&this.q[i].prio>=priority)i++;
     this.q.splice(i,0,item);
