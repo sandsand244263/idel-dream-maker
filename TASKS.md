@@ -654,14 +654,18 @@ npx electron-builder   # 打包验证
 | 5 | **动画元素 will-change** — 7 组动画元素补 will-change 声明，减少掉帧 | `src/style.css` | ✅ |
 | 6 | **font-display: swap** — 5 个 HTML 的 @font-face 补策略，避免字体加载时空白 | `index.html`, `pet/index.html`, `pet-context-menu/index.html`, `pet-selector/index.html`, `pet-bubble/index.html` | ✅ |
 
-## v2.7.3 — Bug修复：等级曲线系数
+## v2.7.3 — Bug修复：等级曲线系数+ScenarioWriter对齐
 
 > **当前阶段：v2.7.3（已完成）**
 >
 > 修复等级曲线 LV100+ 段 EXP 系数 30000→6000，对齐文档设计目标"LV500约117天（8h/天）"。旧值 30000 实际需要约 450 天，修正后匹配 117 天。同步修复前端和共享模块。
+>
+> 同步更新 ScenarioWriter skill：基于新曲线重新设计 filler 密度公式 floor(分钟/30)，每周目 filler ~1700 条。4 周目独立 filler（MinRebirth 区分），story 改为每周目 500 条全量。游戏引擎中 filler 过滤逻辑改为 `minRebirth === currentRebirth`（各周目不混用）。新增防重复 5 条规范。
 
 | # | 内容 | 涉及文件 | 状态 |
 |:-:|:-----|:---------|:----:|
-| 1 | **electron/main.cjs** — calcLevel 260行 30000→6000，calcExpForLevel 269行 30000→6000 | `electron/main.cjs` | ✅ |
-| 2 | **src/main.js** — calcLevel 212行 30000→6000，calcExpForLevel 214行 30000→6000 | `src/main.js` | ✅ |
-| 3 | **src/scenario.js** — calculateLevel 6行 30000→6000，calcExpForLevel 12行 30000→6000 | `src/scenario.js` | ✅ |
+| 1 | **等级曲线系数修复** — 3个文件6处 30000→6000 | `electron/main.cjs`, `src/main.js`, `src/scenario.js` | ✅ |
+| 2 | **filler过滤逻辑** — checkAndTriggerEvent 新增 filler 专属周目校验 `!==` | `electron/main.cjs` | ✅ |
+| 3 | **format-rules.md 重写** — 新密度表/周目分节/防重复5条规范/Action列 | `references/format-rules.md` | ✅ |
+| 4 | **SKILL.md 更新** — 数据规格/生成流程/filler规范/检查清单 | `SKILL.md` | ✅ |
+| 5 | **CLAUDE.md 数据对齐** — 事件文本数更新/skill 引擎说明 | `CLAUDE.md` | ✅ |

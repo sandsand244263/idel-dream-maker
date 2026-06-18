@@ -401,6 +401,8 @@ function checkAndTriggerEvent(typeFilter) {
       if (e.minLevel && e.minLevel > gameState.level) return false;
       if (e.minHours && e.minHours > runtimeHours) return false;
       if (e.minRebirth && e.minRebirth > ((gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0)) return false;
+      // Filler: only trigger events exactly matching current rebirth (not lower rebirth's filler)
+      if (e.type === 'filler' && e.minRebirth !== ((gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0)) return false;
       if (e.once && gameState.triggeredEvents.includes(e.id)) return false;
       return true;
     });
