@@ -638,3 +638,18 @@ npx electron-builder   # 打包验证
 | 8 | **大厅引导提示** — 未进过副本时显示引导文字 | `src/main.js`, `src/style.css` | ✅ |
 | 9 | **EXP进度条加粗** — 6px→10px | `src/style.css` | ✅ |
 | 10 | **标题栏升级闪烁** — level-up时LV数字闪烁变色+缩放动画 | `src/main.js`, `src/style.css` | ✅ |
+
+## v2.7.2 — UX优化（基于UI/UX Pro Max skill）
+
+> **当前阶段：v2.7.2（已完成）**
+>
+> 基于 UI/UX Pro Max skill 的 10 级优先级规则体系，完成 6 项 UI/UX 专业度提升。涉及阅读体验、布局稳定性、z-index 层级、加载反馈、动画性能、字体策略。
+
+| # | 内容 | 涉及文件 | 状态 |
+|:-:|:-----|:---------|:----:|
+| 1 | **阅读类文本行距加宽** — 故事事件/结局/引导/弹窗描述 line-height 1.6-1.7 | `src/style.css`, `themes/style-guide.md` | ✅ |
+| 2 | **侧面板 scrollbar-gutter** — 面板内容不因滚动条出现而抖动 | `src/style.css` | ✅ |
+| 3 | **事件/成就弹窗 z-index 抬到 250/251** — 不被侧面板遮挡，临时反馈始终可见 | `src/style.css`, `themes/style-guide.md` | ✅ |
+| 4 | **骨架屏加载** — 事件历史面板/结局列表加载时显示呼吸闪烁占位条 | `src/style.css`, `src/main.js` | ✅ |
+| 5 | **动画元素 will-change** — 7 组动画元素补 will-change 声明，减少掉帧 | `src/style.css` | ✅ |
+| 6 | **font-display: swap** — 5 个 HTML 的 @font-face 补策略，避免字体加载时空白 | `index.html`, `pet/index.html`, `pet-context-menu/index.html`, `pet-selector/index.html`, `pet-bubble/index.html` | ✅ |

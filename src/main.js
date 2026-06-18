@@ -686,7 +686,7 @@ function dayLabel(d) {
 }
 
 async function renderEventPanel() {
-  eventListEl.innerHTML = '<div class="loading">加载中...</div>';
+  eventListEl.innerHTML = '<div class="skeleton"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div>';
   try {
     const dates = await window.electron.invoke('get-log-dates');
     if (!dates || dates.length === 0) {
@@ -716,7 +716,7 @@ async function renderEventPanel() {
       hdr.addEventListener('click', async () => {
         const isCollapsed = body.classList.contains('hidden');
         if (isCollapsed) {
-          body.innerHTML = '<div class="loading">加载中...</div>';
+          body.innerHTML = '<div class="skeleton"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div>';
           body.classList.remove('hidden');
           const items = await window.electron.invoke('get-log-entries', { date: d }) || [];
           body.innerHTML = '';
@@ -737,7 +737,7 @@ async function renderEventPanel() {
 }
 
 async function renderEndingPanel() {
-  endingPanelList.innerHTML = '<div class="loading">加载中...</div>';
+  endingPanelList.innerHTML = '<div class="skeleton"><div class="skeleton-line"></div><div class="skeleton-line"></div></div>';
   try {
     const stats = await window.electron.invoke('get-hub-stats');
     endingPanelList.innerHTML = '';
