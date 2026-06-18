@@ -46,6 +46,8 @@ const LANG = {
   endingRecord: '{0} · {1}周目 · {2}',
   hubCompletion: '通关 {0}/{1}',
   hubTitleGroup: '大厅称号',
+  completionTitleGroup: '通关称号',
+  completionTitleEmpty: '暂无通关称号',
   scenarioTitleGroup: '副本称号',
   hubAchGroup: '大厅成就',
   scenarioAchGroup: '副本成就',
@@ -593,6 +595,40 @@ async function renderTitlesPanel() {
     // 分隔线
     const sep = document.createElement('div'); sep.style.cssText = 'height:1px;background:color-mix(in srgb,var(--fg) 10%,transparent);margin:8px 0;';
     titlesListEl.appendChild(sep);
+
+    // 通关称号分组
+    const compGroup = document.createElement('div'); compGroup.className = 'title-group-header';
+    compGroup.textContent = t('completionTitleGroup');
+    titlesListEl.appendChild(compGroup);
+    try {
+      const ctData = await window.electron.invoke('get-hub-completion-titles');
+      if (ctData.unlocked && ctData.unlocked.length > 0) {
+        for (const ct of ctData.unlocked) {
+          const isEquipped = ctData.equipped?.scenarioId === ct.scenarioId;
+          const it = document.createElement('div'); it.className = `title-item${isEquipped ? ' equipped' : ''}`;
+          it.innerHTML = `<span class="title-name" style="color:var(--fg)">${ct.title}</span><span class="title-desc">${ct.scenarioName}</span>`;
+          it.style.cursor = 'pointer';
+          it.addEventListener('click', async () => {
+            try {
+              const r = await window.electron.invoke('set-completion-title', { scenarioId: ct.scenarioId });
+              if (r.success) {
+                updateUI();
+                renderTitlesPanel();
+              }
+            } catch (e) { showToast(t('systemTitleEquipFail'), 'error'); }
+          });
+          titlesListEl.appendChild(it);
+        }
+      } else {
+        const empty = document.createElement('div'); empty.className = 'title-item';
+        empty.innerHTML = `<span class="title-name" style="color:var(--dim)">${t('completionTitleEmpty')}</span>`;
+        titlesListEl.appendChild(empty);
+      }
+    } catch {}
+
+    // 分隔线
+    const sep2 = document.createElement('div'); sep2.style.cssText = 'height:1px;background:color-mix(in srgb,var(--fg) 10%,transparent);margin:8px 0;';
+    titlesListEl.appendChild(sep2);
 
     // 副本称号分组标题
     const scenarioGroup = document.createElement('div'); scenarioGroup.className = 'title-group-header';

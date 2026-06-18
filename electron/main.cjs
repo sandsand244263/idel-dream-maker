@@ -218,6 +218,8 @@ function readSave() {
         if (gameState.rebirthExpBonus === undefined) gameState.rebirthExpBonus = 0;
         if (gameState.fillerRebirthBonus === undefined) gameState.fillerRebirthBonus = 0;
         if (gameState.gameCompletions === undefined) gameState.gameCompletions = [];
+        if (gameState.unlockedCompletionTitles === undefined) gameState.unlockedCompletionTitles = [];
+        if (gameState.equippedCompletionTitle === undefined) gameState.equippedCompletionTitle = null;
       }
       gameState._version = SAVE_VERSION;
     }
@@ -506,7 +508,7 @@ function startGameLoop() {
       hub_level: calcLevel(gameState.hubTotalExp),
       rebirth_count: (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0,
       mechanic: currentScenario ? (currentScenario.mechanic || 'standard') : 'standard',
-      hub_title: getHubTitle(hubLevel).name,
+      hub_title: gameState?.equippedCompletionTitle?.title || getHubTitle(hubLevel).name,
     };
     try { mainWindow.webContents.send('game-tick', payload); } catch {}
     forwardToPet('game-tick', payload);
@@ -597,6 +599,18 @@ function startGameLoop() {
       const existingIdx = gameState.gameCompletions.findIndex(c => c.scenarioId === gameState.scenarioId);
       if (existingIdx === -1) {
         gameState.gameCompletions.push({ scenarioId: gameState.scenarioId, date: new Date().toISOString().slice(0,10), rebirthCount: (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0 });
+      }
+      // 首次通关解锁通关称号（来自 .md completion_title）
+      if (currentScenario.completion_title) {
+        if (!gameState.unlockedCompletionTitles) gameState.unlockedCompletionTitles = [];
+        const alreadyUnlocked = gameState.unlockedCompletionTitles.find(c => c.scenarioId === gameState.scenarioId);
+        if (!alreadyUnlocked) {
+          gameState.unlockedCompletionTitles.push({
+            scenarioId: gameState.scenarioId,
+            scenarioName: currentScenario.name_cn || currentScenario.nameCN || currentScenario.name,
+            title: currentScenario.completion_title,
+          });
+        }
       }
       // 检查大厅成就
       checkHubAchievements();
@@ -1128,12 +1142,33 @@ function registerIpcHandlers() {
     }));
   });
 
+  // ── Completion titles ──
+  ipcMain.handle('get-hub-completion-titles', () => {
+    return {
+      unlocked: gameState?.unlockedCompletionTitles || [],
+      equipped: gameState?.equippedCompletionTitle || null,
+    };
+  });
+
+  ipcMain.handle('set-completion-title', (_, { scenarioId }) => {
+    if (!gameState.unlockedCompletionTitles) return { success: false };
+    const found = gameState.unlockedCompletionTitles.find(c => c.scenarioId === scenarioId);
+    if (!found) return { success: false, error: '未解锁' };
+    if (gameState.equippedCompletionTitle?.scenarioId === scenarioId) {
+      gameState.equippedCompletionTitle = null;
+    } else {
+      gameState.equippedCompletionTitle = { scenarioId, title: found.title };
+    }
+    writeSave(gameState);
+    return { success: true, equipped: gameState.equippedCompletionTitle };
+  });
+
   // ── Hub stats ──
   ipcMain.handle('get-hub-stats', () => {
     const completions = (gameState.gameCompletions || []).filter((c, i, arr) => arr.findIndex(x => x.scenarioId === c.scenarioId) === i);
     return {
       hubLevel,
-      hubTitle: getHubTitle(hubLevel),
+      hubTitle: { name: gameState?.equippedCompletionTitle?.title || getHubTitle(hubLevel).name },
       completionCount: completions.length,
       totalScenarios: allScenarios.length,
       completions: completions,
@@ -1196,6 +1231,8 @@ app.whenReady().then(() => {
       rebirthExpBonus: 0,
       fillerRebirthBonus: 0,
       gameCompletions: [],
+      unlockedCompletionTitles: [],
+      equippedCompletionTitle: null,
     };
   }
 
