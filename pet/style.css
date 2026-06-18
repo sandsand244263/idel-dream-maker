@@ -18,10 +18,12 @@ body { font-family:var(--font); color:var(--fg); }
 
 #container { width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0;position:relative;background:rgba(10,10,10,0.85);border:1px solid var(--border);border-radius:8px;overflow:hidden;animation:floatIdle 3s ease-in-out infinite; }
 #container.border-hidden { border:none;background:transparent;border-radius:0;padding:0; }
+#container:hover #info-bar,
+#container:hover #exp-wrap { opacity:1; }
 @keyframes floatIdle { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-4px); } }
 
-/* Info bar */
-#info-bar { text-align:center;height:20px;display:flex;align-items:center;justify-content:center;pointer-events:none;flex-shrink:0;background:color-mix(in srgb,var(--bg) 75%,transparent);border-radius:4px;margin:0 4px;padding:0 4px; }
+/* Info bar — 默认淡显示，悬浮宠物窗口时清晰 */
+#info-bar { text-align:center;height:20px;display:flex;align-items:center;justify-content:center;pointer-events:none;flex-shrink:0;opacity:0.3;transition:opacity 0.2s ease; }
 #info-text { font-size:11px;color:color-mix(in srgb,var(--fg) 70%,transparent);white-space:nowrap;text-shadow:0 0 4px rgba(0,0,0,0.6); }
 
 /* Canvas wrap */
@@ -44,8 +46,8 @@ body { font-family:var(--font); color:var(--fg); }
 #bubble-zone.zone-hide { display:none; }
 #bubble-zone.zone-hidden { display:none; }
 
-/* EXP progress bar */
-#exp-wrap { display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;background:color-mix(in srgb,var(--bg) 75%,transparent);border-radius:4px;margin:0 4px;padding:2px 4px; }
+/* EXP progress bar — 默认淡显示，悬浮宠物窗口时清晰 */
+#exp-wrap { display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;opacity:0.3;transition:opacity 0.2s ease; }
 #exp-track { width:70%;height:8px;background:color-mix(in srgb,var(--fg) 6%,transparent);border-radius:4px;overflow:hidden; }
 #exp-fill { height:100%;width:0%;border-radius:4px;position:relative;background:linear-gradient(90deg,color-mix(in srgb,var(--fg) 25%,transparent),color-mix(in srgb,var(--fg) 80%,transparent),color-mix(in srgb,var(--fg) 25%,transparent));background-size:200% 100%;animation:shimmer 3s ease-in-out infinite;will-change:background-position; }
 @keyframes shimmer { 0% { background-position:200% 0; } 100% { background-position:-200% 0; } }

@@ -621,3 +621,20 @@ npx electron-builder   # 打包验证
 |:-:|:-----|:-----|
 | - | 用升级后的 skill 重新生成 3 个副本 | 现有废土/星空/隐士缺新字段，需重新生成才能用上新功能。注意：不能同时删所有副本，先生成1个再删旧的 |
 | - | 持续产新副本 | 每周 1-2 个，架构已就位，放进 scenarios/ 即可 |
+
+## v2.7.1 — 配色优化+宠物背景修复+bubble闪烁修复+报时自动展开+UX优化
+
+> **当前阶段：v2.7.1（已完成）**
+
+| # | 内容 | 涉及文件 | 状态 |
+|:-:|:-----|:---------|:----:|
+| 1 | **配色优化** — 删除6个低对比度主题保留9个，对比度≥10:1，dim层次拉开，白色主题特殊语义色 | `src/style.css`, `pet/style.css`, `src/main.js`(THEMES数组) | ✅ |
+| 2 | **宠物窗口背景修复** — info-bar/exp-wrap默认淡显示(opacity:0.3)+悬浮清晰(:hover 1.0)，不加背景色保持透明，text-shadow辅助 | `pet/style.css` | ✅ |
+| 3 | **pet bubble闪烁修复** — doShowBubble先更新内容再显示，避免闪旧内容 | `electron/pet-bubble.cjs` | ✅ |
+| 4 | **报时自动展开bubble** — chime不进nq队列，直接弹bubble+6秒自动消失，不占用dot | `pet/pet.js`, `pet-bubble/script.js` | ✅ |
+| 5 | **删除抽取副本功能** — 按钮+IPC+相关代码全部移除 | `index.html`, `src/main.js`, `electron/main.cjs` | ✅ |
+| 6 | **状态栏精简** — 版本号移到设置面板，状态栏只显示核心信息 | `src/main.js`, `index.html`, `src/style.css` | ✅ |
+| 7 | **副本卡片加进度** — 通关✓+重生R数/进行中Lv.X | `src/main.js`, `src/style.css` | ✅ |
+| 8 | **大厅引导提示** — 未进过副本时显示引导文字 | `src/main.js`, `src/style.css` | ✅ |
+| 9 | **EXP进度条加粗** — 6px→10px | `src/style.css` | ✅ |
+| 10 | **标题栏升级闪烁** — level-up时LV数字闪烁变色+缩放动画 | `src/main.js`, `src/style.css` | ✅ |
