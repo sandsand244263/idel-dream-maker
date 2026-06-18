@@ -56,8 +56,14 @@
     <footer id="button-bar">
       <button id="btn-backhub" class="bar-btn hidden" data-i18n="btnBack">大厅</button>
       <button id="btn-scenario" class="bar-btn" data-i18n="btnScenario">副本</button>
-      <button id="btn-titles" class="bar-btn" data-i18n="btnTitles">称号</button>
-      <button id="btn-achievement" class="bar-btn" data-i18n="btnAchievement">成就</button>
+      <div id="btn-journey-wrap">
+        <button id="btn-journey" class="bar-btn" data-i18n="btnJourney">历程</button>
+        <div id="journey-menu" class="hidden">
+          <div class="jm-item" data-action="titles" data-i18n="jTitle">称号</div>
+          <div class="jm-item" data-action="achievement" data-i18n="jAchievement">成就</div>
+          <div class="jm-item" data-action="event" data-i18n="jEvent">事件</div>
+        </div>
+      </div>
       <button id="btn-settings" class="bar-btn" data-i18n="btnSettings">设置</button>
       <button id="btn-tutorial" class="bar-btn" data-i18n="btnTutorial">教程</button>
     </footer>
@@ -123,6 +129,11 @@
   <div id="achievement-panel" class="hidden">
     <div id="achievement-panel-header"><span data-i18n="panelAchievement">成就一览</span><button id="achievement-close">✕</button></div>
     <div id="achievement-list"></div>
+  </div>
+
+  <div id="event-panel" class="hidden">
+    <div id="event-panel-header"><span data-i18n="panelEvent">事件记录</span><button id="event-close">✕</button></div>
+    <div id="event-list"></div>
   </div>
 
   <div id="toast" class="hidden"></div>

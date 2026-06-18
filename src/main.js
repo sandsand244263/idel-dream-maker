@@ -3,9 +3,10 @@
 const LANG = {
   hubWelcome: '欢迎回来', hubLevel: '大厅 Lv.', drawBtn: '+ 抽取副本',
   noScenarios: '暂无可用的副本', hubEmptyHint: '点击下方 [副本] 或 [+ 抽取副本] 开始，点击 [教程] 查看操作说明',
-  btnBack: '大厅', btnScenario: '副本', btnTitles: '称号',
+  btnBack: '大厅', btnScenario: '副本', btnJourney: '历程',
   btnSettings: '设置', btnTutorial: '教程',
-  panelScenario: '副本选择', panelTitles: '称号一览', panelAchievement: '成就一览', panelSettings: '设置',
+  jTitle: '称号', jAchievement: '成就', jEvent: '事件',
+  panelScenario: '副本选择', panelTitles: '称号一览', panelAchievement: '成就一览', panelEvent: '事件记录', panelSettings: '设置',
   labelName: '名称',
   settingsSave: '保存', settingsThemeTitle: '主题', ctSave: '应用自定义配色',
   eventHeader: '事件', achievementHeader: '成就解锁',
@@ -34,6 +35,8 @@ const LANG = {
   dbgEvent: '触发事件', dbgLevelup: '+10 级', dbgAchievement: '解锁成就',
   dbgRuntime: '+1h', dbgHoliday: '节日事件',
   statusHub: '（大厅）', statusNone: '-',
+  eventToday: '今天',
+  eventDate: '{0}月{1}日 · {2}条',
 };
 
 function t(key) { return LANG[key] || key; }
@@ -76,13 +79,17 @@ const achievementClose = document.getElementById('achievement-close');
 const achievementListEl = document.getElementById('achievement-list');
 const btnBackHub = document.getElementById('btn-backhub');
 const btnScenario = document.getElementById('btn-scenario');
-const btnTitles = document.getElementById('btn-titles');
+const btnJourney = document.getElementById('btn-journey');
+const journeyMenu = document.getElementById('journey-menu');
 const btnSettings = document.getElementById('btn-settings');
 const permaStatus = document.getElementById('perma-status');
 const permaText = document.getElementById('perma-text');
 const saveDot = document.getElementById('save-dot');
 const expBarFill = document.getElementById('exp-bar-fill');
 const expBarText = document.getElementById('exp-bar-text');
+const eventPanel = document.getElementById('event-panel');
+const eventClose = document.getElementById('event-close');
+const eventListEl = document.getElementById('event-list');
 
 const confirmModal = document.getElementById('confirm-modal');
 const confirmOk = document.getElementById('confirm-ok');
@@ -253,8 +260,12 @@ function addLog(type, message) {
   const now = new Date(); ts.textContent = `[${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}]`;
   const msg = document.createElement('span'); msg.className = 'msg'; msg.textContent = message;
   entry.appendChild(ts); entry.appendChild(msg); logArea.appendChild(entry);
-  if (logArea.children.length > 500) logArea.removeChild(logArea.firstChild);
   logArea.scrollTop = logArea.scrollHeight;
+
+  // Persist event entries
+  if (type === 'event') {
+    window.electron.invoke('add-log-entry', { type, msg: message }).catch(() => {});
+  }
 }
 
 function dismissEventOverlay() {
@@ -288,7 +299,22 @@ achievementOverlay.addEventListener('animationend', () => {
 achievementOverlay.addEventListener('click', () => { dismissAchievementOverlay(); if (achievementDismissTimer) clearTimeout(achievementDismissTimer); });
 
 btnScenario.addEventListener('click', async () => { try { scenarioList = await window.electron.invoke('get-scenario-list'); } catch (e) { showToast(t('systemDetailFail'), 'error'); } renderScenarioPanel(); scenarioPanel.classList.remove('hidden'); });
-btnTitles.addEventListener('click', () => { renderTitlesPanel(); titlesPanel.classList.remove('hidden'); });
+
+// ── Journey submenu ──
+btnJourney.addEventListener('click', (e) => { e.stopPropagation(); journeyMenu.classList.toggle('hidden'); });
+document.addEventListener('click', () => { journeyMenu.classList.add('hidden'); });
+journeyMenu.addEventListener('click', (e) => { e.stopPropagation(); });
+document.querySelectorAll('.jm-item').forEach(el => {
+  el.addEventListener('click', () => {
+    journeyMenu.classList.add('hidden');
+    const action = el.dataset.action;
+    if (action === 'titles') { renderTitlesPanel(); titlesPanel.classList.remove('hidden'); }
+    else if (action === 'achievement') { renderAchievementPanel(); achievementPanel.classList.remove('hidden'); }
+    else if (action === 'event') { renderEventPanel(); eventPanel.classList.remove('hidden'); }
+  });
+});
+eventClose.addEventListener('click', () => eventPanel.classList.add('hidden'));
+
 btnSettings.addEventListener('click', () => {
   settingsName.value = gameState?.player_name || '';
   if (gameState?.selected_font_theme === 'custom' && gameState?.custom_theme) {
@@ -411,9 +437,6 @@ function renderScenarioPanel() {
 document.getElementById('btn-close').addEventListener('click', () => window.electron.invoke('hide-window'));
 scenarioClose.addEventListener('click', () => scenarioPanel.classList.add('hidden'));
 titlesClose.addEventListener('click', () => titlesPanel.classList.add('hidden'));
-
-const btnAchievement = document.getElementById('btn-achievement');
-btnAchievement.addEventListener('click', () => { renderAchievementPanel(); achievementPanel.classList.remove('hidden'); });
 achievementClose.addEventListener('click', () => achievementPanel.classList.add('hidden'));
 
 async function renderTitlesPanel() {
@@ -464,6 +487,65 @@ async function renderAchievementPanel() {
       achievementListEl.appendChild(it);
     });
   } catch (e) { showToast(t('systemDetailFail'), 'error'); }
+}
+
+function dayLabel(d) {
+  const now = new Date();
+  const today = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+  if (d === today) return t('eventToday');
+  const p = d.split('-');
+  return tf('eventDate', parseInt(p[1]), parseInt(p[2]), 0);
+}
+
+async function renderEventPanel() {
+  eventListEl.innerHTML = '<div class="loading">加载中...</div>';
+  try {
+    const dates = await window.electron.invoke('get-log-dates');
+    if (!dates || dates.length === 0) {
+      eventListEl.innerHTML = '<div class="hub-empty-text">暂无事件记录</div>';
+      return;
+    }
+    eventListEl.innerHTML = '';
+    const today = `${new Date().getFullYear()}-${pad(new Date().getMonth()+1)}-${pad(new Date().getDate())}`;
+    for (const d of dates) {
+      const expanded = (d === today);
+      const entries = expanded ? (await window.electron.invoke('get-log-entries', { date: d }) || []) : [];
+      const grp = document.createElement('div'); grp.className = 'date-group';
+      const hdr = document.createElement('div'); hdr.className = 'date-header';
+      hdr.dataset.date = d;
+      hdr.dataset.loaded = expanded ? '1' : '0';
+      hdr.innerHTML = expanded ? `▼ ${dayLabel(d)}` : `▶ ${dayLabel(d)}`;
+      const body = document.createElement('div'); body.className = 'date-body' + (expanded ? '' : ' hidden');
+      if (expanded) {
+        entries.forEach(e => {
+          const item = document.createElement('div'); item.className = 'log-entry event';
+          item.innerHTML = `<span class="ts">[${e.t}]</span><span class="msg">${e.m}</span>`;
+          body.appendChild(item);
+        });
+      } else {
+        hdr.dataset.count = '0';
+      }
+      hdr.addEventListener('click', async () => {
+        const isCollapsed = body.classList.contains('hidden');
+        if (isCollapsed) {
+          body.innerHTML = '<div class="loading">加载中...</div>';
+          body.classList.remove('hidden');
+          const items = await window.electron.invoke('get-log-entries', { date: d }) || [];
+          body.innerHTML = '';
+          items.forEach(e => {
+            const item = document.createElement('div'); item.className = 'log-entry event';
+            item.innerHTML = `<span class="ts">[${e.t}]</span><span class="msg">${e.m}</span>`;
+            body.appendChild(item);
+          });
+          hdr.innerHTML = `▼ ${dayLabel(d)}`;
+        } else {
+          body.classList.add('hidden');
+          hdr.innerHTML = `▶ ${dayLabel(d)}`;
+        }
+      });
+      grp.appendChild(hdr); grp.appendChild(body); eventListEl.appendChild(grp);
+    }
+  } catch (e) { eventListEl.innerHTML = '<div class="hub-empty-text">加载失败</div>'; }
 }
 
 async function updateTooltip() {
@@ -550,4 +632,19 @@ init().then(() => {
   if (gameState?.is_in_hub) addLog('system', `Idel-DreamMaker v${appVersion} ${t('logStartHub')}`);
   else if (gameState) { switchView(false); addLog('info', tf('logStartScenario', formatRuntime(gameState.total_runtime_ms), gameState.level)); }
   updateUI(); updateTooltip(); setInterval(updateTooltip, 5000);
+
+  // Load today's events from persistence
+  const today = `${new Date().getFullYear()}-${pad(new Date().getMonth()+1)}-${pad(new Date().getDate())}`;
+  window.electron.invoke('get-log-entries', { date: today }).then(entries => {
+    if (entries && entries.length > 0) {
+      entries.forEach(e => {
+        const entry = document.createElement('div'); entry.className = `log-entry event`;
+        const ts = document.createElement('span'); ts.className = 'ts';
+        ts.textContent = `[${e.t}]`;
+        const msg = document.createElement('span'); msg.className = 'msg'; msg.textContent = e.m;
+        entry.appendChild(ts); entry.appendChild(msg); logArea.appendChild(entry);
+      });
+      logArea.scrollTop = logArea.scrollHeight;
+    }
+  }).catch(() => {});
 });

@@ -91,6 +91,46 @@ function getAppDataPath() {
   return path.join(base, 'Idel-DreamMaker');
 }
 
+function getLogDir() {
+  const dir = path.join(getAppDataPath(), 'logs');
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  return dir;
+}
+
+function appendLogEntry(type, msg) {
+  try {
+    const now = new Date();
+    const dateKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    const filePath = path.join(getLogDir(), dateKey + '.json');
+    let entries = [];
+    if (fs.existsSync(filePath)) {
+      entries = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    }
+    entries.push({
+      t: `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`,
+      ty: type,
+      m: msg,
+    });
+    fs.writeFileSync(filePath, JSON.stringify(entries), 'utf-8');
+  } catch (e) { console.error('appendLogEntry error:', e); }
+}
+
+function getLogDates() {
+  try {
+    const dir = getLogDir();
+    const files = fs.readdirSync(dir).filter(f => f.endsWith('.json'));
+    return files.map(f => f.replace('.json', '')).sort();
+  } catch { return []; }
+}
+
+function getLogEntries(date) {
+  try {
+    const filePath = path.join(getLogDir(), date + '.json');
+    if (!fs.existsSync(filePath)) return [];
+    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  } catch { return []; }
+}
+
 // ── IPC Handlers ──
 
 function readSave() {
@@ -823,6 +863,19 @@ function registerIpcHandlers() {
     app.relaunch();
     app.exit();
     return true;
+  });
+
+  ipcMain.handle('add-log-entry', (_, { type, msg }) => {
+    appendLogEntry(type, msg);
+    return true;
+  });
+
+  ipcMain.handle('get-log-dates', () => {
+    return getLogDates();
+  });
+
+  ipcMain.handle('get-log-entries', (_, { date }) => {
+    return getLogEntries(date);
   });
 }
 

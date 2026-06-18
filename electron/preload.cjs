@@ -14,6 +14,7 @@ contextBridge.exposeInMainWorld('electron', {
       'hide-pet-window', 'toggle-pet-window', 'toggle-main-window',
       'dev-trigger-event', 'dev-force-trigger-event', 'dev-level-up', 'dev-achievement', 'dev-runtime', 'dev-force-holiday-event',
       'dev-trigger-story', 'dev-trigger-filler', 'dev-reset-daily', 'dev-hourly-chime', 'dev-reset-save',
+      'add-log-entry', 'get-log-dates', 'get-log-entries',
     ];
     if (validChannels.includes(channel)) {
       return ipcRenderer.invoke(channel, ...args);
