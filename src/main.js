@@ -37,6 +37,20 @@ const LANG = {
   statusHub: '（大厅）', statusNone: '-',
   eventToday: '今天',
   eventDate: '{0}月{1}日',
+  jEnding: '结局',
+  endingHeader: '旅程已达终点',
+  endingRebirth: '重新开始（重生）',
+  endingHub: '返回大厅',
+  endingPanel: '结局收藏',
+  endingEmpty: '暂无通关记录',
+  endingRecord: '{0} · {1}周目 · {2}',
+  hubCompletion: '通关 {0}/{1}',
+  hubTitleGroup: '大厅称号',
+  scenarioTitleGroup: '副本称号',
+  hubAchGroup: '大厅成就',
+  scenarioAchGroup: '副本成就',
+  scenarioLocked: '需要大厅 Lv.{0} 或通关 {1} 个副本',
+  rebirthConfirm: '确定重生吗？该副本进度将清空，你将重新体验所有故事。经验加成 +10%（封顶 +50%），filler 上限 +5（封顶 +25）。',
 };
 
 function t(key) { return LANG[key] || key; }
@@ -90,6 +104,16 @@ const expBarText = document.getElementById('exp-bar-text');
 const eventPanel = document.getElementById('event-panel');
 const eventClose = document.getElementById('event-close');
 const eventListEl = document.getElementById('event-list');
+const hubTitleDisplay = document.getElementById('hub-title-display');
+const hubCompletionDisplay = document.getElementById('hub-completion-display');
+const endingOverlay = document.getElementById('ending-overlay');
+const endingScenarioName = document.getElementById('ending-scenario-name');
+const endingText = document.getElementById('ending-text');
+const endingRebirthBtn = document.getElementById('ending-rebirth');
+const endingHubBtn = document.getElementById('ending-hub');
+const endingPanel = document.getElementById('ending-panel');
+const endingPanelClose = document.getElementById('ending-panel-close');
+const endingPanelList = document.getElementById('ending-panel-list');
 
 const confirmModal = document.getElementById('confirm-modal');
 const confirmOk = document.getElementById('confirm-ok');
@@ -144,7 +168,35 @@ async function init() {
   window.electron.on('achievement-unlocked', (event) => { const { name, desc, icon } = event; addLog('achievement', `${name}: ${desc}`); showAchievementOverlay(icon, name, desc); updateUI(); });
   window.electron.on('scenario-changed', (event) => { gameState = event.game; currentScenario = event.scenario; currentTitle = { name: event.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); });
   window.electron.on('auto-save', () => { flashSaveDot(); });
+  window.electron.on('scenario-ending', (event) => {
+    endingScenarioName.textContent = event.scenarioName;
+    endingText.textContent = event.text;
+    endingOverlay.classList.remove('hidden');
+  });
 }
+
+endingRebirthBtn.addEventListener('click', async () => {
+  const ok = await showConfirmModal(t('rebirthConfirm'));
+  if (!ok) return;
+  try {
+    const r = await window.electron.invoke('rebirth-scenario', { scenarioId: gameState?.scenario_id });
+    if (r.success) {
+      gameState.is_in_hub = true;
+      gameState.scenario_id = '';
+      hubLevel = r.hubLevel;
+      endingOverlay.classList.add('hidden');
+      switchView(true);
+      renderHubView();
+      renderHubCards();
+      updateUI();
+      addLog('info', '已重生，经验加成 +10%');
+    }
+  } catch (e) { showToast('重生失败', 'error'); }
+});
+endingHubBtn.addEventListener('click', () => {
+  endingOverlay.classList.add('hidden');
+});
+endingPanelClose.addEventListener('click', () => endingPanel.classList.add('hidden'));
 
 function switchView(inHub) {
   hubView.classList.toggle('hidden', !inHub); logArea.classList.toggle('hidden', inHub);
@@ -186,6 +238,11 @@ function renderHubView() {
   if (!gameState) return;
   hubGreeting.textContent = t('hubWelcome'); hubPlayerName.textContent = gameState.player_name;
   hubLevelDisplay.textContent = `${t('hubLevel')}${hubLevel}`; hubDrawBtn.textContent = t('drawBtn');
+  // 加载大厅称号和通关统计
+  window.electron.invoke('get-hub-stats').then(stats => {
+    if (hubTitleDisplay) hubTitleDisplay.textContent = stats.hubTitle ? stats.hubTitle.name : '';
+    if (hubCompletionDisplay) hubCompletionDisplay.textContent = tf('hubCompletion', stats.completionCount, stats.totalScenarios);
+  }).catch(() => {});
 }
 
 function renderHubCards() {
@@ -195,13 +252,31 @@ function renderHubCards() {
     hubScenarioList.innerHTML = `<div class="hub-empty"><div class="hub-empty-icon">[ ~ ~ ]</div><div class="hub-empty-text">${t('noScenarios')}</div><div class="hub-empty-hint">${t('hubEmptyHint')}</div></div>`;
     return;
   }
-  scenarioList.forEach(s => {
-    const card = document.createElement('div'); card.className = 'hub-card';
-    card.innerHTML = `<div class="hub-card-name">${s.nameCN} (${s.name})</div><div class="hub-card-desc">${s.description}</div><div class="hub-card-meta">${s.eventCount} ${t('scenarioEvent')} · ${s.achievementCount} ${t('scenarioAchievement')}</div>`;
-    card.addEventListener('click', async () => {
-      try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); }
+  window.electron.invoke('get-scenario-unlocks').then(unlocks => {
+    const unlockMap = {};
+    unlocks.forEach(u => unlockMap[u.id] = u);
+    scenarioList.forEach(s => {
+      const u = unlockMap[s.id] || { unlocked: true };
+      const card = document.createElement('div');
+      card.className = 'hub-card' + (u.unlocked ? '' : ' locked');
+      card.innerHTML = `<div class="hub-card-name">${s.nameCN} (${s.name})</div><div class="hub-card-desc">${s.description}</div><div class="hub-card-meta">${s.eventCount} ${t('scenarioEvent')} · ${s.achievementCount} ${t('scenarioAchievement')}</div>${u.unlocked ? '' : `<div class="hub-card-lock">${tf('scenarioLocked', u.requirement.hub_level || 0, u.requirement.completions || 0)}</div>`}`;
+      if (u.unlocked) {
+        card.addEventListener('click', async () => {
+          try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); }
+        });
+      }
+      hubScenarioList.appendChild(card);
     });
-    hubScenarioList.appendChild(card);
+  }).catch(() => {
+    // 降级：全部可点击
+    scenarioList.forEach(s => {
+      const card = document.createElement('div'); card.className = 'hub-card';
+      card.innerHTML = `<div class="hub-card-name">${s.nameCN} (${s.name})</div><div class="hub-card-desc">${s.description}</div><div class="hub-card-meta">${s.eventCount} ${t('scenarioEvent')} · ${s.achievementCount} ${t('scenarioAchievement')}</div>`;
+      card.addEventListener('click', async () => {
+        try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); }
+      });
+      hubScenarioList.appendChild(card);
+    });
   });
 }
 
@@ -242,7 +317,8 @@ function updatePermaStatus() {
   const rt = gameState.is_in_hub ? '—' : formatRuntime(gameState.total_runtime_ms || 0);
   const ach = gameState.unlockedAchievements?.length || 0;
   const sc = currentScenario?.nameCN || 'Hub';
-  const dl = gameState.is_in_hub ? `Hub Lv.${hubLevel}` : `Lv.${gameState.level}`;
+  const rebirthCount = (gameState.rebirth_count || 0);
+  const dl = gameState.is_in_hub ? `Hub Lv.${hubLevel}` : `Lv.${gameState.level}${rebirthCount > 0 ? `(R${rebirthCount})` : ''}`;
   const title = currentTitle?.name || '?';
   if (permaText) permaText.innerHTML = `${appVersion} | ${sc}<br>${dl} | ${title} | ${rt} | ${t('scenarioAchievement')}:${ach}`;
 }
@@ -315,6 +391,7 @@ document.querySelectorAll('.jm-item').forEach(el => {
     if (action === 'titles') { renderTitlesPanel(); titlesPanel.classList.remove('hidden'); }
     else if (action === 'achievement') { renderAchievementPanel(); achievementPanel.classList.remove('hidden'); }
     else if (action === 'event') { renderEventPanel(); eventPanel.classList.remove('hidden'); }
+    else if (action === 'ending') { renderEndingPanel(); endingPanel.classList.remove('hidden'); }
   });
 });
 eventClose.addEventListener('click', () => eventPanel.classList.add('hidden'));
@@ -446,6 +523,53 @@ achievementClose.addEventListener('click', () => achievementPanel.classList.add(
 async function renderTitlesPanel() {
   titlesListEl.innerHTML = '';
   if (gameState?.is_in_hub) {
+    // 大厅称号分组
+    const hubGroup = document.createElement('div'); hubGroup.className = 'title-group-header';
+    hubGroup.textContent = t('hubTitleGroup');
+    titlesListEl.appendChild(hubGroup);
+    try {
+      const hubTitle = await window.electron.invoke('get-hub-title');
+      if (hubTitle) {
+        const hubTitlesList = [
+          { level: 1, name: '新人', desc: '刚踏上旅途' },
+          { level: 5, name: '初学者', desc: '略有经历' },
+          { level: 10, name: '行者', desc: '步履初启' },
+          { level: 15, name: '探索者', desc: '开始见识世界' },
+          { level: 20, name: '寻路人', desc: '有了方向' },
+          { level: 30, name: '漫游者', desc: '走过几段路' },
+          { level: 40, name: '远行客', desc: '脚步渐远' },
+          { level: 50, name: '冒险家', desc: '已非新人' },
+          { level: 70, name: '历练者', desc: '阅历渐深' },
+          { level: 90, name: '跋涉者', desc: '行路万里' },
+          { level: 110, name: '见闻广博者', desc: '见过许多世界' },
+          { level: 130, name: '行万里路者', desc: '脚印遍布' },
+          { level: 150, name: '传奇行者', desc: '传说的开始' },
+          { level: 180, name: '传奇', desc: '传奇进行时' },
+          { level: 200, name: '传奇冒险家', desc: '传奇已成' },
+          { level: 250, name: '不朽行者', desc: '时光难掩' },
+          { level: 300, name: '永恒', desc: '超越岁月' },
+          { level: 350, name: '超越者', desc: '超越了旅程' },
+          { level: 400, name: '归来者', desc: '千帆过尽' },
+          { level: 500, name: '万界漫游者', desc: '漫游万千世界' },
+        ];
+        hubTitlesList.forEach(tl => {
+          const u = hubLevel >= tl.level;
+          const it = document.createElement('div'); it.className = `title-item${u ? '' : ' locked'}${u && hubTitle.name === tl.name ? ' equipped' : ''}`;
+          it.innerHTML = `<span class="title-level">Lv.${tl.level}</span><span class="title-name" style="color:${u ? 'var(--fg)' : 'var(--dim)'}">${u ? tl.name : '???'}</span><span class="title-desc">${u ? tl.desc : '???'}</span>`;
+          titlesListEl.appendChild(it);
+        });
+      }
+    } catch {}
+
+    // 分隔线
+    const sep = document.createElement('div'); sep.style.cssText = 'height:1px;background:color-mix(in srgb,var(--fg) 10%,transparent);margin:8px 0;';
+    titlesListEl.appendChild(sep);
+
+    // 副本称号分组标题
+    const scenarioGroup = document.createElement('div'); scenarioGroup.className = 'title-group-header';
+    scenarioGroup.textContent = t('scenarioTitleGroup');
+    titlesListEl.appendChild(scenarioGroup);
+
     try {
       const ht = await window.electron.invoke('get-hub-titles');
       for (const s of ht) {
@@ -485,8 +609,31 @@ async function renderTitlesPanel() {
 
 async function renderAchievementPanel() {
   achievementListEl.innerHTML = '';
+  // 大厅成就分组
+  const hubGroup = document.createElement('div'); hubGroup.className = 'title-group-header';
+  hubGroup.textContent = t('hubAchGroup');
+  achievementListEl.appendChild(hubGroup);
+  try {
+    const hubAchs = await window.electron.invoke('get-hub-achievements');
+    hubAchs.forEach(a => {
+      const it = document.createElement('div'); it.className = `title-item${a.unlocked ? '' : ' locked'}`;
+      const condStr = a.condition.type === 'hub_level' ? `大厅 Lv.${a.condition.value}` : a.condition.type === 'completions' ? `通关 ${a.condition.value} 个副本` : a.condition.type === 'completions_half' ? '通关一半副本' : a.condition.type === 'completions_all' ? '通关所有副本' : a.condition.type === 'rebirths' ? `重生 ${a.condition.value} 次` : '';
+      it.innerHTML = `<span class="title-name" style="color:${a.unlocked ? 'var(--fg)' : 'var(--dim)'}">${a.unlocked ? a.name : '???'}</span><span class="title-desc">${a.unlocked ? a.desc : condStr}</span>`;
+      achievementListEl.appendChild(it);
+    });
+  } catch {}
+
+  // 分隔线
+  const sep = document.createElement('div'); sep.style.cssText = 'height:1px;background:color-mix(in srgb,var(--fg) 10%,transparent);margin:8px 0;';
+  achievementListEl.appendChild(sep);
+
+  // 副本成就分组
+  const scenarioGroup = document.createElement('div'); scenarioGroup.className = 'title-group-header';
+  scenarioGroup.textContent = t('scenarioAchGroup');
+  achievementListEl.appendChild(scenarioGroup);
+
   const id = gameState?.scenario_id;
-  if (!id) { achievementListEl.innerHTML = '<div class="hub-empty-text">请先进入副本</div>'; return; }
+  if (!id) { achievementListEl.innerHTML += '<div class="hub-empty-text">请先进入副本</div>'; return; }
   try {
     const d = await window.electron.invoke('get-scenario-detail', { id });
     if (!d || !d.achievements) return;
@@ -558,6 +705,24 @@ async function renderEventPanel() {
       grp.appendChild(hdr); grp.appendChild(body); eventListEl.appendChild(grp);
     }
   } catch (e) { eventListEl.innerHTML = '<div class="hub-empty-text">加载失败</div>'; }
+}
+
+async function renderEndingPanel() {
+  endingPanelList.innerHTML = '<div class="loading">加载中...</div>';
+  try {
+    const stats = await window.electron.invoke('get-hub-stats');
+    endingPanelList.innerHTML = '';
+    if (!stats.completions || stats.completions.length === 0) {
+      endingPanelList.innerHTML = `<div class="hub-empty-text">${t('endingEmpty')}</div>`;
+      return;
+    }
+    stats.completions.forEach(c => {
+      const sc = scenarioList.find(s => s.id === c.scenarioId);
+      const it = document.createElement('div'); it.className = 'title-item';
+      it.innerHTML = `<span class="title-name" style="color:var(--fg)">${sc ? sc.nameCN : c.scenarioId}</span><span class="title-desc">${tf('endingRecord', c.date, c.rebirthCount + 1, '')}</span>`;
+      endingPanelList.appendChild(it);
+    });
+  } catch (e) { endingPanelList.innerHTML = '<div class="hub-empty-text">加载失败</div>'; }
 }
 
 async function updateTooltip() {

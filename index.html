@@ -40,6 +40,8 @@
         <div id="hub-greeting" data-i18n="hubWelcome">欢迎回来</div>
         <div id="hub-player-name">Worker</div>
         <div id="hub-level-display">大厅 Lv.1</div>
+        <div id="hub-title-display"></div>
+        <div id="hub-completion-display"></div>
       </div>
       <div id="hub-scenario-list"></div>
       <button id="hub-draw-btn" data-i18n="drawBtn">+ 抽取副本</button>
@@ -62,6 +64,7 @@
           <div class="jm-item" data-action="titles" data-i18n="jTitle">称号</div>
           <div class="jm-item" data-action="achievement" data-i18n="jAchievement">成就</div>
           <div class="jm-item" data-action="event" data-i18n="jEvent">事件</div>
+          <div class="jm-item" data-action="ending" data-i18n="jEnding">结局</div>
         </div>
       </div>
       <button id="btn-settings" class="bar-btn" data-i18n="btnSettings">设置</button>
@@ -100,6 +103,18 @@
     </div>
   </div>
 
+  <div id="ending-overlay" class="hidden">
+    <div id="ending-box">
+      <div id="ending-header">旅程已达终点</div>
+      <div id="ending-scenario-name"></div>
+      <div id="ending-text"></div>
+      <div id="ending-buttons">
+        <button id="ending-rebirth">重新开始（重生）</button>
+        <button id="ending-hub">返回大厅</button>
+      </div>
+    </div>
+  </div>
+
   <div id="scenario-panel" class="hidden">
     <div id="scenario-panel-header"><span data-i18n="panelScenario">副本选择</span><button id="scenario-close">✕</button></div>
     <div id="scenario-list"></div>
@@ -134,6 +149,11 @@
   <div id="event-panel" class="hidden">
     <div id="event-panel-header"><span data-i18n="panelEvent">事件记录</span><button id="event-close">✕</button></div>
     <div id="event-list"></div>
+  </div>
+
+  <div id="ending-panel" class="hidden">
+    <div id="ending-panel-header"><span>结局收藏</span><button id="ending-panel-close">✕</button></div>
+    <div id="ending-panel-list"></div>
   </div>
 
   <div id="toast" class="hidden"></div>
