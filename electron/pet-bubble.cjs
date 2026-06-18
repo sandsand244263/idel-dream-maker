@@ -15,6 +15,7 @@ function sendToBubble(channel, data) {
 
 function hideBubble() {
   if (!bubbleWindow || bubbleWindow.isDestroyed()) return;
+  if (bubbleWindow.getOpacity() === 0) return; // 已隐藏，不重复发送 bubble-closed
   bubbleWindow.setBounds({ x: HIDE_POS.x, y: HIDE_POS.y, width: 260, height: 100 });
   bubbleWindow.setOpacity(0);
   if (petWindowRef && !petWindowRef.isDestroyed()) {

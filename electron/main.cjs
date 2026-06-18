@@ -144,6 +144,7 @@ function readSave() {
         // v1 migration: add filler-related fields
         if (gameState.lastLoginDay === undefined) gameState.lastLoginDay = '';
         if (gameState.fillerCountToday === undefined) gameState.fillerCountToday = 0;
+        if (gameState.hubEquippedTitles === undefined) gameState.hubEquippedTitles = {};
       }
       gameState._version = SAVE_VERSION;
     }
@@ -938,6 +939,7 @@ app.whenReady().then(() => {
       hasSeenOnboarding: false,
       lastLoginDay: '',
       fillerCountToday: 0,
+      hubEquippedTitles: {},
     };
   }
 

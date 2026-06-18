@@ -64,12 +64,12 @@ class NotificationQueue{
     dotSymbol.textContent = '○';
   }
   hideBubble(){
-    window.pet.invoke('close-bubble').catch(() => {});
+    // 不发 close-bubble：只重置 dot 状态（避免 close→bubble-closed→close 无限循环）
     dotEl.className = 'dot-none';
     dotSymbol.textContent = '○';
   }
   close(){
-    window.pet.invoke('close-bubble').catch(() => {});
+    // close 是响应 bubble-closed 事件的，bubble 已在关闭，不再发 close-bubble（避免无限循环）
     dotEl.className = 'dot-none';
     dotSymbol.textContent = '○';
     this.next();
