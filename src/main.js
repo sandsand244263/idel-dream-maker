@@ -262,8 +262,8 @@ function addLog(type, message) {
   entry.appendChild(ts); entry.appendChild(msg); logArea.appendChild(entry);
   logArea.scrollTop = logArea.scrollHeight;
 
-  // Persist event entries
-  if (type === 'event') {
+  // Persist event and levelup entries
+  if (type === 'event' || type === 'levelup') {
     window.electron.invoke('add-log-entry', { type, msg: message }).catch(() => {});
   }
 }

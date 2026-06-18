@@ -8,7 +8,7 @@ contextBridge.exposeInMainWorld('pet', {
       'get-pet-spritesheet', 'hide-pet-window', 'toggle-pet-window', 'toggle-main-window',
       'open-pets-folder',
       'show-pet-selector', 'show-bubble', 'close-bubble',
-      'show-context-menu', 'get-current-theme',
+      'show-context-menu', 'get-current-theme', 'pet-log',
     ];
     if (validChannels.includes(channel)) {
       return ipcRenderer.invoke(channel, ...args);
