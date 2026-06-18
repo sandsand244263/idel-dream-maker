@@ -125,16 +125,16 @@ async function init() {
   });
   window.electron.on('event-triggered', (event) => { addLog('event', event.text); showEventOverlay(event.title, event.color, event.text); });
   window.electron.on('level-up', (event) => {
-    console.log(`[PROBE] FE level-up level=${event.level} title=${event.title} hasEventText=${!!event.eventText} eventText=${event.eventText?.slice(0,30)}`);
     currentTitle = { name: event.title, color: event.titleColor, desc: event.titleDesc };
-    addLog('levelup', tf('systemLevelUp', event.level, event.title));
+    const logMsg = event.eventText ? `${tf('systemLevelUp', event.level, event.title)} — ${event.eventText}` : tf('systemLevelUp', event.level, event.title);
+    addLog('levelup', logMsg);
     // If merged with story event text, show combined notification
     if (event.eventText) {
       showEventOverlay(`Lv.${event.level} — ${event.title || ''}`, event.titleColor || '#FFA500', event.eventText);
     }
     updateUI();
   });
-  window.electron.on('achievement-unlocked', (event) => { console.log(`[PROBE] FE received achievement-unlocked id=${event.id} name=${event.name}`); const { name, desc, icon } = event; addLog('achievement', `${name}: ${desc}`); showAchievementOverlay(icon, name, desc); gameState?.unlockedAchievements.push(event.id); updateUI(); });
+  window.electron.on('achievement-unlocked', (event) => { const { name, desc, icon } = event; addLog('achievement', `${name}: ${desc}`); showAchievementOverlay(icon, name, desc); gameState?.unlockedAchievements.push(event.id); updateUI(); });
   window.electron.on('scenario-changed', (event) => { gameState = event.game; currentScenario = event.scenario; currentTitle = { name: event.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); });
   window.electron.on('auto-save', () => { flashSaveDot(); });
 }
@@ -277,12 +277,10 @@ function dismissAchievementOverlay() {
   achievementOverlay.classList.add('closing');
 }
 function showAchievementOverlay(icon, name, desc) {
-  console.log(`[PROBE] showAchievementOverlay CALLED icon=${icon} name=${name} desc=${desc}`);
   if (achievementDismissTimer) clearTimeout(achievementDismissTimer);
   achievementOverlay.classList.remove('closing');
   achievementIcon.textContent = icon; achievementName.textContent = name; achievementDesc.textContent = desc;
   achievementOverlay.classList.remove('hidden'); achievementDismissTimer = setTimeout(() => dismissAchievementOverlay(), 8000);
-  console.log(`[PROBE] showAchievementOverlay DONE hidden=${achievementOverlay.classList.contains('hidden')} classes=${achievementOverlay.className}`);
 }
 achievementOverlay.addEventListener('animationend', () => {
   if (achievementOverlay.classList.contains('closing')) { achievementOverlay.classList.add('hidden'); achievementOverlay.classList.remove('closing'); }

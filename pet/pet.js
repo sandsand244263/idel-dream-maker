@@ -282,9 +282,9 @@ window.pet.on('pet-state',d=>{
   updateInfoBar();
 });
 window.pet.on('event-triggered',d=>{transitionTo('run');nq.enqueue({text:d.text,title:d.title||'事件',type:'event'},1);});
-window.pet.on('level-up',d=>{gameInfo.title=d.title||gameInfo.title;transitionTo(Math.random()<0.5?'jump':'extra3');nq.enqueue({text:`升级! Lv.${d.level}`,title:'等级提升',type:'levelup'},2);});
+window.pet.on('level-up',d=>{gameInfo.title=d.title||gameInfo.title;transitionTo(Math.random()<0.5?'jump':'extra3');const txt=d.eventText?`Lv.${d.level} — ${d.eventText}`:`升级! Lv.${d.level}`;nq.enqueue({text:txt,title:'等级提升',type:'levelup'},2);});
 window.pet.on('achievement-unlocked',d=>{transitionTo(Math.random()<0.5?'review':'extra1');nq.enqueue({text:`${d.icon||'★'} ${d.name}`,title:'成就解锁',type:'achievement'},3);});
-window.pet.on('main-shown',()=>{nq.clearQueue();});
+
 window.pet.on('hourly-chime',()=>{
   if(!spritesheet)return;
   const now=new Date();
@@ -308,7 +308,7 @@ setInterval(() => {
 document.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='h')window.pet.invoke('hide-pet-window').catch(()=>{});});
 
 // Half-hourly chime (checks every 30s)
-let lastChimeBlock=-1;
+let lastChimeBlock=new Date().getHours()*2+(new Date().getMinutes()>=30?1:0);
 setInterval(()=>{
   const now=new Date();
   const block=now.getHours()*2+(now.getMinutes()>=30?1:0);

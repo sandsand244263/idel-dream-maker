@@ -173,7 +173,6 @@ function findScenarioById(id) {
 function resetGameForScenario(scenario, alias) {
   gameState.scenarioId = scenario.id;
   const p = gameState.scenarioProgress && gameState.scenarioProgress[scenario.id];
-  console.log(`[PROBE] resetGameForScenario id=${scenario.id} hasProgress=${!!p} eventsInScenario=${scenario.events?.length} achievementsInScenario=${scenario.achievements?.length}`);
   if (p) {
     gameState.totalExpEarned = p.totalExpEarned || 0;
     gameState.level = calcLevel(gameState.totalExpEarned);
@@ -198,14 +197,11 @@ function resetGameForScenario(scenario, alias) {
   // Trigger story event for current level (catches level 1 on first entry)
   const initEvent = findUnusedEvent('story', gameState.level);
   if (initEvent) {
-    console.log(`[PROBE] resetGame-init story id=${initEvent.id} level=${gameState.level}`);
     gameState.triggeredEvents.push(initEvent.id);
     const title = getCurrentTitle(currentScenario, gameState.level);
     const luPayload = { level: gameState.level, title: title?.name || '', titleColor: title?.color || '#888', titleDesc: title?.desc || '', eventText: initEvent.text };
     try { mainWindow.webContents.send('level-up', luPayload); } catch {}
     forwardToPet('level-up', luPayload);
-  } else {
-    console.log(`[PROBE] resetGame-init null level=${gameState.level} triggerCount=${gameState.triggeredEvents.length}`);
   }
 }
 
@@ -244,8 +240,6 @@ function findUnusedEvent(type, level) {
     if (e.once && gameState.triggeredEvents.includes(e.id)) return false;
     return true;
   });
-  console.log(`[PROBE] findUnusedEvent type=${type} level=${level} poolLen=${pool.length} triggerCount=${gameState.triggeredEvents.length}`);
-  if (pool.length > 0) console.log(`[PROBE]   firstMatch id=${pool[0].id} minLevel=${pool[0].minLevel} type=${pool[0].type}`);
   if (pool.length === 0) return null;
   return pool[0];
 }
@@ -310,12 +304,10 @@ function checkAndTriggerEvent(typeFilter) {
 
 function checkAchievements() {
   if (!currentScenario || !currentScenario.achievements || gameState.isInHub) {
-    console.log(`[PROBE] checkAchievements SKIP: scenario=${!!currentScenario} achievements=${!!(currentScenario?.achievements)} isHub=${gameState?.isInHub}`);
     return [];
   }
 
   const unlocked = [];
-  console.log(`[PROBE] checkAchievements scanning ${currentScenario.achievements.length} achievements, already unlocked: ${gameState.unlockedAchievements.length}`);
   for (const a of currentScenario.achievements) {
     if (gameState.unlockedAchievements.includes(a.id)) continue;
     let met = false;
@@ -334,7 +326,6 @@ function checkAchievements() {
         break;
     }
     if (met) {
-      console.log(`[PROBE] achievement UNLOCKED: id=${a.id} name=${a.name} type=${a.condition.type} val=${a.condition.value}`);
       gameState.unlockedAchievements.push(a.id);
       unlocked.push(a);
     }
@@ -387,7 +378,6 @@ function startGameLoop() {
     // Level up check — merge with story event
     const oldLevel = gameState.level;
     gameState.level = calcLevel(gameState.totalExpEarned);
-    console.log(`[PROBE] tick levelCheck old=${oldLevel} new=${gameState.level} exp=${Math.round(gameState.totalExpEarned)}`);
     if (gameState.level > oldLevel) {
       const title = getCurrentTitle(currentScenario, gameState.level);
       const storyEvent = findUnusedEvent('story', gameState.level);
@@ -914,14 +904,11 @@ app.whenReady().then(() => {
   if (!gameState.isInHub && currentScenario) {
     const initEvent = findUnusedEvent('story', gameState.level);
     if (initEvent) {
-      console.log(`[PROBE] initStory-story id=${initEvent.id} level=${gameState.level} text=${initEvent.text?.slice(0,30)}`);
       gameState.triggeredEvents.push(initEvent.id);
       const title = getCurrentTitle(currentScenario, gameState.level);
       const luPayload = { level: gameState.level, title: title?.name || '', titleColor: title?.color || '#888', titleDesc: title?.desc || '', eventText: initEvent.text };
       try { mainWindow.webContents.send('level-up', luPayload); } catch {}
       forwardToPet('level-up', luPayload);
-    } else {
-      console.log(`[PROBE] initStory-null level=${gameState.level} triggerCount=${gameState.triggeredEvents.length}`);
     }
   }
 
