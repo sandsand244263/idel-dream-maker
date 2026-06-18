@@ -67,11 +67,11 @@ function doShowBubble(data) {
   let x = petBounds.x + Math.floor((petBounds.width - bw) / 2);
   let y = petBounds.y + petBounds.height + 5;
   if (y + bh > screen.height) y = Math.max(0, petBounds.y - bh - 5);
-
+  // 先更新内容，再定位显示，避免闪烁旧内容
+  if (data) { currentData = data; sendToBubble('show-bubble', data); }
   bubbleWindow.setBounds({ x, y, width: bw, height: bh });
   bubbleWindow.setOpacity(1);
   bubbleWindow.show();
-  if (data) { currentData = data; sendToBubble('show-bubble', data); }
 }
 
 function positionAndShowBubble(data) {

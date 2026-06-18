@@ -4,10 +4,13 @@ window.petBubble.on('show-bubble', (data) => {
   const textEl = document.getElementById('bubble-text');
   if (data.title) titleEl.textContent = data.title;
   textEl.textContent = data.text || '';
+  document.body.dataset.type = data.type || 'event';
   document.getElementById('bubble').style.display = 'block';
 });
 
 document.getElementById('bubble').addEventListener('click', () => {
+  // chime 类型由 pet.js 自动关闭，点击不主动关闭
+  if (document.body.dataset.type === 'chime') return;
   window.petBubble.invoke('close-bubble').catch(() => {});
 });
 

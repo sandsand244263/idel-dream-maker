@@ -800,19 +800,6 @@ function registerIpcHandlers() {
     };
   });
 
-  ipcMain.handle('draw-scenario', () => {
-    if (allScenarios.length === 0) return null;
-    const idx = Math.floor(Math.random() * allScenarios.length);
-    const s = allScenarios[idx];
-    return {
-      id: s.id,
-      name: s.name,
-      nameCN: s.name_cn || s.nameCN,
-      description: s.description,
-      playerTitle: s.playerTitle || s.player_title,
-    };
-  });
-
   ipcMain.handle('exit-to-hub', () => {
     exitToHub();
     writeSave(gameState);

@@ -84,6 +84,21 @@ class NotificationQueue{
 }
 const nq=new NotificationQueue();
 
+let chimeTimer=null;
+function showChimeBubble(text){
+  window.pet.invoke('show-bubble', {
+    title: '报时',
+    text: text,
+    color: '#FF9E64',
+    type: 'chime',
+  }).catch(() => {});
+  if(chimeTimer) clearTimeout(chimeTimer);
+  chimeTimer = setTimeout(() => {
+    window.pet.invoke('close-bubble').catch(() => {});
+    chimeTimer = null;
+  }, 6000);
+}
+
 function loadStateCfg(s){
   let c=null;
   if(stateConfig&&stateConfig[s]){const st=stateConfig[s];c={row:st.row||0,frames:st.frames||st.frameCount||6,dur:st.durationMs?st.durationMs/(st.frames||6):140};}
@@ -293,7 +308,7 @@ window.pet.on('hourly-chime',()=>{
   if(!spritesheet)return;
   const now=new Date();
   const h=now.getHours(),m=now.getMinutes()>=30?'30':'00';
-  nq.enqueue({text:('0'+h).slice(-2)+':'+m,title:'报时',type:'chime'},0.5);
+  showChimeBubble(('0'+h).slice(-2)+':'+m);
 });
 
 window.pet.on('bubble-closed',()=>{nq.close();});
@@ -321,6 +336,6 @@ setInterval(()=>{
   if(block!==lastChimeBlock&&spritesheet){
     lastChimeBlock=block;
     const h=now.getHours(),m=now.getMinutes()>=30?'30':'00';
-    nq.enqueue({text:('0'+h).slice(-2)+':'+m,title:'报时',type:'chime'},0.5);
+    showChimeBubble(('0'+h).slice(-2)+':'+m);
   }
 },30000);

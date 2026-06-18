@@ -1,7 +1,7 @@
 // IPC via window.electron (provided by preload.cjs)
 
 const LANG = {
-  hubWelcome: '欢迎回来', hubLevel: '大厅 Lv.', drawBtn: '+ 抽取副本',
+  hubWelcome: '欢迎回来', hubLevel: '大厅 Lv.',
   noScenarios: '暂无可用的副本', hubEmptyHint: '点击下方 [副本] 或 [+ 抽取副本] 开始，点击 [教程] 查看操作说明',
   btnBack: '大厅', btnScenario: '副本', btnJourney: '历程',
   btnSettings: '设置', btnTutorial: '教程',
@@ -13,7 +13,7 @@ const LANG = {
   systemInitFail: '初始化失败', systemEnterFail: '进入副本失败',
   systemDrawFail: '抽取失败', systemBackFail: '返回失败',
   systemLevelUp: '等级 {0}！{1}',
-  systemEntered: '进入: {0}', systemDrew: '抽到并进入: {0}', systemBack: '返回大厅 — 大厅 Lv.{0}',
+  systemEntered: '进入: {0}', systemBack: '返回大厅 — 大厅 Lv.{0}',
   systemTitleEquipFail: '佩戴称号失败', systemTitleFetchFail: '获取大厅称号失败',
   systemDetailFail: '获取副本详情失败', systemThemeFail: '切换主题失败',
   logStartHub: '启动完成', logStartScenario: '已挂机 {0}，等级 {1}',
@@ -66,7 +66,6 @@ const hubGreeting = document.getElementById('hub-greeting');
 const hubPlayerName = document.getElementById('hub-player-name');
 const hubLevelDisplay = document.getElementById('hub-level-display');
 const hubScenarioList = document.getElementById('hub-scenario-list');
-const hubDrawBtn = document.getElementById('hub-draw-btn');
 const titlebarId = document.getElementById('titlebar-id');
 const titlebarLv = document.getElementById('titlebar-lv');
 const titlebarTitle = document.getElementById('titlebar-title');
@@ -159,9 +158,13 @@ async function init() {
     currentTitle = { name: event.title, color: event.titleColor, desc: event.titleDesc };
     const logMsg = event.eventText ? `${tf('systemLevelUp', event.level, event.title)} — ${event.eventText}` : tf('systemLevelUp', event.level, event.title);
     addLog('levelup', logMsg);
-    // If merged with story event text, show combined notification
     if (event.eventText) {
       showEventOverlay(`Lv.${event.level} — ${event.title || ''}`, event.titleColor || '#FFA500', event.eventText);
+    }
+    if (titlebarLv) {
+      titlebarLv.classList.remove('titlebar-lv-flash');
+      void titlebarLv.offsetWidth;
+      titlebarLv.classList.add('titlebar-lv-flash');
     }
     updateUI();
   });
@@ -237,7 +240,7 @@ document.getElementById('toast').addEventListener('animationend', () => {
 function renderHubView() {
   if (!gameState) return;
   hubGreeting.textContent = t('hubWelcome'); hubPlayerName.textContent = gameState.player_name;
-  hubLevelDisplay.textContent = `${t('hubLevel')}${hubLevel}`; hubDrawBtn.textContent = t('drawBtn');
+  hubLevelDisplay.textContent = `${t('hubLevel')}${hubLevel}`;
   // 加载大厅称号和通关统计
   window.electron.invoke('get-hub-stats').then(stats => {
     if (hubTitleDisplay) hubTitleDisplay.textContent = stats.hubTitle ? stats.hubTitle.name : '';
@@ -252,6 +255,14 @@ function renderHubCards() {
     hubScenarioList.innerHTML = `<div class="hub-empty"><div class="hub-empty-icon">[ ~ ~ ]</div><div class="hub-empty-text">${t('noScenarios')}</div><div class="hub-empty-hint">${t('hubEmptyHint')}</div></div>`;
     return;
   }
+  // 新手引导：未进过任何副本时显示
+  const hasProgress = gameState?.scenario_progress && Object.keys(gameState.scenario_progress).length > 0;
+  if (!hasProgress && gameState?.has_seen_onboarding) {
+    const guide = document.createElement('div');
+    guide.className = 'hub-guide';
+    guide.textContent = '→ 点击下方[副本]开始你的第一个故事';
+    hubScenarioList.appendChild(guide);
+  }
   window.electron.invoke('get-scenario-unlocks').then(unlocks => {
     const unlockMap = {};
     unlocks.forEach(u => unlockMap[u.id] = u);
@@ -259,7 +270,19 @@ function renderHubCards() {
       const u = unlockMap[s.id] || { unlocked: true };
       const card = document.createElement('div');
       card.className = 'hub-card' + (u.unlocked ? '' : ' locked');
-      card.innerHTML = `<div class="hub-card-name">${s.nameCN} (${s.name})</div><div class="hub-card-desc">${s.description}</div><div class="hub-card-meta">${s.eventCount} ${t('scenarioEvent')} · ${s.achievementCount} ${t('scenarioAchievement')}</div>${u.unlocked ? '' : `<div class="hub-card-lock">${tf('scenarioLocked', u.requirement.hub_level || 0, u.requirement.completions || 0)}</div>`}`;
+      let progressHtml = '';
+      if (u.unlocked) {
+        const progress = gameState?.scenario_progress?.[s.id];
+        const completion = gameState?.gameCompletions?.find(c => c.scenarioId === s.id);
+        const rebirthCount = gameState?.rebirthCounts?.[s.id] || 0;
+        if (completion) {
+          progressHtml = `<div class="hub-card-progress"><span class="progress-complete">✓ 通关</span>${rebirthCount > 0 ? `<span class="progress-rebirth">↻ R${rebirthCount}</span>` : ''}</div>`;
+        } else if (progress) {
+          const lvl = calcLevel(progress.totalExpEarned || progress.total_exp_earned || 0);
+          progressHtml = `<div class="hub-card-progress"><span class="progress-level">Lv.${lvl}</span></div>`;
+        }
+      }
+      card.innerHTML = `<div class="hub-card-name">${s.nameCN} (${s.name})</div><div class="hub-card-desc">${s.description}</div><div class="hub-card-meta">${s.eventCount} ${t('scenarioEvent')} · ${s.achievementCount} ${t('scenarioAchievement')}</div>${progressHtml}${u.unlocked ? '' : `<div class="hub-card-lock">${tf('scenarioLocked', u.requirement.hub_level || 0, u.requirement.completions || 0)}</div>`}`;
       if (u.unlocked) {
         card.addEventListener('click', async () => {
           try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); }
@@ -271,7 +294,17 @@ function renderHubCards() {
     // 降级：全部可点击
     scenarioList.forEach(s => {
       const card = document.createElement('div'); card.className = 'hub-card';
-      card.innerHTML = `<div class="hub-card-name">${s.nameCN} (${s.name})</div><div class="hub-card-desc">${s.description}</div><div class="hub-card-meta">${s.eventCount} ${t('scenarioEvent')} · ${s.achievementCount} ${t('scenarioAchievement')}</div>`;
+      let progressHtml = '';
+      const progress = gameState?.scenario_progress?.[s.id];
+      const completion = gameState?.gameCompletions?.find(c => c.scenarioId === s.id);
+      const rebirthCount = gameState?.rebirthCounts?.[s.id] || 0;
+      if (completion) {
+        progressHtml = `<div class="hub-card-progress"><span class="progress-complete">✓ 通关</span>${rebirthCount > 0 ? `<span class="progress-rebirth">↻ R${rebirthCount}</span>` : ''}</div>`;
+      } else if (progress) {
+        const lvl = calcLevel(progress.totalExpEarned || progress.total_exp_earned || 0);
+        progressHtml = `<div class="hub-card-progress"><span class="progress-level">Lv.${lvl}</span></div>`;
+      }
+      card.innerHTML = `<div class="hub-card-name">${s.nameCN} (${s.name})</div><div class="hub-card-desc">${s.description}</div><div class="hub-card-meta">${s.eventCount} ${t('scenarioEvent')} · ${s.achievementCount} ${t('scenarioAchievement')}</div>${progressHtml}`;
       card.addEventListener('click', async () => {
         try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); }
       });
@@ -279,10 +312,6 @@ function renderHubCards() {
     });
   });
 }
-
-hubDrawBtn.addEventListener('click', async () => {
-  try { const s = await window.electron.invoke('draw-scenario'); if (!s) return; const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemDrew', currentScenario.nameCN)); updateUI(); } catch (e) { showToast(t('systemDrawFail'), 'error'); }
-});
 
 btnBackHub.addEventListener('click', async () => {
   const ok = await showConfirmModal(t('confirmDesc'));
@@ -314,13 +343,16 @@ function updateExpBar() {
 
 function updatePermaStatus() {
   if (!gameState) { if (permaText) permaText.textContent = ''; return; }
-  const rt = gameState.is_in_hub ? '—' : formatRuntime(gameState.total_runtime_ms || 0);
   const ach = gameState.unlockedAchievements?.length || 0;
-  const sc = currentScenario?.nameCN || 'Hub';
   const rebirthCount = (gameState.rebirth_count || 0);
-  const dl = gameState.is_in_hub ? `Hub Lv.${hubLevel}` : `Lv.${gameState.level}${rebirthCount > 0 ? `(R${rebirthCount})` : ''}`;
-  const title = currentTitle?.name || '?';
-  if (permaText) permaText.innerHTML = `${appVersion} | ${sc}<br>${dl} | ${title} | ${rt} | ${t('scenarioAchievement')}:${ach}`;
+  if (gameState.is_in_hub) {
+    if (permaText) permaText.textContent = `Hub Lv.${hubLevel} | ${currentTitle?.name || '?'}`;
+  } else {
+    const rt = formatRuntime(gameState.total_runtime_ms || 0);
+    const dl = `Lv.${gameState.level}${rebirthCount > 0 ? `(R${rebirthCount})` : ''}`;
+    const title = currentTitle?.name || '?';
+    if (permaText) permaText.textContent = `${dl} | ${title} | ${rt} | 成就:${ach}`;
+  }
 }
 
 let saveDotTimer = null;
@@ -398,6 +430,8 @@ eventClose.addEventListener('click', () => eventPanel.classList.add('hidden'));
 
 btnSettings.addEventListener('click', () => {
   settingsName.value = gameState?.player_name || '';
+  const verEl = document.getElementById('settings-version');
+  if (verEl) verEl.textContent = appVersion;
   if (gameState?.selected_font_theme === 'custom' && gameState?.custom_theme) {
     const ct = gameState.custom_theme;
     document.getElementById('ct-fg').value = ct.fg; document.getElementById('ct-fg-text').value = ct.fg;
@@ -419,21 +453,16 @@ document.getElementById('btn-tutorial').addEventListener('click', async () => {
 });
 
 const THEMES = [
-  { id:'red', label:'红', fg:'#F38BA8', bg:'#1E0A10', dim:'#BA7D8F' },
-  { id:'red-orange', label:'红橙', fg:'#FAB387', bg:'#1E120A', dim:'#BF9E82' },
-  { id:'orange', label:'橙', fg:'#FF9E64', bg:'#1E1000', dim:'#C47D3A' },
-  { id:'yellow-orange', label:'黄橙', fg:'#EECB8C', bg:'#1E1400', dim:'#C4A050' },
-  { id:'yellow', label:'黄', fg:'#F9E2AF', bg:'#1E1C0A', dim:'#C4B892' },
-  { id:'yellow-green', label:'黄绿', fg:'#A8D86A', bg:'#0A1400', dim:'#7DAA40' },
-  { id:'green', label:'绿', fg:'#00FF00', bg:'#0A0A0A', dim:'#00AA00' },
-  { id:'cyan', label:'蓝绿', fg:'#94E2D5', bg:'#0A1E1A', dim:'#75BAAD' },
-  { id:'blue', label:'蓝', fg:'#89B4FA', bg:'#0E1428', dim:'#5A7FBF' },
-  { id:'blue-purple', label:'蓝紫', fg:'#A2A0F6', bg:'#0E0A1E', dim:'#7F7EC4' },
-  { id:'purple', label:'紫', fg:'#CBA6F7', bg:'#1A0E1E', dim:'#A284C4' },
-  { id:'pink', label:'红紫', fg:'#F5C2E7', bg:'#1E0E1A', dim:'#C49AB5' },
-  { id:'black', label:'黑', fg:'#CDD6F4', bg:'#11111B', dim:'#585B70' },
-  { id:'white', label:'白', fg:'#4C4F69', bg:'#EFF1F5', dim:'#9CA0B0' },
-  { id:'custom', label:'自定义', fg:'#00FF00', bg:'#0A0A0A', dim:'#00AA00' },
+  { id:'red', label:'红', fg:'#FF6B8A', bg:'#1A0508', dim:'#A85570' },
+  { id:'orange', label:'橙', fg:'#FFA552', bg:'#1A0C00', dim:'#B07030' },
+  { id:'yellow', label:'黄', fg:'#FFE066', bg:'#1A1600', dim:'#A89030' },
+  { id:'green', label:'绿', fg:'#00FF66', bg:'#050A05', dim:'#00AA44' },
+  { id:'cyan', label:'蓝绿', fg:'#5FE3D7', bg:'#051A16', dim:'#3A9A90' },
+  { id:'blue', label:'蓝', fg:'#6BA6FF', bg:'#08111F', dim:'#3A6AAA' },
+  { id:'purple', label:'紫', fg:'#D09BFF', bg:'#150A1A', dim:'#8A60A8' },
+  { id:'black', label:'黑', fg:'#E0E4F0', bg:'#0A0A12', dim:'#606080' },
+  { id:'white', label:'白', fg:'#3A3D55', bg:'#F0F2F8', dim:'#8888A0' },
+  { id:'custom', label:'自定义', fg:'#00FF66', bg:'#050A05', dim:'#00AA44' },
 ];
 
 
