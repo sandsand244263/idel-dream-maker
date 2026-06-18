@@ -27,7 +27,6 @@
       "pet-context-menu/**/*",
       "pet-selector/**/*",
       "public/**/*",
-      "scenarios/**/*.json",
       "package.json"
     ],
     "icon": "icons/icon.png",

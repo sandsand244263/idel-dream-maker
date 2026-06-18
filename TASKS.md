@@ -29,7 +29,7 @@
 | 1 | **初始化 Electron 主进程** | `electron/main.cjs`, `electron/preload.cjs` (新建), `package.json` (改) | ✅ |
 | 2 | **build.rs → build.js** | `build.js` (新建), 安装 yaml 包 | ✅ |
 | 3 | **scenario.rs → scenario.js** | `src/scenario.js` (新建) | ✅ |
-| 4 | **game.rs → game.js** | `src/game.js` (新建) | ✅ |
+| 4 | **game.rs → 主进程游戏循环** | 游戏逻辑合并进 `electron/main.cjs`（未单独建 game.js） | ✅ |
 | 5 | **main.js 通信改造** | `src/main.js` (改), `electron/preload.cjs` (补完) | ✅ |
 | 6 | **系统托盘 + 窗口行为** | `electron/tray.cjs`, `electron/windows.cjs` (新建) | ✅ |
 | 7 | **清理 Tauri 残余** | 删除 `src-tauri/`, `Cargo.*`, `.cargo/`, `target/` | ✅ |
@@ -548,15 +548,6 @@ npx electron-builder   # 打包验证
 > **当前阶段：v2.5.0（已完成）**
 >
 > story/filler 双轨事件（升级触发 story，时间驱动 filler）、成就面板、大厅称号可佩戴、整点报时、浮动待机、存档版本号、禁用代码签名、macOS 托盘图标、canvas 无宠物提示、去除别名输入。
-
-### 已知问题（待新对话修复）
-
-| # | 问题 | 根因 | 涉及文件 |
-|:-:|:----|:-----|:---------|
-| 1 | 关闭按钮 [x] 无反应 | 删除别名弹窗时误删标题栏事件绑定 | `src/main.js` |
-| 2 | 升级不合并 story 事件 | `findUnusedEvent` 可能返回空，需加 debug 探针定位 | `electron/main.cjs` |
-| 3 | 成就气泡未弹出 | `showAchievementOverlay` 被调用但覆盖层未渲染，需加日志排查 | `src/main.js` |
-| 4 | 整点报时改为弹气泡 | 未决策 | `pet/pet.js` + `electron/main.cjs` |
 
 ---
 
