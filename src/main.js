@@ -451,15 +451,20 @@ async function renderTitlesPanel() {
         const bd = document.createElement('div'); bd.className = 'hub-title-body hidden';
         if (s.unlockedTitles.length) {
           for (const n of s.unlockedTitles) {
-            const it = document.createElement('div'); it.className = 'title-item';
+            const isEquipped = s.equippedTitle === n;
+            const it = document.createElement('div'); it.className = `title-item${isEquipped ? ' equipped' : ''}`;
             it.innerHTML = `<span class="title-name" style="color:var(--fg)">${n}</span>`;
             it.style.cursor = 'pointer';
             it.addEventListener('click', async () => {
               try {
                 const r = await window.electron.invoke('set-title', { name: n, scenarioId: s.id });
-                if (r) { currentTitle = { name: r.name, color: r.color, desc: r.desc }; updateUI(); }
+                if (r) {
+                  currentTitle = { name: r.name, color: r.color, desc: r.desc }; updateUI();
+                  // 只更新该组内 item 的 equipped 标记，不重新渲染面板（保留展开状态）
+                  bd.querySelectorAll('.title-item').forEach(item => item.classList.remove('equipped'));
+                  it.classList.add('equipped');
+                }
               } catch(e) { showToast(t('systemTitleEquipFail'), 'error'); }
-              renderTitlesPanel();
             });
             bd.appendChild(it);
           }

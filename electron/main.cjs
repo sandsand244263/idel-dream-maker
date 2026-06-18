@@ -644,6 +644,7 @@ function registerIpcHandlers() {
         unlockedCount: unlocked.length,
         totalCount: s.titles ? s.titles.length : 0,
         unlockedTitles: unlocked,
+        equippedTitle: (gameState.hubEquippedTitles && gameState.hubEquippedTitles[s.id]) || null,
       };
     });
   });
