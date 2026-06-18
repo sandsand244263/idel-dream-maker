@@ -40,6 +40,7 @@ body { font-family:var(--font); color:var(--fg); }
 .dot-event { background:rgba(0,191,255,0.15);border:1px solid rgba(0,191,255,0.4);color:#00BFFF;animation:pulse 1.5s ease-in-out infinite; }
 .dot-levelup { background:rgba(0,255,0,0.15);border:1px solid rgba(0,255,0,0.4);color:#00FF00;animation:pulse 1.5s ease-in-out infinite; }
 .dot-achievement { background:rgba(255,215,0,0.15);border:1px solid rgba(255,215,0,0.4);color:#FFD700;animation:pulse 1.5s ease-in-out infinite; }
+.dot-chime { background:rgba(255,158,100,0.15);border:1px solid rgba(255,158,100,0.4);color:#FF9E64;animation:pulse 1.5s ease-in-out infinite; }
 @keyframes pulse { 0%,100% { transform:scale(1);opacity:0.6; } 50% { transform:scale(1.2);opacity:1; } }
 
 /* Bubble zone (flex child, between canvas and exp) */

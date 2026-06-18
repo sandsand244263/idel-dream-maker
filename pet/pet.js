@@ -46,6 +46,7 @@ class NotificationQueue{
   showDotOnly(){
     if(this.current.type==='achievement'){dotSymbol.textContent='★';dotEl.className='dot-achievement';}
     else if(this.current.type==='levelup'){dotSymbol.textContent='↑';dotEl.className='dot-levelup';}
+    else if(this.current.type==='chime'){dotSymbol.textContent='🕐';dotEl.className='dot-chime';}
     else{dotSymbol.textContent='!';dotEl.className='dot-event';}
     dotEl.dataset.text=this.current.text;
     dotEl.dataset.title=this.current.title||'';
@@ -286,10 +287,9 @@ window.pet.on('achievement-unlocked',d=>{transitionTo(Math.random()<0.5?'review'
 window.pet.on('main-shown',()=>{nq.clearQueue();});
 window.pet.on('hourly-chime',()=>{
   if(!spritesheet)return;
-  transitionTo('extra1');
-  const h=new Date().getHours();
-  infoText.textContent=('0'+h).slice(-2)+':00 | 整点报时';
-  setTimeout(()=>updateInfoBar(),3000);
+  const now=new Date();
+  const h=now.getHours(),m=now.getMinutes()>=30?'30':'00';
+  nq.enqueue({text:('0'+h).slice(-2)+':'+m,title:'报时',type:'chime'},4);
 });
 
 window.pet.invoke('scan-pets').then(r=>{pets=r.pets||[];selIdx=r.selected||0;loadPet(selIdx);applyPetSettings();}).catch(()=>{});
@@ -307,14 +307,14 @@ setInterval(() => {
 }, 20000);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='h')window.pet.invoke('hide-pet-window').catch(()=>{});});
 
-// Hourly chime
-let lastChimeHour=-1;
+// Half-hourly chime (checks every 30s)
+let lastChimeBlock=-1;
 setInterval(()=>{
-  const h=new Date().getHours();
-  if(h!==lastChimeHour&&spritesheet){
-    lastChimeHour=h;
-    transitionTo('extra1');
-    infoText.textContent=('0'+h).slice(-2)+':00 | 整点报时';
-    setTimeout(()=>updateInfoBar(),3000);
+  const now=new Date();
+  const block=now.getHours()*2+(now.getMinutes()>=30?1:0);
+  if(block!==lastChimeBlock&&spritesheet){
+    lastChimeBlock=block;
+    const h=now.getHours(),m=now.getMinutes()>=30?'30':'00';
+    nq.enqueue({text:('0'+h).slice(-2)+':'+m,title:'报时',type:'chime'},4);
   }
-},60000);
+},30000);

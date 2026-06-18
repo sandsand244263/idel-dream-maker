@@ -125,6 +125,7 @@ async function init() {
   });
   window.electron.on('event-triggered', (event) => { addLog('event', event.text); showEventOverlay(event.title, event.color, event.text); });
   window.electron.on('level-up', (event) => {
+    console.log(`[PROBE] FE level-up level=${event.level} title=${event.title} hasEventText=${!!event.eventText} eventText=${event.eventText?.slice(0,30)}`);
     currentTitle = { name: event.title, color: event.titleColor, desc: event.titleDesc };
     addLog('levelup', tf('systemLevelUp', event.level, event.title));
     // If merged with story event text, show combined notification
@@ -409,6 +410,7 @@ function renderScenarioPanel() {
     scenarioListEl.appendChild(card);
   });
 }
+document.getElementById('btn-close').addEventListener('click', () => window.electron.invoke('hide-window'));
 scenarioClose.addEventListener('click', () => scenarioPanel.classList.add('hidden'));
 titlesClose.addEventListener('click', () => titlesPanel.classList.add('hidden'));
 

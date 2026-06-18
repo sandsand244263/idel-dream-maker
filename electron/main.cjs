@@ -194,6 +194,19 @@ function resetGameForScenario(scenario, alias) {
   gameState.isInHub = false;
   gameState.scenarioAlias = alias || '';
   currentScenario = scenario;
+
+  // Trigger story event for current level (catches level 1 on first entry)
+  const initEvent = findUnusedEvent('story', gameState.level);
+  if (initEvent) {
+    console.log(`[PROBE] resetGame-init story id=${initEvent.id} level=${gameState.level}`);
+    gameState.triggeredEvents.push(initEvent.id);
+    const title = getCurrentTitle(currentScenario, gameState.level);
+    const luPayload = { level: gameState.level, title: title?.name || '', titleColor: title?.color || '#888', titleDesc: title?.desc || '', eventText: initEvent.text };
+    try { mainWindow.webContents.send('level-up', luPayload); } catch {}
+    forwardToPet('level-up', luPayload);
+  } else {
+    console.log(`[PROBE] resetGame-init null level=${gameState.level} triggerCount=${gameState.triggeredEvents.length}`);
+  }
 }
 
 function exitToHub() {
@@ -896,6 +909,22 @@ app.whenReady().then(() => {
   registerPetIpcHandlers(mainWindow, app);
   setOnPetSelected((idx) => { if (gameState) gameState.petSelectedIndex = idx; });
   initPet(app, gameState?.petSelectedIndex);
+
+  // Trigger initial story for restored scenarios
+  if (!gameState.isInHub && currentScenario) {
+    const initEvent = findUnusedEvent('story', gameState.level);
+    if (initEvent) {
+      console.log(`[PROBE] initStory-story id=${initEvent.id} level=${gameState.level} text=${initEvent.text?.slice(0,30)}`);
+      gameState.triggeredEvents.push(initEvent.id);
+      const title = getCurrentTitle(currentScenario, gameState.level);
+      const luPayload = { level: gameState.level, title: title?.name || '', titleColor: title?.color || '#888', titleDesc: title?.desc || '', eventText: initEvent.text };
+      try { mainWindow.webContents.send('level-up', luPayload); } catch {}
+      forwardToPet('level-up', luPayload);
+    } else {
+      console.log(`[PROBE] initStory-null level=${gameState.level} triggerCount=${gameState.triggeredEvents.length}`);
+    }
+  }
+
   startGameLoop();
 
   // Tooltip update every 5s
