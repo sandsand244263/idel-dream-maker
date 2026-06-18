@@ -33,12 +33,14 @@ let displayExp=0,dragMoved=false;
 class NotificationQueue{
   constructor(){this.q=[];this.current=null;}
   enqueue(item,priority){
+    console.log(`[PET] nq.enqueue type=${item.type} text=${(item.text||'').slice(0,30)} hasCurrent=${!!this.current} qLen=${this.q.length}`);
     item.prio=priority;
     let i=0;while(i<this.q.length&&this.q[i].prio>=priority)i++;
     this.q.splice(i,0,item);
     if(!this.current)this.next();
   }
   next(){
+    console.log(`[PET] nq.next qLen=${this.q.length}`);
     if(this.q.length===0){this.current=null;dotEl.className='dot-none';dotSymbol.textContent='○';return;}
     this.current=this.q.shift();
     this.showDotOnly();
@@ -282,10 +284,19 @@ window.pet.on('pet-state',d=>{
   updateInfoBar();
 });
 window.pet.on('event-triggered',d=>{transitionTo('run');nq.enqueue({text:d.text,title:d.title||'事件',type:'event'},1);});
-window.pet.on('level-up',d=>{gameInfo.title=d.title||gameInfo.title;transitionTo(Math.random()<0.5?'jump':'extra3');const txt=d.eventText?`Lv.${d.level} — ${d.eventText}`:`升级! Lv.${d.level}`;nq.enqueue({text:txt,title:'等级提升',type:'levelup'},2);});
+window.pet.on('level-up',d=>{
+  console.log(`[PET] level-up received level=${d.level} hasEventText=${!!d.eventText} eventText=${(d.eventText||'').slice(0,30)}`);
+  try {
+    gameInfo.title=d.title||gameInfo.title;
+    transitionTo(Math.random()<0.5?'jump':'extra3');
+    const txt=d.eventText?`Lv.${d.level} — ${d.eventText}`:`升级! Lv.${d.level}`;
+    nq.enqueue({text:txt,title:'等级提升',type:'levelup'},2);
+  } catch(e){console.log(`[PET] level-up ERROR: ${e.message}`);}
+});
 window.pet.on('achievement-unlocked',d=>{transitionTo(Math.random()<0.5?'review':'extra1');nq.enqueue({text:`${d.icon||'★'} ${d.name}`,title:'成就解锁',type:'achievement'},3);});
 
 window.pet.on('hourly-chime',()=>{
+  console.log(`[PET] hourly-chime IPC received spritesheet=${!!spritesheet}`);
   if(!spritesheet)return;
   const now=new Date();
   const h=now.getHours(),m=now.getMinutes()>=30?'30':'00';
@@ -309,9 +320,11 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='h')window.
 
 // Half-hourly chime (checks every 30s)
 let lastChimeBlock=new Date().getHours()*2+(new Date().getMinutes()>=30?1:0);
+console.log(`[PET] chime init lastChimeBlock=${lastChimeBlock}`);
 setInterval(()=>{
   const now=new Date();
   const block=now.getHours()*2+(now.getMinutes()>=30?1:0);
+  console.log(`[PET] chime check block=${block} last=${lastChimeBlock} spritesheet=${!!spritesheet} same=${block===lastChimeBlock}`);
   if(block!==lastChimeBlock&&spritesheet){
     lastChimeBlock=block;
     const h=now.getHours(),m=now.getMinutes()>=30?'30':'00';
