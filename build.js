@@ -70,6 +70,11 @@ function parseTable(lines, start, end) {
   for (let i = start; i < end; i++) {
     const line = lines[i].trim();
     if (!line.startsWith('|') || !line.endsWith('|')) {
+      if (inTable && line !== '' && !line.startsWith('|---')) {
+        const lm = line.length > 80 ? line.substring(0, 80) + '...' : line;
+        const reason = !line.startsWith('|') ? '行首缺少 |' : '行末缺少 |';
+        throw new Error(`parseTable 错误 (第 ${i + 1} 行): ${reason}\n  内容: "${lm}"`);
+      }
       if (inTable) break;
       continue;
     }
