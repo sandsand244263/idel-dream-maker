@@ -146,6 +146,7 @@ async function init() {
     if (gameState?.is_in_hub) {
       gameState = { ...gameState, ...p };
       if (p.hub_total_exp !== undefined) hubLevel = calcLevel(p.hub_total_exp);
+      if (p.hub_title) currentTitle = { name: p.hub_title, color: '#FFD700', desc: '' };
       renderHubView();
     } else {
       // Preserve runtime when hub tick sends 0
@@ -606,7 +607,7 @@ async function renderTitlesPanel() {
         for (const ct of ctData.unlocked) {
           const isEquipped = ctData.equipped?.scenarioId === ct.scenarioId;
           const it = document.createElement('div'); it.className = `title-item${isEquipped ? ' equipped' : ''}`;
-          it.innerHTML = `<span class="title-name" style="color:var(--fg)">${ct.title}</span><span class="title-desc">${ct.scenarioName}</span>`;
+          it.innerHTML = `<span class="title-name" style="color:#FFD700">${ct.title}</span><span class="title-desc">${ct.scenarioName}</span>`;
           it.style.cursor = 'pointer';
           it.addEventListener('click', async () => {
             try {

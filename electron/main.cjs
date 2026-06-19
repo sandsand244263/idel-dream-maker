@@ -1099,6 +1099,13 @@ function registerIpcHandlers() {
   ipcMain.handle('rebirth-scenario', (_, { scenarioId }) => {
     const sid = scenarioId || gameState.scenarioId;
     if (!sid) return { success: false, error: '无副本ID' };
+    // 检查重生上限
+    const scenario = findScenarioById(sid);
+    const maxR = scenario?.max_rebirth ?? 0;
+    const currentR = gameState.rebirthCounts?.[sid] || 0;
+    if (maxR > 0 && currentR >= maxR) {
+      return { success: false, error: '已达到该副本重生上限' };
+    }
     // 增加重生次数
     if (!gameState.rebirthCounts) gameState.rebirthCounts = {};
     gameState.rebirthCounts[sid] = (gameState.rebirthCounts[sid] || 0) + 1;
