@@ -615,11 +615,11 @@ npx electron-builder   # 打包验证
 | 15 | **CLAUDE.md长期规划章节** — 架构能力/挂机变体/副本增长路线/解锁曲线/大厅称号/大厅成就/UI规划/skill增长引擎 | `CLAUDE.md` | ✅ |
 | 16 | **ScenarioWriter skill完整升级** — 四周目结构+5种机制推荐+游戏机制说明+MinRebirth列+新frontmatter字段 | `skills/ScenarioWriter/SKILL.md`, `skills/ScenarioWriter/references/format-rules.md` | ✅ |
 
-### 后续待办（作者执行，非 AI 任务）
+### 后续待办
 
 | # | 内容 | 说明 |
 |:-:|:-----|:-----|
-| - | 用升级后的 skill 重新生成 3 个副本 | 现有废土/星空/隐士缺新字段，需重新生成才能用上新功能。注意：不能同时删所有副本，先生成1个再删旧的 |
+| - | 用升级后的 skill（第二人称/分段/灯停规则）重新生成 starfield 和 hermit | 现有副本已回退到旧版，需用新 skill 重新生成。先做哪个都行 |
 | - | 持续产新副本 | 每周 1-2 个，架构已就位，放进 scenarios/ 即可 |
 
 ## v2.7.1 — 配色优化+宠物背景修复+bubble闪烁修复+报时自动展开+UX优化
@@ -669,3 +669,7 @@ npx electron-builder   # 打包验证
 | 5 | **ScenarioWriter skill优化** — 串行分步/大纲先行/ID分配表/build.js失败对照表/完整frontmatter模板/备份指引/性能预期 | `SKILL.md` | ✅ |
 | 6 | **R0 filler补全** — 补370条至1700对齐密度表 | `scenarios/wasteland.md` | ✅ |
 | 7 | **清理旧脚本** — 删除4个生成脚本+测试产物+文档引用修复 | `scenarios/`, `CLAUDE.md`, `package.json` | ✅ |
+| 8 | **ScenarioWriter skill重写** — 第二人称叙事/分段生成(每周目5段)/灯停规则/validate_md.cjs自检/Action列说明/BOM防污染 | `Skill.md` | ✅ |
+| 9 | **build.js parseTable加精准报错** — 行末缺\|/BOM时直接报行号+原因 | `build.js` | ✅ |
+| 10 | **validate_md.cjs格式自检脚本** — 检查BOM/缺尾\|/表中空行，自动修复 | `validate_md.cjs` | ✅ |
+| 11 | **回退starfield+hermit副本** — 保持废土独版，待新skill重新生成 | `scenarios/starfield.md`, `scenarios/hermit.md` | ✅ |
