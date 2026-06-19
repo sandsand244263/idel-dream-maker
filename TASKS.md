@@ -654,19 +654,18 @@ npx electron-builder   # 打包验证
 | 5 | **动画元素 will-change** — 7 组动画元素补 will-change 声明，减少掉帧 | `src/style.css` | ✅ |
 | 6 | **font-display: swap** — 5 个 HTML 的 @font-face 补策略，避免字体加载时空白 | `index.html`, `pet/index.html`, `pet-context-menu/index.html`, `pet-selector/index.html`, `pet-bubble/index.html` | ✅ |
 
-## v2.7.3 — Bug修复：等级曲线系数+ScenarioWriter对齐
+## v2.7.3 — 废土副本重写 + Bug修复 + ScenarioWriter优化
 
 > **当前阶段：v2.7.3（已完成）**
 >
-> 修复等级曲线 LV100+ 段 EXP 系数 30000→6000，对齐文档设计目标"LV500约117天（8h/天）"。旧值 30000 实际需要约 450 天，修正后匹配 117 天。同步修复前端和共享模块。
->
-> 同步更新 ScenarioWriter skill：基于新曲线重新设计 filler 密度公式 floor(分钟/30)，每周目 filler ~1700 条。4 周目独立 filler（MinRebirth 区分），story 改为每周目 500 条全量。游戏引擎中 filler 过滤逻辑改为 `minRebirth === currentRebirth`（各周目不混用）。新增防重复 5 条规范。
+> 废土副本完整重写为4周目格式（2000story+6782filler+30称号+50成就+52节日）。修复preload白名单缺失8通道导致大厅功能/结局弹窗失效。修复重生上限检查。优化ScenarioWriter skill：串行分步+大纲先行+ID分配表+build.js失败对照表。清理工作区旧脚本。
 
 | # | 内容 | 涉及文件 | 状态 |
 |:-:|:-----|:---------|:----:|
-| 1 | **等级曲线系数修复** — 3个文件6处 30000→6000 | `electron/main.cjs`, `src/main.js`, `src/scenario.js` | ✅ |
-| 2 | **filler过滤逻辑** — checkAndTriggerEvent 新增 filler 专属周目校验 `!==` | `electron/main.cjs` | ✅ |
-| 3 | **format-rules.md 重写** — 新密度表/周目分节/防重复5条规范/Action列 | `references/format-rules.md` | ✅ |
-| 4 | **SKILL.md 更新** — 数据规格/生成流程/filler规范/检查清单 | `SKILL.md` | ✅ |
-| 5 | **CLAUDE.md 数据对齐** — 事件文本数更新/skill 引擎说明 | `CLAUDE.md` | ✅ |
-| 6 | **completion_title 通关称号** — gameState 存储 + 通关自动解锁 + IPC 装备/取消 + 前端面板（大厅称号/通关称号/副本称号三级） | `electron/main.cjs`, `electron/preload.cjs`, `src/main.js` | ✅ |
+| 1 | **废土副本重写** — 4周目完整格式：周目0拾荒建城/周目1流浪医者/周目2机械工程师/周目3探秘终局 | `scenarios/wasteland.md` | ✅ |
+| 2 | **preload 白名单修复** — invoke白名单加7通道+on白名单加scenario-ending | `electron/preload.cjs` | ✅ |
+| 3 | **重生上限检查** — rebirth-scenario加max_rebirth校验 | `electron/main.cjs` | ✅ |
+| 4 | **通关称号UI修复** — game-tick hub分支更新currentTitle | `src/main.js` | ✅ |
+| 5 | **ScenarioWriter skill优化** — 串行分步/大纲先行/ID分配表/build.js失败对照表/完整frontmatter模板/备份指引/性能预期 | `SKILL.md` | ✅ |
+| 6 | **R0 filler补全** — 补370条至1700对齐密度表 | `scenarios/wasteland.md` | ✅ |
+| 7 | **清理旧脚本** — 删除4个生成脚本+测试产物+文档引用修复 | `scenarios/`, `CLAUDE.md`, `package.json` | ✅ |
