@@ -25,8 +25,8 @@
 | wasteland_a021 | 百日孤独 | 挂机满 2400 小时 | ★ | runtime | 8640000000 |
 | wasteland_a022 | 半年磨一剑 | 挂机满 4320 小时 | ★ | runtime | 15552000000 |
 | wasteland_a023 | 经年累月 | 挂机满 7200 小时 | ★ | runtime | 25920000000 |
-| wasteland_a024 | 废土人生 | 挂机满 10000 小时 | ★ | runtime | 36000000000 |
-| wasteland_a025 | 千日之旅 | 挂机满 24000 小时 | ★ | runtime | 86400000000 |
+| wasteland_a024 | 废土人生 | 挂机满 6000 小时 | ★ | runtime | 21600000000 |
+| wasteland_a025 | 千日之旅 | 挂机满 8760 小时 | ★ | runtime | 31536000000 |
 | wasteland_a026 | 十个故事 | 触发过 10 个不同事件 | ★ | events | 10 |
 | wasteland_a027 | 故事收集者 | 触发过 30 个不同事件 | ★ | events | 30 |
 | wasteland_a028 | 百态人生 | 触发过 60 个不同事件 | ★ | events | 60 |
