@@ -253,9 +253,7 @@ function writeSave(data) {
 // Read scenarios data
 function loadScenarios() {
   try {
-    const jsonPath = app.isPackaged
-      ? path.join(process.resourcesPath, 'scenarios_data.json')
-      : path.join(__dirname, '..', 'public', 'scenarios_data.json');
+    const jsonPath = path.join(__dirname, '..', 'public', 'scenarios_data.json');
     return JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
   } catch (e) {
     console.error('Failed to load scenarios:', e);
