@@ -1,4 +1,4 @@
-const LANG = { back:'返回', hint:'从 petdex.dev 下载精灵图，解压后将文件夹放入', openFolder:'打开文件夹', petdexLink:'前往 petdex.dev 下载', disclaimer:'宠物精灵为社区用户创作的同人作品，版权归各自权利人。本软件不捆绑、不分发任何精灵文件。', empty:'暂无宠物' };
+const LANG = { back:'返回', hint:'从 petdex.dev（需登录+网络工具）下载精灵图，解压后将文件夹放入', openFolder:'打开文件夹', petdexLink:'前往 petdex.dev 下载', disclaimer:'宠物精灵为社区用户创作的同人作品，版权归各自权利人。本软件不捆绑、不分发任何精灵文件。', empty:'暂无宠物' };
 function t(key) { return LANG[key] || key; }
 
 const petListEl = document.getElementById('pet-list');

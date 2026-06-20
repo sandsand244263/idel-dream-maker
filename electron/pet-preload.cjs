@@ -6,7 +6,7 @@ contextBridge.exposeInMainWorld('pet', {
       'scan-pets', 'select-pet', 'pet-get-state',
       'pet-drag-start', 'pet-drag-move', 'pet-drag-end',
       'get-pet-spritesheet', 'hide-pet-window', 'toggle-pet-window', 'toggle-main-window',
-      'open-pets-folder',
+      'open-pets-folder', 'open-external-link',
       'show-pet-selector', 'show-bubble', 'close-bubble',
       'show-context-menu', 'get-current-theme',
     ];
@@ -19,7 +19,7 @@ contextBridge.exposeInMainWorld('pet', {
     const validChannels = [
       'game-tick', 'pet-list', 'pet-selected',
       'event-triggered', 'level-up', 'achievement-unlocked', 'main-shown',
-      'toggle-feature', 'theme-changed', 'pet-state', 'hourly-chime', 'bubble-closed',
+      'toggle-feature', 'theme-changed', 'pet-state', 'hourly-chime', 'bubble-closed', 'pet-guide',
     ];
     if (validChannels.includes(channel)) {
       const listener = (_, data) => callback(data);

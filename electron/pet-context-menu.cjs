@@ -83,6 +83,14 @@ function registerContextMenuIpcHandlers() {
   ipcMain.handle('get-toggle-state', () => {
     return {};
   });
+
+  ipcMain.handle('pet-guide', () => {
+    if (petWindowRef && !petWindowRef.isDestroyed()) {
+      try { petWindowRef.webContents.send('pet-guide', {}); } catch {}
+    }
+    return true;
+  });
+});
 }
 
 function sendToContextMenu(channel, data) {

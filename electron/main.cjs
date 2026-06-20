@@ -1407,6 +1407,10 @@ app.whenReady().then(() => {
     mainWindow.setPosition(gameState.windowX, gameState.windowY);
   }
 
+  // Show main window on startup
+  mainWindow.show();
+  mainWindow.focus();
+
   // Save window position on move
   let moveTimer = null;
   mainWindow.on('move', () => {

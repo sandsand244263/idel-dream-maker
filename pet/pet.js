@@ -8,6 +8,10 @@ const expFill = document.getElementById('exp-fill');
 const expWrap = document.getElementById('exp-wrap');
 const expPct = document.getElementById('exp-pct');
 const expDetail = document.getElementById('exp-detail');
+const guidePanel = document.getElementById('no-pet-guide');
+const guideOpenFolder = document.getElementById('guide-open-folder');
+const guidePetdex = document.getElementById('guide-petdex');
+const canvasWrap = document.getElementById('canvas-wrap');
 
 canvas.width = 120;
 canvas.height = 140;
@@ -28,6 +32,35 @@ let pets=[],selIdx=0,spritesheet=null,cols=8,rows=9,stateConfig=null;
 let curState='idle',frameIdx=0,frameList=[],animFrameId=null,lastFrameTime=0,returnTimer=null,debounceTimer=null;
 let gameInfo={level:1,title:'—',exp:0,scenario:'大厅',runtime:'0h0m0s',ach:0,theme:'green',hubLevel:1,isInHub:true};
 let displayExp=0,dragMoved=false;
+
+// ── Guide Panel ──
+function showGuidePanel() {
+  guidePanel.classList.remove('hidden');
+  canvasWrap.classList.add('hidden');
+  stopAnim();
+  ctx.clearRect(0,0,120,140);
+}
+function hideGuidePanel() {
+  guidePanel.classList.add('hidden');
+  canvasWrap.classList.remove('hidden');
+}
+
+// ── First-Pet Tutorial ──
+const PET_TUTORIAL_KEY = 'pet_has_seen_tutorial';
+const TUTORIAL_TIPS = [
+  '单击宠物 → 互动动画',
+  '双击宠物 → 切换主窗口',
+  '右键宠物 → 菜单（换宠/设置）',
+];
+function showPetTutorial() {
+  if (localStorage.getItem(PET_TUTORIAL_KEY) === 'true') return;
+  localStorage.setItem(PET_TUTORIAL_KEY, 'true');
+  TUTORIAL_TIPS.forEach((tip, i) => {
+    setTimeout(() => {
+      nq.enqueue({ text: tip, title: '操作提示', type: 'event' }, 1);
+    }, 2000 + i * 4000);
+  });
+}
 
 // ── Notification Queue ──
 class NotificationQueue{
@@ -192,25 +225,15 @@ function loadSpritesheet(b64,ext,cfg){
 function loadPet(idx){
   if(idx<0||idx>=pets.length){
     spritesheet=null;
-    drawNoPetHint();
+    showGuidePanel();
     return;
   }
-  window.pet.invoke('get-pet-spritesheet',{index:idx}).then(r=>{if(r)loadSpritesheet(r.data,r.ext,r.config||null);}).catch(()=>{});
+  hideGuidePanel();
+  window.pet.invoke('get-pet-spritesheet',{index:idx}).then(r=>{if(r){loadSpritesheet(r.data,r.ext,r.config||null);showPetTutorial();}}).catch(()=>{});
 }
 
 function drawNoPetHint(){
-  if(!ctx)return;
-  ctx.clearRect(0,0,120,140);
-  ctx.fillStyle='rgba(10,10,10,0.7)';
-  ctx.fillRect(10,45,100,50);
-  ctx.fillStyle='#ffd564';
-  ctx.font='11px MapleMonoNFCN,Courier New,monospace';
-  ctx.textAlign='center';
-  ctx.textBaseline='middle';
-  ctx.fillText('暂无宠物',60,65);
-  ctx.font='9px MapleMonoNFCN,Courier New,monospace';
-  ctx.fillStyle='#aaa';
-  ctx.fillText('前往 petdex.dev',60,83);
+  showGuidePanel();
 }
 
 function updateExpBar(){
@@ -224,7 +247,7 @@ function updateExpBar(){
   expDetail.textContent=`${Math.floor(e)} / ${nr} (${rounded}%)`;
 }
 function updateInfoBar(){
-  if(!spritesheet){drawNoPetHint();return;}
+  if(!spritesheet){showGuidePanel();return;}
   const title=gameInfo.title&&gameInfo.title!=='—'?gameInfo.title:'';
   const dl=gameInfo.isInHub?(gameInfo.hubLevel||1):(gameInfo.level||1);
   infoText.textContent=title?`${gameInfo.scenario} | LV.${dl} | ${title}`:`${gameInfo.scenario} | LV.${dl}`;
@@ -313,6 +336,10 @@ window.pet.on('hourly-chime',()=>{
 
 window.pet.on('bubble-closed',()=>{nq.close();});
 
+window.pet.on('pet-guide',()=>{
+  nq.enqueue({text:'单击 → 互动动画\n双击 → 切换主窗口\n右键 → 菜单（换宠/设置）\n拖拽 → 移动窗口\nEsc/H → 隐藏屏幕',title:'操作说明',type:'event'},0);
+});
+
 window.pet.invoke('scan-pets').then(r=>{pets=r.pets||[];selIdx=r.selected||0;loadPet(selIdx);applyPetSettings();}).catch(()=>{});
 window.pet.invoke('pet-get-state').then(()=>updateInfoBar()).catch(()=>{});
 
@@ -339,3 +366,7 @@ setInterval(()=>{
     showChimeBubble(('0'+h).slice(-2)+':'+m);
   }
 },30000);
+
+// ── Guide Buttons ──
+guideOpenFolder.addEventListener('click',()=>{window.pet.invoke('open-pets-folder').catch(()=>{});});
+guidePetdex.addEventListener('click',()=>{window.pet.invoke('open-external-link',{url:'https://petdex.dev/'}).catch(()=>{});});

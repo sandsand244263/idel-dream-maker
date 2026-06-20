@@ -13,6 +13,15 @@
 <body>
   <div id="container">
     <div id="info-bar"><span id="info-text"></span></div>
+    <div id="no-pet-guide" class="hidden">
+      <div id="guide-icon">?</div>
+      <div id="guide-title">还未拥有宠物</div>
+      <div id="guide-desc">从 petdex.dev（需登录 + 网络工具）下载精灵图，解压后将文件夹放入 pets 目录</div>
+      <div id="guide-buttons">
+        <button id="guide-open-folder">打开宠物文件夹</button>
+        <button id="guide-petdex">前往 petdex.dev</button>
+      </div>
+    </div>
     <div id="canvas-wrap">
       <canvas id="pet-canvas"></canvas>
       <div id="bubble-dot" class="dot-none"><span id="dot-symbol">○</span></div>

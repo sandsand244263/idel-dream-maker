@@ -1,4 +1,4 @@
-const LANG = { selectPet:'选择宠物', border:'显示边框', infobar:'信息栏', expbar:'进度条', hide:'隐藏' };
+const LANG = { selectPet:'选择宠物', border:'显示边框', infobar:'信息栏', expbar:'进度条', guide:'操作说明', hide:'隐藏' };
 function t(key) { return LANG[key] || key; }
 
 function setToggle(key, val) { localStorage.setItem('pet_' + key, val); }
@@ -43,6 +43,11 @@ document.getElementById('ctx-select-pet').addEventListener('click', () => {
     window.ctxMenu.invoke('toggle-pet-feature', { feature: k, value: val }).catch(() => {});
     updateUI();
   });
+});
+
+document.getElementById('ctx-guide').addEventListener('click', () => {
+  window.ctxMenu.invoke('pet-guide').catch(() => {});
+  window.ctxMenu.invoke('close-menu').catch(() => {});
 });
 
 document.getElementById('ctx-close').addEventListener('click', () => {
