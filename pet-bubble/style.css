@@ -1,5 +1,5 @@
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html,body { width:100%;background:transparent;user-select:none;font-family:var(--font);color:color-mix(in srgb,var(--fg) 65%,transparent); }
+html,body { width:100%;height:100%;overflow:hidden;background:transparent;user-select:none;font-family:var(--font);color:color-mix(in srgb,var(--fg) 65%,transparent); }
 :root { --fg:#00FF00; --dim:#00AA00; --bg:rgba(10,10,10,0.85); --border:rgba(0,255,0,0.2); --font:'MapleMonoNFCN','Courier New',monospace; }
 .theme-red { --fg:#F38BA8; --dim:#BA7D8F; --bg:rgba(30,10,16,0.85); --border:rgba(243,139,168,0.2); }
 .theme-red-orange { --fg:#FAB387; --dim:#BF9E82; --bg:rgba(30,18,10,0.85); --border:rgba(250,179,135,0.2); }
@@ -15,7 +15,7 @@ html,body { width:100%;background:transparent;user-select:none;font-family:var(-
 .theme-pink { --fg:#F5C2E7; --dim:#C49AB5; --bg:rgba(30,14,26,0.85); --border:rgba(245,194,231,0.2); }
 .theme-black { --fg:#CDD6F4; --dim:#585B70; --bg:rgba(17,17,27,0.85); --border:rgba(205,214,244,0.2); }
 .theme-white { --fg:#4C4F69; --dim:#9CA0B0; --bg:rgba(239,241,245,0.85); --border:rgba(76,79,105,0.15); }
-#bubble { background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow-y:auto;border-left:3px solid var(--fg); }
+#bubble { width:100%;height:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow-y:auto;border-left:3px solid var(--fg); }
 #bubble::-webkit-scrollbar { width:4px; }
 #bubble::-webkit-scrollbar-track { background:var(--bg); }
 #bubble::-webkit-scrollbar-thumb { background:var(--dim);border-radius:2px; }

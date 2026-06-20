@@ -1456,8 +1456,10 @@ app.whenReady().then(() => {
   }, 5000);
 
   // Show main window after all setup is complete
+  mainWindow._ignoreBlur = true;
   mainWindow.show();
   mainWindow.focus();
+  setTimeout(() => { if (mainWindow) mainWindow._ignoreBlur = false; }, 500);
 });
 
 app.on('before-quit', () => {

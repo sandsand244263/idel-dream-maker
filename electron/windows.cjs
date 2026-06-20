@@ -35,7 +35,7 @@ function createMainWindow(preloadPath) {
   });
 
   mainWindow.on('blur', () => {
-    if (mainWindow && !mainWindow._isQuitting) mainWindow.hide();
+    if (mainWindow && !mainWindow._isQuitting && !mainWindow._ignoreBlur) mainWindow.hide();
   });
 
   return mainWindow;
