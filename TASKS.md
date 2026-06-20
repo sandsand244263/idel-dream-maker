@@ -688,3 +688,19 @@ npx electron-builder   # 打包验证
 | 4 | **反馈面板** — 设置面板新增反馈区块：邮箱（点击复制）、导出日志到桌面、打开日志文件夹 | `index.html`, `electron/main.cjs`, `electron/preload.cjs`, `src/main.js`, `src/style.css` | ✅ |
 | 5 | **大厅挂机提醒** — 在大厅连续挂机5分钟触发提醒（走宠物气泡），全部通关后不提醒；进副本重置计时 | `electron/main.cjs` | ✅ |
 | 6 | **自动测试脚本** — `test/auto-test.cjs`，覆盖等级计算/称号/成就/canArchive/全部通关/filler上限/重生加成/数据完整性 共117项测试，全部通过 | `test/auto-test.cjs` | ✅ |
+
+## v2.7.5 — 宠物新手指引优化 + 启动默认显示 + Bug修复
+
+> **当前阶段：v2.7.5（已完成）**
+>
+> 宠物窗口新手指引系统：无宠物指引面板+三段引导+操作说明入口。启动自动显示主窗口。修复宠物不显示的竞态条件、有宠物用户跳过引导、pet-bubble滚动条样式。
+
+| # | 内容 | 涉及文件 | 状态 |
+|:-:|:-----|:---------|:----:|
+| 1 | **启动默认显示主窗口** — 所有初始化完成后才显示，避免被宠物窗口抢焦点后 blur 隐藏 | `electron/main.cjs` | ✅ |
+| 2 | **宠物窗口无宠物指引面板** — 替换原有 canvas 小字，改用指引面板+两个按钮（打开文件夹/前往 petdex） | `pet/index.html`, `pet/pet.js`, `pet/style.css` | ✅ |
+| 3 | **首次宠物三段引导** — 从无到有首次加载宠物时，nq 弹出 3 条操作提示（单击/双击/右键） | `pet/pet.js` | ✅ |
+| 4 | **有宠物跳过引导** — 启动时已有宠物直接标记已看，不弹引导 | `pet/pet.js` | ✅ |
+| 5 | **右键菜单「操作说明」** — 点击弹气泡汇总所有交互操作 | `pet-context-menu/index.html`, `pet-context-menu/script.js`, `electron/pet-context-menu.cjs`, `electron/pet-context-menu-preload.cjs`, `electron/pet-preload.cjs`, `pet/pet.js` | ✅ |
+| 6 | **pet-bubble 加滚动条** — 符合样式规范（width:4px/var(--dim)/border-radius:2px） | `pet-bubble/style.css` | ✅ |
+| 7 | **宠物选择器提示文本更新** — 标注需登录+网络工具 | `pet-selector/index.html`, `pet-selector/script.js` | ✅ |

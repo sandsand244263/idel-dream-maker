@@ -36,13 +36,9 @@ let displayExp=0,dragMoved=false;
 // ── Guide Panel ──
 function showGuidePanel() {
   guidePanel.classList.remove('hidden');
-  canvasWrap.classList.add('hidden');
-  stopAnim();
-  ctx.clearRect(0,0,120,140);
 }
 function hideGuidePanel() {
   guidePanel.classList.add('hidden');
-  canvasWrap.classList.remove('hidden');
 }
 
 // ── First-Pet Tutorial ──
@@ -233,6 +229,18 @@ function loadPet(idx){
 }
 
 function drawNoPetHint(){
+  if(!ctx)return;
+  ctx.clearRect(0,0,120,140);
+  ctx.fillStyle='rgba(10,10,10,0.7)';
+  ctx.fillRect(10,45,100,50);
+  ctx.fillStyle='#ffd564';
+  ctx.font='11px MapleMonoNFCN,Courier New,monospace';
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.fillText('暂无宠物',60,65);
+  ctx.font='9px MapleMonoNFCN,Courier New,monospace';
+  ctx.fillStyle='#aaa';
+  ctx.fillText('前往 petdex.dev',60,83);
   showGuidePanel();
 }
 
@@ -247,7 +255,7 @@ function updateExpBar(){
   expDetail.textContent=`${Math.floor(e)} / ${nr} (${rounded}%)`;
 }
 function updateInfoBar(){
-  if(!spritesheet){showGuidePanel();return;}
+  if(!spritesheet){drawNoPetHint();return;}
   const title=gameInfo.title&&gameInfo.title!=='—'?gameInfo.title:'';
   const dl=gameInfo.isInHub?(gameInfo.hubLevel||1):(gameInfo.level||1);
   infoText.textContent=title?`${gameInfo.scenario} | LV.${dl} | ${title}`:`${gameInfo.scenario} | LV.${dl}`;
@@ -340,7 +348,11 @@ window.pet.on('pet-guide',()=>{
   nq.enqueue({text:'单击 → 互动动画\n双击 → 切换主窗口\n右键 → 菜单（换宠/设置）\n拖拽 → 移动窗口\nEsc/H → 隐藏屏幕',title:'操作说明',type:'event'},0);
 });
 
-window.pet.invoke('scan-pets').then(r=>{pets=r.pets||[];selIdx=r.selected||0;loadPet(selIdx);applyPetSettings();}).catch(()=>{});
+window.pet.invoke('scan-pets').then(r=>{
+  pets=r.pets||[];selIdx=r.selected||0;
+  if(pets.length>0)localStorage.setItem(PET_TUTORIAL_KEY,'true');
+  loadPet(selIdx);applyPetSettings();
+}).catch(()=>{});
 window.pet.invoke('pet-get-state').then(()=>updateInfoBar()).catch(()=>{});
 
 let expRafId=null;

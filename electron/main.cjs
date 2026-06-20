@@ -1407,10 +1407,6 @@ app.whenReady().then(() => {
     mainWindow.setPosition(gameState.windowX, gameState.windowY);
   }
 
-  // Show main window on startup
-  mainWindow.show();
-  mainWindow.focus();
-
   // Save window position on move
   let moveTimer = null;
   mainWindow.on('move', () => {
@@ -1458,6 +1454,10 @@ app.whenReady().then(() => {
     const sc = currentScenario ? (currentScenario.name_cn || currentScenario.nameCN || currentScenario.name) : (gameState.isInHub ? '大厅' : '?');
     setToolTip(`${gameState.playerName} | ${sc}\n${lv} | ${title} | ${rtStr}`);
   }, 5000);
+
+  // Show main window after all setup is complete
+  mainWindow.show();
+  mainWindow.focus();
 });
 
 app.on('before-quit', () => {
