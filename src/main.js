@@ -53,6 +53,20 @@ const LANG = {
   scenarioAchGroup: '副本成就',
   scenarioLocked: '需要大厅 Lv.{0} 或通关 {1} 个副本',
   rebirthConfirm: '确定重生吗？该副本进度将清空，你将重新体验所有故事。经验加成 +10%（封顶 +50%），filler 上限 +5（封顶 +25）。',
+  archivedLabel: '已归档',
+  restoreBtn: '恢复',
+  scenarioArchived: '已归档',
+  archiveFail: '归档失败',
+  archiveAllDone: '所有副本都已通关',
+  archivePromptAction: '反馈与催更',
+  feedbackTitle: '反馈与支持',
+  feedbackEmailLabel: '邮箱',
+  feedbackEmailCopied: '已复制到剪贴板',
+  feedbackExportBtn: '导出日志到桌面',
+  feedbackOpenFolder: '打开日志文件夹',
+  feedbackExporting: '正在导出...',
+  feedbackExported: '已导出到桌面',
+  feedbackExportFail: '导出失败',
 };
 
 function t(key) { return LANG[key] || key; }
@@ -266,10 +280,17 @@ function renderHubCards() {
     guide.textContent = '→ 点击下方[副本]开始你的第一个故事';
     hubScenarioList.appendChild(guide);
   }
-  window.electron.invoke('get-scenario-unlocks').then(unlocks => {
+  Promise.all([
+    window.electron.invoke('get-archived-scenarios'),
+    window.electron.invoke('get-scenario-unlocks')
+  ]).then(([archivedIds, unlocks]) => {
     const unlockMap = {};
     unlocks.forEach(u => unlockMap[u.id] = u);
-    scenarioList.forEach(s => {
+    const archivedSet = new Set(archivedIds || []);
+    const activeList = scenarioList.filter(s => !archivedSet.has(s.id));
+    const archivedList = scenarioList.filter(s => archivedSet.has(s.id));
+    // 未归档卡片
+    activeList.forEach(s => {
       const u = unlockMap[s.id] || { unlocked: true };
       const card = document.createElement('div');
       card.className = 'hub-card' + (u.unlocked ? '' : ' locked');
@@ -285,16 +306,54 @@ function renderHubCards() {
           progressHtml = `<div class="hub-card-progress"><span class="progress-level">Lv.${lvl}</span></div>`;
         }
       }
-      card.innerHTML = `<div class="hub-card-name">${s.nameCN} (${s.name})</div><div class="hub-card-desc">${s.description}</div><div class="hub-card-meta">${s.eventCount} ${t('scenarioEvent')} · ${s.achievementCount} ${t('scenarioAchievement')}</div>${progressHtml}${u.unlocked ? '' : `<div class="hub-card-lock">${tf('scenarioLocked', u.requirement.hub_level || 0, u.requirement.completions || 0)}</div>`}`;
+      const archiveBtn = (u.unlocked && u.canArchive) ? `<span class="archive-btn" data-sid="${s.id}">[归档]</span>` : '';
+      card.innerHTML = `<div class="hub-card-name">${s.nameCN} (${s.name})</div><div class="hub-card-desc">${s.description}</div><div class="hub-card-meta">${s.eventCount} ${t('scenarioEvent')} · ${s.achievementCount} ${t('scenarioAchievement')}</div>${progressHtml}${archiveBtn}${u.unlocked ? '' : `<div class="hub-card-lock">${tf('scenarioLocked', u.requirement.hub_level || 0, u.requirement.completions || 0)}</div>`}`;
       if (u.unlocked) {
-        card.addEventListener('click', async () => {
+        card.addEventListener('click', async (e) => {
+          if (e.target.closest('.archive-btn')) return;
           try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); }
+        });
+        card.querySelector('.archive-btn')?.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          try { await window.electron.invoke('archive-scenario', { scenarioId: s.id }); renderHubCards(); showToast(t('scenarioArchived'), 'info'); } catch (e) { showToast(t('archiveFail'), 'error'); }
         });
       }
       hubScenarioList.appendChild(card);
     });
+    // 已归档区域
+    if (archivedList.length > 0) {
+      const archSection = document.createElement('div');
+      archSection.className = 'archived-section';
+      const archHeader = document.createElement('div');
+      archHeader.className = 'archived-header';
+      archHeader.textContent = `─── ${t('archivedLabel')} (${archivedList.length}) ───`;
+      const archListEl = document.createElement('div');
+      archListEl.className = 'archived-list';
+      archivedList.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'hub-card archived-card';
+        const completion = gameState?.gameCompletions?.find(c => c.scenarioId === s.id);
+        const rebirthCount = gameState?.rebirthCounts?.[s.id] || 0;
+        let progHtml = '';
+        if (completion) {
+          progHtml = `<div class="hub-card-progress"><span class="progress-complete">✓ 通关</span>${rebirthCount > 0 ? `<span class="progress-rebirth">↻ R${rebirthCount}</span>` : ''}</div>`;
+        }
+        card.innerHTML = `<div class="hub-card-name">${s.nameCN} (${s.name})</div><div class="hub-card-desc">${s.description}</div>${progHtml}<span class="restore-btn" data-sid="${s.id}">[${t('restoreBtn')}]</span>`;
+        card.querySelector('.restore-btn').addEventListener('click', async (e) => {
+          e.stopPropagation();
+          try { await window.electron.invoke('unarchive-scenario', { scenarioId: s.id }); renderHubCards(); } catch {}
+        });
+        archListEl.appendChild(card);
+      });
+      archSection.appendChild(archHeader);
+      archSection.appendChild(archListEl);
+      archHeader.addEventListener('click', () => { archListEl.classList.toggle('hidden'); });
+      hubScenarioList.appendChild(archSection);
+    }
+    // 全部通关催更入口（T3 实现）
+    renderAllCompletePrompt();
   }).catch(() => {
-    // 降级：全部可点击
+    // 降级：全部可点击，无归档
     scenarioList.forEach(s => {
       const card = document.createElement('div'); card.className = 'hub-card';
       let progressHtml = '';
@@ -314,6 +373,10 @@ function renderHubCards() {
       hubScenarioList.appendChild(card);
     });
   });
+}
+
+function renderAllCompletePrompt() {
+  // T3 实现：全部通关时的催更入口
 }
 
 btnBackHub.addEventListener('click', async () => {
@@ -540,11 +603,21 @@ function applyLanguage() {
 
 function renderScenarioPanel() {
   scenarioListEl.innerHTML = ''; const cid = gameState?.scenario_id;
-  scenarioList.forEach(s => {
-    const card = document.createElement('div'); card.className = `scenario-card${s.id === cid ? ' active' : ''}`;
-    card.innerHTML = `<div class="scenario-name" style="color:${s.id === cid ? '#0F0' : '#888'}">${s.nameCN} (${s.name})</div><div class="scenario-desc">${s.description}</div><div class="scenario-stats"><span>${s.eventCount} ${t('scenarioEvent')}</span><span>${s.achievementCount} ${t('scenarioAchievement')}</span></div>`;
-    card.addEventListener('click', async () => { try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); scenarioPanel.classList.add('hidden'); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); } });
-    scenarioListEl.appendChild(card);
+  window.electron.invoke('get-archived-scenarios').then(archivedIds => {
+    const archivedSet = new Set(archivedIds || []);
+    scenarioList.filter(s => !archivedSet.has(s.id)).forEach(s => {
+      const card = document.createElement('div'); card.className = `scenario-card${s.id === cid ? ' active' : ''}`;
+      card.innerHTML = `<div class="scenario-name" style="color:${s.id === cid ? '#0F0' : '#888'}">${s.nameCN} (${s.name})</div><div class="scenario-desc">${s.description}</div><div class="scenario-stats"><span>${s.eventCount} ${t('scenarioEvent')}</span><span>${s.achievementCount} ${t('scenarioAchievement')}</span></div>`;
+      card.addEventListener('click', async () => { try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); scenarioPanel.classList.add('hidden'); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); } });
+      scenarioListEl.appendChild(card);
+    });
+  }).catch(() => {
+    scenarioList.forEach(s => {
+      const card = document.createElement('div'); card.className = `scenario-card${s.id === cid ? ' active' : ''}`;
+      card.innerHTML = `<div class="scenario-name" style="color:${s.id === cid ? '#0F0' : '#888'}">${s.nameCN} (${s.name})</div><div class="scenario-desc">${s.description}</div><div class="scenario-stats"><span>${s.eventCount} ${t('scenarioEvent')}</span><span>${s.achievementCount} ${t('scenarioAchievement')}</span></div>`;
+      card.addEventListener('click', async () => { try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); scenarioPanel.classList.add('hidden'); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); } });
+      scenarioListEl.appendChild(card);
+    });
   });
 }
 document.getElementById('btn-close').addEventListener('click', () => window.electron.invoke('hide-window'));

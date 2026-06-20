@@ -331,4 +331,42 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #ending-panel-list::-webkit-scrollbar-track { background: var(--bg); }
 #ending-panel-list::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
 
+/* ── 归档 ── */
+.archive-btn {
+  display: inline-block;
+  font-size: 11px;
+  color: var(--dim);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-top: 4px;
+  align-self: flex-end;
+  user-select: none;
+}
+.archive-btn:hover { background: color-mix(in srgb, var(--fg) 15%, transparent); color: var(--fg); }
+.archived-section { margin-top: 12px; border-top: 1px solid color-mix(in srgb, var(--dim) 30%, transparent); padding-top: 4px; }
+.archived-header {
+  text-align: center;
+  color: var(--dim);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 8px 0;
+  user-select: none;
+}
+.archived-header:hover { color: var(--fg); }
+.archived-card { opacity: 0.55; }
+.archived-card .hub-card-name { font-size: 12px; }
+.archived-list { padding-left: 4px; }
+.restore-btn {
+  display: inline-block;
+  font-size: 11px;
+  color: var(--dim);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-top: 2px;
+  user-select: none;
+}
+.restore-btn:hover { background: color-mix(in srgb, var(--fg) 15%, transparent); color: var(--fg); }
+
 .hidden { display: none !important; }

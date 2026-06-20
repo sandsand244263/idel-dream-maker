@@ -82,6 +82,18 @@ function checkHubAchievements() {
   return unlocked;
 }
 
+function canArchiveScenario(scenarioId) {
+  if (!gameState) return false;
+  const scenario = findScenarioById(scenarioId);
+  if (!scenario) return false;
+  const hasCompleted = (gameState.gameCompletions || []).some(c => c.scenarioId === scenarioId);
+  if (!hasCompleted) return false;
+  const maxR = scenario.max_rebirth || 0;
+  if (maxR === 0) return true;
+  const currentR = (gameState.rebirthCounts || {})[scenarioId] || 0;
+  return currentR >= maxR;
+}
+
 function setupAppMenu() {
   const template = [
     ...(isMac ? [{
@@ -220,6 +232,7 @@ function readSave() {
         if (gameState.gameCompletions === undefined) gameState.gameCompletions = [];
         if (gameState.unlockedCompletionTitles === undefined) gameState.unlockedCompletionTitles = [];
         if (gameState.equippedCompletionTitle === undefined) gameState.equippedCompletionTitle = null;
+        if (gameState.archivedScenarios === undefined) gameState.archivedScenarios = [];
       }
       gameState._version = SAVE_VERSION;
     }
@@ -1175,11 +1188,13 @@ function registerIpcHandlers() {
   // ── Hub stats ──
   ipcMain.handle('get-hub-stats', () => {
     const completions = (gameState.gameCompletions || []).filter((c, i, arr) => arr.findIndex(x => x.scenarioId === c.scenarioId) === i);
+    const archived = gameState.archivedScenarios || [];
+    const activeTotal = allScenarios.filter(s => !archived.includes(s.id)).length;
     return {
       hubLevel,
       hubTitle: { name: gameState?.equippedCompletionTitle?.title || getHubTitle(hubLevel).name },
       completionCount: completions.length,
-      totalScenarios: allScenarios.length,
+      totalScenarios: activeTotal,
       completions: completions,
     };
   });
@@ -1187,6 +1202,7 @@ function registerIpcHandlers() {
   // ── Scenario unlock check ──
   ipcMain.handle('get-scenario-unlocks', () => {
     const completionCount = (gameState.gameCompletions || []).filter((c, i, arr) => arr.findIndex(x => x.scenarioId === c.scenarioId) === i).length;
+    const archived = gameState.archivedScenarios || [];
     return allScenarios.map(s => {
       const req = s.unlock_requirement || {};
       const hubOk = !req.hub_level || hubLevel >= req.hub_level;
@@ -1198,8 +1214,31 @@ function registerIpcHandlers() {
         requirement: req,
         hubLevel: hubLevel,
         completionCount,
+        archived: archived.includes(s.id),
+        canArchive: canArchiveScenario(s.id),
       };
     });
+  });
+
+  // ── Archive ──
+  ipcMain.handle('archive-scenario', (_, { scenarioId }) => {
+    if (!canArchiveScenario(scenarioId)) return { success: false, error: '未满足归档条件（需通关所有周目）' };
+    if (!gameState.archivedScenarios) gameState.archivedScenarios = [];
+    if (!gameState.archivedScenarios.includes(scenarioId)) {
+      gameState.archivedScenarios.push(scenarioId);
+      writeSave(gameState);
+    }
+    return { success: true };
+  });
+
+  ipcMain.handle('unarchive-scenario', (_, { scenarioId }) => {
+    gameState.archivedScenarios = (gameState.archivedScenarios || []).filter(id => id !== scenarioId);
+    writeSave(gameState);
+    return { success: true };
+  });
+
+  ipcMain.handle('get-archived-scenarios', () => {
+    return gameState.archivedScenarios || [];
   });
 }
 
@@ -1242,6 +1281,7 @@ app.whenReady().then(() => {
       gameCompletions: [],
       unlockedCompletionTitles: [],
       equippedCompletionTitle: null,
+      archivedScenarios: [],
     };
   }
 
