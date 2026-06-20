@@ -376,7 +376,18 @@ function renderHubCards() {
 }
 
 function renderAllCompletePrompt() {
-  // T3 实现：全部通关时的催更入口
+  window.electron.invoke('get-all-complete-prompt').then(p => {
+    if (!p.show) return;
+    const card = document.createElement('div');
+    card.className = 'prompt-card';
+    card.innerHTML = `<div class="prompt-text">${t('archiveAllDone')}</div><div class="prompt-action" data-i18n="archivePromptAction">→ ${t('archivePromptAction')}</div>`;
+    card.addEventListener('click', () => {
+      openSettingsPanel();
+      window.electron.invoke('dismiss-all-complete-prompt');
+      card.remove();
+    });
+    hubScenarioList.appendChild(card);
+  }).catch(() => {});
 }
 
 btnBackHub.addEventListener('click', async () => {
@@ -494,7 +505,7 @@ document.querySelectorAll('.jm-item').forEach(el => {
 });
 eventClose.addEventListener('click', () => eventPanel.classList.add('hidden'));
 
-btnSettings.addEventListener('click', () => {
+function openSettingsPanel() {
   settingsName.value = gameState?.player_name || '';
   const verEl = document.getElementById('settings-version');
   if (verEl) verEl.textContent = appVersion;
@@ -510,12 +521,40 @@ btnSettings.addEventListener('click', () => {
   }
   renderThemeSwatches();
   settingsPanel.classList.remove('hidden');
-});
+}
+btnSettings.addEventListener('click', openSettingsPanel);
 settingsClose.addEventListener('click', () => settingsPanel.classList.add('hidden'));
 settingsNameSave.addEventListener('click', async () => { const n = settingsName.value.trim(); if (!n) return; try { await window.electron.invoke('set-player-name', { name: n }); if (gameState) gameState.player_name = n; renderHubView(); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); } });
 document.getElementById('btn-tutorial').addEventListener('click', async () => {
   if (onboardingInput) onboardingInput.value = gameState?.player_name || '';
   if (onboardingModal) onboardingModal.classList.remove('hidden');
+});
+
+// ── 反馈面板 ──
+document.getElementById('feedback-email')?.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText('1015524534@qq.com');
+    showToast(t('feedbackEmailCopied'), 'info');
+  } catch {}
+});
+document.getElementById('btn-export-logs')?.addEventListener('click', async () => {
+  const btn = document.getElementById('btn-export-logs');
+  const origText = btn.textContent;
+  btn.textContent = t('feedbackExporting');
+  btn.disabled = true;
+  try {
+    const r = await window.electron.invoke('export-logs-to-desktop');
+    if (r.success) {
+      showToast(t('feedbackExported'), 'info');
+    } else {
+      showToast(t('feedbackExportFail'), 'error');
+    }
+  } catch { showToast(t('feedbackExportFail'), 'error'); }
+  btn.textContent = origText;
+  btn.disabled = false;
+});
+document.getElementById('btn-open-log-folder')?.addEventListener('click', async () => {
+  try { await window.electron.invoke('open-log-folder'); } catch {}
 });
 
 const THEMES = [

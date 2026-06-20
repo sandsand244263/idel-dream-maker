@@ -233,6 +233,7 @@ function readSave() {
         if (gameState.unlockedCompletionTitles === undefined) gameState.unlockedCompletionTitles = [];
         if (gameState.equippedCompletionTitle === undefined) gameState.equippedCompletionTitle = null;
         if (gameState.archivedScenarios === undefined) gameState.archivedScenarios = [];
+        if (gameState.promptDismissedAtScenarioCount === undefined) gameState.promptDismissedAtScenarioCount = null;
       }
       gameState._version = SAVE_VERSION;
     }
@@ -1240,6 +1241,68 @@ function registerIpcHandlers() {
   ipcMain.handle('get-archived-scenarios', () => {
     return gameState.archivedScenarios || [];
   });
+
+  // ── All-complete prompt ──
+  ipcMain.handle('get-all-complete-prompt', () => {
+    const total = allScenarios.length;
+    if (total === 0) return { show: false };
+    const dismissedAt = gameState.promptDismissedAtScenarioCount;
+    if (dismissedAt === total) return { show: false };
+    const completions = (gameState.gameCompletions || []).filter((c, i, arr) => arr.findIndex(x => x.scenarioId === c.scenarioId) === i).length;
+    return { show: completions >= total, totalCount: total, completedCount: completions };
+  });
+
+  ipcMain.handle('dismiss-all-complete-prompt', () => {
+    gameState.promptDismissedAtScenarioCount = allScenarios.length;
+    writeSave(gameState);
+    return true;
+  });
+
+  // ── Export / feedback ──
+  ipcMain.handle('export-logs-to-desktop', () => {
+    try {
+      const desktop = path.join(require('os').homedir(), 'Desktop');
+      const exportDir = path.join(desktop, `Idel-DreamMaker-日志-${new Date().toISOString().slice(0,10)}`);
+      if (!fs.existsSync(exportDir)) fs.mkdirSync(exportDir, { recursive: true });
+      // Copy log files
+      const logDir = getLogDir();
+      if (fs.existsSync(logDir)) {
+        fs.readdirSync(logDir).forEach(f => {
+          const src = path.join(logDir, f);
+          if (fs.statSync(src).isFile()) fs.copyFileSync(src, path.join(exportDir, f));
+        });
+      }
+      // Copy save file
+      const savePath = path.join(getAppDataPath(), 'save.json');
+      if (fs.existsSync(savePath)) fs.copyFileSync(savePath, path.join(exportDir, 'save.json'));
+      // Write version info
+      const verInfo = [
+        `Idel-DreamMaker v${APP_VERSION}`,
+        `导出时间: ${new Date().toLocaleString('zh-CN')}`,
+        `系统: ${process.platform} ${process.arch}`,
+        `Node: ${process.version}`,
+        `Electron: ${process.versions.electron}`,
+        `存档路径: ${getAppDataPath()}`,
+        `副本数: ${allScenarios.length}`,
+        `已通关: ${(gameState.gameCompletions || []).filter((c,i,a) => a.findIndex(x=>x.scenarioId===c.scenarioId)===i).length}`,
+        `大厅等级: ${hubLevel}`,
+      ].join('\n');
+      fs.writeFileSync(path.join(exportDir, '版本信息.txt'), verInfo, 'utf-8');
+      return { success: true, path: exportDir };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  });
+
+  ipcMain.handle('open-log-folder', () => {
+    try {
+      const { shell } = require('electron');
+      shell.openPath(getLogDir());
+      return { success: true };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  });
 }
 
 // ── App Lifecycle ──
@@ -1282,6 +1345,7 @@ app.whenReady().then(() => {
       unlockedCompletionTitles: [],
       equippedCompletionTitle: null,
       archivedScenarios: [],
+      promptDismissedAtScenarioCount: null,
     };
   }
 
