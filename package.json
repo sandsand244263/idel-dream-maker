@@ -41,8 +41,8 @@
       "category": "public.app-category.entertainment"
     },
     "linux": {
-      "icon": "icons/icon.png",
-      "target": "AppImage"
+      "icon": "icons/icon_256.png",
+      "target": "tar.gz"
     }
   },
   "devDependencies": {

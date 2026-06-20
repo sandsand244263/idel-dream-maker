@@ -23,6 +23,7 @@ function createMainWindow(preloadPath) {
     winOpts.trafficLightPosition = { x: 10, y: 10 };
   } else {
     winOpts.frame = false;
+    winOpts.icon = path.join(__dirname, '..', 'icons', 'icon.png');
   }
   mainWindow = new BrowserWindow(winOpts);
 
