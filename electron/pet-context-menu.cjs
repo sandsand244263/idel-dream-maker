@@ -90,7 +90,6 @@ function registerContextMenuIpcHandlers() {
     }
     return true;
   });
-});
 }
 
 function sendToContextMenu(channel, data) {
