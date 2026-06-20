@@ -673,3 +673,16 @@ npx electron-builder   # 打包验证
 | 9 | **build.js parseTable加精准报错** — 行末缺\|/BOM时直接报行号+原因 | `build.js` | ✅ |
 | 10 | **validate_md.cjs格式自检脚本** — 检查BOM/缺尾\|/表中空行，自动修复 | `validate_md.cjs` | ✅ |
 | 11 | **回退starfield+hermit副本** — 保持废土独版，待新skill重新生成 | `scenarios/starfield.md`, `scenarios/hermit.md` | ✅ |
+
+## v2.7.4 — 副本管理+反馈面板
+
+> **当前阶段：v2.7.4（已完成）**
+>
+> 删除不完整的 hermit/starfield 副本。新增归档功能（所有周目通关后可归档隐藏）。新增全部通关催更入口+设置反馈面板（邮箱、导出日志、打开日志文件夹）。
+
+| # | 内容 | 涉及文件 | 状态 |
+|:-:|:-----|:---------|:----:|
+| 1 | **删除 hermit/starfield** — 移除旧 .md 文件，build.js 重建后仅剩 wasteland | `scenarios/hermit.md`, `scenarios/starfield.md` | ✅ |
+| 2 | **归档功能** — 后端 IPC（archive-scenario/unarchive-scenario/get-archived-scenarios、canArchive 校验）+ preload 白名单 + 前端 renderHubCards 分已归档/未归档 + 已归档折叠区 + 样式 | `electron/main.cjs`, `electron/preload.cjs`, `src/main.js`, `src/style.css` | ✅ |
+| 3 | **催更入口** — 全部通关后大厅列表底部显示提示卡片，点击打开设置面板，一次性消除（加新副本后重置） | `electron/main.cjs`, `electron/preload.cjs`, `src/main.js`, `src/style.css` | ✅ |
+| 4 | **反馈面板** — 设置面板新增反馈区块：邮箱（点击复制）、导出日志到桌面、打开日志文件夹 | `index.html`, `electron/main.cjs`, `electron/preload.cjs`, `src/main.js`, `src/style.css` | ✅ |
