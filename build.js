@@ -215,6 +215,7 @@ function parseAchievements(bodyLines) {
   const descIdx = headers.indexOf('desc');
   const condTypeIdx = headers.indexOf('conditiontype');
   const condValIdx = headers.indexOf('conditionvalue');
+  const minRebirthIdx = headers.indexOf('minrebirth');
   if (idIdx === -1) throw new Error("Achievements table missing 'ID' column");
   if (nameIdx === -1) throw new Error("Achievements table missing 'Name' column");
   if (descIdx === -1) throw new Error("Achievements table missing 'Description' column");
@@ -245,12 +246,16 @@ function parseAchievements(bodyLines) {
       default: throw new Error(`Unknown achievement condition type '${condType}' in '${id}'`);
     }
 
+    const minRebirth = minRebirthIdx !== -1 ? parseInt(row[minRebirthIdx], 10) : 0;
+    if (isNaN(minRebirth) || minRebirth < 0) throw new Error(`Achievement '${id}' MinRebirth parse error`);
+
     achievements.push({
       id,
       name: row[nameIdx],
       desc: row[descIdx],
       icon: iconIdx !== -1 ? row[iconIdx] : '★',
       condition,
+      minRebirth,
     });
   }
   return achievements;

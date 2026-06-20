@@ -120,7 +120,7 @@ for (const fpath of inputPaths) {
       if (!inEvents) continue;
       if (t.startsWith('| ID |') || t.startsWith('|---')) continue;
       if (t === '') continue;
-      if (t.startsWith('|') && t.endsWith('|')) {
+      if (t.startsWith('|')) {
         dataLines.push(t);
       }
     }

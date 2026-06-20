@@ -454,9 +454,11 @@ function checkAchievements() {
     return [];
   }
 
+  const currentRebirth = (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0;
   const unlocked = [];
   for (const a of currentScenario.achievements) {
     if (gameState.unlockedAchievements.includes(a.id)) continue;
+    if (a.minRebirth !== undefined && a.minRebirth !== currentRebirth) continue;
     let met = false;
     switch (a.condition.type) {
       case 'level':
