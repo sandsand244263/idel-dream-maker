@@ -687,3 +687,4 @@ npx electron-builder   # 打包验证
 | 3 | **催更入口** — 全部通关后大厅列表底部显示提示卡片，点击打开设置面板，一次性消除（加新副本后重置） | `electron/main.cjs`, `electron/preload.cjs`, `src/main.js`, `src/style.css` | ✅ |
 | 4 | **反馈面板** — 设置面板新增反馈区块：邮箱（点击复制）、导出日志到桌面、打开日志文件夹 | `index.html`, `electron/main.cjs`, `electron/preload.cjs`, `src/main.js`, `src/style.css` | ✅ |
 | 5 | **大厅挂机提醒** — 在大厅连续挂机5分钟触发提醒（走宠物气泡），全部通关后不提醒；进副本重置计时 | `electron/main.cjs` | ✅ |
+| 6 | **自动测试脚本** — `test/auto-test.cjs`，覆盖等级计算/称号/成就/canArchive/全部通关/filler上限/重生加成/数据完整性 共117项测试，全部通过 | `test/auto-test.cjs` | ✅ |
