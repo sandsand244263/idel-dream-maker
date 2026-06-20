@@ -496,12 +496,41 @@ function checkAchievements() {
   return unlocked;
 }
 
+function allScenariosFullyCompleted() {
+  if (!allScenarios || allScenarios.length === 0) return false;
+  return allScenarios.every(s => {
+    const hasCompletion = (gameState.gameCompletions || []).some(c => c.scenarioId === s.id);
+    if (!hasCompletion) return false;
+    const maxR = s.max_rebirth || 0;
+    if (maxR === 0) return true;
+    const currentR = (gameState.rebirthCounts || {})[s.id] || 0;
+    return currentR >= maxR;
+  });
+}
+
+let hubIdleMs = 0;
+let lastHubReminderMs = 0;
+
 function startGameLoop() {
   if (gameLoopInterval) return;
   let lastTick = Date.now();
+  hubIdleMs = 0;
+  lastHubReminderMs = 0;
+
+  const HUB_REMINDERS = [
+    '在大厅挂机不涨经验，进副本才有。',
+    '已经在大厅待了5分钟，不选个副本开始吗？',
+    '大厅只能管理和浏览，经验在副本里。',
+    '副本才是挂机的地方——选一个进去吧。',
+    '在大厅不会有事件触发，副本里才有故事。',
+  ];
 
   gameLoopInterval = setInterval(() => {
     if (!gameState) return;
+
+    const now = Date.now();
+    const delta = now - lastTick;
+    lastTick = now;
 
     // Send game tick regardless of hub/scenario
     const payload = {
@@ -530,11 +559,19 @@ function startGameLoop() {
     forwardToPet('game-tick', payload);
     forwardToPet('pet-state', { hubLevel: calcLevel(gameState.hubTotalExp), isInHub: gameState.isInHub, level: gameState.level });
 
-    if (gameState.isInHub) return;
-
-    const now = Date.now();
-    const delta = now - lastTick;
-    lastTick = now;
+    if (gameState.isInHub) {
+      if (!allScenariosFullyCompleted()) {
+        hubIdleMs += delta;
+        if (hubIdleMs >= 300000 && hubIdleMs - lastHubReminderMs >= 900000) {
+          lastHubReminderMs = hubIdleMs;
+          const text = HUB_REMINDERS[Math.floor(Math.random() * HUB_REMINDERS.length)];
+          const reminderPayload = { id: 'hub_reminder', title: '提醒', color: '#FFA500', text };
+          try { mainWindow.webContents.send('event-triggered', reminderPayload); } catch {}
+          forwardToPet('event-triggered', reminderPayload);
+        }
+      }
+      return;
+    }
 
     gameState.totalRuntimeMs += delta;
     let expMultiplier = 1;
@@ -765,6 +802,8 @@ function registerIpcHandlers() {
     if (!scenario) throw new Error(`Scenario '${id}' not found`);
     const aliasStr = alias || '';
     resetGameForScenario(scenario, aliasStr);
+    hubIdleMs = 0;
+    lastHubReminderMs = 0;
     writeSave(gameState);
     try { mainWindow.webContents.send('scenario-changed', {
       game: {
