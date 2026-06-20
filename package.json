@@ -10,7 +10,7 @@
     "predev": "node build.js",
     "prebuild": "node build.js",
     "electron:dev": "node build.js && concurrently \"npm run dev\" \"wait-on http://localhost:1420 && electron .\"",
-    "electron:build": "node build.js && vite build && electron-builder"
+    "electron:build": "node build.js && vite build && electron-builder && node -e \"const f=require('fs'),p=require('path');['win-unpacked','linux-unpacked','mac-unpacked','builder-debug.yml','builder-effective-config.yaml'].forEach(n=>{const d=p.join('release',n);if(f.existsSync(d))f.rmSync(d,{recursive:true,force:true})})\""
   },
   "build": {
     "appId": "com.idel.dream-maker",
