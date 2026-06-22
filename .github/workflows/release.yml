@@ -42,6 +42,10 @@ jobs:
       - name: Build web assets
         run: npx vite build
 
+      - name: Generate icons
+        if: matrix.os == 'windows-latest'
+        run: node scripts/generate-icon.mjs
+
       - name: Package (${{ matrix.asset-name }})
         run: npx electron-builder ${{ matrix.target }}
         env:

@@ -262,11 +262,19 @@ function loadScenarios() {
   }
 }
 
+// Get scenarios_user directory (portable: next to exe; dev: project root)
+function getScenariosUserDir() {
+  if (app.isPackaged) {
+    return path.join(path.dirname(app.getPath('exe')), 'scenarios_user');
+  }
+  return path.join(__dirname, '..', 'scenarios_user');
+}
+
 // Read user scenarios from scenarios_user/
 function loadUserScenarios() {
-  const userDir = path.join(__dirname, '..', 'scenarios_user');
+  const userDir = getScenariosUserDir();
   if (!fs.existsSync(userDir)) {
-    fs.mkdirSync(userDir, { recursive: true });
+    try { fs.mkdirSync(userDir, { recursive: true }); } catch {}
     return [];
   }
   const files = fs.readdirSync(userDir).filter(f => f.endsWith('.md')).sort();
@@ -1057,16 +1065,16 @@ function registerIpcHandlers() {
   });
 
   ipcMain.handle('open-user-scenarios-folder', () => {
-    const userDir = path.join(__dirname, '..', 'scenarios_user');
-    if (!fs.existsSync(userDir)) fs.mkdirSync(userDir, { recursive: true });
+    const userDir = getScenariosUserDir();
+    if (!fs.existsSync(userDir)) { try { fs.mkdirSync(userDir, { recursive: true }); } catch {} }
     const { shell } = require('electron');
     shell.openPath(userDir);
     return { success: true };
   });
 
   ipcMain.handle('refresh-user-scenarios', () => {
-    const userDir = path.join(__dirname, '..', 'scenarios_user');
-    if (!fs.existsSync(userDir)) fs.mkdirSync(userDir, { recursive: true });
+    const userDir = getScenariosUserDir();
+    if (!fs.existsSync(userDir)) { try { fs.mkdirSync(userDir, { recursive: true }); } catch {} }
     const newUserScenarios = loadUserScenarios();
     const builtInIds = new Set(loadScenarios().map(s => s.id));
     allScenarios = allScenarios.filter(s => !s._userFile || builtInIds.has(s.id));

@@ -20,10 +20,6 @@ idel-dream-maker@*
 tauri
 .env.local
 
-# Large assets
-public/fonts/*.ttf
-public/fonts/*.otf
-
 # Build output (electron-builder)
 release/
 
