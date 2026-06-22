@@ -1050,6 +1050,12 @@ function registerIpcHandlers() {
   });
 
   // ── User Scenarios ──
+  ipcMain.handle('open-github-repo', () => {
+    const { shell } = require('electron');
+    shell.openExternal('https://github.com/sandsand244263/idel-dream-maker');
+    return { success: true };
+  });
+
   ipcMain.handle('open-user-scenarios-folder', () => {
     const userDir = path.join(__dirname, '..', 'scenarios_user');
     if (!fs.existsSync(userDir)) fs.mkdirSync(userDir, { recursive: true });

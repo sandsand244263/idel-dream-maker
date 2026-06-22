@@ -62,8 +62,8 @@ const LANG = {
   archiveAllDone: '所有副本都已通关',
   archivePromptAction: '反馈与催更',
   feedbackTitle: '反馈与支持',
-  feedbackEmailLabel: '邮箱',
-  feedbackEmailCopied: '已复制到剪贴板',
+  openGitHub: '在 GitHub 提交 Issue',
+  feedbackHint: '提交 Issue 时附上日志文件有助于排查问题',
   feedbackExportBtn: '导出日志到桌面',
   feedbackOpenFolder: '打开日志文件夹',
   feedbackExporting: '正在导出...',
@@ -534,11 +534,8 @@ document.getElementById('btn-tutorial').addEventListener('click', async () => {
 });
 
 // ── 反馈面板 ──
-document.getElementById('feedback-email')?.addEventListener('click', async () => {
-  try {
-    await navigator.clipboard.writeText('1015524534@qq.com');
-    showToast(t('feedbackEmailCopied'), 'info');
-  } catch {}
+document.getElementById('btn-github-repo')?.addEventListener('click', async () => {
+  try { await window.electron.invoke('open-github-repo'); } catch {}
 });
 document.getElementById('btn-export-logs')?.addEventListener('click', async () => {
   const btn = document.getElementById('btn-export-logs');

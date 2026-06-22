@@ -1,7 +1,7 @@
 {
   "name": "idel-dream-maker",
   "private": true,
-  "version": "2.8.0",
+  "version": "2.8.1",
   "type": "module",
   "main": "electron/main.cjs",
   "scripts": {
@@ -38,7 +38,9 @@
     "mac": {
       "icon": "icons/icon.png",
       "target": "dmg",
-      "category": "public.app-category.entertainment"
+      "category": "public.app-category.entertainment",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false
     },
     "linux": {
       "icon": "icons/icon_256.png",
