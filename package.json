@@ -32,7 +32,7 @@
     "icon": "icons/icon.png",
     "win": {
       "icon": "icons/icon.ico",
-      "target": "portable",
+      "target": ["portable", "zip"],
       "signAndEditExecutable": false
     },
     "mac": {

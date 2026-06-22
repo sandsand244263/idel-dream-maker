@@ -32,7 +32,9 @@ const LANG = {
   obStep4: '随时点击 [大厅] 退出，经验累入全局等级',
   obTip: '提示：宠物窗口常驻桌面，点击宠物可交互',
   obName: '你的名称', obNamePlaceholder: '输入名称', obStart: '开始冒险',
-  btnImportScenario: '导入副本',
+  btnOpenScenariosFolder: '打开副本文件夹',
+  btnRefreshScenarios: '刷新副本列表',
+  scenariosFolderHint: '将 .md 副本文件放入打开的文件夹，点「刷新」即可自动加载',
   labelUserMade: '自制',
   statusHub: '（大厅）', statusNone: '-',
   eventToday: '今天',
@@ -926,24 +928,18 @@ onboardingOk.addEventListener('click', async () => {
   renderHubView(); renderHubCards(); updateUI();
 });
 
-// ── Import Scenario ──
-document.getElementById('btn-import-scenario')?.addEventListener('click', async () => {
-  const r = await window.electron.invoke('import-scenario').catch(() => ({ success: false, error: '操作失败' }));
-  if (r.success) {
-    showToast(`已导入: ${r.fileName}`, 'info');
-    try { scenarioList = await window.electron.invoke('get-scenario-list'); } catch {}
+// ── User Scenarios ──
+document.getElementById('btn-open-scenarios-folder')?.addEventListener('click', async () => {
+  try { await window.electron.invoke('open-user-scenarios-folder'); } catch {}
+});
+document.getElementById('btn-refresh-scenarios')?.addEventListener('click', async () => {
+  try {
+    const r = await window.electron.invoke('refresh-user-scenarios');
+    scenarioList = await window.electron.invoke('get-scenario-list');
     renderHubCards();
     renderScenarioPanel();
-  } else if (r.error !== '已取消') {
-    showToast(`导入失败: ${r.error}`, 'error');
-  }
-});
-
-// ── Scenario List Updated Listener ──
-window.electron.on('scenario-list-updated', (list) => {
-  scenarioList = list;
-  renderHubCards();
-  renderScenarioPanel();
+    showToast(`已加载 ${r.count} 个自制副本`, 'info');
+  } catch { showToast('刷新失败', 'error'); }
 });
 
 bindCt('ct-fg'); bindCt('ct-bg'); bindCt('ct-dim'); bindCt('ct-border');

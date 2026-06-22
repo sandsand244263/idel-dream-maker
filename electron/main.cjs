@@ -1050,51 +1050,12 @@ function registerIpcHandlers() {
   });
 
   // ── User Scenarios ──
-  ipcMain.handle('import-scenario', async () => {
+  ipcMain.handle('open-user-scenarios-folder', () => {
     const userDir = path.join(__dirname, '..', 'scenarios_user');
     if (!fs.existsSync(userDir)) fs.mkdirSync(userDir, { recursive: true });
-    const result = await dialog.showOpenDialog(mainWindow, {
-      title: '导入副本',
-      defaultPath: userDir,
-      filters: [{ name: '副本文件', extensions: ['md'] }],
-      properties: ['openFile'],
-    });
-    if (result.canceled || result.filePaths.length === 0) return { success: false, error: '已取消' };
-    const srcPath = result.filePaths[0];
-    const fileName = path.basename(srcPath);
-    const destPath = path.join(userDir, fileName);
-    let counter = 1;
-    let actualDest = destPath;
-    while (fs.existsSync(actualDest)) {
-      const ext = path.extname(fileName);
-      const base = path.basename(fileName, ext);
-      actualDest = path.join(userDir, `${base}_${counter}${ext}`);
-      counter++;
-    }
-    try {
-      fs.copyFileSync(srcPath, actualDest);
-    } catch (e) {
-      return { success: false, error: `复制失败: ${e.message}` };
-    }
-    // Re-load user scenarios
-    const newUserScenarios = loadUserScenarios();
-    // Merge into allScenarios (replace existing user scenarios, keep built-in)
-    const builtInIds = new Set(loadScenarios().map(s => s.id));
-    allScenarios = allScenarios.filter(s => !s._userFile || builtInIds.has(s.id));
-    allScenarios.push(...newUserScenarios);
-    // Notify frontend
-    try {
-      const list = allScenarios.map(s => ({
-        id: s.id, name: s.name, nameCN: s.name_cn || s.nameCN,
-        description: s.description, playerTitle: s.playerTitle || s.player_title,
-        titleCount: s.titles ? s.titles.length : 0,
-        eventCount: s.events ? s.events.length : 0,
-        achievementCount: s.achievements ? s.achievements.length : 0,
-        isUserMade: !!s._userFile,
-      }));
-      mainWindow.webContents.send('scenario-list-updated', list);
-    } catch {}
-    return { success: true, fileName };
+    const { shell } = require('electron');
+    shell.openPath(userDir);
+    return { success: true };
   });
 
   ipcMain.handle('refresh-user-scenarios', () => {

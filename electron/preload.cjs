@@ -15,7 +15,7 @@ contextBridge.exposeInMainWorld('electron', {
       'rebirth-scenario', 'get-scenario-unlocks',
       'set-onboarding-seen', 'set-custom-theme',
       'hide-pet-window', 'toggle-pet-window', 'toggle-main-window',
-      'import-scenario', 'refresh-user-scenarios',
+      'open-user-scenarios-folder', 'refresh-user-scenarios',
       'add-log-entry', 'get-log-dates', 'get-log-entries',
       'archive-scenario', 'unarchive-scenario', 'get-archived-scenarios',
       'get-all-complete-prompt', 'dismiss-all-complete-prompt',
