@@ -240,19 +240,8 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #onboarding-ok:hover { background:color-mix(in srgb, var(--fg) 8%, transparent); }
 #onboarding-ok:active { transform:scale(0.96); }
 
-/* ── Debug Panel ── */
-#debug-panel { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; background: rgba(0,0,0,0.92); display: flex; flex-direction: column; }
-#debug-panel.hidden { display: none; }
-#debug-header { display: flex; justify-content: space-between; align-items: center; padding: 4px 10px; border-bottom: 1px solid var(--dim); font-weight: bold; font-size: 11px; }
-#debug-header button { background: transparent; border: none; color: var(--dim); font-size: 14px; cursor: pointer; }
-#debug-header button:hover { color: var(--fg); }
-#debug-toolbar { display: flex; gap: 6px; padding: 4px 10px; border-bottom: 1px solid var(--dim); }
-#debug-toolbar button { background: color-mix(in srgb, var(--fg) 6%, transparent); border: 1px solid var(--dim); color: var(--fg); font-family: var(--font); font-size: 11px; padding: 2px 8px; cursor: pointer; }
-#debug-toolbar button:hover { background: color-mix(in srgb, var(--fg) 12%, transparent); }
-#debug-content { flex: 1; overflow: auto; padding: 8px 10px; font-family: var(--font); font-size: 10px; color: var(--fg); white-space: pre-wrap; word-break: break-all; line-height: 1.4; }
-#debug-content::-webkit-scrollbar { width: 4px; }
-#debug-content::-webkit-scrollbar-track { background: var(--bg); }
-#debug-content::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
+/* ── User-Made Tag ── */
+.user-made-tag { display:inline-block; font-size:9px; color:var(--fg); background:color-mix(in srgb, var(--fg) 12%, transparent); border:1px solid var(--dim); border-radius:3px; padding:0 4px; margin-left:4px; vertical-align:middle; }
 
 /* ── Event Panel Date Groups ── */
 #event-panel .date-group { border-bottom:1px solid color-mix(in srgb, var(--fg) 4%, transparent); }

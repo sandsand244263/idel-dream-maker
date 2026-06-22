@@ -26,3 +26,6 @@ public/fonts/*.otf
 
 # Build output (electron-builder)
 release/
+
+# Player-created scenarios
+scenarios_user/

@@ -1,4 +1,4 @@
-const { app, ipcMain, Menu } = require('electron');
+const { app, ipcMain, Menu, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -6,6 +6,7 @@ const { createMainWindow, getMainWindow } = require('./windows.cjs');
 const { createTray, setToolTip, getTray, updateMenu } = require('./tray.cjs');
 const { registerPetIpcHandlers, forwardToPet, initPet, broadcastTheme, setOnPetSelected } = require('./pet.cjs');
 const { getTodaysHolidayId, getUpcomingHolidayId, getHolidayName, getHolidayIcon, getHolidayEventFromScenario, getRandomHolidayEvent } = require('./holiday.cjs');
+const { parseScenarioMd } = require('../src/scenario-parser.cjs');
 
 let mainWindow = null;
 let tray = null;
@@ -259,6 +260,32 @@ function loadScenarios() {
     console.error('Failed to load scenarios:', e);
     return [];
   }
+}
+
+// Read user scenarios from scenarios_user/
+function loadUserScenarios() {
+  const userDir = path.join(__dirname, '..', 'scenarios_user');
+  if (!fs.existsSync(userDir)) {
+    fs.mkdirSync(userDir, { recursive: true });
+    return [];
+  }
+  const files = fs.readdirSync(userDir).filter(f => f.endsWith('.md')).sort();
+  const loaded = [];
+  for (const file of files) {
+    try {
+      const content = fs.readFileSync(path.join(userDir, file), 'utf-8');
+      const scenario = parseScenarioMd(content);
+      if (allScenarios.find(s => s.id === scenario.id)) {
+        console.warn(`User scenario '${scenario.id}' in ${file} duplicates built-in ID, skipping`);
+        continue;
+      }
+      scenario._userFile = file;
+      loaded.push(scenario);
+    } catch (e) {
+      console.error(`Failed to parse user scenario ${file}: ${e.message}`);
+    }
+  }
+  return loaded;
 }
 
 let allScenarios = [];
@@ -787,6 +814,7 @@ function registerIpcHandlers() {
       titleCount: s.titles ? s.titles.length : 0,
       eventCount: s.events ? s.events.length : 0,
       achievementCount: s.achievements ? s.achievements.length : 0,
+      isUserMade: !!s._userFile,
     }));
   });
 
@@ -1021,118 +1049,72 @@ function registerIpcHandlers() {
     return { theme: gameState?.selectedFontTheme || 'green', customTheme: gameState?.customTheme || null };
   });
 
-  // ── Dev Tools ──
-  ipcMain.handle('dev-trigger-event', () => {
-    if (!currentScenario || gameState.isInHub) return null;
-    const event = checkAndTriggerEvent();
-    if (event) {
-      const evPayload = { id: event.id, title: event.title || '事件', color: event.color || '#FFA500', text: event.text };
-      try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
-      forwardToPet('event-triggered', evPayload);
-    }
-    return event ? { text: event.text } : null;
-  });
-
-  ipcMain.handle('dev-force-trigger-event', () => {
-    if (!currentScenario || !currentScenario.events || gameState.isInHub) return { info: '需要在副本内' };
-    const pool = currentScenario.events.filter(e => {
-      const runtimeHours = gameState.totalRuntimeMs / 3600000;
-      if (e.minLevel && e.minLevel > gameState.level) return false;
-      if (e.minHours && e.minHours > runtimeHours) return false;
-      if (e.once && gameState.triggeredEvents.includes(e.id)) return false;
-      return true;
+  // ── User Scenarios ──
+  ipcMain.handle('import-scenario', async () => {
+    const result = await dialog.showOpenDialog(mainWindow, {
+      title: '导入副本',
+      filters: [{ name: '副本文件', extensions: ['md'] }],
+      properties: ['openFile'],
     });
-    if (pool.length === 0) return { info: '无可触发的事件' };
-    const choice = pool[Math.floor(Math.random() * pool.length)];
-    if (choice.once) gameState.triggeredEvents.push(choice.id);
-    const evPayload = { id: choice.id, title: choice.title || '事件', color: choice.color || '#FFA500', text: choice.text };
-    try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
-    forwardToPet('event-triggered', evPayload);
-    return { text: choice.text };
-  });
-
-  ipcMain.handle('dev-level-up', (_, { levels }) => {
-    const gain = levels || 10;
-    gameState.totalExpEarned += gain * 100 * gameState.level;
-    gameState.level = calcLevel(gameState.totalExpEarned);
-    currentTitle = getCurrentTitle(currentScenario, gameState.level);
-    if (currentTitle && currentScenario) {
-      gameState.equippedTitleIndex = currentScenario.titles.indexOf(currentTitle);
+    if (result.canceled || result.filePaths.length === 0) return { success: false, error: '已取消' };
+    const srcPath = result.filePaths[0];
+    const userDir = path.join(__dirname, '..', 'scenarios_user');
+    if (!fs.existsSync(userDir)) fs.mkdirSync(userDir, { recursive: true });
+    const fileName = path.basename(srcPath);
+    const destPath = path.join(userDir, fileName);
+    let counter = 1;
+    let actualDest = destPath;
+    while (fs.existsSync(actualDest)) {
+      const ext = path.extname(fileName);
+      const base = path.basename(fileName, ext);
+      actualDest = path.join(userDir, `${base}_${counter}${ext}`);
+      counter++;
     }
-    const luPayload = { level: gameState.level, title: currentTitle ? currentTitle.name : null, titleColor: currentTitle ? currentTitle.color : null, titleDesc: currentTitle ? currentTitle.desc : null };
-    try { mainWindow.webContents.send('level-up', luPayload); } catch {}
-    forwardToPet('level-up', luPayload);
-    return { level: gameState.level, title: currentTitle ? currentTitle.name : null };
-  });
-
-  ipcMain.handle('dev-achievement', () => {
-    if (!currentScenario || gameState.isInHub) return { info: '在副本内才能解锁成就' };
-    const unlocked = checkAchievements();
-    for (const a of unlocked) {
-      const achPayload = { id: a.id, name: a.name, desc: a.desc, icon: a.icon || '★' };
-      try { mainWindow.webContents.send('achievement-unlocked', achPayload); } catch {}
-      forwardToPet('achievement-unlocked', achPayload);
-    }
-    return unlocked.length > 0 ? { name: unlocked[0].name } : { info: '暂无可解锁的成就，试试先 +10 级' };
-  });
-
-  ipcMain.handle('dev-runtime', (_, { hours }) => {
-    gameState.totalRuntimeMs += (hours || 1) * 3600000;
-    return { runtime: gameState.totalRuntimeMs };
-  });
-
-  ipcMain.handle('dev-force-holiday-event', () => {
-    if (!currentScenario || gameState.isInHub) return { info: '需要在副本内' };
-    const holidays = require('./holiday.cjs');
-    const he = holidays.getRandomHolidayEvent(currentScenario);
-    if (!he) return { info: '当前副本无节日事件' };
-    const evPayload = { id: 'holiday_' + he.id, title: he.holidayName, color: '#FFD700', text: he.text, isHoliday: true };
-    try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
-    forwardToPet('event-triggered', evPayload);
-    return { text: he.text, holiday: he.holidayName };
-  });
-
-  ipcMain.handle('dev-trigger-story', () => {
-    if (!currentScenario || gameState.isInHub) return null;
-    const event = findUnusedEvent('story', gameState.level);
-    if (!event) return null;
-    gameState.triggeredEvents.push(event.id);
-    const evPayload = { id: event.id, title: '故事', color: '#FFA500', text: event.text };
-    try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
-    forwardToPet('event-triggered', evPayload);
-    return { text: event.text };
-  });
-
-  ipcMain.handle('dev-trigger-filler', () => {
-    if (!currentScenario || gameState.isInHub) return null;
-    const event = findUnusedEvent('filler', gameState.level);
-    if (!event) return null;
-    gameState.triggeredEvents.push(event.id);
-    const evPayload = { id: event.id, title: '日常', color: '#FFA500', text: event.text };
-    try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
-    forwardToPet('event-triggered', evPayload);
-    return { text: event.text };
-  });
-
-  ipcMain.handle('dev-reset-daily', () => {
-    gameState.lastLoginDay = '';
-    gameState.fillerCountToday = 0;
-    return true;
-  });
-
-  ipcMain.handle('dev-hourly-chime', () => {
-    forwardToPet('hourly-chime', {});
-    return true;
-  });
-
-  ipcMain.handle('dev-reset-save', () => {
     try {
-      const sp = path.join(getAppDataPath(), 'save.json');
-      if (fs.existsSync(sp)) fs.unlinkSync(sp);
+      fs.copyFileSync(srcPath, actualDest);
+    } catch (e) {
+      return { success: false, error: `复制失败: ${e.message}` };
+    }
+    // Re-load user scenarios
+    const newUserScenarios = loadUserScenarios();
+    // Merge into allScenarios (replace existing user scenarios, keep built-in)
+    const builtInIds = new Set(loadScenarios().map(s => s.id));
+    allScenarios = allScenarios.filter(s => !s._userFile || builtInIds.has(s.id));
+    allScenarios.push(...newUserScenarios);
+    // Notify frontend
+    try {
+      const list = allScenarios.map(s => ({
+        id: s.id, name: s.name, nameCN: s.name_cn || s.nameCN,
+        description: s.description, playerTitle: s.playerTitle || s.player_title,
+        titleCount: s.titles ? s.titles.length : 0,
+        eventCount: s.events ? s.events.length : 0,
+        achievementCount: s.achievements ? s.achievements.length : 0,
+        isUserMade: !!s._userFile,
+      }));
+      mainWindow.webContents.send('scenario-list-updated', list);
     } catch {}
-    app.relaunch();
-    app.exit();
-    return true;
+    return { success: true, fileName };
+  });
+
+  ipcMain.handle('refresh-user-scenarios', () => {
+    const userDir = path.join(__dirname, '..', 'scenarios_user');
+    if (!fs.existsSync(userDir)) fs.mkdirSync(userDir, { recursive: true });
+    const newUserScenarios = loadUserScenarios();
+    const builtInIds = new Set(loadScenarios().map(s => s.id));
+    allScenarios = allScenarios.filter(s => !s._userFile || builtInIds.has(s.id));
+    allScenarios.push(...newUserScenarios);
+    try {
+      const list = allScenarios.map(s => ({
+        id: s.id, name: s.name, nameCN: s.name_cn || s.nameCN,
+        description: s.description, playerTitle: s.playerTitle || s.player_title,
+        titleCount: s.titles ? s.titles.length : 0,
+        eventCount: s.events ? s.events.length : 0,
+        achievementCount: s.achievements ? s.achievements.length : 0,
+        isUserMade: !!s._userFile,
+      }));
+      mainWindow.webContents.send('scenario-list-updated', list);
+    } catch {}
+    return { count: newUserScenarios.length };
   });
 
   ipcMain.handle('add-log-entry', (_, { type, msg }) => {
@@ -1346,6 +1328,11 @@ function registerIpcHandlers() {
 
 app.whenReady().then(() => {
   allScenarios = loadScenarios();
+  const userScenarios = loadUserScenarios();
+  if (userScenarios.length > 0) {
+    allScenarios.push(...userScenarios);
+    console.log(`Loaded ${userScenarios.length} user scenario(s)`);
+  }
 
   // Load save or create default
   gameState = readSave();

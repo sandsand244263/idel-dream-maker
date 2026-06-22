@@ -10,7 +10,7 @@
 
 ---
 
-新对话启动流程详见 `CLAUDE.md` → **「工作规范」** 章节。
+新对话启动流程详见 `CONTRIBUTING.md` → **「快速开始」** 章节。
 
 ---
 
@@ -704,3 +704,23 @@ npx electron-builder   # 打包验证
 | 5 | **右键菜单「操作说明」** — 点击弹气泡汇总所有交互操作 | `pet-context-menu/index.html`, `pet-context-menu/script.js`, `electron/pet-context-menu.cjs`, `electron/pet-context-menu-preload.cjs`, `electron/pet-preload.cjs`, `pet/pet.js` | ✅ |
 | 6 | **pet-bubble 加滚动条** — 符合样式规范（width:4px/var(--dim)/border-radius:2px） | `pet-bubble/style.css` | ✅ |
 | 7 | **宠物选择器提示文本更新** — 标注需登录+网络工具 | `pet-selector/index.html`, `pet-selector/script.js` | ✅ |
+
+## v2.8.0 — 开源准备
+
+> **当前阶段：v2.8.0（已完成）**
+>
+> 为开源做准备：MIT 许可证、README、副本格式文档、AI 创作模板、示例副本。核心：玩家自制副本功能（启动时自动解析 scenarios_user/*.md）+ 导入副本按钮。删除 debug 开发工具。清理项目遗留物（.opencode/、update_hermit.ps1）。CLAUDE.md → CONTRIBUTING.md。
+
+| # | 内容 | 涉及文件 | 状态 |
+|:-:|:-----|:---------|:----:|
+| 1 | **LICENSE** — MIT 协议 | `LICENSE` | ✅ |
+| 2 | **README.md** — 项目介绍/快速开始/自制副本指引/版权声明 | `README.md` | ✅ |
+| 3 | **副本格式文档** — format-rules.md（完整规范）+ creating-scenarios.md（手把手教程） | `docs/format-rules.md`, `docs/creating-scenarios.md` | ✅ |
+| 4 | **AI 创作模板** — 通用提示词模板，复制给任何 AI 就能写副本 | `docs/ai-prompt-template.md` | ✅ |
+| 5 | **示例副本** — 10 级极简可运行示例 | `scenarios/example-hello-world.md` | ✅ |
+| 6 | **共享解析模块** — 从 build.js 抽出 parseScenarioMd 到 src/scenario-parser.cjs | `src/scenario-parser.cjs`, `build.js` | ✅ |
+| 7 | **玩家自制副本** — 启动时自动扫描 scenarios_user/*.md，解析并合并入 allScenarios；导入副本 IPC；刷新列表 IPC | `electron/main.cjs`, `electron/preload.cjs`, `src/main.js` | ✅ |
+| 8 | **自制标签** — 副本卡片显示"自制"标签，区分内建/玩家副本 | `src/main.js`, `src/style.css`, `electron/main.cjs` | ✅ |
+| 9 | **删除 debug 功能** — 移除开发工具面板、10 个 dev- IPC 通道、CSS 样式、前端快捷键 | `index.html`, `src/main.js`, `src/style.css`, `electron/main.cjs`, `electron/preload.cjs` | ✅ |
+| 10 | **清理项目遗留物** — 删除 .opencode/、update_hermit.ps1；CLAUDE.md → CONTRIBUTING.md（重写为贡献指南） | `CONTRIBUTING.md`, `.opencode/`, `update_hermit.ps1`, `CLAUDE.md` | ✅ |
+| 11 | **.gitignore** — 加 scenarios_user/ | `.gitignore` | ✅ |

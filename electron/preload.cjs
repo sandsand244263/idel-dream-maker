@@ -15,8 +15,7 @@ contextBridge.exposeInMainWorld('electron', {
       'rebirth-scenario', 'get-scenario-unlocks',
       'set-onboarding-seen', 'set-custom-theme',
       'hide-pet-window', 'toggle-pet-window', 'toggle-main-window',
-      'dev-trigger-event', 'dev-force-trigger-event', 'dev-level-up', 'dev-achievement', 'dev-runtime', 'dev-force-holiday-event',
-      'dev-trigger-story', 'dev-trigger-filler', 'dev-reset-daily', 'dev-hourly-chime', 'dev-reset-save',
+      'import-scenario', 'refresh-user-scenarios',
       'add-log-entry', 'get-log-dates', 'get-log-entries',
       'archive-scenario', 'unarchive-scenario', 'get-archived-scenarios',
       'get-all-complete-prompt', 'dismiss-all-complete-prompt',
@@ -32,6 +31,7 @@ contextBridge.exposeInMainWorld('electron', {
       'game-tick', 'auto-save', 'event-triggered', 'level-up',
       'achievement-unlocked', 'scenario-changed',
       'scenario-ending',
+      'scenario-list-updated',
     ];
     if (validChannels.includes(channel)) {
       const listener = (_, data) => callback(data);

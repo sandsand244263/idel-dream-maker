@@ -1,5 +1,414 @@
 [
   {
+    "id": "hello_world",
+    "name": "Hello World",
+    "name_cn": "你好世界",
+    "description": "一个极简的示例副本，仅 10 级，快速了解副本格式",
+    "player_title": "旅人",
+    "mechanic": "standard",
+    "max_rebirth": 0,
+    "unlock_requirement": {
+      "hub_level": 0,
+      "completions": 0
+    },
+    "completion_title": "初窥门径",
+    "titles": [
+      {
+        "level": 1,
+        "name": "旅人",
+        "color": "#888888",
+        "desc": "你踏上了旅程"
+      },
+      {
+        "level": 2,
+        "name": "漫步者",
+        "color": "#AAAAAA",
+        "desc": "你开始习惯路上的风景"
+      },
+      {
+        "level": 3,
+        "name": "探路者",
+        "color": "#66BB6A",
+        "desc": "你在前方寻找方向"
+      },
+      {
+        "level": 5,
+        "name": "见证者",
+        "color": "#FF9800",
+        "desc": "你见证了许多故事"
+      },
+      {
+        "level": 8,
+        "name": "归来者",
+        "color": "#5C6BC0",
+        "desc": "旅程即将结束"
+      },
+      {
+        "level": 10,
+        "name": "初窥者",
+        "color": "#FFD700",
+        "desc": "你看到了世界的一角"
+      }
+    ],
+    "events": [
+      {
+        "id": "s_01",
+        "type": "story",
+        "minLevel": 1,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你睁开眼睛，阳光透过树叶洒在脸上。你坐起来，发现自己躺在一片陌生的草地上。远处有一座小镇的轮廓。"
+      },
+      {
+        "id": "s_02",
+        "type": "story",
+        "minLevel": 2,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你走进小镇，街上的行人对你微笑致意。一个面包店的老板递给你一块刚出炉的面包。\"新来的吧？先吃点东西。\""
+      },
+      {
+        "id": "s_03",
+        "type": "story",
+        "minLevel": 3,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在镇中心发现一块公告板。上面贴满了各种委托——有人需要帮忙送信，有人需要采集药材。你撕下一张纸条，决定去镇外的森林看看。"
+      },
+      {
+        "id": "s_04",
+        "type": "story",
+        "minLevel": 4,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "森林里比想象中安静。你沿着小径走了大约半小时，看到一座被藤蔓覆盖的石塔。塔门虚掩着，里面隐约有灯光。"
+      },
+      {
+        "id": "s_05",
+        "type": "story",
+        "minLevel": 5,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你推开塔门，里面是一位白发老人坐在摇椅上。\"等你好久了，\"他说，\"你是第一个走到这里的人。坐吧，我给你讲个故事。\""
+      },
+      {
+        "id": "s_06",
+        "type": "story",
+        "minLevel": 6,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "老人告诉你，这座塔曾经是世界的瞭望台，能看到所有角落发生的事。但随着时间流逝，塔的力量渐渐消散了。\"也许你能帮它重新亮起来。\""
+      },
+      {
+        "id": "s_07",
+        "type": "story",
+        "minLevel": 7,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你按照老人的指引，在塔顶找到了一颗暗淡的水晶球。当你的手触碰它时，球体突然发出柔和的光。你看到了无数画面——远方的城市、高山、大海。"
+      },
+      {
+        "id": "s_08",
+        "type": "story",
+        "minLevel": 8,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "水晶球的光芒越来越亮，最终化作一道光柱射向天空。老人站在你身后，微笑着说：\"塔重新亮了。谢谢你，旅人。你是这段历史的一部分了。\""
+      },
+      {
+        "id": "s_09",
+        "type": "story",
+        "minLevel": 9,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你告别老人，回到小镇。镇民们聚集在广场上，他们看到了那道光柱。镇长握住你的手：\"年轻人，你给这里带来了希望。\""
+      },
+      {
+        "id": "s_10",
+        "type": "story",
+        "minLevel": 10,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你站在小镇外的山丘上，回望这片土地。旅程才刚刚开始，但你已经有了方向。你知道前方还有更多的故事在等你。"
+      },
+      {
+        "id": "f_01",
+        "type": "filler",
+        "minLevel": 1,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "阳光温暖，微风拂面。今天是个好日子。"
+      },
+      {
+        "id": "f_02",
+        "type": "filler",
+        "minLevel": 1,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "你听到远处传来孩子的笑声。"
+      },
+      {
+        "id": "f_03",
+        "type": "filler",
+        "minLevel": 2,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "面包店飘来诱人的香气。"
+      },
+      {
+        "id": "f_04",
+        "type": "filler",
+        "minLevel": 2,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "一只橘猫在墙头打盹，尾巴轻轻摆动。"
+      },
+      {
+        "id": "f_05",
+        "type": "filler",
+        "minLevel": 3,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "公告板上多了几张新的委托。"
+      },
+      {
+        "id": "f_06",
+        "type": "filler",
+        "minLevel": 3,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "一片落叶飘到你的肩头。"
+      },
+      {
+        "id": "f_07",
+        "type": "filler",
+        "minLevel": 4,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "森林里的鸟鸣声此起彼伏。"
+      },
+      {
+        "id": "f_08",
+        "type": "filler",
+        "minLevel": 4,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "你在一棵树下发现了一朵蓝色的小花。"
+      },
+      {
+        "id": "f_09",
+        "type": "filler",
+        "minLevel": 5,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "塔里的灯光在远处隐约可见。"
+      },
+      {
+        "id": "f_10",
+        "type": "filler",
+        "minLevel": 5,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "老人哼着一首古老的曲子。"
+      },
+      {
+        "id": "f_11",
+        "type": "filler",
+        "minLevel": 6,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "水晶球在你手中微微发暖。"
+      },
+      {
+        "id": "f_12",
+        "type": "filler",
+        "minLevel": 6,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "塔顶的风很大，但景色很美。"
+      },
+      {
+        "id": "f_13",
+        "type": "filler",
+        "minLevel": 7,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "你看到远方有一片金色的麦田。"
+      },
+      {
+        "id": "f_14",
+        "type": "filler",
+        "minLevel": 7,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "云朵在天空中缓缓移动。"
+      },
+      {
+        "id": "f_15",
+        "type": "filler",
+        "minLevel": 8,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "广场上的喷泉在阳光下闪闪发光。"
+      },
+      {
+        "id": "f_16",
+        "type": "filler",
+        "minLevel": 8,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "镇民们对你投来友善的目光。"
+      },
+      {
+        "id": "f_17",
+        "type": "filler",
+        "minLevel": 9,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "镇长办公室的窗台上放着一盆盛开的花。"
+      },
+      {
+        "id": "f_18",
+        "type": "filler",
+        "minLevel": 9,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "你听到钟楼传来了悠扬的钟声。"
+      },
+      {
+        "id": "f_19",
+        "type": "filler",
+        "minLevel": 10,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "山丘上的风吹动你的衣角。"
+      },
+      {
+        "id": "f_20",
+        "type": "filler",
+        "minLevel": 10,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 5,
+        "once": false,
+        "text": "前方是一条延伸向远方的路。"
+      }
+    ],
+    "holidayEvents": [
+      {
+        "holidayId": "spring_festival",
+        "type": "day",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 5,
+        "once": false,
+        "text": "小镇里挂满了红灯笼，空气中弥漫着鞭炮的味道。有人递给你一碗热气腾腾的饺子。\"新年快乐！\""
+      },
+      {
+        "holidayId": "spring_festival",
+        "type": "advance",
+        "minLevel": 1,
+        "minHours": 0,
+        "weight": 5,
+        "once": false,
+        "text": "镇民们开始忙碌起来，到处贴着红色的剪纸。春节要到了。"
+      }
+    ],
+    "achievements": [
+      {
+        "id": "ach_traveler",
+        "name": "旅人",
+        "desc": "到达 1 级",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 1
+        },
+        "minRebirth": 0
+      },
+      {
+        "id": "ach_explorer",
+        "name": "探索者",
+        "desc": "到达 5 级",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 5
+        },
+        "minRebirth": 0
+      },
+      {
+        "id": "ach_completer",
+        "name": "完成者",
+        "desc": "到达 10 级",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 10
+        },
+        "minRebirth": 0
+      }
+    ]
+  },
+  {
     "id": "wasteland",
     "name": "Wasteland",
     "name_cn": "废土",

@@ -135,6 +135,10 @@
         <div class="ct-row"><span class="ct-label">bd</span><label class="ct-swatch" style="background:#00FF00"><input type="color" id="ct-border" value="#00FF00"></label><input class="ct-text" type="text" id="ct-border-text" value="#00FF00"></div>
         <button id="ct-save" data-i18n="ctSave">应用自定义配色</button>
       </div>
+      <div class="settings-section-title">副本</div>
+      <div class="setting-row">
+        <button id="btn-import-scenario" data-i18n="btnImportScenario">导入副本</button>
+      </div>
       <div class="settings-section-title" data-i18n="feedbackTitle">反馈与支持</div>
       <div class="setting-row"><span data-i18n="feedbackEmailLabel">邮箱</span><span id="feedback-email" style="color:var(--fg);cursor:pointer;" title="点击复制">1015524534@qq.com</span></div>
       <div class="setting-row" style="display:flex;gap:6px;flex-wrap:wrap;">
@@ -190,23 +194,6 @@
       <button id="onboarding-ok" data-i18n="obStart">开始冒险</button>
     </div>
   </div>
-  <div id="debug-panel" class="hidden">
-    <div id="debug-header"><span>Debug</span><button id="debug-close">✕</button></div>
-    <div id="debug-toolbar">
-      <button id="dbg-event" data-i18n="dbgEvent">触发事件</button>
-      <button id="dbg-levelup" data-i18n="dbgLevelup">+10 级</button>
-      <button id="dbg-achievement" data-i18n="dbgAchievement">解锁成就</button>
-      <button id="dbg-runtime" data-i18n="dbgRuntime">+1h</button>
-      <button id="dbg-holiday" data-i18n="dbgHoliday">节日事件</button>
-      <button id="dbg-story">触发 story</button>
-      <button id="dbg-filler">触发 filler</button>
-      <button id="dbg-reset-daily">重置每日</button>
-      <button id="dbg-chime">整点报时</button>
-      <button id="dbg-reset-save">重置存档</button>
-    </div>
-    <pre id="debug-content"></pre>
-  </div>
-
   <script type="module" src="src/scenario.js"></script>
   <script type="module" src="src/main.js"></script>
 </body>
