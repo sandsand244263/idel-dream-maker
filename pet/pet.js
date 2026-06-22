@@ -98,9 +98,12 @@ class NotificationQueue{
     dotSymbol.textContent = '○';
   }
   close(){
-    // close 是响应 bubble-closed 事件的，bubble 已在关闭，不再发 close-bubble（避免无限循环）
     dotEl.className = 'dot-none';
     dotSymbol.textContent = '○';
+    if(this._chimeShowing){
+      this._chimeShowing=false;
+      if(this.current){this.showDotOnly();return;}
+    }
     this.next();
   }
   clearQueue(){
@@ -115,6 +118,7 @@ const nq=new NotificationQueue();
 
 let chimeTimer=null;
 function showChimeBubble(text){
+  nq._chimeShowing=true;
   window.pet.invoke('show-bubble', {
     title: '报时',
     text: text,

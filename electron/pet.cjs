@@ -250,10 +250,9 @@ function getPetWindow() {
 }
 
 function togglePetWindow() {
-  if (petWindow && !petWindow.isDestroyed()) {
-    if (petWindow.isVisible()) { petWindow.hide(); }
-    else { petWindow.show(); petWindow.focus(); }
-  }
+  if (!petWindow || petWindow.isDestroyed()) return;
+  if (petWindow.isVisible()) { petWindow.hide(); }
+  else { petWindow.show(); petWindow.focus(); petWindow.setOpacity(1); }
 }
 
 function initPet(app, selectedIndex) {

@@ -66,7 +66,10 @@ function createTray(mainWindow) {
 
   tray.on('click', () => {
     if (mainWindow.isVisible()) { mainWindow.hide(); }
-    else { mainWindow.show(); mainWindow.focus(); }
+    else {
+      mainWindow.show(); mainWindow.focus();
+      try { const { getPetWindow, showPetWindow } = require('./pet.cjs'); const pw = getPetWindow(); if (pw && !pw.isDestroyed() && !pw.isVisible()) showPetWindow(); } catch {}
+    }
   });
 
   // Rebuild menu on show/hide
