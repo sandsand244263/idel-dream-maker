@@ -1429,6 +1429,7 @@ app.on('before-quit', () => {
   isQuitting = true;
   stopGameLoop();
   if (tooltipInterval) clearInterval(tooltipInterval);
+  try { const { forwardToPet, getPetWindow } = require('./pet.cjs'); const pw = getPetWindow(); if (pw) pw._isQuitting = true; } catch {}
   if (gameState) {
     if (mainWindow) {
       const [x, y] = mainWindow.getPosition();

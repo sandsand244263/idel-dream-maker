@@ -137,6 +137,10 @@ function createPetWindow(app) {
     petWindow.setPosition(pos.x, pos.y);
   }
 
+  petWindow._isQuitting = false;
+  petWindow.on('close', (e) => {
+    if (!petWindow._isQuitting) { e.preventDefault(); petWindow.hide(); }
+  });
   petWindow.on('closed', () => { petWindow = null; });
   petWindow.on('show', () => { try { require('./tray.cjs').updateMenu(); } catch {} });
   petWindow.on('hide', () => { try { require('./tray.cjs').updateMenu(); } catch {} });
