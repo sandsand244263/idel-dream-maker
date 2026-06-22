@@ -6,11 +6,13 @@
 
 ## 截图
 
-> TODO: 请补充截图，放到 `docs/screenshots/` 目录下
+| 大厅界面 | 副本内挂机 |
+|---------|-----------|
+| ![大厅](docs/screenshots/hub.jpg) | ![副本内](docs/screenshots/scenario.jpg) |
 
-| 大厅界面 | 副本内挂机 | 宠物窗口 | 事件弹窗 |
-|---------|-----------|---------|---------|
-| `docs/screenshots/hub.png` | `docs/screenshots/scenario.png` | `docs/screenshots/pet-window.png` | `docs/screenshots/event.png` |
+| 宠物窗口 | 事件弹窗 |
+|---------|---------|
+| ![宠物](docs/screenshots/pet-window.jpg) | ![事件弹窗](docs/screenshots/event.jpg) |
 
 ## 快速开始
 
