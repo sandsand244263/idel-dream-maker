@@ -1,4 +1,4 @@
-const LANG = { selectPet:'选择宠物', border:'显示边框', infobar:'信息栏', expbar:'进度条', guide:'操作说明', hide:'隐藏' };
+const LANG = { selectPet:'选择宠物', border:'显示边框', infobar:'信息栏', expbar:'进度条', chime:'整点报时', guide:'操作说明', hide:'隐藏' };
 function t(key) { return LANG[key] || key; }
 
 function setToggle(key, val) { localStorage.setItem('pet_' + key, val); }
@@ -22,9 +22,11 @@ function applyLanguage() {
 
 function updateUI() {
   applyLanguage();
-  ['border','infobar','expbar'].forEach(k => {
+  ['border','infobar','expbar','chime'].forEach(k => {
     const el = document.getElementById('ctx-toggle-' + k);
-    const on = getToggle('show' + k.charAt(0).toUpperCase() + k.slice(1), true);
+    const def = k === 'chime' ? true : true;
+    const key = k === 'chime' ? 'chime' : 'show' + k.charAt(0).toUpperCase() + k.slice(1);
+    const on = getToggle(key, def);
     el.childNodes[0].textContent = on ? '\u2713 ' : '\u2717 ';
     el.className = 'ctx-item ctx-toggle' + (on ? ' ctx-on' : ' ctx-off');
   });
@@ -35,9 +37,9 @@ document.getElementById('ctx-select-pet').addEventListener('click', () => {
   window.ctxMenu.invoke('close-menu').catch(() => {});
 });
 
-['border','infobar','expbar'].forEach(k => {
+['border','infobar','expbar','chime'].forEach(k => {
   document.getElementById('ctx-toggle-' + k).addEventListener('click', () => {
-    const key = 'show' + k.charAt(0).toUpperCase() + k.slice(1);
+    const key = k === 'chime' ? 'chime' : 'show' + k.charAt(0).toUpperCase() + k.slice(1);
     const val = !getToggle(key, true);
     setToggle(key, val);
     window.ctxMenu.invoke('toggle-pet-feature', { feature: k, value: val }).catch(() => {});
@@ -57,8 +59,8 @@ document.getElementById('ctx-close').addEventListener('click', () => {
 
 window.ctxMenu.invoke('get-toggle-state').then(r => {
   if (r) {
-    ['border','infobar','expbar'].forEach(k => {
-      const key = 'show' + k.charAt(0).toUpperCase() + k.slice(1);
+    ['border','infobar','expbar','chime'].forEach(k => {
+      const key = k === 'chime' ? 'chime' : 'show' + k.charAt(0).toUpperCase() + k.slice(1);
       if (r[key] !== undefined) setToggle(key, r[key]);
     });
   }

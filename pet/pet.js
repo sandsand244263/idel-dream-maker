@@ -375,8 +375,11 @@ setInterval(()=>{
   const block=now.getHours()*2+(now.getMinutes()>=30?1:0);
   if(block!==lastChimeBlock&&spritesheet){
     lastChimeBlock=block;
-    const h=now.getHours(),m=now.getMinutes()>=30?'30':'00';
-    showChimeBubble(('0'+h).slice(-2)+':'+m);
+    const chimeOn=getToggle('chime',true);
+    if(chimeOn){
+      const h=now.getHours(),m=now.getMinutes()>=30?'30':'00';
+      showChimeBubble(('0'+h).slice(-2)+':'+m);
+    }
   }
 },30000);
 
