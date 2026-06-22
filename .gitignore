@@ -30,3 +30,8 @@ release/
 # Player-created scenarios
 scenarios_user/*
 !scenarios_user/README.md
+
+# Local project files (not pushed to GitHub)
+CLAUDE.md
+themes/
+TASKS.md
