@@ -717,7 +717,7 @@ npx electron-builder   # 打包验证
 | 2 | **README.md** — 项目介绍/快速开始/自制副本指引/版权声明 | `README.md` | ✅ |
 | 3 | **副本格式文档** — format-rules.md（完整规范）+ creating-scenarios.md（手把手教程） | `docs/format-rules.md`, `docs/creating-scenarios.md` | ✅ |
 | 4 | **AI 创作模板** — 通用提示词模板，复制给任何 AI 就能写副本 | `docs/ai-prompt-template.md` | ✅ |
-| 5 | **示例副本** — 10 级极简可运行示例 | `scenarios/example-hello-world.md` | ✅ |
+| 5 | **示例副本** — 10 级极简可运行示例 | `scenarios/example-hello-world.md` → `docs/example-hello-world.md` | ✅ |
 | 6 | **共享解析模块** — 从 build.js 抽出 parseScenarioMd 到 src/scenario-parser.cjs | `src/scenario-parser.cjs`, `build.js` | ✅ |
 | 7 | **玩家自制副本** — 启动时自动扫描 scenarios_user/*.md，解析并合并入 allScenarios；导入副本 IPC；刷新列表 IPC | `electron/main.cjs`, `electron/preload.cjs`, `src/main.js` | ✅ |
 | 8 | **自制标签** — 副本卡片显示"自制"标签，区分内建/玩家副本 | `src/main.js`, `src/style.css`, `electron/main.cjs` | ✅ |

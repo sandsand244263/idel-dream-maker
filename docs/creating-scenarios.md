@@ -81,7 +81,7 @@ completion_title: 初体验
 
 ## 完整示例
 
-完整的可运行示例见 `scenarios/example-hello-world.md`。
+完整的可运行示例见 `docs/example-hello-world.md`。
 
 ## 分享副本
 

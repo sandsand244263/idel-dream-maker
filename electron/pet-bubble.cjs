@@ -61,17 +61,37 @@ function initBubble(app, petWin) {
 function doShowBubble(data) {
   if (!bubbleWindow || bubbleWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) return;
   const petBounds = petWindowRef.getBounds();
-  const bw = 260, bh = 120;
+  const bw = 260;
   const screen = require('electron').screen.getPrimaryDisplay().workAreaSize;
 
-  let x = petBounds.x + Math.floor((petBounds.width - bw) / 2);
-  let y = petBounds.y + petBounds.height + 5;
-  if (y + bh > screen.height) y = Math.max(0, petBounds.y - bh - 5);
-  // 先更新内容，再定位显示，避免闪烁旧内容
+  // 先更新内容
   if (data) { currentData = data; sendToBubble('show-bubble', data); }
-  bubbleWindow.setBounds({ x, y, width: bw, height: bh });
-  bubbleWindow.setOpacity(1);
-  bubbleWindow.show();
+
+  // 异步量内容实际高度，然后设 bounds
+  setImmediate(() => {
+    bubbleWindow.webContents.executeJavaScript(
+      `(function(){
+        const body = document.getElementById('bubble-body');
+        const header = document.getElementById('bubble-header');
+        if (!body) return 70;
+        const bodyH = body.scrollHeight;
+        const headerH = header ? header.scrollHeight : 0;
+        const gap = bodyH > 0 ? 16 : 0;
+        return Math.max(70, Math.min(bodyH + headerH + gap, 300));
+      })()`
+    ).then(actualH => {
+      let nx = petBounds.x + Math.floor((petBounds.width - bw) / 2);
+      let ny = petBounds.y + petBounds.height + 5;
+      if (ny + actualH > screen.height) ny = Math.max(0, petBounds.y - actualH - 5);
+      bubbleWindow.setBounds({ x: nx, y: ny, width: bw, height: actualH });
+      bubbleWindow.setOpacity(1);
+      bubbleWindow.show();
+    }).catch(() => {
+      bubbleWindow.setBounds({ x: petBounds.x + Math.floor((petBounds.width - bw) / 2), y: petBounds.y + petBounds.height + 5, width: bw, height: 70 });
+      bubbleWindow.setOpacity(1);
+      bubbleWindow.show();
+    });
+  });
 }
 
 function positionAndShowBubble(data) {

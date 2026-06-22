@@ -98,6 +98,6 @@ completion_title: 通关称号 # LV500 通关后获得的称号
 
 ## 副本格式参考
 
-完整格式规范见项目的 `docs/format-rules.md`，最小示例见 `scenarios/example-hello-world.md`。
+完整格式规范见项目的 `docs/format-rules.md`，最小示例见 `docs/example-hello-world.md`。
 
 生成完成后保存为 `.md` 文件，放到 `scenarios_user/` 目录下，重启游戏即可加载。

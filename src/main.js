@@ -2,7 +2,7 @@
 
 const LANG = {
   hubWelcome: '欢迎回来', hubLevel: '大厅 Lv.',
-  noScenarios: '暂无可用的副本', hubEmptyHint: '点击下方 [副本] 或 [+ 抽取副本] 开始，点击 [教程] 查看操作说明',
+  noScenarios: '暂无可用的副本', hubEmptyHint: '点击下方 [副本] 选择一个故事世界',
   btnBack: '大厅', btnScenario: '副本', btnJourney: '历程',
   btnSettings: '设置', btnTutorial: '教程',
   jTitle: '称号', jAchievement: '成就', jEvent: '事件',
@@ -11,7 +11,7 @@ const LANG = {
   settingsSave: '保存', settingsThemeTitle: '主题', ctSave: '应用自定义配色',
   eventHeader: '事件', achievementHeader: '成就解锁',
   systemInitFail: '初始化失败', systemEnterFail: '进入副本失败',
-  systemDrawFail: '抽取失败', systemBackFail: '返回失败',
+  systemBackFail: '返回失败',
   systemLevelUp: '等级 {0}！{1}',
   systemEntered: '进入: {0}', systemBack: '返回大厅 — 大厅 Lv.{0}',
   systemTitleEquipFail: '佩戴称号失败', systemTitleFetchFail: '获取大厅称号失败',
@@ -27,7 +27,7 @@ const LANG = {
   obWelcome: '欢迎来到', obSubtitle: 'Idel-DreamMaker',
   obDesc1: '藏在系统托盘里的宠物陪伴应用', obDesc2: '挂机升级 · 解锁称号与成就',
   obDesc3: '触发故事事件——陪你度过每一刻',
-  obHow: '如何开始：', obStep1: '点击 [副本] 或 [+ 抽取副本] 选择一个故事世界',
+  obHow: '如何开始：',   obStep1: '点击 [副本] 选择一个故事世界',
   obStep2: '进入后自动挂机，经验随时间增长', obStep3: '升级解锁称号，随机弹出故事事件',
   obStep4: '随时点击 [大厅] 退出，经验累入全局等级',
   obTip: '提示：宠物窗口常驻桌面，点击宠物可交互',

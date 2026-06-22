@@ -12,7 +12,7 @@ const OUTPUT_PATH = path.join(__dirname, 'public', 'scenarios_data.json');
 
 function loadDir(scenarios, dir) {
   if (!fs.existsSync(dir)) return;
-  const files = fs.readdirSync(dir).filter(f => f.endsWith('.md')).sort();
+  const files = fs.readdirSync(dir).filter(f => f.endsWith('.md') && f !== 'README.md').sort();
   for (const file of files) {
     const filePath = path.join(dir, file);
     const content = fs.readFileSync(filePath, 'utf-8');

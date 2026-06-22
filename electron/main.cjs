@@ -1051,15 +1051,16 @@ function registerIpcHandlers() {
 
   // ── User Scenarios ──
   ipcMain.handle('import-scenario', async () => {
+    const userDir = path.join(__dirname, '..', 'scenarios_user');
+    if (!fs.existsSync(userDir)) fs.mkdirSync(userDir, { recursive: true });
     const result = await dialog.showOpenDialog(mainWindow, {
       title: '导入副本',
+      defaultPath: userDir,
       filters: [{ name: '副本文件', extensions: ['md'] }],
       properties: ['openFile'],
     });
     if (result.canceled || result.filePaths.length === 0) return { success: false, error: '已取消' };
     const srcPath = result.filePaths[0];
-    const userDir = path.join(__dirname, '..', 'scenarios_user');
-    if (!fs.existsSync(userDir)) fs.mkdirSync(userDir, { recursive: true });
     const fileName = path.basename(srcPath);
     const destPath = path.join(userDir, fileName);
     let counter = 1;

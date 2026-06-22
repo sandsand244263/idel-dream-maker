@@ -28,4 +28,5 @@ public/fonts/*.otf
 release/
 
 # Player-created scenarios
-scenarios_user/
+scenarios_user/*
+!scenarios_user/README.md
