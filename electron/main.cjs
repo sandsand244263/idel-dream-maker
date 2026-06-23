@@ -832,6 +832,25 @@ function registerIpcHandlers() {
   });
 
   ipcMain.handle('select-scenario', (_, { id, alias }) => {
+    // 如果当前正在副本内，先保存当前副本进度再切换
+    if (!gameState.isInHub && gameState.scenarioId && gameState.scenarioId !== id) {
+      const oldSid = gameState.scenarioId;
+      if (!gameState.scenarioProgress) gameState.scenarioProgress = {};
+      const prevExp = gameState.scenarioProgress[oldSid]?.totalExpEarned || 0;
+      const delta = gameState.totalExpEarned - prevExp;
+      gameState.hubTotalExp += Math.max(0, delta);
+      gameState.scenarioProgress[oldSid] = {
+        totalExpEarned: gameState.totalExpEarned,
+        totalRuntimeMs: gameState.totalRuntimeMs,
+        triggeredEvents: [...gameState.triggeredEvents],
+        unlockedAchievements: [...gameState.unlockedAchievements],
+        equippedTitleIndex: gameState.equippedTitleIndex,
+      };
+    }
+    // 点的是当前副本，不做任何事
+    if (id === gameState.scenarioId) {
+      return { game: { ...gameState, is_in_hub: false }, scenario: currentScenario ? { id: currentScenario.id, name: currentScenario.name, nameCN: currentScenario.name_cn } : null };
+    }
     const scenario = findScenarioById(id);
     if (!scenario) throw new Error(`Scenario '${id}' not found`);
     const aliasStr = alias || '';
