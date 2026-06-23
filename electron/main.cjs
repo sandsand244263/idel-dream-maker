@@ -847,9 +847,9 @@ function registerIpcHandlers() {
         equippedTitleIndex: gameState.equippedTitleIndex,
       };
     }
-    // 点的是当前副本，不做任何事
-    if (id === gameState.scenarioId) {
-      return { game: { ...gameState, is_in_hub: false }, scenario: currentScenario ? { id: currentScenario.id, name: currentScenario.name, nameCN: currentScenario.name_cn } : null };
+    // 点的是当前副本，不做任何事（仅当在副本内时触发）
+    if (!gameState.isInHub && id === gameState.scenarioId) {
+      return { game: { ...gameState, is_in_hub: false }, scenario: currentScenario ? { id: currentScenario.id, name: currentScenario.name, nameCN: currentScenario.name_cn || currentScenario.nameCN, playerTitle: currentScenario.playerTitle || currentScenario.player_title, titles: currentScenario.titles } : null };
     }
     const scenario = findScenarioById(id);
     if (!scenario) throw new Error(`Scenario '${id}' not found`);
