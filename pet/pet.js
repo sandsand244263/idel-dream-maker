@@ -429,7 +429,7 @@ window.pet.on('hourly-chime',()=>{
 
 window.pet.on('choice-event',(d)=>{
   if (d && d.choices) {
-    nq.enqueue({ text: d.text, title: d.title || '抉择', type: 'choice', choices: d.choices }, 4);
+    nq.enqueue({ text: d.text, title: d.title || '抉择', type: 'choice', choices: d.choices, _eventId: d._eventId }, 4);
   }
 });
 window.pet.on('key-combo',(d)=>{
