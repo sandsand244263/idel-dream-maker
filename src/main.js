@@ -535,8 +535,6 @@ function openSettingsPanel() {
     if (cb) cb.checked = r.enabled;
   }).catch(() => {});
   settingsName.value = gameState?.player_name || '';
-  const verEl = document.getElementById('settings-version');
-  if (verEl) verEl.textContent = appVersion;
   if (gameState?.selected_font_theme === 'custom' && gameState?.custom_theme) {
     const ct = gameState.custom_theme;
     document.getElementById('ct-fg').value = ct.fg; document.getElementById('ct-fg-text').value = ct.fg;
