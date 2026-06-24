@@ -7,6 +7,7 @@ const { createTray, setToolTip, getTray, updateMenu } = require('./tray.cjs');
 const { registerPetIpcHandlers, forwardToPet, initPet, broadcastTheme, setOnPetSelected } = require('./pet.cjs');
 const { getTodaysHolidayId, getUpcomingHolidayId, getHolidayName, getHolidayIcon, getHolidayEventFromScenario, getRandomHolidayEvent } = require('./holiday.cjs');
 const { parseScenarioMd } = require('../src/scenario-parser.cjs');
+const { GlobalKeyboardListener } = require('node-global-key-listener');
 
 let mainWindow = null;
 let tray = null;
@@ -304,6 +305,74 @@ let hubLevel = 1;
 let gameLoopInterval = null;
 let tooltipInterval = null;
 
+// ── Key Counter ──
+let keyListener = null;
+const KEY_STREAK_WINDOW = 3000;
+let keyStream = [];
+let comboMilestones = [];
+
+const COMBO_GRADES = [
+  { min: 40, grade: 'SSS' },
+  { min: 25, grade: 'SS' },
+  { min: 15, grade: 'S' },
+  { min: 10, grade: 'A' },
+  { min: 6, grade: 'B' },
+  { min: 4, grade: 'C' },
+  { min: 2, grade: 'D' },
+];
+
+function getGrade(streak) {
+  for (const g of COMBO_GRADES) {
+    if (streak >= g.min) return g.grade;
+  }
+  return null;
+}
+
+function initKeyListener() {
+  try {
+    keyListener = new GlobalKeyboardListener();
+    keyListener.addListener((e, release) => {
+      if (e.state !== 'DOWN') return;
+      const vk = e.vKey;
+      if (vk <= 7) return;
+      if (vk === 16 || vk === 17 || vk === 18 || vk === 20) return;
+      if (vk === 27) return;
+      if (vk >= 91 && vk <= 93) return;
+      if (vk >= 112 && vk <= 135) return;
+      if (vk === 144 || vk === 145) return;
+
+      if (!gameState) return;
+      const now = Date.now();
+      gameState.totalKeyPresses = (gameState.totalKeyPresses || 0) + 1;
+      gameState.dailyKeyPresses = (gameState.dailyKeyPresses || 0) + 1;
+
+      keyStream.push(now);
+      keyStream = keyStream.filter(t => now - t <= KEY_STREAK_WINDOW);
+      const streak = keyStream.length;
+      const grade = getGrade(streak);
+
+      // Milestone check: first time reaching this grade
+      if (grade && !gameState.comboMilestones) gameState.comboMilestones = [];
+      if (grade && !gameState.comboMilestones.includes(grade)) {
+        gameState.comboMilestones = [...gameState.comboMilestones, grade];
+      }
+
+      try { forwardToPet('key-combo', { streak, grade, total: gameState.totalKeyPresses, daily: gameState.dailyKeyPresses }); } catch {}
+    });
+  } catch (e) {
+    console.error('Failed to init key listener:', e);
+  }
+}
+
+function resetDailyIfNewDay() {
+  if (!gameState) return;
+  const today = new Date().toISOString().slice(0, 10);
+  if (gameState.keyPressDate !== today) {
+    gameState.dailyKeyPresses = 0;
+    gameState.keyPressDate = today;
+  }
+}
+
 // ── Game Logic ──
 
 function calcLevel(exp) {
@@ -561,6 +630,8 @@ function startGameLoop() {
   gameLoopInterval = setInterval(() => {
     if (!gameState) return;
 
+    resetDailyIfNewDay();
+
     const now = Date.now();
     const delta = now - lastTick;
     lastTick = now;
@@ -587,6 +658,8 @@ function startGameLoop() {
       rebirth_count: (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0,
       mechanic: currentScenario ? (currentScenario.mechanic || 'standard') : 'standard',
       hub_title: gameState?.equippedCompletionTitle?.title || getHubTitle(hubLevel).name,
+      total_key_presses: gameState.totalKeyPresses || 0,
+      daily_key_presses: gameState.dailyKeyPresses || 0,
     };
     try { mainWindow.webContents.send('game-tick', payload); } catch {}
     forwardToPet('game-tick', payload);
@@ -1317,6 +1390,19 @@ function registerIpcHandlers() {
       return { success: false, error: e.message };
     }
   });
+
+  // ── Key stats ──
+  ipcMain.handle('get-key-stats', () => {
+    if (!gameState) return { total: 0, daily: 0, milestones: [] };
+    const grade = getGrade(keyStream.length);
+    return {
+      total: gameState.totalKeyPresses || 0,
+      daily: gameState.dailyKeyPresses || 0,
+      streak: keyStream.length,
+      grade,
+      milestones: gameState.comboMilestones || [],
+    };
+  });
 }
 
 // ── App Lifecycle ──
@@ -1365,6 +1451,10 @@ app.whenReady().then(() => {
       equippedCompletionTitle: null,
       archivedScenarios: [],
       promptDismissedAtScenarioCount: null,
+      totalKeyPresses: 0,
+      dailyKeyPresses: 0,
+      keyPressDate: new Date().toISOString().slice(0, 10),
+      comboMilestones: [],
     };
   }
 
@@ -1421,6 +1511,7 @@ app.whenReady().then(() => {
   }
 
   startGameLoop();
+  initKeyListener();
 
   // Tooltip update every 5s
   tooltipInterval = setInterval(() => {
@@ -1448,6 +1539,7 @@ app.on('before-quit', () => {
   isQuitting = true;
   stopGameLoop();
   if (tooltipInterval) clearInterval(tooltipInterval);
+  if (keyListener) try { keyListener.kill(); } catch {}
   try { const { forwardToPet, getPetWindow } = require('./pet.cjs'); const pw = getPetWindow(); if (pw) pw._isQuitting = true; } catch {}
   if (gameState) {
     if (mainWindow) {

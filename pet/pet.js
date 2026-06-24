@@ -30,7 +30,7 @@ const DEFAULT_STATES = {
 
 let pets=[],selIdx=0,spritesheet=null,cols=8,rows=9,stateConfig=null;
 let curState='idle',frameIdx=0,frameList=[],animFrameId=null,lastFrameTime=0,returnTimer=null,debounceTimer=null;
-let gameInfo={level:1,title:'—',exp:0,scenario:'大厅',runtime:'0h0m0s',ach:0,theme:'green',hubLevel:1,isInHub:true};
+let gameInfo={level:1,title:'—',exp:0,scenario:'大厅',runtime:'0h0m0s',ach:0,theme:'green',hubLevel:1,isInHub:true,comboGrade:null,comboStreak:0,totalKeyPresses:0,dailyKeyPresses:0};
 let displayExp=0,dragMoved=false;
 
 // ── Guide Panel ──
@@ -258,12 +258,37 @@ function updateExpBar(){
   expFill.style.width=`${rounded}%`;
   expDetail.textContent=`${Math.floor(e)} / ${nr} (${rounded}%)`;
 }
+let comboFadeAlpha=0;
+let comboFlashTimer=null;
+function drawCombo(){
+  const g=gameInfo.comboGrade;
+  const s=gameInfo.comboStreak||0;
+  if(!g||s<2){comboFadeAlpha=0;return;}
+  const r=100,c=120-5,t=5;
+  ctx.save();
+  ctx.textAlign='right';
+  ctx.textBaseline='top';
+  const fontSize=Math.min(18,10+Math.floor(s/10));
+  ctx.font=`bold ${fontSize}px MapleMonoNFCN,Courier New,monospace`;
+  const colors={'D':'#888','C':'#aaa','B':'#6b6','A':'#6bf','S':'#ff6','SS':'#f80','SSS':'#f44'};
+  ctx.fillStyle=colors[g]||'#fff';
+  ctx.globalAlpha=Math.min(1,comboFadeAlpha+0.3);
+  ctx.fillText(g,120,5);
+  ctx.font=`${fontSize-4}px MapleMonoNFCN,Courier New,monospace`;
+  ctx.fillStyle=colorMix(ctx.fillStyle,0.5);
+  ctx.fillText(s,120-ctx.measureText(g).width-2,fontSize+2);
+  ctx.restore();
+  comboFadeAlpha=Math.min(1,comboFadeAlpha+0.05);
+}
+function colorMix(c,f){return c;}
+
 function updateInfoBar(){
   if(!spritesheet&&pets.length===0){drawNoPetHint();return;}
   if(!spritesheet)return;
   const title=gameInfo.title&&gameInfo.title!=='—'?gameInfo.title:'';
   const dl=gameInfo.isInHub?(gameInfo.hubLevel||1):(gameInfo.level||1);
-  infoText.textContent=title?`${gameInfo.scenario} | LV.${dl} | ${title}`:`${gameInfo.scenario} | LV.${dl}`;
+  const kp=gameInfo.totalKeyPresses?` | ⌨ ${gameInfo.totalKeyPresses.toLocaleString()}`:'';
+  infoText.textContent=title?`${gameInfo.scenario} | LV.${dl} | ${title}${kp}`:`${gameInfo.scenario} | LV.${dl}${kp}`;
   updateExpBar();
 }
 function applyTheme(theme, customTheme){
@@ -347,6 +372,12 @@ window.pet.on('hourly-chime',()=>{
   showChimeBubble(('0'+h).slice(-2)+':'+m);
 });
 
+window.pet.on('key-combo',(d)=>{
+  if(d.grade)gameInfo.comboGrade=d.grade;
+  gameInfo.comboStreak=d.streak||0;
+  gameInfo.totalKeyPresses=d.total||0;
+  gameInfo.dailyKeyPresses=d.daily||0;
+});
 window.pet.on('bubble-closed',()=>{nq.close();});
 
 window.pet.on('pet-guide',()=>{
@@ -361,7 +392,7 @@ window.pet.invoke('scan-pets').then(r=>{
 window.pet.invoke('pet-get-state').then(()=>updateInfoBar()).catch(()=>{});
 
 let expRafId=null;
-function expLoop(){updateExpBar();expRafId=requestAnimationFrame(expLoop);}
+function expLoop(){updateExpBar();drawCombo();expRafId=requestAnimationFrame(expLoop);}
 expRafId=requestAnimationFrame(expLoop);
 const IDLE_ANIMS=['failed','review','extra1','extra2'];
 // Random idle animation every 20s (30% chance)

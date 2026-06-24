@@ -33,13 +33,22 @@
     "icon": "icons/icon.png",
     "win": {
       "icon": "icons/icon.ico",
-      "target": ["portable", "zip"],
+      "target": [
+        "portable",
+        "zip"
+      ],
       "signAndEditExecutable": false
     },
     "mac": {
       "icon": "icons/icon.png",
       "target": [
-        { "target": "dmg", "arch": ["x64", "arm64"] }
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
       ],
       "category": "public.app-category.entertainment",
       "hardenedRuntime": false,
@@ -61,6 +70,7 @@
   },
   "dependencies": {
     "chinese-lunar-calendar": "^1.0.1",
+    "node-global-key-listener": "^0.3.0",
     "yaml": "^2.9.0"
   }
 }

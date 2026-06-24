@@ -5,8 +5,8 @@ const LANG = {
   noScenarios: '暂无可用的副本', hubEmptyHint: '点击下方 [副本] 选择一个故事世界',
   btnBack: '大厅', btnScenario: '副本', btnJourney: '历程',
   btnSettings: '设置', btnTutorial: '教程',
-  jTitle: '称号', jAchievement: '成就', jEvent: '事件',
-  panelScenario: '副本选择', panelTitles: '称号一览', panelAchievement: '成就一览', panelEvent: '事件记录', panelSettings: '设置',
+  jTitle: '称号', jAchievement: '成就', jEvent: '事件', jStats: '按键',
+  panelScenario: '副本选择', panelTitles: '称号一览', panelAchievement: '成就一览', panelEvent: '事件记录', panelStats: '按键统计', panelSettings: '设置',
   labelName: '名称',
   settingsSave: '保存', settingsThemeTitle: '主题', ctSave: '应用自定义配色',
   eventHeader: '事件', achievementHeader: '成就解锁',
@@ -131,6 +131,9 @@ const endingHubBtn = document.getElementById('ending-hub');
 const endingPanel = document.getElementById('ending-panel');
 const endingPanelClose = document.getElementById('ending-panel-close');
 const endingPanelList = document.getElementById('ending-panel-list');
+const statsPanel = document.getElementById('stats-panel');
+const statsClose = document.getElementById('stats-close');
+const statsListEl = document.getElementById('stats-list');
 
 const confirmModal = document.getElementById('confirm-modal');
 const confirmOk = document.getElementById('confirm-ok');
@@ -492,6 +495,20 @@ achievementOverlay.addEventListener('click', () => { dismissAchievementOverlay()
 
 btnScenario.addEventListener('click', async () => { try { scenarioList = await window.electron.invoke('get-scenario-list'); } catch (e) { showToast(t('systemDetailFail'), 'error'); } renderScenarioPanel(); scenarioPanel.classList.remove('hidden'); });
 
+// ── Stats Panel ──
+async function renderStatsPanel() {
+  try {
+    const s = await window.electron.invoke('get-key-stats');
+    const items = [
+      `<div class="stats-row"><span class="stats-label">总按键</span><span class="stats-value">${(s.total || 0).toLocaleString()}</span></div>`,
+      `<div class="stats-row"><span class="stats-label">今日按键</span><span class="stats-value">${(s.daily || 0).toLocaleString()}</span></div>`,
+      `<div class="stats-row"><span class="stats-label">当前连击</span><span class="stats-value">${s.grade ? s.grade + ' ' + s.streak : '—'}</span></div>`,
+      `<div class="stats-row"><span class="stats-label">达成段位</span><span class="stats-value">${s.milestones && s.milestones.length > 0 ? s.milestones.join(' · ') : '—'}</span></div>`,
+    ];
+    statsListEl.innerHTML = items.join('');
+  } catch { statsListEl.innerHTML = '<div class="stats-row" style="color:var(--dim)">加载失败</div>'; }
+}
+
 // ── Journey submenu ──
 btnJourney.addEventListener('click', (e) => { e.stopPropagation(); journeyMenu.classList.toggle('hidden'); });
 document.addEventListener('click', () => { journeyMenu.classList.add('hidden'); });
@@ -504,9 +521,11 @@ document.querySelectorAll('.jm-item').forEach(el => {
     else if (action === 'achievement') { renderAchievementPanel(); achievementPanel.classList.remove('hidden'); }
     else if (action === 'event') { renderEventPanel(); eventPanel.classList.remove('hidden'); }
     else if (action === 'ending') { renderEndingPanel(); endingPanel.classList.remove('hidden'); }
+    else if (action === 'stats') { renderStatsPanel(); statsPanel.classList.remove('hidden'); }
   });
 });
 eventClose.addEventListener('click', () => eventPanel.classList.add('hidden'));
+statsClose.addEventListener('click', () => statsPanel.classList.add('hidden'));
 
 function openSettingsPanel() {
   settingsName.value = gameState?.player_name || '';

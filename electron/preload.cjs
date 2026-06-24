@@ -20,6 +20,7 @@ contextBridge.exposeInMainWorld('electron', {
       'archive-scenario', 'unarchive-scenario', 'get-archived-scenarios',
       'get-all-complete-prompt', 'dismiss-all-complete-prompt',
       'export-logs-to-desktop', 'open-log-folder', 'open-github-repo',
+      'get-key-stats',
     ];
     if (validChannels.includes(channel)) {
       return ipcRenderer.invoke(channel, ...args);
