@@ -30,7 +30,7 @@ const DEFAULT_STATES = {
 
 let pets=[],selIdx=0,spritesheet=null,cols=8,rows=9,stateConfig=null;
 let curState='idle',frameIdx=0,frameList=[],animFrameId=null,lastFrameTime=0,returnTimer=null,debounceTimer=null;
-let gameInfo={level:1,title:'—',exp:0,scenario:'大厅',runtime:'0h0m0s',ach:0,theme:'green',hubLevel:1,isInHub:true,comboGrade:null,comboStreak:0,totalKeyPresses:0,dailyKeyPresses:0};
+let gameInfo={level:1,title:'—',exp:0,scenario:'大厅',runtime:'0h0m0s',ach:0,theme:'green',hubLevel:1,isInHub:true,totalKeyPresses:0,dailyKeyPresses:0};
 let displayExp=0,dragMoved=false;
 
 // ── Guide Panel ──
@@ -149,7 +149,7 @@ function buildFrames(s){
   for(let i=0;i<n;i++){let d=b;if(i===0)d*=c.firstMult||2;else if(i===n-1)d*=c.lastMult||2;f.push({c:i,r:c.row,d});}
   return f;
 }
-function drawSprite(col,row){if(!spritesheet)return;ctx.clearRect(0,0,120,140);ctx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,120,140);}
+function drawSprite(col,row){if(!spritesheet)return;ctx.clearRect(0,0,120,140);ctx.drawImage(spritesheet,col*FW,row*FH,FW,FH,0,0,120,140);drawCombo();}
 function stopAnim(){if(animFrameId){cancelAnimationFrame(animFrameId);animFrameId=null;}}
 function animLoop(now){
   if(!animFrameId)return;
@@ -258,36 +258,81 @@ function updateExpBar(){
   expFill.style.width=`${rounded}%`;
   expDetail.textContent=`${Math.floor(e)} / ${nr} (${rounded}%)`;
 }
-let comboFadeAlpha=0;
-let comboFlashTimer=null;
-function drawCombo(){
-  const g=gameInfo.comboGrade;
-  const s=gameInfo.comboStreak||0;
-  if(!g||s<2){comboFadeAlpha=0;return;}
-  const r=100,c=120-5,t=5;
-  ctx.save();
-  ctx.textAlign='right';
-  ctx.textBaseline='top';
-  const fontSize=Math.min(18,10+Math.floor(s/10));
-  ctx.font=`bold ${fontSize}px MapleMonoNFCN,Courier New,monospace`;
-  const colors={'D':'#888','C':'#aaa','B':'#6b6','A':'#6bf','S':'#ff6','SS':'#f80','SSS':'#f44'};
-  ctx.fillStyle=colors[g]||'#fff';
-  ctx.globalAlpha=Math.min(1,comboFadeAlpha+0.3);
-  ctx.fillText(g,120,5);
-  ctx.font=`${fontSize-4}px MapleMonoNFCN,Courier New,monospace`;
-  ctx.fillStyle=colorMix(ctx.fillStyle,0.5);
-  ctx.fillText(s,120-ctx.measureText(g).width-2,fontSize+2);
-  ctx.restore();
-  comboFadeAlpha=Math.min(1,comboFadeAlpha+0.05);
-}
-function colorMix(c,f){return c;}
+const COMBO_COLORS={
+  'D':['#888','#666'],'C':['#aaa','#888'],'B':['#6b6','#484'],
+  'A':['#6bf','#48a'],'S':['#ff6','#cc4'],'SS':['#f80','#c60'],'SSS':['#f44','#c22'],
+};
+let comboHits=[];
 
+function randComboPos(){
+  let x,y;
+  do{x=15+Math.random()*90;y=15+Math.random()*100}while(x>80&&y<30);
+  return{x,y};
+}
+
+function newComboHit(grade,streak){
+  if(!grade||streak<2)return;
+  const p=randComboPos();
+  const cl=COMBO_COLORS[grade]||['#fff','#ccc'];
+  comboHits.push({grade,streak,x:p.x,y:p.y,t:Date.now(),col:cl});
+}
+
+function drawCombo(){
+  const now=Date.now();
+  for(let i=comboHits.length-1;i>=0;i--){
+    const h=comboHits[i],a=(now-h.t)/1000;
+    if(a>1.8){comboHits.splice(i,1);continue;}
+    let sc,shx=0,shy=0,dy=0,op=1;
+    if(a<0.07){
+      const t=a/0.07;
+      sc=1+t*1.6;
+      shx=Math.sin(t*Math.PI*3)*5*(1-t);
+      shy=Math.cos(t*Math.PI*3)*3*(1-t);
+      dy=t*2;
+    }else if(a<0.2){
+      const t=(a-0.07)/0.13;
+      sc=1.6-t*0.6;
+      shx=Math.sin(t*Math.PI*4)*3*(1-t);
+      shy=Math.cos(t*Math.PI*4)*2*(1-t);
+      dy=2-t*4;
+    }else if(a<0.5){
+      sc=1;dy=0;
+    }else{
+      const t=(a-0.5)/1.3;
+      sc=1-t*0.2;
+      dy=-t*15;
+      op=1-t*t;
+    }
+    ctx.save();
+    ctx.globalAlpha=op;
+    ctx.translate(h.x+shx,h.y+shy+dy);
+    ctx.scale(sc,sc);
+    ctx.textAlign='right';ctx.textBaseline='bottom';
+    ctx.font='bold 22px MapleMonoNFCN,Courier New,monospace';
+    ctx.fillStyle=h.col[0];
+    ctx.fillText(h.grade,0,22);
+    ctx.textAlign='left';
+    ctx.font='bold 13px MapleMonoNFCN,Courier New,monospace';
+    ctx.fillStyle=h.col[1];
+    ctx.fillText(''+h.streak,2,24);
+    ctx.restore();
+  }
+}
+
+function shortNum(n){
+  if(n<1000)return String(n);
+  if(n<10000)return(n/1000).toFixed(1)+'k';
+  if(n<1000000)return Math.floor(n/1000)+'k';
+  if(n<10000000)return(n/1000000).toFixed(1)+'M';
+  if(n<1000000000)return Math.floor(n/1000000)+'M';
+  return(n/1000000000).toFixed(1)+'B';
+}
 function updateInfoBar(){
   if(!spritesheet&&pets.length===0){drawNoPetHint();return;}
   if(!spritesheet)return;
   const title=gameInfo.title&&gameInfo.title!=='—'?gameInfo.title:'';
   const dl=gameInfo.isInHub?(gameInfo.hubLevel||1):(gameInfo.level||1);
-  const kp=gameInfo.totalKeyPresses?` | ⌨ ${gameInfo.totalKeyPresses.toLocaleString()}`:'';
+  const kp=gameInfo.totalKeyPresses?` | ⌨ ${shortNum(gameInfo.totalKeyPresses)}`:'';
   infoText.textContent=title?`${gameInfo.scenario} | LV.${dl} | ${title}${kp}`:`${gameInfo.scenario} | LV.${dl}${kp}`;
   updateExpBar();
 }
@@ -373,15 +418,14 @@ window.pet.on('hourly-chime',()=>{
 });
 
 window.pet.on('key-combo',(d)=>{
-  if(d.grade)gameInfo.comboGrade=d.grade;
-  gameInfo.comboStreak=d.streak||0;
   gameInfo.totalKeyPresses=d.total||0;
   gameInfo.dailyKeyPresses=d.daily||0;
+  if(d.grade)newComboHit(d.grade,d.streak||0);
 });
 window.pet.on('bubble-closed',()=>{nq.close();});
 
 window.pet.on('pet-guide',()=>{
-  nq.enqueue({text:'单击 → 互动动画\n双击 → 切换主窗口\n右键 → 菜单（换宠/设置）\n拖拽 → 移动窗口\nEsc/H → 隐藏屏幕',title:'操作说明',type:'event'},0);
+  nq.enqueue({text:'单击 → 互动动画\n双击 → 切换主窗口\n右键 → 菜单（换宠/设置）\n拖拽 → 移动窗口',title:'操作说明',type:'event'},0);
 });
 
 window.pet.invoke('scan-pets').then(r=>{
@@ -392,7 +436,7 @@ window.pet.invoke('scan-pets').then(r=>{
 window.pet.invoke('pet-get-state').then(()=>updateInfoBar()).catch(()=>{});
 
 let expRafId=null;
-function expLoop(){updateExpBar();drawCombo();expRafId=requestAnimationFrame(expLoop);}
+function expLoop(){updateExpBar();expRafId=requestAnimationFrame(expLoop);}
 expRafId=requestAnimationFrame(expLoop);
 const IDLE_ANIMS=['failed','review','extra1','extra2'];
 // Random idle animation every 20s (30% chance)
@@ -401,7 +445,6 @@ setInterval(() => {
     transitionTo(IDLE_ANIMS[Math.floor(Math.random()*IDLE_ANIMS.length)]);
   }
 }, 20000);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='h')window.pet.invoke('hide-pet-window').catch(()=>{});});
 
 // Half-hourly chime (checks every 30s)
 let lastChimeBlock=new Date().getHours()*2+(new Date().getMinutes()>=30?1:0);
