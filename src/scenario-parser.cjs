@@ -17,6 +17,8 @@ const COL_NORM = {
   'conditionvalue': 'conditionvalue', '条件值': 'conditionvalue', 'condition_value': 'conditionvalue', 'conditionValue': 'conditionvalue',
   'type': 'type', '类型': 'type',
   'holidayid': 'holidayid', 'holiday_id': 'holidayid', 'holidayId': 'holidayid', '节日id': 'holidayid',
+  'choice1': 'choice1', 'choice1target': 'choice1target', 'choice_1_target': 'choice1target',
+  'choice2': 'choice2', 'choice2target': 'choice2target', 'choice_2_target': 'choice2target',
 };
 
 function normCol(name) {
@@ -137,6 +139,10 @@ function parseEvents(bodyLines) {
   const onceIdx = headers.indexOf('once');
   const minRebirthIdx = headers.indexOf('minrebirth');
   const typeIdx = headers.indexOf('type');
+  const choice1Idx = headers.indexOf('choice1');
+  const choice1TargetIdx = headers.indexOf('choice1target');
+  const choice2Idx = headers.indexOf('choice2');
+  const choice2TargetIdx = headers.indexOf('choice2target');
 
   const events = [];
   const ids = new Set();
@@ -145,7 +151,7 @@ function parseEvents(bodyLines) {
     const id = row[idIdx];
     if (ids.has(id)) throw new Error(`Duplicate event ID: ${id}`);
     ids.add(id);
-    events.push({
+    const ev = {
       id,
       type: typeIdx !== -1 ? row[typeIdx].trim().toLowerCase() : 'story',
       minLevel: minlevelIdx !== -1 ? parseInt(row[minlevelIdx], 10) || 1 : 1,
@@ -154,7 +160,20 @@ function parseEvents(bodyLines) {
       weight: weightIdx !== -1 ? parseInt(row[weightIdx], 10) || 5 : 5,
       once: onceIdx !== -1 ? parseBool(row[onceIdx]) : false,
       text: row[textIdx],
-    });
+    };
+    if (choice1Idx !== -1 && row.length > choice1Idx && row[choice1Idx]) {
+      ev.choice1 = row[choice1Idx];
+    }
+    if (choice1TargetIdx !== -1 && row.length > choice1TargetIdx && row[choice1TargetIdx]) {
+      ev.choice1Target = row[choice1TargetIdx];
+    }
+    if (choice2Idx !== -1 && row.length > choice2Idx && row[choice2Idx]) {
+      ev.choice2 = row[choice2Idx];
+    }
+    if (choice2TargetIdx !== -1 && row.length > choice2TargetIdx && row[choice2TargetIdx]) {
+      ev.choice2Target = row[choice2TargetIdx];
+    }
+    events.push(ev);
   }
   return events;
 }
@@ -257,12 +276,19 @@ function validateScenario(scenario) {
   if (!/^[a-z0-9_]+$/.test(scenario.id)) {
     throw new Error(`Scenario ID '${scenario.id}' must contain only lowercase letters, digits, and underscores`);
   }
+  const eventIds = new Set(scenario.events.map(e => e.id));
   for (const event of scenario.events) {
     if (event.text.length < 10) {
       throw new Error(`Event '${event.id}' text too short (${event.text.length} chars, min 10)`);
     }
     if (event.weight < 1 || event.weight > 10) {
       throw new Error(`Event '${event.id}' weight ${event.weight} out of range [1,10]`);
+    }
+    if (event.choice1 && event.choice1Target && !eventIds.has(event.choice1Target)) {
+      throw new Error(`Event '${event.id}' choice1Target '${event.choice1Target}' not found in events`);
+    }
+    if (event.choice2 && event.choice2Target && !eventIds.has(event.choice2Target)) {
+      throw new Error(`Event '${event.id}' choice2Target '${event.choice2Target}' not found in events`);
     }
   }
   for (const ach of scenario.achievements) {
