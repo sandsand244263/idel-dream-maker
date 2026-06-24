@@ -8,11 +8,12 @@
 
 ## 核心规则
 
-1. 游戏是挂机游戏，玩家不操作，只阅读事件文本
+1. 游戏以挂机为主，关键节点会有分支选择让玩家决定故事走向
 2. 每个等级绑定一个故事事件（story），构成完整叙事线
-3. filler 事件是日常见闻，按时间驱动触发
-4. 所有文本用第二人称"你"来写
-5. 文本风格：简洁平实，不用华丽辞藻
+3. choice 事件是带两个选项的关键节点，玩家选完后剧情走向不同
+4. filler 事件是日常见闻，按时间驱动触发
+5. 所有文本用第二人称"你"来写
+6. 文本风格：简洁平实，不用华丽辞藻
 
 ## 格式规范
 
@@ -48,28 +49,37 @@ completion_title: 通关称号 # LV500 通关后获得的称号
 
 ### Events 事件表
 
-| ID | Type | MinLevel | Weight | Once | MinRebirth | Text |
-|---|---|---|---|---|---|---|
-| s_001 | story | 1 | 1 | yes | 0 | 事件文本... |
+| ID | Type | MinLevel | Weight | Once | MinRebirth | Choice1 | Choice1Target | Choice2 | Choice2Target | Text |
+|---|---|---|---|---|---|---|---|---|---|---|
+| s_001 | story | 1 | 1 | yes | 0 | | | | | 事件文本... |
+| s_050 | story | 50 | 1 | yes | 0 | 走大道 | s_051a | 穿密林 | s_051b | 你站在岔路口... |
+| s_051a | story | 51 | 1 | yes | 0 | | | | | 你走上大道，遇到一队商队... |
+| s_051b | story | 51 | 1 | yes | 0 | | | | | 你钻入密林，踩到了捕兽夹... |
 
-**story 事件规则：**
-- 每个等级 1 条 story 事件，共约 500 条
+**普通 story 规则：**
+- 每个等级 1 条 story 事件，共约 475 条
 - Type=story, Weight=1, Once=yes
 - MinRebirth 表示周目：0=初始周目, 1=二周目, 2=三周目...
-- 每周目 story 事件从等级 1 开始重新编排，内容独立
-- 多周目故事应呈现"同一世界的不同视角"或"时间循环后的变化"
+
+**choice 事件规则（新增）：**
+- 每周目 20-25 个 choice 事件，放在关键转折点
+- 在普通 story 上加 Choice1/Choice1Target/Choice2/Choice2Target 列
+- Choice1/Choice2 是选项按钮上的文字（10 字以内）
+- Choice1Target/Choice2Target 是选完后弹出的事件 ID
+- target 事件是普通 story，不加 Choice 列
+- target 事件 ID 用 `{编号}a` / `{编号}b` 命名
 
 **filler 事件规则：**
 - 约 1700 条/周目，分布于各等级
 - Type=filler, Weight=5, Once=no
 - 内容是日常见闻、环境描写、生活细节
 - 不推进剧情主线
-- 不同周目的 filler 事件应不同（玩家不会在同一个副本挂机太多周目，但副本要有足够密度）
+- 不同周目的 filler 事件应不同
 
 ### Achievements 成就表
 
 | ID | Name | Description | Icon | ConditionType | ConditionValue |
-|---|---|---|---|---|---|
+|---|---|---|---|---|---|---|
 | ach_001 | 成就名 | 成就描述 | ★ | level | 100 |
 
 - 建议 50 个成就
