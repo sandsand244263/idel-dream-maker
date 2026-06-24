@@ -20,7 +20,7 @@ contextBridge.exposeInMainWorld('electron', {
       'archive-scenario', 'unarchive-scenario', 'get-archived-scenarios',
       'get-all-complete-prompt', 'dismiss-all-complete-prompt',
       'export-logs-to-desktop', 'open-log-folder', 'open-github-repo',
-      'get-key-stats',
+      'get-key-stats', 'choice-selected',
     ];
     if (validChannels.includes(channel)) {
       return ipcRenderer.invoke(channel, ...args);
@@ -33,6 +33,7 @@ contextBridge.exposeInMainWorld('electron', {
       'achievement-unlocked', 'scenario-changed',
       'scenario-ending',
       'scenario-list-updated',
+      'choice-event',
     ];
     if (validChannels.includes(channel)) {
       const listener = (_, data) => callback(data);

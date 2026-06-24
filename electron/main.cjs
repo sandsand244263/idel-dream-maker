@@ -446,6 +446,8 @@ function resetGameForScenario(scenario, alias) {
 }
 
 function exitToHub() {
+  // Clear pending choice on exit
+  if (gameState) gameState.pendingChoiceEvent = null;
   const unlocked = getUnlockedTitles(currentScenario, gameState.level).map(t => t.name);
   const sid = gameState.scenarioId;
   if (sid) {
@@ -734,7 +736,23 @@ function startGameLoop() {
         currentTitle = title;
         gameState.equippedTitleIndex = currentScenario.titles.indexOf(title);
       }
-      const luPayload = { level: gameState.level, title: title ? title.name : null, titleColor: title ? title.color : null, titleDesc: title ? title.desc : null, eventText: storyEvent ? storyEvent.text : null };
+      // Check if this is a choice event
+      if (storyEvent && storyEvent.choice1 && storyEvent.choice1Target) {
+        const choices = [];
+        if (storyEvent.choice1Target) choices.push({ text: storyEvent.choice1, target: storyEvent.choice1Target });
+        if (storyEvent.choice2Target) choices.push({ text: storyEvent.choice2, target: storyEvent.choice2Target });
+        gameState.pendingChoiceEvent = {
+          eventId: storyEvent.id,
+          scenarioId: gameState.scenarioId,
+          title: '抉择',
+          text: storyEvent.text,
+          choices,
+        };
+        const choicePayload = { title: '抉择', text: storyEvent.text, choices };
+        try { mainWindow.webContents.send('choice-event', choicePayload); } catch {}
+        forwardToPet('choice-event', choicePayload);
+      }
+      const luPayload = { level: gameState.level, title: title ? title.name : null, titleColor: title ? title.color : null, titleDesc: title ? title.desc : null, eventText: storyEvent && !storyEvent.choice1 ? storyEvent.text : null };
       try { mainWindow.webContents.send('level-up', luPayload); } catch {}
       forwardToPet('level-up', luPayload);
     }
@@ -923,8 +941,11 @@ function registerIpcHandlers() {
         triggeredEvents: [...gameState.triggeredEvents],
         unlockedAchievements: [...gameState.unlockedAchievements],
         equippedTitleIndex: gameState.equippedTitleIndex,
+        choiceFlags: gameState.choiceFlags ? { ...gameState.choiceFlags[oldSid] } : undefined,
       };
     }
+    // Clear pending choice when switching
+    gameState.pendingChoiceEvent = null;
     // 点的是当前副本，不做任何事（仅当在副本内时触发）
     if (!gameState.isInHub && id === gameState.scenarioId) {
       return { game: { ...gameState, is_in_hub: false }, scenario: currentScenario ? { id: currentScenario.id, name: currentScenario.name, nameCN: currentScenario.name_cn || currentScenario.nameCN, playerTitle: currentScenario.playerTitle || currentScenario.player_title, titles: currentScenario.titles } : null };
@@ -1397,6 +1418,33 @@ function registerIpcHandlers() {
   });
 
   // ── Key stats ──
+  // ── Choice events ──
+  ipcMain.handle('choice-selected', (_, { eventId, choiceIndex }) => {
+    if (!gameState.pendingChoiceEvent || gameState.pendingChoiceEvent.eventId !== eventId) {
+      return { success: false, error: '无待决选择' };
+    }
+    const pe = gameState.pendingChoiceEvent;
+    const choice = pe.choices[choiceIndex];
+    if (!choice) return { success: false, error: '无效选项' };
+    // Record the choice
+    if (!gameState.choiceFlags) gameState.choiceFlags = {};
+    if (!gameState.choiceFlags[pe.scenarioId]) gameState.choiceFlags[pe.scenarioId] = {};
+    gameState.choiceFlags[pe.scenarioId][pe.eventId] = choiceIndex === 0 ? 'choice1' : 'choice2';
+    // Fire target event
+    if (choice.target) {
+      const targetEvent = currentScenario && currentScenario.events.find(e => e.id === choice.target);
+      if (targetEvent && !gameState.triggeredEvents.includes(targetEvent.id)) {
+        gameState.triggeredEvents.push(targetEvent.id);
+        const evPayload = { id: targetEvent.id, title: '事件', color: '#00BFFF', text: targetEvent.text };
+        try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
+        forwardToPet('event-triggered', evPayload);
+      }
+    }
+    gameState.pendingChoiceEvent = null;
+    writeSave(gameState);
+    return { success: true, choiceFlag: gameState.choiceFlags[pe.scenarioId]?.[pe.eventId] };
+  });
+
   ipcMain.handle('get-key-stats', () => {
     if (!gameState) return { total: 0, daily: 0, milestones: [] };
     const grade = getGrade(keyStream.length);
@@ -1460,6 +1508,8 @@ app.whenReady().then(() => {
       dailyKeyPresses: 0,
       keyPressDate: new Date().toISOString().slice(0, 10),
       comboMilestones: [],
+      choiceFlags: {},
+      pendingChoiceEvent: null,
     };
   }
 
@@ -1502,6 +1552,13 @@ app.whenReady().then(() => {
   registerPetIpcHandlers(mainWindow, app);
   setOnPetSelected((idx) => { if (gameState) gameState.petSelectedIndex = idx; });
   initPet(app, gameState?.petSelectedIndex);
+
+  // Restore pending choice event if saved
+  if (gameState.pendingChoiceEvent && mainWindow) {
+    const pe = gameState.pendingChoiceEvent;
+    try { mainWindow.webContents.send('choice-event', { title: pe.title, text: pe.text, choices: pe.choices }); } catch {}
+    forwardToPet('choice-event', { title: pe.title, text: pe.text, choices: pe.choices });
+  }
 
   // Trigger initial story for restored scenarios
   if (!gameState.isInHub && currentScenario) {
