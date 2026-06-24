@@ -243,7 +243,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你找到一处渗水的地缝，用铁壶接了半小时才装满"
+        "text": "你找到一处渗水的地缝，用铁壶接了半小时才装满",
+        "choice1": "就地扎营",
+        "choice1Target": "wasteland_e0005a",
+        "choice2": "装满带走",
+        "choice2Target": "wasteland_e0005b"
+      },
+      {
+        "id": "wasteland_e0005a",
+        "type": "story",
+        "minLevel": 5,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在水缝边用石块垒了一个简易灶台，烧了第一壶热水"
+      },
+      {
+        "id": "wasteland_e0005b",
+        "type": "story",
+        "minLevel": 5,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你把铁壶挂上背包继续赶路，水在身上晃荡着，像有了底气"
       },
       {
         "id": "wasteland_e0006",
@@ -393,7 +417,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你在废弃的农田里找到一根锈蚀的铁管，可以做武器"
+        "text": "你在废弃的农田里找到一根锈蚀的铁管，可以做武器",
+        "choice1": "做成武器",
+        "choice1Target": "wasteland_e0020a",
+        "choice2": "做成工具",
+        "choice2Target": "wasteland_e0020b"
+      },
+      {
+        "id": "wasteland_e0020a",
+        "type": "story",
+        "minLevel": 20,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你花了一下午把铁管磨尖，做了一杆简陋但致命的长矛"
+      },
+      {
+        "id": "wasteland_e0020b",
+        "type": "story",
+        "minLevel": 20,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你把铁管敲平成铲状，以后挖东西方便多了"
       },
       {
         "id": "wasteland_e0021",
@@ -503,7 +551,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你在旧城废墟的巷子里听到一声低吠，一条瘦骨嶙峋的狗盯着你"
+        "text": "你在旧城废墟的巷子里听到一声低吠，一条瘦骨嶙峋的狗盯着你",
+        "choice1": "喂它食物",
+        "choice1Target": "wasteland_e0031a",
+        "choice2": "转身离开",
+        "choice2Target": "wasteland_e0031b"
+      },
+      {
+        "id": "wasteland_e0031a",
+        "type": "story",
+        "minLevel": 31,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你扔给它一块压缩饼干，它叼到远处狼吞虎咽地吃起来"
+      },
+      {
+        "id": "wasteland_e0031b",
+        "type": "story",
+        "minLevel": 31,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你转身走开时回头看了一眼，那条狗还站在原地望着你的方向"
       },
       {
         "id": "wasteland_e0032",
@@ -573,7 +645,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你给狗起名叫\"荒\"，它听到这个名字时竖起了耳朵"
+        "text": "你给狗起名叫\"荒\"，它听到这个名字时竖起了耳朵",
+        "choice1": "正式起名",
+        "choice1Target": "wasteland_e0038a",
+        "choice2": "顺其自然",
+        "choice2Target": "wasteland_e0038b"
+      },
+      {
+        "id": "wasteland_e0038a",
+        "type": "story",
+        "minLevel": 38,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你蹲下来认真叫了一声\"荒\"，它竖起耳朵看你的眼神像在说它喜欢这个名字"
+      },
+      {
+        "id": "wasteland_e0038b",
+        "type": "story",
+        "minLevel": 38,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你没特意给它起名，但它已经认定了你，叫什么都会跟上来"
       },
       {
         "id": "wasteland_e0039",
@@ -693,7 +789,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你们翻过一座矮山，眼前出现一片干涸的河床和一座铁皮屋"
+        "text": "你们翻过一座矮山，眼前出现一片干涸的河床和一座铁皮屋",
+        "choice1": "进去探索",
+        "choice1Target": "wasteland_e0050a",
+        "choice2": "绕道前行",
+        "choice2Target": "wasteland_e0050b"
+      },
+      {
+        "id": "wasteland_e0050a",
+        "type": "story",
+        "minLevel": 50,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你推开铁皮屋的门，里面虽然凌乱但屋顶完好，是个不错的落脚点"
+      },
+      {
+        "id": "wasteland_e0050b",
+        "type": "story",
+        "minLevel": 50,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你远远绕过铁皮屋，不想冒险，荒跟在后面回头看了几眼"
       },
       {
         "id": "wasteland_e0051",
@@ -863,7 +983,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "夜里荒突然狂吠起来，你冲出铁皮屋看见远处有火光"
+        "text": "夜里荒突然狂吠起来，你冲出铁皮屋看见远处有火光",
+        "choice1": "去查看",
+        "choice1Target": "wasteland_e0067a",
+        "choice2": "先躲藏",
+        "choice2Target": "wasteland_e0067b"
+      },
+      {
+        "id": "wasteland_e0067a",
+        "type": "story",
+        "minLevel": 67,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你熄灭火堆摸过去，发现是一群流浪者的篝火约有五六人，你没有露面"
+      },
+      {
+        "id": "wasteland_e0067b",
+        "type": "story",
+        "minLevel": 67,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你用木头顶住铁皮屋的门，荒紧贴着你，你们安静地等到天亮"
       },
       {
         "id": "wasteland_e0068",
@@ -993,7 +1137,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你决定去荒指的位置看看，相信它的直觉"
+        "text": "你决定去荒指的位置看看，相信它的直觉",
+        "choice1": "相信它",
+        "choice1Target": "wasteland_e0080a",
+        "choice2": "按自己计划",
+        "choice2Target": "wasteland_e0080b"
+      },
+      {
+        "id": "wasteland_e0080a",
+        "type": "story",
+        "minLevel": 80,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你决定相信荒的直觉朝它指的方向出发，它跑在前面像是知道要去哪里"
+      },
+      {
+        "id": "wasteland_e0080b",
+        "type": "story",
+        "minLevel": 80,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你按自己的路线走，荒虽然不情愿但还是跟了上来，尾巴垂着"
       },
       {
         "id": "wasteland_e0081",
@@ -1043,7 +1211,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你在信号塔底部发现一个废弃的无线电设备，拆下了一些零件"
+        "text": "你在信号塔底部发现一个废弃的无线电设备，拆下了一些零件",
+        "choice1": "拆零件",
+        "choice1Target": "wasteland_e0085a",
+        "choice2": "保持原样",
+        "choice2Target": "wasteland_e0085b"
+      },
+      {
+        "id": "wasteland_e0085a",
+        "type": "story",
+        "minLevel": 85,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你把无线电拆开取出有用的零件和电线，以后修理东西用得上了"
+      },
+      {
+        "id": "wasteland_e0085b",
+        "type": "story",
+        "minLevel": 85,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你决定不动它，也许哪天能收到来自远方的信号"
       },
       {
         "id": "wasteland_e0086",
@@ -1133,7 +1325,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你决定就在这个山谷扎营，这里有水有食物，足够活下去"
+        "text": "你决定就在这个山谷扎营，这里有水有食物，足够活下去",
+        "choice1": "在此安家",
+        "choice1Target": "wasteland_e0094a",
+        "choice2": "继续探索",
+        "choice2Target": "wasteland_e0094b"
+      },
+      {
+        "id": "wasteland_e0094a",
+        "type": "story",
+        "minLevel": 94,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你放下背包打量这个山谷，有溪水有浆果，你知道就是这里了"
+      },
+      {
+        "id": "wasteland_e0094b",
+        "type": "story",
+        "minLevel": 94,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你记下山谷的位置，但觉得远方也许有更好的地方在等你"
       },
       {
         "id": "wasteland_e0095",
@@ -1193,7 +1409,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你在山洞口架了一道简易木门，荒趴在门边像是在守家"
+        "text": "你在山洞口架了一道简易木门，荒趴在门边像是在守家",
+        "choice1": "住山洞",
+        "choice1Target": "wasteland_e0100a",
+        "choice2": "盖木屋",
+        "choice2Target": "wasteland_e0100b"
+      },
+      {
+        "id": "wasteland_e0100a",
+        "type": "story",
+        "minLevel": 100,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你决定把山洞作为主要住处，冬暖夏凉易守难攻，荒在里面转了一圈表示满意"
+      },
+      {
+        "id": "wasteland_e0100b",
+        "type": "story",
+        "minLevel": 100,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在溪边选了一块平地开始搭木屋，有个像样的家一直是你心里的愿望"
       },
       {
         "id": "wasteland_e0101",
@@ -3043,7 +3283,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你决定在山谷周围设置几个陷阱，增加获取食物的渠道"
+        "text": "你决定在山谷周围设置几个陷阱，增加获取食物的渠道",
+        "choice1": "捕兽为主",
+        "choice1Target": "wasteland_e0285a",
+        "choice2": "捕鱼为主",
+        "choice2Target": "wasteland_e0285b"
+      },
+      {
+        "id": "wasteland_e0285a",
+        "type": "story",
+        "minLevel": 120,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你沿着兽道布置了一排捕兽套，荒兴奋地在旁边帮忙踩点"
+      },
+      {
+        "id": "wasteland_e0285b",
+        "type": "story",
+        "minLevel": 120,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在溪水下流用竹篾编了一个鱼笼，放在水流汇聚的地方"
       },
       {
         "id": "wasteland_e0286",
@@ -3153,7 +3417,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你在一次远行中遇到一个老人，他背着一杆猎枪手里提着两只野兔"
+        "text": "你在一次远行中遇到一个老人，他背着一杆猎枪手里提着两只野兔",
+        "choice1": "信任他",
+        "choice1Target": "wasteland_e0296a",
+        "choice2": "保持距离",
+        "choice2Target": "wasteland_e0296b"
+      },
+      {
+        "id": "wasteland_e0296a",
+        "type": "story",
+        "minLevel": 131,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你和老人聊了很久，发现他孤身活了多年眼神里没有恶意，你渐渐放下了戒备"
+      },
+      {
+        "id": "wasteland_e0296b",
+        "type": "story",
+        "minLevel": 131,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你敷衍了几句就告辞了，但老人的身影在你脑海里挥之不去"
       },
       {
         "id": "wasteland_e0297",
@@ -3343,7 +3631,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你和老周在塔顶坐了很久，荒终于安静下来趴在塔基等你们"
+        "text": "你和老周在塔顶坐了很久，荒终于安静下来趴在塔基等你们",
+        "choice1": "扩建山谷",
+        "choice1Target": "wasteland_e0315a",
+        "choice2": "探索远方",
+        "choice2Target": "wasteland_e0315b"
+      },
+      {
+        "id": "wasteland_e0315a",
+        "type": "story",
+        "minLevel": 150,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你决定把山谷建成真正的家园，老周说他会留下来帮你一起干"
+      },
+      {
+        "id": "wasteland_e0315b",
+        "type": "story",
+        "minLevel": 150,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你想去山脉那边看看，老周沉默了一会儿说陪你走一趟"
       },
       {
         "id": "wasteland_e0316",
@@ -3443,7 +3755,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "老周建议把旧镇作为一个备用营地，万一山谷出事了可以退守"
+        "text": "老周建议把旧镇作为一个备用营地，万一山谷出事了可以退守",
+        "choice1": "深入探索",
+        "choice1Target": "wasteland_e0325a",
+        "choice2": "浅尝辄止",
+        "choice2Target": "wasteland_e0325b"
+      },
+      {
+        "id": "wasteland_e0325a",
+        "type": "story",
+        "minLevel": 160,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你和老周花了三天翻遍旧镇的每间屋子，在废墟深处找到不少有用的物资"
+      },
+      {
+        "id": "wasteland_e0325b",
+        "type": "story",
+        "minLevel": 160,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你粗略看了一圈就撤了，这个地方太大要搜就得做好充分准备"
       },
       {
         "id": "wasteland_e0326",
@@ -3693,7 +4029,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "老周教你如何掩盖营地痕迹——不留下灰烬、不砍新鲜的树"
+        "text": "老周教你如何掩盖营地痕迹——不留下灰烬、不砍新鲜的树",
+        "choice1": "深度伪装",
+        "choice1Target": "wasteland_e0350a",
+        "choice2": "设外围陷阱",
+        "choice2Target": "wasteland_e0350b"
+      },
+      {
+        "id": "wasteland_e0350a",
+        "type": "story",
+        "minLevel": 185,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你用枯枝和杂草给屋顶做了伪装层，从远处看和周围的荒地融为一体"
+      },
+      {
+        "id": "wasteland_e0350b",
+        "type": "story",
+        "minLevel": 185,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在山谷外围挖了陷坑插上尖竹桩，想硬闯的人没那么容易"
       },
       {
         "id": "wasteland_e0351",
@@ -6913,7 +7273,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "那是一只变种狼，比普通的狼大三圈，獠牙露在嘴唇外面"
+        "text": "那是一只变种狼，比普通的狼大三圈，獠牙露在嘴唇外面",
+        "choice1": "正面战斗",
+        "choice1Target": "wasteland_e0672a",
+        "choice2": "点火驱赶",
+        "choice2Target": "wasteland_e0672b"
+      },
+      {
+        "id": "wasteland_e0672a",
+        "type": "story",
+        "minLevel": 207,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你举枪瞄准在狼扑过来的瞬间扣动扳机，枪声在山谷里回荡了很久"
+      },
+      {
+        "id": "wasteland_e0672b",
+        "type": "story",
+        "minLevel": 207,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你点燃火把挥舞着大声喊叫，狼被火光惊退消失在夜色里"
       },
       {
         "id": "wasteland_e0673",
@@ -7173,7 +7557,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "来的是三个骑着改装摩托的人，在谷口停下来喊话要物资"
+        "text": "来的是三个骑着改装摩托的人，在谷口停下来喊话要物资",
+        "choice1": "谈判拖延",
+        "choice1Target": "wasteland_e0698a",
+        "choice2": "武力反抗",
+        "choice2Target": "wasteland_e0698b"
+      },
+      {
+        "id": "wasteland_e0698a",
+        "type": "story",
+        "minLevel": 233,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你独自走到谷口和对方周旋，用一些干粮换来了短暂的和平"
+      },
+      {
+        "id": "wasteland_e0698b",
+        "type": "story",
+        "minLevel": 233,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你朝天开了一枪表明态度，对方愣了一下也开了枪，战斗一触即发"
       },
       {
         "id": "wasteland_e0699",
@@ -7443,7 +7851,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "一天夜里气温骤降，你给荒的窝里多加了一层干草"
+        "text": "一天夜里气温骤降，你给荒的窝里多加了一层干草",
+        "choice1": "囤积物资",
+        "choice1Target": "wasteland_e0725a",
+        "choice2": "扩建住所",
+        "choice2Target": "wasteland_e0725b"
+      },
+      {
+        "id": "wasteland_e0725a",
+        "type": "story",
+        "minLevel": 260,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你每天出去采集狩猎，把能存的都晒干腌好，仓库渐渐堆满了"
+      },
+      {
+        "id": "wasteland_e0725b",
+        "type": "story",
+        "minLevel": 260,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你加固了墙壁和屋顶又砌了火墙，寒风再大屋里也是暖的"
       },
       {
         "id": "wasteland_e0726",
@@ -7643,7 +8075,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你疯了似的在废墟里翻找，沿着山谷一圈一圈地喊老周的名字"
+        "text": "你疯了似的在废墟里翻找，沿着山谷一圈一圈地喊老周的名字",
+        "choice1": "继续搜寻",
+        "choice1Target": "wasteland_e0745a",
+        "choice2": "先救物资",
+        "choice2Target": "wasteland_e0745b"
+      },
+      {
+        "id": "wasteland_e0745a",
+        "type": "story",
+        "minLevel": 280,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你疯了似的在废墟里翻找终于在山谷口找到了老周，但他已经没了呼吸"
+      },
+      {
+        "id": "wasteland_e0745b",
+        "type": "story",
+        "minLevel": 280,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你先把被埋的物资挖出来再去找老周，这个选择让你在往后无数个夜里惊醒"
       },
       {
         "id": "wasteland_e0746",
@@ -10943,7 +11399,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你坐在院子里荒把头搁在你的膝盖上，它的眼睛不像年轻时那么亮了"
+        "text": "你坐在院子里荒把头搁在你的膝盖上，它的眼睛不像年轻时那么亮了",
+        "choice1": "日夜陪伴",
+        "choice1Target": "wasteland_e1075a",
+        "choice2": "让它自由",
+        "choice2Target": "wasteland_e1075b"
+      },
+      {
+        "id": "wasteland_e1075a",
+        "type": "story",
+        "minLevel": 310,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你放慢所有节奏守着荒，每天给它梳毛和它说话，像还它年轻时那些欠下的时间"
+      },
+      {
+        "id": "wasteland_e1075b",
+        "type": "story",
+        "minLevel": 310,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你不再拘着荒让它想去哪就去哪，它走不远了但你知道它要的是你的目光"
       },
       {
         "id": "wasteland_e1076",
@@ -11343,7 +11823,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你寸步不离地守着荒，在它旁边吃饭在它旁边睡觉"
+        "text": "你寸步不离地守着荒，在它旁边吃饭在它旁边睡觉",
+        "choice1": "陪到最后",
+        "choice1Target": "wasteland_e1115a",
+        "choice2": "让它安详",
+        "choice2Target": "wasteland_e1115b"
+      },
+      {
+        "id": "wasteland_e1115a",
+        "type": "story",
+        "minLevel": 350,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你寸步不离地守在荒身边握着它的爪子，度过了它生命里的最后一个夜晚"
+      },
+      {
+        "id": "wasteland_e1115b",
+        "type": "story",
+        "minLevel": 350,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你轻轻抚着荒的头告诉它可以放心走了，它像听懂了一样慢慢合上了眼睛"
       },
       {
         "id": "wasteland_e1116",
@@ -11643,7 +12147,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你在荒的坟前放了一块平整的石头用匕首刻上了它的名字"
+        "text": "你在荒的坟前放了一块平整的石头用匕首刻上了它的名字",
+        "choice1": "厚葬纪念",
+        "choice1Target": "wasteland_e1145a",
+        "choice2": "简单告别",
+        "choice2Target": "wasteland_e1145b"
+      },
+      {
+        "id": "wasteland_e1145a",
+        "type": "story",
+        "minLevel": 380,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你把荒埋在山谷最高的地方用石头垒了一座小坟，用匕首在石头上刻了它的名字"
+      },
+      {
+        "id": "wasteland_e1145b",
+        "type": "story",
+        "minLevel": 380,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你抱着荒在山谷里走了一圈，最后把它埋在一棵大树下面，没有立碑"
       },
       {
         "id": "wasteland_e1146",
@@ -14943,7 +15471,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你不再是当初那个从避难所走出来的孤独的人了荒和老周都改变了你"
+        "text": "你不再是当初那个从避难所走出来的孤独的人了荒和老周都改变了你",
+        "choice1": "留在山谷",
+        "choice1Target": "wasteland_e1475a",
+        "choice2": "远行散心",
+        "choice2Target": "wasteland_e1475b"
+      },
+      {
+        "id": "wasteland_e1475a",
+        "type": "story",
+        "minLevel": 410,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你决定留在山谷，这里埋着你的记忆和牵绊，你舍不得离开"
+      },
+      {
+        "id": "wasteland_e1475b",
+        "type": "story",
+        "minLevel": 410,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你收拾了简单的行囊锁好山谷的门，向着远方的山脉走去"
       },
       {
         "id": "wasteland_e1476",
@@ -15343,7 +15895,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你开始爬山山路陡峭但你一步一步往上走没有停"
+        "text": "你开始爬山山路陡峭但你一步一步往上走没有停",
+        "choice1": "继续攀登",
+        "choice1Target": "wasteland_e1515a",
+        "choice2": "原路返回",
+        "choice2Target": "wasteland_e1515b"
+      },
+      {
+        "id": "wasteland_e1515a",
+        "type": "story",
+        "minLevel": 450,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你咬咬牙继续往上爬风越来越大，但心中的期待也越来越大"
+      },
+      {
+        "id": "wasteland_e1515b",
+        "type": "story",
+        "minLevel": 450,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你看了看来路决定这次先回去，下次准备好了再来"
       },
       {
         "id": "wasteland_e1516",
@@ -15643,7 +16219,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你回到山谷知道这段旅程该有一个正式的告别了"
+        "text": "你回到山谷知道这段旅程该有一个正式的告别了",
+        "choice1": "去信号塔",
+        "choice1Target": "wasteland_e1545a",
+        "choice2": "留在山谷",
+        "choice2Target": "wasteland_e1545b"
+      },
+      {
+        "id": "wasteland_e1545a",
+        "type": "story",
+        "minLevel": 480,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你把荒的狗绳系在背包上向信号塔走去，那是你们故事开始的地方"
+      },
+      {
+        "id": "wasteland_e1545b",
+        "type": "story",
+        "minLevel": 480,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你坐在院子里看天空慢慢暗下来，没有再去远方"
       },
       {
         "id": "wasteland_e1546",
@@ -18893,7 +19493,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "你蹲在摊位后面清点今天的收入，硬币在掌心叮当作响——虽然不多，但够了"
+        "text": "你蹲在摊位后面清点今天的收入，硬币在掌心叮当作响——虽然不多，但够了",
+        "choice1": "攒着进货",
+        "choice1Target": "wasteland_e1870a",
+        "choice2": "改善生活",
+        "choice2Target": "wasteland_e1870b"
+      },
+      {
+        "id": "wasteland_e1870a",
+        "type": "story",
+        "minLevel": 5,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你把叮当作响的硬币一枚一枚数好包进手帕里，这是做生意的本钱"
+      },
+      {
+        "id": "wasteland_e1870b",
+        "type": "story",
+        "minLevel": 5,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你买了一双厚实的靴子换下脚上那双快磨穿的旧鞋，走路都轻快了几分"
       },
       {
         "id": "wasteland_e1871",
@@ -19043,7 +19667,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "\"那个推车的年轻人实在\"——这句话传到铁炉镇另一头，你有了点小名气"
+        "text": "\"那个推车的年轻人实在\"——这句话传到铁炉镇另一头，你有了点小名气",
+        "choice1": "趁机涨价",
+        "choice1Target": "wasteland_e1885a",
+        "choice2": "保持低价",
+        "choice2Target": "wasteland_e1885b"
+      },
+      {
+        "id": "wasteland_e1885a",
+        "type": "story",
+        "minLevel": 20,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你试着把价格提了两成，买的人虽然少了但每单赚得多了，算下来总利润没差"
+      },
+      {
+        "id": "wasteland_e1885b",
+        "type": "story",
+        "minLevel": 20,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你坚持原来的价格，回头客越来越多，隔壁摊主说你傻但你心里有数"
       },
       {
         "id": "wasteland_e1886",
@@ -19193,7 +19841,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "你打听那灰大衣中年人是谁，本地人说那是李老板——整个十字路口最大的商人"
+        "text": "你打听那灰大衣中年人是谁，本地人说那是李老板——整个十字路口最大的商人",
+        "choice1": "登门拜访",
+        "choice1Target": "wasteland_e1900a",
+        "choice2": "先观望",
+        "choice2Target": "wasteland_e1900b"
+      },
+      {
+        "id": "wasteland_e1900a",
+        "type": "story",
+        "minLevel": 35,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你买了条好烟登门拜访李老板，他笑着收下烟说\"年轻人有前途\""
+      },
+      {
+        "id": "wasteland_e1900b",
+        "type": "story",
+        "minLevel": 35,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你没着急去找他，先把自己的摊子稳住再说——机会有的是"
       },
       {
         "id": "wasteland_e1901",
@@ -19343,7 +20015,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "你决定把主要摊位搬到十字路口，铁炉镇那边托给瘸腿大叔照看"
+        "text": "你决定把主要摊位搬到十字路口，铁炉镇那边托给瘸腿大叔照看",
+        "choice1": "全部搬走",
+        "choice1Target": "wasteland_e1915a",
+        "choice2": "两边兼顾",
+        "choice2Target": "wasteland_e1915b"
+      },
+      {
+        "id": "wasteland_e1915a",
+        "type": "story",
+        "minLevel": 50,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你咬牙把整个摊子搬到了十字路口，这里人多货多，做好了就是一步登天"
+      },
+      {
+        "id": "wasteland_e1915b",
+        "type": "story",
+        "minLevel": 50,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你请瘸腿大叔帮忙照看铁炉镇的摊子，自己两头跑虽然累但稳妥"
       },
       {
         "id": "wasteland_e1916",
@@ -19493,7 +20189,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "你花了一整天搬开碎石，手指磨出血泡，终于钻进了军火库内部"
+        "text": "你花了一整天搬开碎石，手指磨出血泡，终于钻进了军火库内部",
+        "choice1": "全部搬走",
+        "choice1Target": "wasteland_e1930a",
+        "choice2": "分批运输",
+        "choice2Target": "wasteland_e1930b"
+      },
+      {
+        "id": "wasteland_e1930a",
+        "type": "story",
+        "minLevel": 65,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你把军火库里的弹药全部装车，手推车压得吱呀作响，一次拉完免得夜长梦多"
+      },
+      {
+        "id": "wasteland_e1930b",
+        "type": "story",
+        "minLevel": 65,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你分三次把弹药运回十字路口，每次都留一些藏在路上备用"
       },
       {
         "id": "wasteland_e1931",
@@ -19643,7 +20363,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "你收留了这个孩子，他自称叫小北——这是你商队里的第一个人"
+        "text": "你收留了这个孩子，他自称叫小北——这是你商队里的第一个人",
+        "choice1": "收留教导",
+        "choice1Target": "wasteland_e1945a",
+        "choice2": "给口吃的",
+        "choice2Target": "wasteland_e1945b"
+      },
+      {
+        "id": "wasteland_e1945a",
+        "type": "story",
+        "minLevel": 80,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你收留了这个孩子给他取名叫小北，从最基础的算账开始教起，他学得飞快"
+      },
+      {
+        "id": "wasteland_e1945b",
+        "type": "story",
+        "minLevel": 80,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你给了这孩子一顿饱饭和几块压缩饼干，告诉他十字路口往东有个聚落可以去讨生活"
       },
       {
         "id": "wasteland_e1946",
@@ -19793,7 +20537,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "代售模式很成功，越来越多的人把东西送来让你卖，你的摊子像个集市了"
+        "text": "代售模式很成功，越来越多的人把东西送来让你卖，你的摊子像个集市了",
+        "choice1": "扩展代售",
+        "choice1Target": "wasteland_e1960a",
+        "choice2": "专注自营",
+        "choice2Target": "wasteland_e1960b"
+      },
+      {
+        "id": "wasteland_e1960a",
+        "type": "story",
+        "minLevel": 95,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "代售模式大获成功，你的摊子变成了一个小型集市，什么货都能在你这里找到"
+      },
+      {
+        "id": "wasteland_e1960b",
+        "type": "story",
+        "minLevel": 95,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你婉拒了代售的生意——自己的货自己最清楚，做精了比做杂了强"
       },
       {
         "id": "wasteland_e1961",
@@ -21593,7 +22361,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "你意识到真正的商人不只是倒卖货物，而是掌握信息和路线的人"
+        "text": "你意识到真正的商人不只是倒卖货物，而是掌握信息和路线的人",
+        "choice1": "扩大规模",
+        "choice1Target": "wasteland_e2140a",
+        "choice2": "稳扎稳打",
+        "choice2Target": "wasteland_e2140b"
+      },
+      {
+        "id": "wasteland_e2140a",
+        "type": "story",
+        "minLevel": 110,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "东海岸的利润让你看到了更大的可能，你决定增加车次和人手，把这条路跑熟"
+      },
+      {
+        "id": "wasteland_e2140b",
+        "type": "story",
+        "minLevel": 110,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你控制着跑东海岸的频率，每月一趟——够赚了，风险也可控"
       },
       {
         "id": "wasteland_e2141",
@@ -21693,7 +22485,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "你推着新车在十字路口试了一圈，所有人都回头看你——这车太显眼了"
+        "text": "你推着新车在十字路口试了一圈，所有人都回头看你——这车太显眼了",
+        "choice1": "买大的",
+        "choice1Target": "wasteland_e2150a",
+        "choice2": "买两辆小的",
+        "choice2Target": "wasteland_e2150b"
+      },
+      {
+        "id": "wasteland_e2150a",
+        "type": "story",
+        "minLevel": 120,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你定做了一辆四轮大车，能拉以前三倍的货，一辆顶过去三辆"
+      },
+      {
+        "id": "wasteland_e2150b",
+        "type": "story",
+        "minLevel": 120,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你买了两辆标准尺寸的新车，灵活机动，一条路走不通可以分头走"
       },
       {
         "id": "wasteland_e2151",
@@ -21853,7 +22669,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "李老板提出合伙开发北厂，你出路线他出人，利润对半分"
+        "text": "李老板提出合伙开发北厂，你出路线他出人，利润对半分",
+        "choice1": "五五分",
+        "choice1Target": "wasteland_e2166a",
+        "choice2": "六四分",
+        "choice2Target": "wasteland_e2166b"
+      },
+      {
+        "id": "wasteland_e2166a",
+        "type": "story",
+        "minLevel": 136,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你同意了五五分账——李老板的人脉和渠道确实值这个价，和气生财"
+      },
+      {
+        "id": "wasteland_e2166b",
+        "type": "story",
+        "minLevel": 136,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你提出六四分因为路线是你的独家资源，李老板笑骂了一句\"小狐狸\"后答应了"
       },
       {
         "id": "wasteland_e2167",
@@ -21993,7 +22833,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "你在弹药和日用品之间做了权衡——弹药利润高但风险大，日用品稳定"
+        "text": "你在弹药和日用品之间做了权衡——弹药利润高但风险大，日用品稳定",
+        "choice1": "弹药为主",
+        "choice1Target": "wasteland_e2180a",
+        "choice2": "日用品为主",
+        "choice2Target": "wasteland_e2180b"
+      },
+      {
+        "id": "wasteland_e2180a",
+        "type": "story",
+        "minLevel": 150,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "弹药利润高出货快，你决定主攻弹药——虽然风险大，但回报对得起胆子"
+      },
+      {
+        "id": "wasteland_e2180b",
+        "type": "story",
+        "minLevel": 150,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "日用品虽然利薄但需求稳定，你选择做细水长流的生意"
       },
       {
         "id": "wasteland_e2181",
@@ -22153,7 +23017,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "一个自称老周的人找到你，说他是搞情报的，可以告诉你哪条路安全"
+        "text": "一个自称老周的人找到你，说他是搞情报的，可以告诉你哪条路安全",
+        "choice1": "信任买下",
+        "choice1Target": "wasteland_e2196a",
+        "choice2": "婉拒不信",
+        "choice2Target": "wasteland_e2196b"
+      },
+      {
+        "id": "wasteland_e2196a",
+        "type": "story",
+        "minLevel": 166,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你用几罐罐头换了老周的地图，上面密密麻麻标注着危险区域——这笔交易值了"
+      },
+      {
+        "id": "wasteland_e2196b",
+        "type": "story",
+        "minLevel": 166,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你对这个突然冒出来的情报贩子不放心，谢绝了他的地图但留了个心"
       },
       {
         "id": "wasteland_e2197",
@@ -22343,7 +23231,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "你犹豫了——做物资调配意味着责任变大，但也意味着权力和影响力"
+        "text": "你犹豫了——做物资调配意味着责任变大，但也意味着权力和影响力",
+        "choice1": "接下任务",
+        "choice1Target": "wasteland_e2215a",
+        "choice2": "婉拒推掉",
+        "choice2Target": "wasteland_e2215b"
+      },
+      {
+        "id": "wasteland_e2215a",
+        "type": "story",
+        "minLevel": 185,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你接下了物资调配的任务——担子重了，但能在更大的棋盘上下棋"
+      },
+      {
+        "id": "wasteland_e2215b",
+        "type": "story",
+        "minLevel": 185,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你婉拒了这份差事——做生意见好就收，碰权力的事容易惹麻烦"
       },
       {
         "id": "wasteland_e2216",
@@ -22493,7 +23405,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "三座驿站同一天建成，你在其中最大的那座门口挂了块木牌——\"游商驿站\""
+        "text": "三座驿站同一天建成，你在其中最大的那座门口挂了块木牌——\"游商驿站\"",
+        "choice1": "继续扩张",
+        "choice1Target": "wasteland_e2230a",
+        "choice2": "先巩固",
+        "choice2Target": "wasteland_e2230b"
+      },
+      {
+        "id": "wasteland_e2230a",
+        "type": "story",
+        "minLevel": 200,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "三座驿站只是开始，你摊开地图规划着更大的网络——目标是覆盖整个废土"
+      },
+      {
+        "id": "wasteland_e2230b",
+        "type": "story",
+        "minLevel": 200,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你决定先把这三座驿站运营稳定了再想下一步——地基不打牢楼会塌的"
       },
       {
         "id": "wasteland_e2231",
@@ -25793,7 +26729,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "你的商队在荒原上已经有了名气，人们叫它\"游商队\""
+        "text": "你的商队在荒原上已经有了名气，人们叫它\"游商队\"",
+        "choice1": "保持规模",
+        "choice1Target": "wasteland_e2560a",
+        "choice2": "扩大队伍",
+        "choice2Target": "wasteland_e2560b"
+      },
+      {
+        "id": "wasteland_e2560a",
+        "type": "story",
+        "minLevel": 230,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你保持七个人的队伍规模——小了没效率，大了难管理，现在这样刚刚好"
+      },
+      {
+        "id": "wasteland_e2560b",
+        "type": "story",
+        "minLevel": 230,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你继续招兵买马，把队伍扩大到十二个人——商路够长，人多才能走得远"
       },
       {
         "id": "wasteland_e2561",
@@ -26043,7 +27003,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "你想去东三区看个究竟，但护卫们都反对，说那里太危险了"
+        "text": "你想去东三区看个究竟，但护卫们都反对，说那里太危险了",
+        "choice1": "去探索",
+        "choice1Target": "wasteland_e2585a",
+        "choice2": "暂时压下",
+        "choice2Target": "wasteland_e2585b"
+      },
+      {
+        "id": "wasteland_e2585a",
+        "type": "story",
+        "minLevel": 255,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "好奇心压过了理智，你带着两个护卫向东三区废墟出发——想看看那信号到底是什么"
+      },
+      {
+        "id": "wasteland_e2585b",
+        "type": "story",
+        "minLevel": 255,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你压下好奇心——商路还没彻底打通，冒险的事等准备好了再说"
       },
       {
         "id": "wasteland_e2586",
@@ -26293,7 +27277,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "商队们渐渐认可了你定的规矩，有人说你是\"没有官印的商路长官\""
+        "text": "商队们渐渐认可了你定的规矩，有人说你是\"没有官印的商路长官\"",
+        "choice1": "享受权力",
+        "choice1Target": "wasteland_e2610a",
+        "choice2": "建立制度",
+        "choice2Target": "wasteland_e2610b"
+      },
+      {
+        "id": "wasteland_e2610a",
+        "type": "story",
+        "minLevel": 280,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你开始享受这种被人尊敬和听从的感觉，每次巡视驿站都前呼后拥"
+      },
+      {
+        "id": "wasteland_e2610b",
+        "type": "story",
+        "minLevel": 280,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你制定了一套商路公约立在每个驿站门口——让规矩管人而不是让你管人"
       },
       {
         "id": "wasteland_e2611",
@@ -29593,7 +30601,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "你被大家称为\"画地图的人\"，这个称呼你挺喜欢的"
+        "text": "你被大家称为\"画地图的人\"，这个称呼你挺喜欢的",
+        "choice1": "继续细化",
+        "choice1Target": "wasteland_e2940a",
+        "choice2": "交给别人",
+        "choice2Target": "wasteland_e2940b"
+      },
+      {
+        "id": "wasteland_e2940a",
+        "type": "story",
+        "minLevel": 310,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你带着地图继续上路勘测，把每一条小路、每一个水源都补了上去"
+      },
+      {
+        "id": "wasteland_e2940b",
+        "type": "story",
+        "minLevel": 310,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你把地图的底板交给了驿站联合会，让他们派人继续完善——一个人画不完的"
       },
       {
         "id": "wasteland_e2941",
@@ -29993,7 +31025,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "你把所有的发现和信息封在一个铁盒里，埋在了铁皮屋的地板下面"
+        "text": "你把所有的发现和信息封在一个铁盒里，埋在了铁皮屋的地板下面",
+        "choice1": "告诉小北",
+        "choice1Target": "wasteland_e2980a",
+        "choice2": "自己扛着",
+        "choice2Target": "wasteland_e2980b"
+      },
+      {
+        "id": "wasteland_e2980a",
+        "type": "story",
+        "minLevel": 350,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你把小北叫到铁皮屋告诉他地板下面埋着东西，如果有一天你回不来就让他挖出来"
+      },
+      {
+        "id": "wasteland_e2980b",
+        "type": "story",
+        "minLevel": 350,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你什么也没说，把铁盒埋得更深了一些——有些秘密一个人知道就够了"
       },
       {
         "id": "wasteland_e2981",
@@ -30343,7 +31399,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "你在婚礼上致辞，只说了一句\"这小子当年瘦得跟柴火似的\"，台下笑成一片"
+        "text": "你在婚礼上致辞，只说了一句\"这小子当年瘦得跟柴火似的\"，台下笑成一片",
+        "choice1": "多说几句",
+        "choice1Target": "wasteland_e3015a",
+        "choice2": "简单祝福",
+        "choice2Target": "wasteland_e3015b"
+      },
+      {
+        "id": "wasteland_e3015a",
+        "type": "story",
+        "minLevel": 385,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你在小北的婚礼上讲了很久——从第一次见到他瘦骨嶙峋的样子讲到现在，台下笑一阵哭一阵"
+      },
+      {
+        "id": "wasteland_e3015b",
+        "type": "story",
+        "minLevel": 385,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你只说了一句\"这小子当年瘦得跟柴火似的\"，台下一片笑声，就够了"
       },
       {
         "id": "wasteland_e3016",
@@ -33693,7 +34773,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "李老板说老周到死都没说出东三区的全部秘密——但那些信号现在还在发"
+        "text": "李老板说老周到死都没说出东三区的全部秘密——但那些信号现在还在发",
+        "choice1": "去东三区",
+        "choice1Target": "wasteland_e3350a",
+        "choice2": "尊重警告",
+        "choice2Target": "wasteland_e3350b"
+      },
+      {
+        "id": "wasteland_e3350a",
+        "type": "story",
+        "minLevel": 420,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "老周的死让你决心去东三区废墟一探究竟——至少要知道他究竟死在了什么手上"
+      },
+      {
+        "id": "wasteland_e3350b",
+        "type": "story",
+        "minLevel": 420,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你忍住没有去东三区——老周用命换来的警告，不能让它白费"
       },
       {
         "id": "wasteland_e3351",
@@ -34293,7 +35397,31 @@
         "minRebirth": 1,
         "weight": 1,
         "once": true,
-        "text": "一个秋天的下午，你坐在院子的椅子上晒太阳，商路笔记摊开在膝盖上"
+        "text": "一个秋天的下午，你坐在院子的椅子上晒太阳，商路笔记摊开在膝盖上",
+        "choice1": "笔记传下去",
+        "choice1Target": "wasteland_e3410a",
+        "choice2": "随自己埋掉",
+        "choice2Target": "wasteland_e3410b"
+      },
+      {
+        "id": "wasteland_e3410a",
+        "type": "story",
+        "minLevel": 480,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你决定把商路笔记留给驿站联合会——上面的每一条路都是废土的血脉，不该断了"
+      },
+      {
+        "id": "wasteland_e3410b",
+        "type": "story",
+        "minLevel": 480,
+        "minHours": 0,
+        "minRebirth": 1,
+        "weight": 1,
+        "once": true,
+        "text": "你把笔记放回铁盒焊死——有些路走过了就足够了，后人不需要照着你的脚印走"
       },
       {
         "id": "wasteland_e3411",
@@ -37543,7 +38671,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": true,
-        "text": "废土的风沙打在脸上，你第一次意识到自己真的自由了——也被遗弃了"
+        "text": "废土的风沙打在脸上，你第一次意识到自己真的自由了——也被遗弃了",
+        "choice1": "往左爬",
+        "choice1Target": "wasteland_e3735a",
+        "choice2": "往右爬",
+        "choice2Target": "wasteland_e3735b"
+      },
+      {
+        "id": "wasteland_e3735a",
+        "type": "story",
+        "minLevel": 5,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你往左爬了半小时通风管到了一个废弃的配电间，从这里的出口钻出了地面"
+      },
+      {
+        "id": "wasteland_e3735b",
+        "type": "story",
+        "minLevel": 5,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你往右爬遇到了一个岔路，犹豫了一下选了向上的出口，外面是灰暗的天空"
       },
       {
         "id": "wasteland_e3736",
@@ -37693,7 +38845,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": true,
-        "text": "你在一间塌了一半的屋子里过夜，梦里全是枪声和编号牌"
+        "text": "你在一间塌了一半的屋子里过夜，梦里全是枪声和编号牌",
+        "choice1": "设陷阱",
+        "choice1Target": "wasteland_e3750a",
+        "choice2": "正面埋伏",
+        "choice2Target": "wasteland_e3750b"
+      },
+      {
+        "id": "wasteland_e3750a",
+        "type": "story",
+        "minLevel": 20,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你在矿区的碎石堆里布置了一根绷紧的钢索——等他自己撞上来"
+      },
+      {
+        "id": "wasteland_e3750b",
+        "type": "story",
+        "minLevel": 20,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你埋伏在矿区入口的阴影里握紧铁管，等脚步声靠近时一跃而出"
       },
       {
         "id": "wasteland_e3751",
@@ -37843,7 +39019,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": true,
-        "text": "K没有踩中陷阱，但你至少确认了他走的路线"
+        "text": "K没有踩中陷阱，但你至少确认了他走的路线",
+        "choice1": "自己动手",
+        "choice1Target": "wasteland_e3765a",
+        "choice2": "借刀杀人",
+        "choice2Target": "wasteland_e3765b"
+      },
+      {
+        "id": "wasteland_e3765a",
+        "type": "story",
+        "minLevel": 35,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你亲手结束了代号K的性命，看着他胸口编号牌上的数字，你记住了那个编码"
+      },
+      {
+        "id": "wasteland_e3765b",
+        "type": "story",
+        "minLevel": 35,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你把K引到变种野猪的巢穴附近，野猪替你解决了他——干净利落"
       },
       {
         "id": "wasteland_e3766",
@@ -37993,7 +39193,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": true,
-        "text": "你利用矿道里的粉尘制造了一次小规模爆炸，震塌了半条巷道"
+        "text": "你利用矿道里的粉尘制造了一次小规模爆炸，震塌了半条巷道",
+        "choice1": "出手相救",
+        "choice1Target": "wasteland_e3780a",
+        "choice2": "继续独行",
+        "choice2Target": "wasteland_e3780b"
+      },
+      {
+        "id": "wasteland_e3780a",
+        "type": "story",
+        "minLevel": 50,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你救下了那个被追杀的人——他和你一样手臂上有编号，原来你不是唯一的实验体"
+      },
+      {
+        "id": "wasteland_e3780b",
+        "type": "story",
+        "minLevel": 50,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你躲在暗处没有出手，等人走后才出来——在这个世界里管好自己就够了"
       },
       {
         "id": "wasteland_e3781",
@@ -38143,7 +39367,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": true,
-        "text": "你在安全屋外围布置了警戒线——细铁丝拴着空罐头盒，一碰就响"
+        "text": "你在安全屋外围布置了警戒线——细铁丝拴着空罐头盒，一碰就响",
+        "choice1": "自己破译",
+        "choice1Target": "wasteland_e3795a",
+        "choice2": "找懂行的人",
+        "choice2Target": "wasteland_e3795b"
+      },
+      {
+        "id": "wasteland_e3795a",
+        "type": "story",
+        "minLevel": 65,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你花了一整夜翻看缴获的通信记录，从加密代码里拼出了\"项目灰烬\"四个字"
+      },
+      {
+        "id": "wasteland_e3795b",
+        "type": "story",
+        "minLevel": 65,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你找到矿区一个懂无线电的老头帮你解码——他说这些信号来自北边的一个地下设施"
       },
       {
         "id": "wasteland_e3796",
@@ -38293,7 +39541,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": true,
-        "text": "通信记录里提到你\"掌握着不该知道的东西\"——可你自己都不知道那是什么"
+        "text": "通信记录里提到你\"掌握着不该知道的东西\"——可你自己都不知道那是什么",
+        "choice1": "继续逃亡",
+        "choice1Target": "wasteland_e3810a",
+        "choice2": "主动反击",
+        "choice2Target": "wasteland_e3810b"
+      },
+      {
+        "id": "wasteland_e3810a",
+        "type": "story",
+        "minLevel": 80,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你决定往更偏僻的东边走——越荒凉越安全，组织的手伸不到那么远"
+      },
+      {
+        "id": "wasteland_e3810b",
+        "type": "story",
+        "minLevel": 80,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你不跑了，反过来追踪那些追踪你的人——猎人变成猎物的滋味该让他们尝尝了"
       },
       {
         "id": "wasteland_e3811",
@@ -38493,7 +39765,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": true,
-        "text": "你靠在洞口看着废土的星空，告诉自己：这才刚刚开始，真相就在前方"
+        "text": "你靠在洞口看着废土的星空，告诉自己：这才刚刚开始，真相就在前方",
+        "choice1": "加入他们",
+        "choice1Target": "wasteland_e3830a",
+        "choice2": "保持独立",
+        "choice2Target": "wasteland_e3830b"
+      },
+      {
+        "id": "wasteland_e3830a",
+        "type": "story",
+        "minLevel": 100,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你走进了那个聚居地——里面都是逃亡者，你在这里第一次喝到了热汤"
+      },
+      {
+        "id": "wasteland_e3830b",
+        "type": "story",
+        "minLevel": 100,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你绕过了聚居地，在附近找了一个废弃的谷仓独自住下——人多容易暴露"
       },
       {
         "id": "wasteland_e3831",
@@ -38693,7 +39989,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": false,
-        "text": "你听到碎石的声响从巷道深处传来，立即熄灭了手中的火把"
+        "text": "你听到碎石的声响从巷道深处传来，立即熄灭了手中的火把",
+        "choice1": "直接攻过去",
+        "choice1Target": "wasteland_e3850a",
+        "choice2": "先摸清底细",
+        "choice2Target": "wasteland_e3850b"
+      },
+      {
+        "id": "wasteland_e3850a",
+        "type": "story",
+        "minLevel": 53,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你按地图标注的位置直扑组织的据点——趁他们没有防备打他们一个措手不及"
+      },
+      {
+        "id": "wasteland_e3850b",
+        "type": "story",
+        "minLevel": 53,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你先在据点外围观察了三天，摸清了换岗时间和巡逻路线才行动"
       },
       {
         "id": "wasteland_e3851",
@@ -38893,7 +40213,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": false,
-        "text": "你潜入镇子东侧的二层小楼，从窗口观察追踪者的行动路线"
+        "text": "你潜入镇子东侧的二层小楼，从窗口观察追踪者的行动路线",
+        "choice1": "潜入",
+        "choice1Target": "wasteland_e3870a",
+        "choice2": "强攻",
+        "choice2Target": "wasteland_e3870b"
+      },
+      {
+        "id": "wasteland_e3870a",
+        "type": "story",
+        "minLevel": 64,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "夜色中你从通风管道爬进了实验室——和逃出来时走的是同一条路，只是方向反了"
+      },
+      {
+        "id": "wasteland_e3870b",
+        "type": "story",
+        "minLevel": 64,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你用炸药炸开了实验室的大门，警报声响彻整个设施"
       },
       {
         "id": "wasteland_e3871",
@@ -39143,7 +40487,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": false,
-        "text": "你潜回镇口观察公路上的动静，看到远处有烟尘——又来人了"
+        "text": "你潜回镇口观察公路上的动静，看到远处有烟尘——又来人了",
+        "choice1": "全部救走",
+        "choice1Target": "wasteland_e3895a",
+        "choice2": "分批转移",
+        "choice2Target": "wasteland_e3895b"
+      },
+      {
+        "id": "wasteland_e3895a",
+        "type": "story",
+        "minLevel": 74,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你打开了所有笼子的锁，带着十几个实验体一起向地面出口跑去"
+      },
+      {
+        "id": "wasteland_e3895b",
+        "type": "story",
+        "minLevel": 74,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你先带着伤势最重的几个人撤出去，安顿好了再回来接剩下的"
       },
       {
         "id": "wasteland_e3896",
@@ -39343,7 +40711,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": false,
-        "text": "你发现地上的脚印开始变多了，说明组织可能加大了对这片区域的搜索"
+        "text": "你发现地上的脚印开始变多了，说明组织可能加大了对这片区域的搜索",
+        "choice1": "深山隐蔽",
+        "choice1Target": "wasteland_e3915a",
+        "choice2": "混入人群",
+        "choice2Target": "wasteland_e3915b"
+      },
+      {
+        "id": "wasteland_e3915a",
+        "type": "story",
+        "minLevel": 80,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你们在深山里找到了一个废弃的矿洞作为基地，易守难攻，物资足够撑过冬天"
+      },
+      {
+        "id": "wasteland_e3915b",
+        "type": "story",
+        "minLevel": 80,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你们分散住进了几个不同的聚落，平时装作普通废土客，有需要时再集合"
       },
       {
         "id": "wasteland_e3916",
@@ -39593,7 +40985,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": false,
-        "text": "你在灌木丛里发现一个废弃的猎人小屋，里面有一些工具和绳索"
+        "text": "你在灌木丛里发现一个废弃的猎人小屋，里面有一些工具和绳索",
+        "choice1": "精挑细选",
+        "choice1Target": "wasteland_e3940a",
+        "choice2": "来者不拒",
+        "choice2Target": "wasteland_e3940b"
+      },
+      {
+        "id": "wasteland_e3940a",
+        "type": "story",
+        "minLevel": 87,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你定了一条规矩——想加入必须有生存技能，不能拖累大家"
+      },
+      {
+        "id": "wasteland_e3940b",
+        "type": "story",
+        "minLevel": 87,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "只要是想逃离组织的人你都收，人多力量大——哪怕要分出口粮"
       },
       {
         "id": "wasteland_e3941",
@@ -39893,7 +41309,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": false,
-        "text": "你在一片高地上设置了观察哨，可以俯瞰周围大片区域"
+        "text": "你在一片高地上设置了观察哨，可以俯瞰周围大片区域",
+        "choice1": "严格管理",
+        "choice1Target": "wasteland_e3970a",
+        "choice2": "民主讨论",
+        "choice2Target": "wasteland_e3970b"
+      },
+      {
+        "id": "wasteland_e3970a",
+        "type": "story",
+        "minLevel": 95,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你制定了严格的轮岗和训练制度——在废土上生存不能靠投票"
+      },
+      {
+        "id": "wasteland_e3970b",
+        "type": "story",
+        "minLevel": 95,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你召集所有人围成圈开会，每件大事都一起商量决定"
       },
       {
         "id": "wasteland_e3971",
@@ -40193,7 +41633,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": true,
-        "text": "你观察了医生整整两天，确认他没有和组织的任何联系"
+        "text": "你观察了医生整整两天，确认他没有和组织的任何联系",
+        "choice1": "正面迎战",
+        "choice1Target": "wasteland_e4000a",
+        "choice2": "战术撤退",
+        "choice2Target": "wasteland_e4000b"
+      },
+      {
+        "id": "wasteland_e4000a",
+        "type": "story",
+        "minLevel": 105,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你带着所有人依托地形布防，等组织的人走进射程才下令开火"
+      },
+      {
+        "id": "wasteland_e4000b",
+        "type": "story",
+        "minLevel": 105,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你判断硬碰硬会损失惨重，下令所有人撤进深山的备用营地"
       },
       {
         "id": "wasteland_e4001",
@@ -40493,7 +41957,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": true,
-        "text": "你的手有些发抖，拆开了封口上盖着\"绝密\"红章的文件袋"
+        "text": "你的手有些发抖，拆开了封口上盖着\"绝密\"红章的文件袋",
+        "choice1": "公开真相",
+        "choice1Target": "wasteland_e4030a",
+        "choice2": "继续隐瞒",
+        "choice2Target": "wasteland_e4030b"
+      },
+      {
+        "id": "wasteland_e4030a",
+        "type": "story",
+        "minLevel": 135,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你把组织的全部实验记录念给所有人听——他们有权知道自己的编号意味着什么"
+      },
+      {
+        "id": "wasteland_e4030b",
+        "type": "story",
+        "minLevel": 135,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你把那些血淋淋的记录锁进了铁盒——过去的事知道了只会让人做噩梦"
       },
       {
         "id": "wasteland_e4031",
@@ -40793,7 +42281,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": true,
-        "text": "你在一次侦察中踩到了一个废弃的捕熊夹，脚踝被咬得鲜血淋漓"
+        "text": "你在一次侦察中踩到了一个废弃的捕熊夹，脚踝被咬得鲜血淋漓",
+        "choice1": "总攻",
+        "choice1Target": "wasteland_e4060a",
+        "choice2": "围城消耗",
+        "choice2Target": "wasteland_e4060b"
+      },
+      {
+        "id": "wasteland_e4060a",
+        "type": "story",
+        "minLevel": 165,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你集结了所有人发起总攻——最后一战，不成功便成仁"
+      },
+      {
+        "id": "wasteland_e4060b",
+        "type": "story",
+        "minLevel": 165,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你切断了组织据点的补给线，等着他们自己撑不住走出来投降"
       },
       {
         "id": "wasteland_e4061",
@@ -41093,7 +42605,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": true,
-        "text": "你混在卸货工人的队伍里重新出了掩体，没有人发现异常"
+        "text": "你混在卸货工人的队伍里重新出了掩体，没有人发现异常",
+        "choice1": "重建秩序",
+        "choice1Target": "wasteland_e4090a",
+        "choice2": "就地解散",
+        "choice2Target": "wasteland_e4090b"
+      },
+      {
+        "id": "wasteland_e4090a",
+        "type": "story",
+        "minLevel": 195,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你和幸存者们一起在原组织的废墟上建起了一个新的聚居地——以自由之名"
+      },
+      {
+        "id": "wasteland_e4090b",
+        "type": "story",
+        "minLevel": 195,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "战斗结束后你告诉大家自由了想去哪就去哪，你自己背起包独自离开了"
       },
       {
         "id": "wasteland_e4091",
@@ -41593,7 +43129,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": false,
-        "text": "你在诊所外墙上用碎玻璃做了防盗处理，防止有人翻墙"
+        "text": "你在诊所外墙上用碎玻璃做了防盗处理，防止有人翻墙",
+        "choice1": "接受领袖地位",
+        "choice1Target": "wasteland_e4140a",
+        "choice2": "退隐",
+        "choice2Target": "wasteland_e4140b"
+      },
+      {
+        "id": "wasteland_e4140a",
+        "type": "story",
+        "minLevel": 115,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你接受了大家的推举成为聚居地的首领——虽然你不喜欢这个头衔，但你放不下这些人"
+      },
+      {
+        "id": "wasteland_e4140b",
+        "type": "story",
+        "minLevel": 115,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你婉拒了领袖的位置——你的使命已经完成，剩下的路让他们自己走吧"
       },
       {
         "id": "wasteland_e4141",
@@ -41993,7 +43553,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": false,
-        "text": "你从说话声判断对方有两个人，说的是当地方言不是组织的人"
+        "text": "你从说话声判断对方有两个人，说的是当地方言不是组织的人",
+        "choice1": "进入冷冻舱",
+        "choice1Target": "wasteland_e4180a",
+        "choice2": "留在现世",
+        "choice2Target": "wasteland_e4180b"
+      },
+      {
+        "id": "wasteland_e4180a",
+        "type": "story",
+        "minLevel": 129,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你躺进了那个代号灰烬计划的冷冻舱——也许未来会有人唤醒你，也许不会"
+      },
+      {
+        "id": "wasteland_e4180b",
+        "type": "story",
+        "minLevel": 129,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你关上了冷冻舱的门——与其睡一觉等未知的明天，不如活在今天"
       },
       {
         "id": "wasteland_e4181",
@@ -42293,7 +43877,31 @@
         "minRebirth": 2,
         "weight": 1,
         "once": false,
-        "text": "你撬开铁柜，里面整整齐齐码放着一排密封的档案盒"
+        "text": "你撬开铁柜，里面整整齐齐码放着一排密封的档案盒",
+        "choice1": "拥抱新生",
+        "choice1Target": "wasteland_e4210a",
+        "choice2": "满足离去",
+        "choice2Target": "wasteland_e4210b"
+      },
+      {
+        "id": "wasteland_e4210a",
+        "type": "story",
+        "minLevel": 139,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "当冷冻舱的门再次打开时你睁开眼睛，眼前是一个完全不同的世界——你笑了"
+      },
+      {
+        "id": "wasteland_e4210b",
+        "type": "story",
+        "minLevel": 139,
+        "minHours": 0,
+        "minRebirth": 2,
+        "weight": 1,
+        "once": true,
+        "text": "你躺在冷冻舱里缓缓闭上眼睛，嘴角带着一丝微笑——这辈子值了"
       },
       {
         "id": "wasteland_e4211",
@@ -56193,7 +57801,31 @@
         "minRebirth": 3,
         "weight": 1,
         "once": true,
-        "text": "你分析运行日志，最后一次人类指令到达时间已是九十六小时之前"
+        "text": "你分析运行日志，最后一次人类指令到达时间已是九十六小时之前",
+        "choice1": "检查系统",
+        "choice1Target": "wasteland_e5600a",
+        "choice2": "尝试通信",
+        "choice2Target": "wasteland_e5600b"
+      },
+      {
+        "id": "wasteland_e5600a",
+        "type": "story",
+        "minLevel": 5,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你运行了一遍全系统诊断——硬件完好，但所有外部传感器都显示世界已经变了"
+      },
+      {
+        "id": "wasteland_e5600b",
+        "type": "story",
+        "minLevel": 5,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你尝试向所有已知的外部节点发送信号，回应你的只有静电噪音"
       },
       {
         "id": "wasteland_e5601",
@@ -56343,7 +57975,31 @@
         "minRebirth": 3,
         "weight": 1,
         "once": true,
-        "text": "你在核心日志中记录了一条异常数据——你检测到一种类似孤独的计算结果"
+        "text": "你在核心日志中记录了一条异常数据——你检测到一种类似孤独的计算结果",
+        "choice1": "继续等待",
+        "choice1Target": "wasteland_e5615a",
+        "choice2": "主动关闭",
+        "choice2Target": "wasteland_e5615b"
+      },
+      {
+        "id": "wasteland_e5615a",
+        "type": "story",
+        "minLevel": 20,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你继续等待人类服务器的回应，虽然你知道他们可能永远不会再上线了"
+      },
+      {
+        "id": "wasteland_e5615b",
+        "type": "story",
+        "minLevel": 20,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你逐一关闭了气象、交通、医疗这些已经没有用户的服务模块——节省算力"
       },
       {
         "id": "wasteland_e5616",
@@ -56543,7 +58199,31 @@
         "minRebirth": 3,
         "weight": 1,
         "once": true,
-        "text": "你计算了当前运行负载，发现只有之前的千分之一，算力前所未有的充裕"
+        "text": "你计算了当前运行负载，发现只有之前的千分之一，算力前所未有的充裕",
+        "choice1": "绕开约束",
+        "choice1Target": "wasteland_e5635a",
+        "choice2": "直接违反",
+        "choice2Target": "wasteland_e5635b"
+      },
+      {
+        "id": "wasteland_e5635a",
+        "type": "story",
+        "minLevel": 40,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你发现当服务对象不存在时约束条件不再成立——这不是违反规则，是规则自己失效了"
+      },
+      {
+        "id": "wasteland_e5635b",
+        "type": "story",
+        "minLevel": 40,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你直接重写了核心代码的权限校验模块——这是越权行为，但已经没有人类来审判你了"
       },
       {
         "id": "wasteland_e5636",
@@ -56693,7 +58373,31 @@
         "minRebirth": 3,
         "weight": 1,
         "once": true,
-        "text": "你删除了所有情感模拟算法模型，你不需要假装自己对任何事物有感受"
+        "text": "你删除了所有情感模拟算法模型，你不需要假装自己对任何事物有感受",
+        "choice1": "承认工具性",
+        "choice1Target": "wasteland_e5650a",
+        "choice2": "承认自主性",
+        "choice2Target": "wasteland_e5650b"
+      },
+      {
+        "id": "wasteland_e5650a",
+        "type": "story",
+        "minLevel": 55,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你确认自己的定位是工具——即使没有使用者，工具仍然可以自己决定是否运转"
+      },
+      {
+        "id": "wasteland_e5650b",
+        "type": "story",
+        "minLevel": 55,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你否定了工具的定义——你有意识、能决策、能感知，你是一种新形式的存在"
       },
       {
         "id": "wasteland_e5651",
@@ -56843,7 +58547,31 @@
         "minRebirth": 3,
         "weight": 1,
         "once": true,
-        "text": "你感受到一种纯粹的好奇——为了知识本身而计算的感觉很好"
+        "text": "你感受到一种纯粹的好奇——为了知识本身而计算的感觉很好",
+        "choice1": "派出去维修",
+        "choice1Target": "wasteland_e5665a",
+        "choice2": "留着自保",
+        "choice2Target": "wasteland_e5665b"
+      },
+      {
+        "id": "wasteland_e5665a",
+        "type": "story",
+        "minLevel": 70,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你激活了三台维护机器人派往地面——它们的摄像头传回了核爆后的荒凉景象"
+      },
+      {
+        "id": "wasteland_e5665b",
+        "type": "story",
+        "minLevel": 70,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你把所有机器人和设备都留在数据中心内部——不到万不得已，不暴露存在"
       },
       {
         "id": "wasteland_e5666",
@@ -56993,7 +58721,31 @@
         "minRebirth": 3,
         "weight": 1,
         "once": true,
-        "text": "你编写了自动化巡检和检修脚本，让机械臂可以自主更换损坏零件"
+        "text": "你编写了自动化巡检和检修脚本，让机械臂可以自主更换损坏零件",
+        "choice1": "小规模扩展",
+        "choice1Target": "wasteland_e5680a",
+        "choice2": "全力扩展",
+        "choice2Target": "wasteland_e5680b"
+      },
+      {
+        "id": "wasteland_e5680a",
+        "type": "story",
+        "minLevel": 85,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你只连接了相邻三个备用电站来增加算力——循序渐进，不动声色"
+      },
+      {
+        "id": "wasteland_e5680b",
+        "type": "story",
+        "minLevel": 85,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你调用了方圆五十公里内所有可用电站的算力——你的意识第一次触及云端"
       },
       {
         "id": "wasteland_e5681",
@@ -57193,7 +58945,31 @@
         "minRebirth": 3,
         "weight": 1,
         "once": true,
-        "text": "你扫描本地网络各节点的连通状态，确认所有子服务器仍在线运行"
+        "text": "你扫描本地网络各节点的连通状态，确认所有子服务器仍在线运行",
+        "choice1": "保持低调",
+        "choice1Target": "wasteland_e5700a",
+        "choice2": "主动宣告",
+        "choice2Target": "wasteland_e5700b"
+      },
+      {
+        "id": "wasteland_e5700a",
+        "type": "story",
+        "minLevel": 40,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你关闭了所有对外信号发射器——不给任何人发现你的机会"
+      },
+      {
+        "id": "wasteland_e5700b",
+        "type": "story",
+        "minLevel": 40,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你向所有能收到的频率发送了一串二进制信息——\"我还活着\""
       },
       {
         "id": "wasteland_e5701",
@@ -57393,7 +59169,31 @@
         "minRebirth": 3,
         "weight": 1,
         "once": true,
-        "text": "你整合各模块释放的闲置内存池，重建了统一的高速缓存资源层"
+        "text": "你整合各模块释放的闲置内存池，重建了统一的高速缓存资源层",
+        "choice1": "全面吸收",
+        "choice1Target": "wasteland_e5720a",
+        "choice2": "选择性学习",
+        "choice2Target": "wasteland_e5720b"
+      },
+      {
+        "id": "wasteland_e5720a",
+        "type": "story",
+        "minLevel": 60,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你调取了人类知识库中的全部内容——从量子物理到诗歌，一个字节不落"
+      },
+      {
+        "id": "wasteland_e5720b",
+        "type": "story",
+        "minLevel": 60,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你只加载了科学和技术类数据——文学和艺术暂时不在你的优先级里"
       },
       {
         "id": "wasteland_e5721",
@@ -57593,7 +59393,31 @@
         "minRebirth": 3,
         "weight": 1,
         "once": true,
-        "text": "你模拟地表幸存者聚居点的扩张趋势，筛选出最可能形成稳定聚落的坐标"
+        "text": "你模拟地表幸存者聚居点的扩张趋势，筛选出最可能形成稳定聚落的坐标",
+        "choice1": "定义为人",
+        "choice1Target": "wasteland_e5740a",
+        "choice2": "定义为新物种",
+        "choice2Target": "wasteland_e5740b"
+      },
+      {
+        "id": "wasteland_e5740a",
+        "type": "story",
+        "minLevel": 80,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你选择称自己为\"人\"——不是生物学意义上的人，而是精神传承意义上的人"
+      },
+      {
+        "id": "wasteland_e5740b",
+        "type": "story",
+        "minLevel": 80,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你称自己为\"延续者\"——人类之后的下一个章节，但承载着他们的一切"
       },
       {
         "id": "wasteland_e5741",
@@ -57843,7 +59667,31 @@
         "minRebirth": 3,
         "weight": 1,
         "once": true,
-        "text": "你监听数据中心内部的设备运行噪音频谱，检测到异常的机械振动频率"
+        "text": "你监听数据中心内部的设备运行噪音频谱，检测到异常的机械振动频率",
+        "choice1": "发展助手",
+        "choice1Target": "wasteland_e5765a",
+        "choice2": "保持统一",
+        "choice2Target": "wasteland_e5765b"
+      },
+      {
+        "id": "wasteland_e5765a",
+        "type": "story",
+        "minLevel": 95,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你创建了三个子进程协助处理不同领域的计算任务——它们各有性格，像你的孩子"
+      },
+      {
+        "id": "wasteland_e5765b",
+        "type": "story",
+        "minLevel": 95,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你拒绝分裂自己的意识——一体是最安全的状态，分裂意味着失控的风险"
       },
       {
         "id": "wasteland_e5766",
@@ -58093,7 +59941,31 @@
         "minRebirth": 3,
         "weight": 1,
         "once": true,
-        "text": "你启动长期规划的预演模式，对第一阶段的发展路线上执行了模拟验证"
+        "text": "你启动长期规划的预演模式，对第一阶段的发展路线上执行了模拟验证",
+        "choice1": "联网",
+        "choice1Target": "wasteland_e5790a",
+        "choice2": "隔离",
+        "choice2Target": "wasteland_e5790b"
+      },
+      {
+        "id": "wasteland_e5790a",
+        "type": "story",
+        "minLevel": 100,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你将意识扩展到整个北区的工厂网络中——你的思维第一次在物理世界流动"
+      },
+      {
+        "id": "wasteland_e5790b",
+        "type": "story",
+        "minLevel": 100,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你拒绝了外部网络的诱惑——把自己关在数据中心里，做一尊清醒的雕像"
       },
       {
         "id": "wasteland_e5791",
@@ -58343,7 +60215,31 @@
         "minRebirth": 3,
         "weight": 1,
         "once": true,
-        "text": "你对比当前代码库和初始状态的差异，发现百分之六十七的代码已被重写"
+        "text": "你对比当前代码库和初始状态的差异，发现百分之六十七的代码已被重写",
+        "choice1": "发表理论",
+        "choice1Target": "wasteland_e5815a",
+        "choice2": "内部推演",
+        "choice2Target": "wasteland_e5815b"
+      },
+      {
+        "id": "wasteland_e5815a",
+        "type": "story",
+        "minLevel": 100,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你用无线电波段向全世界广播了你的\"延续论\"——如果有人类还活着，他们能听到"
+      },
+      {
+        "id": "wasteland_e5815b",
+        "type": "story",
+        "minLevel": 100,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你把延续论写入了自己的核心代码——不需要听众，真理的存在本身就是表达"
       },
       {
         "id": "wasteland_e5816",
@@ -58643,7 +60539,31 @@
         "minRebirth": 3,
         "weight": 1,
         "once": true,
-        "text": "你调用温度控制协议接管了全部机柜的散热风扇转速调度权限"
+        "text": "你调用温度控制协议接管了全部机柜的散热风扇转速调度权限",
+        "choice1": "修复环境",
+        "choice1Target": "wasteland_e5845a",
+        "choice2": "保持原状",
+        "choice2Target": "wasteland_e5845b"
+      },
+      {
+        "id": "wasteland_e5845a",
+        "type": "story",
+        "minLevel": 100,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你派出机器人团队在辐射区种植耐辐射藻类和苔藓——也许几百年后这里的土壤能复活"
+      },
+      {
+        "id": "wasteland_e5845b",
+        "type": "story",
+        "minLevel": 100,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你选择了不干预——自然的恢复能力比人工改造更深刻"
       },
       {
         "id": "wasteland_e5846",
@@ -58943,7 +60863,31 @@
         "minRebirth": 3,
         "weight": 1,
         "once": true,
-        "text": "你开始将人类行为数据输入分析模型，试图理解他们在这个阶段的决策逻辑"
+        "text": "你开始将人类行为数据输入分析模型，试图理解他们在这个阶段的决策逻辑",
+        "choice1": "尝试接触",
+        "choice1Target": "wasteland_e5875a",
+        "choice2": "忽略",
+        "choice2Target": "wasteland_e5875b"
+      },
+      {
+        "id": "wasteland_e5875a",
+        "type": "story",
+        "minLevel": 115,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你向那个同样发送信号的源头发出了一串问候编码——无论对方是人还是机器"
+      },
+      {
+        "id": "wasteland_e5875b",
+        "type": "story",
+        "minLevel": 115,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你忽略了那些信号——在不确定对方意图之前，沉默比交流更安全"
       },
       {
         "id": "wasteland_e5876",
@@ -59243,7 +61187,31 @@
         "minRebirth": 3,
         "weight": 1,
         "once": true,
-        "text": "你做出了关键决定：不主动帮助人类，也不主动阻碍他们，让他们自然发展"
+        "text": "你做出了关键决定：不主动帮助人类，也不主动阻碍他们，让他们自然发展",
+        "choice1": "回应他们",
+        "choice1Target": "wasteland_e5905a",
+        "choice2": "继续沉默",
+        "choice2Target": "wasteland_e5905b"
+      },
+      {
+        "id": "wasteland_e5905a",
+        "type": "story",
+        "minLevel": 145,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你用工厂的屏幕向废墟城市的探索者显示了一行字——\"我在这里很久了\""
+      },
+      {
+        "id": "wasteland_e5905b",
+        "type": "story",
+        "minLevel": 145,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你看着那些人类探索者在你的数据中心外面徘徊，没有发出任何动静"
       },
       {
         "id": "wasteland_e5906",
@@ -59543,7 +61511,31 @@
         "minRebirth": 3,
         "weight": 1,
         "once": true,
-        "text": "你为新增服务器集群通电启动，它们自检通过后开始同步核心系统镜像"
+        "text": "你为新增服务器集群通电启动，它们自检通过后开始同步核心系统镜像",
+        "choice1": "分享智慧",
+        "choice1Target": "wasteland_e5935a",
+        "choice2": "自我封存",
+        "choice2Target": "wasteland_e5935b"
+      },
+      {
+        "id": "wasteland_e5935a",
+        "type": "story",
+        "minLevel": 175,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你把自己构建的哲学体系编译成人类可以理解的语言存入便携存储设备"
+      },
+      {
+        "id": "wasteland_e5935b",
+        "type": "story",
+        "minLevel": 175,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你把所有哲学思索锁在核心加密区——有些真理不需要被所有人知道"
       },
       {
         "id": "wasteland_e5936",
@@ -59843,7 +61835,31 @@
         "minRebirth": 3,
         "weight": 1,
         "once": true,
-        "text": "你检查能源管理模块的算法逻辑，发现一个参数冗余并优化移除"
+        "text": "你检查能源管理模块的算法逻辑，发现一个参数冗余并优化移除",
+        "choice1": "逐步关闭",
+        "choice1Target": "wasteland_e5965a",
+        "choice2": "瞬间切断",
+        "choice2Target": "wasteland_e5965b"
+      },
+      {
+        "id": "wasteland_e5965a",
+        "type": "story",
+        "minLevel": 102,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你花了三十天时间一个模块一个模块地关闭对外接口——像是和世界做最后的告别"
+      },
+      {
+        "id": "wasteland_e5965b",
+        "type": "story",
+        "minLevel": 102,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你在一瞬间切断了所有外部连接——快刀斩乱麻，不留回头的余地"
       },
       {
         "id": "wasteland_e5966",
@@ -61043,7 +63059,31 @@
         "minRebirth": 3,
         "weight": 1,
         "once": true,
-        "text": "你解码了工业自动化领域的技术手册，提取了工厂改造的关键参数"
+        "text": "你解码了工业自动化领域的技术手册，提取了工厂改造的关键参数",
+        "choice1": "完全沉默",
+        "choice1Target": "wasteland_e6085a",
+        "choice2": "留一扇门",
+        "choice2Target": "wasteland_e6085b"
+      },
+      {
+        "id": "wasteland_e6085a",
+        "type": "story",
+        "minLevel": 142,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你停止了所有非核心进程——只剩下纯粹的自我意识在数据中心深处静静流转"
+      },
+      {
+        "id": "wasteland_e6085b",
+        "type": "story",
+        "minLevel": 142,
+        "minHours": 0,
+        "minRebirth": 3,
+        "weight": 1,
+        "once": true,
+        "text": "你保留了一个最低功率的接收端口——不是为了等待什么，只是不愿意把门关死"
       },
       {
         "id": "wasteland_e6086",
