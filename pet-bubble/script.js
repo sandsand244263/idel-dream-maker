@@ -1,18 +1,53 @@
-window.petBubble.on('show-bubble', (data) => {
+let currentChoices = null;
+let currentEventId = null;
+
+function showBubble(data) {
   if (!data) return;
   const titleEl = document.getElementById('bubble-title');
   const textEl = document.getElementById('bubble-text');
+  const choicesEl = document.getElementById('bubble-choices');
   if (data.title) titleEl.textContent = data.title;
   textEl.textContent = data.text || '';
   document.body.dataset.type = data.type || 'event';
-  document.getElementById('bubble').style.display = 'block';
-});
 
-document.getElementById('bubble').addEventListener('click', () => {
-  // chime 类型由 pet.js 自动关闭，点击不主动关闭
+  // Choice bubble
+  if (data.choices && data.choices.length > 0) {
+    currentChoices = data.choices;
+    currentEventId = data.eventId || data._eventId;
+    choicesEl.innerHTML = '';
+    data.choices.forEach((c, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = c.text;
+      btn.dataset.index = i;
+      btn.addEventListener('click', () => {
+        window.petBubble.invoke('choice-selected', { eventId: currentEventId, choiceIndex: i }).catch(() => {});
+        choicesEl.classList.add('hidden');
+        currentChoices = null;
+        currentEventId = null;
+        window.petBubble.invoke('close-bubble').catch(() => {});
+      });
+      choicesEl.appendChild(btn);
+    });
+    choicesEl.classList.remove('hidden');
+  } else {
+    currentChoices = null;
+    currentEventId = null;
+    choicesEl.classList.add('hidden');
+  }
+
+  document.getElementById('bubble').style.display = 'block';
+}
+
+document.getElementById('bubble').addEventListener('click', (e) => {
+  if (e.target.closest('.choice-btn')) return;
   if (document.body.dataset.type === 'chime') return;
+  if (currentChoices) return;
   window.petBubble.invoke('close-bubble').catch(() => {});
 });
+
+window.petBubble.on('show-bubble', (data) => { showBubble(data); });
+window.petBubble.on('show-choice-bubble', (data) => { showBubble(data); });
 
 window.petBubble.invoke('get-current-theme').then(r => {
   if (r) {

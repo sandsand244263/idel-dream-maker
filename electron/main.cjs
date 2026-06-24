@@ -757,7 +757,7 @@ function startGameLoop() {
           text: storyEvent.text,
           choices,
         };
-        const choicePayload = { title: '抉择', text: storyEvent.text, choices };
+        const choicePayload = { title: '抉择', text: storyEvent.text, choices, _eventId: storyEvent.id };
         try { mainWindow.webContents.send('choice-event', choicePayload); } catch {}
         forwardToPet('choice-event', choicePayload);
       }

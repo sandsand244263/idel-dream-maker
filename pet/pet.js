@@ -76,6 +76,7 @@ class NotificationQueue{
     if(this.current.type==='achievement'){dotSymbol.textContent='★';dotEl.className='dot-achievement';}
     else if(this.current.type==='levelup'){dotSymbol.textContent='↑';dotEl.className='dot-levelup';}
     else if(this.current.type==='chime'){dotSymbol.textContent='🕐';dotEl.className='dot-chime';}
+    else if(this.current.type==='choice'){dotSymbol.textContent='?';dotEl.className='dot-event';}
     else{dotSymbol.textContent='!';dotEl.className='dot-event';}
     dotEl.dataset.text=this.current.text;
     dotEl.dataset.title=this.current.title||'';
@@ -83,14 +84,19 @@ class NotificationQueue{
   }
   showBubble(){
     if(!this.current)return;
+    const isChoice = this.current.type === 'choice';
     window.pet.invoke('show-bubble', {
       title: this.current.title || '事件',
       text: this.current.text,
-      color: this.current.type === 'achievement' ? '#FFD700' : this.current.type === 'levelup' ? '#00FF00' : '#00BFFF',
+      color: isChoice ? '#FF9E64' : this.current.type === 'achievement' ? '#FFD700' : this.current.type === 'levelup' ? '#00FF00' : '#00BFFF',
       type: this.current.type,
+      choices: isChoice ? (this.current.choices || []) : undefined,
+      _eventId: isChoice ? (this.current._eventId || null) : undefined,
     }).catch(() => {});
     dotEl.className = 'dot-none';
     dotSymbol.textContent = '○';
+    // Choice bubbles keep the choice dot until resolved
+    if (isChoice && this.current) { this.showDotOnly(); }
   }
   hideBubble(){
     // 不发 close-bubble：只重置 dot 状态（避免 close→bubble-closed→close 无限循环）
@@ -421,6 +427,11 @@ window.pet.on('hourly-chime',()=>{
   showChimeBubble(('0'+h).slice(-2)+':'+m);
 });
 
+window.pet.on('choice-event',(d)=>{
+  if (d && d.choices) {
+    nq.enqueue({ text: d.text, title: d.title || '抉择', type: 'choice', choices: d.choices }, 4);
+  }
+});
 window.pet.on('key-combo',(d)=>{
   gameInfo.totalKeyPresses=d.total||0;
   gameInfo.dailyKeyPresses=d.daily||0;

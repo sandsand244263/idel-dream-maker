@@ -15,7 +15,8 @@ function sendToBubble(channel, data) {
 
 function hideBubble() {
   if (!bubbleWindow || bubbleWindow.isDestroyed()) return;
-  if (bubbleWindow.getOpacity() === 0) return; // 已隐藏，不重复发送 bubble-closed
+  if (bubbleWindow.getOpacity() === 0) return;
+  if (isChoiceBubble) return; // choice bubbles don't auto-hide
   bubbleWindow.setBounds({ x: HIDE_POS.x, y: HIDE_POS.y, width: 260, height: 100 });
   bubbleWindow.setOpacity(0);
   if (petWindowRef && !petWindowRef.isDestroyed()) {
@@ -58,26 +59,28 @@ function initBubble(app, petWin) {
   bubbleWindow.on('closed', () => { bubbleWindow = null; currentData = null; });
 }
 
+let isChoiceBubble = false;
+
 function doShowBubble(data) {
   if (!bubbleWindow || bubbleWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) return;
   const petBounds = petWindowRef.getBounds();
   const bw = 260;
   const screen = require('electron').screen.getPrimaryDisplay().workAreaSize;
 
-  // 先更新内容
   if (data) { currentData = data; sendToBubble('show-bubble', data); }
+  isChoiceBubble = !!(data && data.choices);
 
-  // 异步量内容实际高度，然后设 bounds
   setImmediate(() => {
+    const extraH = data && data.choices ? 60 : 0;
     bubbleWindow.webContents.executeJavaScript(
       `(function(){
         const body = document.getElementById('bubble-body');
         const header = document.getElementById('bubble-header');
-        if (!body) return 70;
+        if (!body) return ${70 + extraH};
         const bodyH = body.scrollHeight;
         const headerH = header ? header.scrollHeight : 0;
         const gap = bodyH > 0 ? 16 : 0;
-        return Math.max(70, Math.min(bodyH + headerH + gap, 300));
+        return Math.max(${70 + extraH}, Math.min(bodyH + headerH + gap + ${extraH}, 350));
       })()`
     ).then(actualH => {
       let nx = petBounds.x + Math.floor((petBounds.width - bw) / 2);
@@ -87,7 +90,7 @@ function doShowBubble(data) {
       bubbleWindow.setOpacity(1);
       bubbleWindow.show();
     }).catch(() => {
-      bubbleWindow.setBounds({ x: petBounds.x + Math.floor((petBounds.width - bw) / 2), y: petBounds.y + petBounds.height + 5, width: bw, height: 70 });
+      bubbleWindow.setBounds({ x: petBounds.x + Math.floor((petBounds.width - bw) / 2), y: petBounds.y + petBounds.height + 5, width: bw, height: 100 + extraH });
       bubbleWindow.setOpacity(1);
       bubbleWindow.show();
     });
@@ -107,7 +110,14 @@ function positionAndShowBubble(data) {
 
 function registerBubbleIpcHandlers(app) {
   ipcMain.handle('show-bubble', (_, data) => {
+    isChoiceBubble = false;
     positionAndShowBubble(data);
+    return true;
+  });
+
+  ipcMain.handle('show-choice-bubble', (_, data) => {
+    isChoiceBubble = true;
+    positionAndShowBubble({ ...data, choices: data.choices });
     return true;
   });
 
