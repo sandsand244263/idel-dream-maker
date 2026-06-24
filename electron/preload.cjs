@@ -22,7 +22,7 @@ contextBridge.exposeInMainWorld('electron', {
       'export-logs-to-desktop', 'open-log-folder', 'open-github-repo',
       'get-key-stats', 'choice-selected',
       'get-sync-path', 'set-sync-path', 'select-sync-directory', 'sync-now', 'delete-save',
-      'check-for-update', 'open-update-url', 'get-proxy-download',
+      'check-for-update', 'open-update-url', 'get-proxy-download', 'trigger-update',
     ];
     if (validChannels.includes(channel)) {
       return ipcRenderer.invoke(channel, ...args);
@@ -36,6 +36,7 @@ contextBridge.exposeInMainWorld('electron', {
       'scenario-ending',
       'scenario-list-updated',
       'choice-event',
+      'update-status',
     ];
     if (validChannels.includes(channel)) {
       const listener = (_, data) => callback(data);

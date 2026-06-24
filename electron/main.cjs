@@ -9,6 +9,10 @@ const { registerPetIpcHandlers, forwardToPet, initPet, broadcastTheme, setOnPetS
 const { getTodaysHolidayId, getUpcomingHolidayId, getHolidayName, getHolidayIcon, getHolidayEventFromScenario, getRandomHolidayEvent } = require('./holiday.cjs');
 const { parseScenarioMd } = require('../src/scenario-parser.cjs');
 const { GlobalKeyboardListener } = require('node-global-key-listener');
+const { autoUpdater } = require('electron-updater');
+
+autoUpdater.autoDownload = true;
+autoUpdater.autoInstallOnAppQuit = true;
 
 let mainWindow = null;
 let tray = null;
@@ -387,6 +391,28 @@ const KEY_STREAK_WINDOW = 3000;
 let keyStream = [];
 let keyDown = {};
 let comboMilestones = [];
+
+// ── Auto Updater ──
+function setupAutoUpdater() {
+  autoUpdater.on('checking-for-update', () => {
+    try { mainWindow?.webContents.send('update-status', { type: 'checking' }); } catch {}
+  });
+  autoUpdater.on('update-available', (info) => {
+    try { mainWindow?.webContents.send('update-status', { type: 'available', version: info.version }); } catch {}
+  });
+  autoUpdater.on('update-not-available', () => {
+    try { mainWindow?.webContents.send('update-status', { type: 'not-available' }); } catch {}
+  });
+  autoUpdater.on('download-progress', (p) => {
+    try { mainWindow?.webContents.send('update-status', { type: 'progress', percent: Math.round(p.percent), bytesPerSecond: p.bytesPerSecond }); } catch {}
+  });
+  autoUpdater.on('update-downloaded', () => {
+    try { mainWindow?.webContents.send('update-status', { type: 'downloaded' }); } catch {}
+  });
+  autoUpdater.on('error', (e) => {
+    try { mainWindow?.webContents.send('update-status', { type: 'error', message: e?.message || '更新出错' }); } catch {}
+  });
+}
 
 const COMBO_GRADES = [
   { min: 40, grade: 'SSS' },
@@ -1703,6 +1729,10 @@ function registerIpcHandlers() {
   ipcMain.handle('open-update-url', (_, { url }) => {
     try { shell.openExternal(url); return { success: true }; } catch { return { success: false }; }
   });
+  // ── Auto-update ──
+  ipcMain.handle('trigger-update', () => {
+    try { autoUpdater.quitAndInstall(); return { success: true }; } catch (e) { return { success: false, error: e.message }; }
+  });
 }
 
 // ── App Lifecycle ──
@@ -1835,6 +1865,8 @@ app.whenReady().then(() => {
 
   startGameLoop();
   initKeyListener();
+  setupAutoUpdater();
+  autoUpdater.checkForUpdates().catch(() => {});
 
   // Tooltip update every 5s
   tooltipInterval = setInterval(() => {

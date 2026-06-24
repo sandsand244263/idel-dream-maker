@@ -59,5 +59,7 @@ jobs:
             release/*.zip
             release/*.tar.gz
             release/*.dmg
+            release/latest.yml
+            release/latest-mac.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,7 +1,7 @@
 {
   "name": "idel-dream-maker",
   "private": true,
-  "version": "3.0.0",
+  "version": "3.1.0",
   "type": "module",
   "main": "electron/main.cjs",
   "scripts": {
@@ -31,11 +31,17 @@
       "package.json"
     ],
     "icon": "icons/icon.png",
+    "publish": {
+      "provider": "github",
+      "owner": "sandsand244263",
+      "repo": "idel-dream-maker"
+    },
     "win": {
       "icon": "icons/icon.ico",
       "target": [
         "portable",
-        "zip"
+        "zip",
+        "nsis"
       ],
       "signAndEditExecutable": false
     },
@@ -70,6 +76,7 @@
   },
   "dependencies": {
     "chinese-lunar-calendar": "^1.0.1",
+    "electron-updater": "^6.8.9",
     "node-global-key-listener": "^0.3.0",
     "yaml": "^2.9.0"
   }

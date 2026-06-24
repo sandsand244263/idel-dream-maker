@@ -615,6 +615,25 @@ document.getElementById('btn-check-update')?.addEventListener('click', async () 
 const versionEl = document.getElementById('update-current-version');
 if (versionEl) versionEl.textContent = appVersion;
 
+// ── Auto-update listener ──
+window.electron.on('update-status', (d) => {
+  const status = document.getElementById('update-status');
+  const btn = document.getElementById('btn-check-update');
+  if (!status) return;
+  if (d.type === 'checking') { status.textContent = '正在检查更新...'; status.style.color = 'var(--dim)'; }
+  else if (d.type === 'available') { status.textContent = '发现 v' + d.version + '，正在自动下载...'; status.style.color = '#ff6'; }
+  else if (d.type === 'not-available') { status.textContent = '已是最新版本'; status.style.color = '#6b6'; }
+  else if (d.type === 'progress') { status.textContent = '下载中 ' + d.percent + '%'; status.style.color = 'var(--fg)'; btn.textContent = '下载中 ' + d.percent + '%'; }
+  else if (d.type === 'downloaded') {
+    status.innerHTML = '新版本已下载，<a href="#" id="btn-install-update" style="color:var(--fg);">立即重启安装</a>';
+    status.style.color = '#6b6';
+    btn.textContent = '立即重启';
+    btn.onclick = () => window.electron.invoke('trigger-update');
+    setTimeout(() => { document.getElementById('btn-install-update')?.addEventListener('click', (e) => { e.preventDefault(); window.electron.invoke('trigger-update'); }); }, 100);
+  }
+  else if (d.type === 'error') { status.textContent = '更新失败: ' + (d.message || '未知错误'); status.style.color = '#f44'; btn.textContent = '检查更新'; }
+});
+
 // ── 反馈面板 ──
 document.getElementById('btn-github-repo')?.addEventListener('click', async () => {
   try { await window.electron.invoke('open-github-repo'); } catch {}
