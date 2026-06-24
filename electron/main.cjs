@@ -1705,7 +1705,8 @@ function registerIpcHandlers() {
             const plat = process.platform;
             let asset = null;
             if (plat === 'win32') {
-              asset = assets.find(a => a.name && a.name.endsWith('.exe'));
+              asset = assets.find(a => a.name && a.name.includes('Setup') && a.name.endsWith('.exe'));
+              if (!asset) asset = assets.find(a => a.name && a.name.endsWith('.exe'));
               if (!asset) asset = assets.find(a => a.name && a.name.includes('win'));
             } else if (plat === 'darwin') {
               asset = assets.find(a => a.name && a.name.includes('dmg'));
