@@ -1,6 +1,7 @@
-const { app, ipcMain, Menu, dialog } = require('electron');
+const { app, ipcMain, Menu, dialog, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const https = require('https');
 
 const { createMainWindow, getMainWindow } = require('./windows.cjs');
 const { createTray, setToolTip, getTray, updateMenu } = require('./tray.cjs');
@@ -1543,6 +1544,41 @@ function registerIpcHandlers() {
       currentTitle = null;
       return { success: true };
     } catch (e) { return { success: false, error: e.message }; }
+  });
+
+  // ── Check for update ──
+  ipcMain.handle('check-for-update', () => {
+    return new Promise((resolve) => {
+      const req = https.get('https://api.github.com/repos/sandsand244263/idel-dream-maker/releases/latest', {
+        headers: { 'User-Agent': 'idel-dream-maker', 'Accept': 'application/vnd.github.v3+json' },
+        timeout: 8000,
+      }, (res) => {
+        let data = '';
+        res.on('data', chunk => data += chunk);
+        res.on('end', () => {
+          try {
+            const r = JSON.parse(data);
+            const latest = (r.tag_name || '').replace(/^v/, '');
+            const current = APP_VERSION.replace(/^v/, '');
+            const hasUpdate = latest !== current;
+            resolve({
+              success: true,
+              hasUpdate,
+              latestVersion: latest,
+              currentVersion: APP_VERSION,
+              downloadUrl: r.html_url || 'https://github.com/sandsand244263/idel-dream-maker/releases/latest',
+            });
+          } catch {
+            resolve({ success: false, error: '解析响应失败' });
+          }
+        });
+      });
+      req.on('error', () => resolve({ success: false, error: '网络请求失败' }));
+      req.on('timeout', () => { req.destroy(); resolve({ success: false, error: '请求超时' }); });
+    });
+  });
+  ipcMain.handle('open-update-url', (_, { url }) => {
+    try { shell.openExternal(url); return { success: true }; } catch { return { success: false }; }
   });
 }
 

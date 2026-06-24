@@ -553,6 +553,48 @@ document.getElementById('btn-tutorial').addEventListener('click', async () => {
   if (onboardingModal) onboardingModal.classList.remove('hidden');
 });
 
+// ── 版本更新 ──
+document.getElementById('btn-check-update')?.addEventListener('click', async () => {
+  const btn = document.getElementById('btn-check-update');
+  const status = document.getElementById('update-status');
+  const dlProxy = document.getElementById('btn-dl-proxy');
+  btn.textContent = '检查中...';
+  btn.disabled = true;
+  status.textContent = '正在检查更新...';
+  status.style.color = 'var(--dim)';
+  try {
+    const r = await window.electron.invoke('check-for-update');
+    if (!r.success) {
+      status.textContent = '检查失败: ' + (r.error || '网络错误');
+      status.style.color = '#f44';
+      dlProxy.classList.remove('hidden');
+      dlProxy.onclick = () => window.electron.invoke('open-update-url', { url: 'https://ghproxy.com/https://github.com/sandsand244263/idel-dream-maker/releases/latest' });
+      return;
+    }
+    if (r.hasUpdate) {
+      status.innerHTML = '发现新版本: v' + r.latestVersion + ' &nbsp;<a href="#" id="update-dl-link" style="color:var(--fg);">GitHub 下载</a>';
+      status.style.color = '#ff6';
+      dlProxy.classList.remove('hidden');
+      dlProxy.onclick = () => window.electron.invoke('open-update-url', { url: 'https://ghproxy.com/https://github.com/sandsand244263/idel-dream-maker/releases/latest' });
+      document.getElementById('update-dl-link')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.electron.invoke('open-update-url', { url: r.downloadUrl });
+      });
+    } else {
+      status.textContent = '已是最新版本 (v' + r.currentVersion + ')';
+      status.style.color = '#6b6';
+    }
+  } catch {
+    status.textContent = '检查失败';
+    status.style.color = '#f44';
+  }
+  btn.textContent = '检查更新';
+  btn.disabled = false;
+});
+// Init current version display
+const versionEl = document.getElementById('update-current-version');
+if (versionEl) versionEl.textContent = appVersion;
+
 // ── 反馈面板 ──
 document.getElementById('btn-github-repo')?.addEventListener('click', async () => {
   try { await window.electron.invoke('open-github-repo'); } catch {}

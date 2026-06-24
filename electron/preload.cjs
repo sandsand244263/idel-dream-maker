@@ -22,6 +22,7 @@ contextBridge.exposeInMainWorld('electron', {
       'export-logs-to-desktop', 'open-log-folder', 'open-github-repo',
       'get-key-stats', 'choice-selected',
       'get-sync-path', 'set-sync-path', 'select-sync-directory', 'sync-now', 'delete-save',
+      'check-for-update', 'open-update-url',
     ];
     if (validChannels.includes(channel)) {
       return ipcRenderer.invoke(channel, ...args);
