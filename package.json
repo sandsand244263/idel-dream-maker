@@ -10,7 +10,7 @@
     "predev": "node build.js",
     "prebuild": "node build.js",
     "electron:dev": "node build.js && concurrently \"npm run dev\" \"wait-on http://localhost:1420 && electron .\"",
-    "electron:build": "node build.js && vite build && electron-builder && node scripts/inject-icon.cjs && node -e \"const f=require('fs'),p=require('path');['win-unpacked','linux-unpacked','mac-unpacked','builder-debug.yml','builder-effective-config.yaml', 'test_icon.exe', 'test_icon_real.exe'].forEach(n=>{const d=p.join('release',n);if(f.existsSync(d)){try{f.rmSync(d,{recursive:true,force:true})}catch{}}})\""
+    "electron:build": "node build.js && vite build && electron-builder --win --x64 && node scripts/inject-icon.cjs"
   },
   "build": {
     "appId": "com.idel.dream-maker",
@@ -36,7 +36,7 @@
       "repo": "idel-dream-maker"
     },
     "win": {
-      "icon": "icons/icon.ico",
+      "icon": "icons/icon_png.ico",
       "target": [
         "portable",
         "zip",
