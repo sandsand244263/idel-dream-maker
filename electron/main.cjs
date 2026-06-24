@@ -1006,6 +1006,7 @@ function registerIpcHandlers() {
   ipcMain.handle('select-scenario', (_, { id, alias }) => {
     // 如果当前正在副本内，先保存当前副本进度再切换
     if (!gameState.isInHub && gameState.scenarioId && gameState.scenarioId !== id) {
+      try { forwardToPet('dismiss-choice', {}); } catch {}
       const oldSid = gameState.scenarioId;
       if (!gameState.scenarioProgress) gameState.scenarioProgress = {};
       const prevExp = gameState.scenarioProgress[oldSid]?.totalExpEarned || 0;
@@ -1028,6 +1029,13 @@ function registerIpcHandlers() {
     if (!scenario) throw new Error(`Scenario '${id}' not found`);
     const aliasStr = alias || '';
     resetGameForScenario(scenario, aliasStr);
+    // Re-send pending choice if exists
+    if (gameState.pendingChoiceEvent) {
+      const pe = gameState.pendingChoiceEvent;
+      const cp = { title: pe.title, text: pe.text, choices: pe.choices, _eventId: pe.eventId };
+      try { mainWindow.webContents.send('choice-event', cp); } catch {}
+      forwardToPet('choice-event', cp);
+    }
     hubIdleMs = 0;
     lastHubReminderMs = 0;
     writeSave(gameState);
@@ -1098,6 +1106,7 @@ function registerIpcHandlers() {
   });
 
   ipcMain.handle('exit-to-hub', () => {
+    try { forwardToPet('dismiss-choice', {}); } catch {}
     exitToHub();
     writeSave(gameState);
     return { hubTotalExp: gameState.hubTotalExp, hubLevel: hubLevel };
@@ -1494,6 +1503,7 @@ function registerIpcHandlers() {
   // ── Key stats ──
   // ── Choice events ──
   ipcMain.handle('choice-selected', (_, { eventId, choiceIndex }) => {
+    console.log('[main-choice] received eventId:', eventId, 'choiceIndex:', choiceIndex, 'pending:', gameState.pendingChoiceEvent?.eventId);
     if (!gameState.pendingChoiceEvent || gameState.pendingChoiceEvent.eventId !== eventId) {
       return { success: false, error: '无待决选择' };
     }

@@ -14,6 +14,7 @@ function showBubble(data) {
   if (data.choices && data.choices.length > 0) {
     currentChoices = data.choices;
     currentEventId = data.eventId || data._eventId;
+    console.log('[bubble] currentEventId:', currentEventId, 'from _eventId:', data._eventId, 'eventId:', data.eventId);
     choicesEl.innerHTML = '';
     data.choices.forEach((c, i) => {
       const btn = document.createElement('button');
@@ -21,7 +22,8 @@ function showBubble(data) {
       btn.textContent = c.text;
       btn.dataset.index = i;
       btn.addEventListener('click', () => {
-        window.petBubble.invoke('choice-selected', { eventId: currentEventId, choiceIndex: i }).catch(() => {});
+        console.log('[choice] click eventId:', currentEventId, 'index:', i);
+        window.petBubble.invoke('choice-selected', { eventId: currentEventId, choiceIndex: i }).then(r => console.log('[choice] result:', r)).catch(() => {});
         choicesEl.classList.add('hidden');
         currentChoices = null;
         currentEventId = null;

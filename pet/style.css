@@ -19,7 +19,11 @@ body { font-family:var(--font); color:var(--fg); }
 #container { width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0;position:relative;background:rgba(10,10,10,0.85);border:1px solid var(--border);border-radius:8px;overflow:hidden;animation:floatIdle 3s ease-in-out infinite; }
 #container.border-hidden { border:none;background:transparent;border-radius:0;padding:0; }
 #container:hover #info-bar,
-#container:hover #exp-wrap { opacity:1; }
+#container:hover #exp-wrap,
+#container:hover #key-detail { opacity:1; }
+#container:hover #info-text,
+#container:hover #exp-detail,
+#container:hover #key-detail { color:var(--fg); }
 @keyframes floatIdle { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-4px); } }
 
 /* Info bar — 默认淡显示，悬浮宠物窗口时清晰 */
@@ -64,6 +68,7 @@ body { font-family:var(--font); color:var(--fg); }
 
 #exp-pct { display:none; }
 #exp-detail { font-size:10px;color:color-mix(in srgb,var(--fg) 50%,transparent);line-height:1;text-shadow:0 1px 1px rgba(0,0,0,0.9); }
+#key-detail { font-size:10px;color:color-mix(in srgb,var(--fg) 50%,transparent);line-height:1;text-shadow:0 1px 1px rgba(0,0,0,0.9);opacity:0.3;transition:opacity 0.2s ease; }
 
 .hidden { display:none !important; }
 @media (prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;}}

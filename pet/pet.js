@@ -8,6 +8,7 @@ const expFill = document.getElementById('exp-fill');
 const expWrap = document.getElementById('exp-wrap');
 const expPct = document.getElementById('exp-pct');
 const expDetail = document.getElementById('exp-detail');
+const keyDetail = document.getElementById('key-detail');
 const guidePanel = document.getElementById('no-pet-guide');
 const guideOpenFolder = document.getElementById('guide-open-folder');
 const guidePetdex = document.getElementById('guide-petdex');
@@ -31,7 +32,7 @@ const DEFAULT_STATES = {
 let pets=[],selIdx=0,spritesheet=null,cols=8,rows=9,stateConfig=null;
 let curState='idle',frameIdx=0,frameList=[],animFrameId=null,lastFrameTime=0,returnTimer=null,debounceTimer=null;
 let gameInfo={level:1,title:'—',exp:0,scenario:'大厅',runtime:'0h0m0s',ach:0,theme:'green',hubLevel:1,isInHub:true,totalKeyPresses:0,dailyKeyPresses:0};
-let displayExp=0,dragMoved=false;
+let displayExp=0,dragMoved=false,displayExpFull=0;
 
 // ── Guide Panel ──
 function showGuidePanel() {
@@ -262,7 +263,9 @@ function updateExpBar(){
   if(Math.abs(displayExp-target)<0.3)displayExp=target;
   const rounded=Math.round(displayExp);
   expFill.style.width=`${rounded}%`;
-  expDetail.textContent=`${Math.floor(e)} / ${nr} (${rounded}%)`;
+  displayExpFull+=(e-displayExpFull)*0.3;
+  if(Math.abs(displayExpFull-e)<1)displayExpFull=e;
+  expDetail.textContent=`${shortNum(displayExpFull)} / ${shortNum(nr)} (${rounded}%)`;
 }
 const COMBO_COLORS={
   'D':['#888','#666'],'C':['#aaa','#888'],'B':['#6b6','#484'],
@@ -330,20 +333,21 @@ function drawCombo(){
 }
 
 function shortNum(n){
-  if(n<1000)return String(n);
-  if(n<10000)return(n/1000).toFixed(1)+'k';
-  if(n<1000000)return Math.floor(n/1000)+'k';
-  if(n<10000000)return(n/1000000).toFixed(1)+'M';
-  if(n<1000000000)return Math.floor(n/1000000)+'M';
-  return(n/1000000000).toFixed(1)+'B';
+  const v=Number(n);
+  if(Number.isNaN(v))return'0';
+  if(v<1000)return v.toFixed(0);
+  if(v<10000)return(v/1000).toFixed(2)+'k';
+  if(v<1000000)return(v/1000).toFixed(2)+'k';
+  if(v<10000000)return(v/1000000).toFixed(2)+'M';
+  if(v<1000000000)return(v/1000000).toFixed(2)+'M';
+  return(v/1000000000).toFixed(2)+'B';
 }
 function updateInfoBar(){
   if(!spritesheet&&pets.length===0){drawNoPetHint();return;}
   if(!spritesheet)return;
   const title=gameInfo.title&&gameInfo.title!=='—'?gameInfo.title:'';
   const dl=gameInfo.isInHub?(gameInfo.hubLevel||1):(gameInfo.level||1);
-  const kp=gameInfo.totalKeyPresses?` | ⌨ ${shortNum(gameInfo.totalKeyPresses)}`:'';
-  infoText.textContent=title?`${gameInfo.scenario} | LV.${dl} | ${title}${kp}`:`${gameInfo.scenario} | LV.${dl}${kp}`;
+  infoText.textContent=title?`${gameInfo.scenario} | LV.${dl} | ${title}`:`${gameInfo.scenario} | LV.${dl}`;
   updateExpBar();
 }
 function applyTheme(theme, customTheme){
@@ -404,6 +408,7 @@ window.pet.on('game-tick',d=>{
   gameInfo.runtime=`${Math.floor(s/3600)}h${Math.floor((s%3600)/60)}m${s%60}s`;
   gameInfo.ach=(d.unlockedAchievements||[]).length;
   if(d.theme&&d.theme!==gameInfo.theme){gameInfo.theme=d.theme;applyTheme(d.theme, d.customTheme);}
+  if(keyDetail){const tk=d.total_key_presses||0,dk=d.daily_key_presses||0;keyDetail.textContent=`⌨ ${shortNum(tk)}   今日 ${shortNum(dk)}`;}
   updateInfoBar();
 });
 window.pet.on('theme-changed',(d)=>{if(d){gameInfo.theme=d.theme;applyTheme(d.theme, d.customTheme);}});
@@ -428,13 +433,19 @@ window.pet.on('hourly-chime',()=>{
 });
 
 window.pet.on('choice-event',(d)=>{
-  if (d && d.choices) {
-    nq.enqueue({ text: d.text, title: d.title || '抉择', type: 'choice', choices: d.choices, _eventId: d._eventId }, 4);
+  if(d&&d.choices){
+    window.pet.invoke('show-bubble',{title:d.title||'抉择',text:d.text,color:'#FF9E64',type:'choice',choices:d.choices,_eventId:d._eventId}).catch(()=>{});
   }
+});
+window.pet.on('dismiss-choice',()=>{
+  window.pet.invoke('close-bubble').catch(()=>{});
+  nq.q=nq.q.filter(item=>item.type!=='choice');
+  if(nq.current&&nq.current.type==='choice'){nq.current=null;nq.next();}
 });
 window.pet.on('key-combo',(d)=>{
   gameInfo.totalKeyPresses=d.total||0;
   gameInfo.dailyKeyPresses=d.daily||0;
+  if(keyDetail)keyDetail.textContent=`⌨ ${shortNum(d.total||0)}   今日 ${shortNum(d.daily||0)}`;
   if(d.grade)newComboHit(d.grade,d.streak||0);
 });
 window.pet.on('bubble-closed',()=>{nq.close();});
