@@ -568,14 +568,14 @@ document.getElementById('btn-check-update')?.addEventListener('click', async () 
       status.textContent = '检查失败: ' + (r.error || '网络错误');
       status.style.color = '#f44';
       dlProxy.classList.remove('hidden');
-      dlProxy.onclick = () => window.electron.invoke('open-update-url', { url: 'https://ghproxy.com/https://github.com/sandsand244263/idel-dream-maker/releases/latest' });
+      dlProxy.onclick = () => window.electron.invoke('open-update-url', { url: 'https://gh-proxy.com/https://github.com/sandsand244263/idel-dream-maker/releases/latest' });
       return;
     }
     if (r.hasUpdate) {
       status.innerHTML = '发现新版本: v' + r.latestVersion + ' &nbsp;<a href="#" id="update-dl-link" style="color:var(--fg);">GitHub 下载</a>';
       status.style.color = '#ff6';
       dlProxy.classList.remove('hidden');
-      dlProxy.onclick = () => window.electron.invoke('open-update-url', { url: 'https://ghproxy.com/https://github.com/sandsand244263/idel-dream-maker/releases/latest' });
+      dlProxy.onclick = () => window.electron.invoke('open-update-url', { url: 'https://gh-proxy.com/https://github.com/sandsand244263/idel-dream-maker/releases/latest' });
       document.getElementById('update-dl-link')?.addEventListener('click', (e) => {
         e.preventDefault();
         window.electron.invoke('open-update-url', { url: r.downloadUrl });
