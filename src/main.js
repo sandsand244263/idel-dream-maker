@@ -554,6 +554,26 @@ document.getElementById('btn-tutorial').addEventListener('click', async () => {
 });
 
 // ── 版本更新 ──
+async function proxyDownload() {
+  const status = document.getElementById('update-status');
+  const dlProxy = document.getElementById('btn-dl-proxy');
+  dlProxy.textContent = '获取中...';
+  dlProxy.disabled = true;
+  try {
+    const r = await window.electron.invoke('get-proxy-download');
+    if (r.success) {
+      window.electron.invoke('open-update-url', { url: r.url });
+      status.textContent = '正在下载: ' + r.name;
+      status.style.color = 'var(--fg)';
+    } else {
+      status.textContent = '获取下载链接失败: ' + (r.error || '');
+      status.style.color = '#f44';
+    }
+  } catch { status.textContent = '获取下载链接失败'; status.style.color = '#f44'; }
+  dlProxy.textContent = '国内加速下载';
+  dlProxy.disabled = false;
+}
+
 document.getElementById('btn-check-update')?.addEventListener('click', async () => {
   const btn = document.getElementById('btn-check-update');
   const status = document.getElementById('update-status');
@@ -568,14 +588,14 @@ document.getElementById('btn-check-update')?.addEventListener('click', async () 
       status.textContent = '检查失败: ' + (r.error || '网络错误');
       status.style.color = '#f44';
       dlProxy.classList.remove('hidden');
-      dlProxy.onclick = () => window.electron.invoke('open-update-url', { url: 'https://gh-proxy.com/https://github.com/sandsand244263/idel-dream-maker/releases/latest' });
+      dlProxy.onclick = proxyDownload;
       return;
     }
     if (r.hasUpdate) {
       status.innerHTML = '发现新版本: v' + r.latestVersion + ' &nbsp;<a href="#" id="update-dl-link" style="color:var(--fg);">GitHub 下载</a>';
       status.style.color = '#ff6';
       dlProxy.classList.remove('hidden');
-      dlProxy.onclick = () => window.electron.invoke('open-update-url', { url: 'https://gh-proxy.com/https://github.com/sandsand244263/idel-dream-maker/releases/latest' });
+      dlProxy.onclick = proxyDownload;
       document.getElementById('update-dl-link')?.addEventListener('click', (e) => {
         e.preventDefault();
         window.electron.invoke('open-update-url', { url: r.downloadUrl });

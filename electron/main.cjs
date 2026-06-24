@@ -1613,6 +1613,35 @@ function registerIpcHandlers() {
       req.on('timeout', () => { req.destroy(); resolve({ success: false, error: '请求超时' }); });
     });
   });
+  ipcMain.handle('get-proxy-download', () => {
+    return new Promise((resolve) => {
+      const req = https.get('https://api.github.com/repos/sandsand244263/idel-dream-maker/releases/latest', {
+        headers: { 'User-Agent': 'idel-dream-maker', 'Accept': 'application/vnd.github.v3+json' },
+        timeout: 8000,
+      }, (res) => {
+        let data = '';
+        res.on('data', chunk => data += chunk);
+        res.on('end', () => {
+          try {
+            const r = JSON.parse(data);
+            const assets = r.assets || [];
+            const plat = process.platform; // win32/darwin/linux
+            const ext = plat === 'win32' ? 'win' : plat === 'darwin' ? 'dmg' : 'tar.gz';
+            const asset = assets.find(a => a.name && a.name.includes(ext));
+            if (asset) {
+              resolve({ success: true, url: 'https://gh-proxy.com/' + asset.browser_download_url, name: asset.name });
+            } else {
+              resolve({ success: false, error: '未找到匹配的安装包' });
+            }
+          } catch {
+            resolve({ success: false, error: '解析响应失败' });
+          }
+        });
+      });
+      req.on('error', () => resolve({ success: false, error: '网络请求失败' }));
+      req.on('timeout', () => { req.destroy(); resolve({ success: false, error: '请求超时' }); });
+    });
+  });
   ipcMain.handle('open-update-url', (_, { url }) => {
     try { shell.openExternal(url); return { success: true }; } catch { return { success: false }; }
   });
