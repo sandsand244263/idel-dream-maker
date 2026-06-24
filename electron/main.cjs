@@ -729,6 +729,15 @@ function startGameLoop() {
     const oldLevel = gameState.level;
     gameState.level = calcLevel(gameState.totalExpEarned);
     if (gameState.level > oldLevel) {
+      // If there's a pending choice, skip story event — choice must be resolved first
+      if (gameState.pendingChoiceEvent) {
+        const title = getCurrentTitle(currentScenario, gameState.level);
+        if (title) { currentTitle = title; gameState.equippedTitleIndex = currentScenario.titles.indexOf(title); }
+        const luPayload = { level: gameState.level, title: title ? title.name : null, titleColor: title ? title.color : null, titleDesc: title ? title.desc : null, eventText: null };
+        try { mainWindow.webContents.send('level-up', luPayload); } catch {}
+        forwardToPet('level-up', luPayload);
+        return;
+      }
       const title = getCurrentTitle(currentScenario, gameState.level);
       const storyEvent = findUnusedEvent('story', gameState.level);
       if (storyEvent) gameState.triggeredEvents.push(storyEvent.id);
@@ -944,8 +953,6 @@ function registerIpcHandlers() {
         choiceFlags: gameState.choiceFlags ? { ...gameState.choiceFlags[oldSid] } : undefined,
       };
     }
-    // Clear pending choice when switching
-    gameState.pendingChoiceEvent = null;
     // 点的是当前副本，不做任何事（仅当在副本内时触发）
     if (!gameState.isInHub && id === gameState.scenarioId) {
       return { game: { ...gameState, is_in_hub: false }, scenario: currentScenario ? { id: currentScenario.id, name: currentScenario.name, nameCN: currentScenario.name_cn || currentScenario.nameCN, playerTitle: currentScenario.playerTitle || currentScenario.player_title, titles: currentScenario.titles } : null };
