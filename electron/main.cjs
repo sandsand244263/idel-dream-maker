@@ -233,6 +233,41 @@ function readSave() {
   } catch { return null; }
 }
 
+function checkSyncOnStartup() {
+  try {
+    const cfg = readSyncConfig();
+    if (!cfg || !cfg.path || !mainWindow) return;
+    const syncSavePath = path.join(cfg.path, 'save.json');
+    if (!fs.existsSync(syncSavePath)) return;
+    const syncData = JSON.parse(fs.readFileSync(syncSavePath, 'utf-8'));
+    const localTime = gameState?.lastWriteTimestamp || '';
+    const syncTime = syncData.lastWriteTimestamp || '';
+    if (!syncTime || syncTime <= localTime) return;
+    const { dialog } = require('electron');
+    const result = dialog.showMessageBoxSync(mainWindow, {
+      type: 'question',
+      title: '发现云端存档',
+      message: '检测到云端存档比本地更新，是否导入？',
+      detail: `本地版本: ${localTime.slice(0, 19).replace('T', ' ')}\n云端版本: ${syncTime.slice(0, 19).replace('T', ' ')}`,
+      buttons: ['使用本地', '导入云端'],
+      defaultId: 1,
+    });
+    if (result === 1) {
+      // Import cloud save
+      const imported = JSON.parse(fs.readFileSync(syncSavePath, 'utf-8'));
+      Object.assign(gameState, imported);
+      gameState._version = SAVE_VERSION;
+      writeSave(gameState);
+      // Recalculate
+      hubLevel = calcLevel(gameState.hubTotalExp);
+      if (gameState.scenarioId && !gameState.isInHub) {
+        currentScenario = findScenarioById(gameState.scenarioId);
+        if (currentScenario) currentTitle = getCurrentTitle(currentScenario, gameState.level);
+      }
+    }
+  } catch {}
+}
+
 function getSyncConfigPath() {
   return path.join(getAppDataPath(), 'sync-config.json');
 }
@@ -254,6 +289,7 @@ function writeSyncConfig(cfg) {
 function writeSave(data) {
   try {
     data._version = SAVE_VERSION;
+    data.lastWriteTimestamp = new Date().toISOString();
     const dir = getAppDataPath();
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, 'save.json'), JSON.stringify(data, null, 2), 'utf-8');
@@ -1537,7 +1573,7 @@ function registerIpcHandlers() {
         archivedScenarios: [], promptDismissedAtScenarioCount: null,
         totalKeyPresses: 0, dailyKeyPresses: 0,
         keyPressDate: new Date().toISOString().slice(0, 10), comboMilestones: [],
-        choiceFlags: {}, pendingChoiceEvent: null,
+        choiceFlags: {}, pendingChoiceEvent: null, lastWriteTimestamp: new Date().toISOString(),
       };
       hubLevel = 1;
       currentScenario = null;
@@ -1634,6 +1670,7 @@ app.whenReady().then(() => {
       comboMilestones: [],
       choiceFlags: {},
       pendingChoiceEvent: null,
+      lastWriteTimestamp: new Date().toISOString(),
     };
   }
 
@@ -1674,6 +1711,7 @@ app.whenReady().then(() => {
   setupTray();
   registerIpcHandlers();
   registerPetIpcHandlers(mainWindow, app);
+  checkSyncOnStartup();
   setOnPetSelected((idx) => { if (gameState) gameState.petSelectedIndex = idx; });
   initPet(app, gameState?.petSelectedIndex);
 
