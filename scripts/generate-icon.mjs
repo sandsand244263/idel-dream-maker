@@ -120,6 +120,45 @@ async function main() {
   writeFileSync(join(ROOT, 'icons', 'icon.ico'), ico);
   console.log(`icon.ico generated: ${ico.length} bytes (${sizes.join('/')})`);
 
+  // ── Generate PNG-based ICO for Windows (reliable transparency) ──
+  const pngIcoSizes = [16, 32, 48, 64, 128, 256];
+  const pngEntries = await Promise.all(pngIcoSizes.map(async (s) => {
+    const cloned = src.clone().resize({ w: s });
+    const pngBuf = await cloned.getBuffer('image/png');
+    return { width: s, height: s, data: pngBuf };
+  }));
+  // Build ICO with PNG data (Windows Vista+ supports PNG-in-ICO)
+  const pngHeaderSize = 6;
+  const pngDirSize = 16;
+  let pngDataOffset = pngHeaderSize + pngDirSize * pngEntries.length;
+  const pngParts = [];
+  const pngHdr = Buffer.alloc(pngHeaderSize);
+  pngHdr.writeUInt16LE(0, 0);
+  pngHdr.writeUInt16LE(1, 2);
+  pngHdr.writeUInt16LE(pngEntries.length, 4);
+  pngParts.push(pngHdr);
+  for (const e of pngEntries) {
+    const w = e.width >= 256 ? 0 : e.width;
+    const h = e.height >= 256 ? 0 : e.height;
+    const entry = Buffer.alloc(pngDirSize);
+    entry.writeUInt8(w, 0);
+    entry.writeUInt8(h, 1);
+    entry.writeUInt8(0, 2);
+    entry.writeUInt8(0, 3);
+    entry.writeUInt16LE(1, 4);
+    entry.writeUInt16LE(32, 6);
+    entry.writeUInt32LE(e.data.length, 8);
+    entry.writeUInt32LE(pngDataOffset, 12);
+    pngParts.push(entry);
+    pngDataOffset += e.data.length;
+  }
+  for (const e of pngEntries) {
+    pngParts.push(e.data);
+  }
+  const pngIco = Buffer.concat(pngParts);
+  writeFileSync(join(ROOT, 'icons', 'icon_png.ico'), pngIco);
+  console.log(`icon_png.ico generated: ${pngIco.length} bytes (PNG-in-ICO, ${pngIcoSizes.join('/')})`);
+
   // ── Generate .icns for macOS ──
   const icnsSizes = [
     { size: 16, type: 'ic04' },

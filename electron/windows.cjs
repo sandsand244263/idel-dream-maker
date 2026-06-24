@@ -1,4 +1,4 @@
-const { BrowserWindow } = require('electron');
+const { BrowserWindow, nativeImage } = require('electron');
 const path = require('path');
 
 const isMac = process.platform === 'darwin';
@@ -23,7 +23,9 @@ function createMainWindow(preloadPath) {
     winOpts.trafficLightPosition = { x: 10, y: 10 };
   } else {
     winOpts.frame = false;
-    winOpts.icon = path.join(__dirname, '..', 'icons', 'icon_256.png');
+    const iconFile = path.join(__dirname, '..', 'icons', 'icon_256.png');
+    const img = nativeImage.createFromPath(iconFile);
+    if (!img.isEmpty()) winOpts.icon = img;
   }
   mainWindow = new BrowserWindow(winOpts);
 

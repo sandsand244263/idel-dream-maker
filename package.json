@@ -10,7 +10,7 @@
     "predev": "node build.js",
     "prebuild": "node build.js",
     "electron:dev": "node build.js && concurrently \"npm run dev\" \"wait-on http://localhost:1420 && electron .\"",
-    "electron:build": "node build.js && vite build && electron-builder && node -e \"const f=require('fs'),p=require('path');['win-unpacked','linux-unpacked','mac-unpacked','builder-debug.yml','builder-effective-config.yaml'].forEach(n=>{const d=p.join('release',n);if(f.existsSync(d))f.rmSync(d,{recursive:true,force:true})})\""
+    "electron:build": "node build.js && vite build && electron-builder && node scripts/inject-icon.cjs && node -e \"const f=require('fs'),p=require('path');['win-unpacked','linux-unpacked','mac-unpacked','builder-debug.yml','builder-effective-config.yaml', 'test_icon.exe', 'test_icon_real.exe'].forEach(n=>{const d=p.join('release',n);if(f.existsSync(d)){try{f.rmSync(d,{recursive:true,force:true})}catch{}}})\""
   },
   "build": {
     "appId": "com.idel.dream-maker",
@@ -30,14 +30,13 @@
       "public/**/*",
       "package.json"
     ],
-    "icon": "icons/icon.png",
     "publish": {
       "provider": "github",
       "owner": "sandsand244263",
       "repo": "idel-dream-maker"
     },
     "win": {
-      "icon": "icons/icon_256.png",
+      "icon": "icons/icon.ico",
       "target": [
         "portable",
         "zip",
@@ -75,9 +74,10 @@
   "devDependencies": {
     "concurrently": "^9",
     "electron": "^34.5.8",
-    "electron-builder": "^25",
+    "electron-builder": "^25.1.8",
     "icojs": "^0.23.0",
     "jimp": "^1.6.1",
+    "rcedit": "^5.0.1",
     "vite": "^6",
     "wait-on": "^8"
   },
