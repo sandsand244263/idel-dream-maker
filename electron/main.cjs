@@ -513,8 +513,6 @@ function resetGameForScenario(scenario, alias) {
 }
 
 function exitToHub() {
-  // Clear pending choice on exit
-  if (gameState) gameState.pendingChoiceEvent = null;
   const unlocked = getUnlockedTitles(currentScenario, gameState.level).map(t => t.name);
   const sid = gameState.scenarioId;
   if (sid) {
