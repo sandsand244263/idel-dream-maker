@@ -125,7 +125,7 @@
   <div id="settings-panel" class="hidden">
     <div id="settings-header"><span data-i18n="panelSettings">设置</span><button id="settings-close">✕</button></div>
     <div id="settings-body">
-      <div class="setting-row" style="justify-content:center;margin-bottom:6px;"><span style="font-size:10px;color:var(--dim);">Idel-DreamMaker v<span id="settings-version"></span></span></div>
+      <div class="settings-version">Idel-DreamMaker v<span id="settings-version"></span></div>
       <div class="setting-row"><label data-i18n="labelName">名称</label><input type="text" id="settings-name" /><button id="settings-name-save" data-i18n="settingsSave">保存</button></div>
       <div class="settings-section-title" data-i18n="settingsThemeTitle">主题</div>
       <div id="theme-swatches"></div>
@@ -141,42 +141,39 @@
         <button id="btn-open-scenarios-folder" data-i18n="btnOpenScenariosFolder">打开副本文件夹</button>
         <button id="btn-refresh-scenarios" data-i18n="btnRefreshScenarios">刷新副本列表</button>
       </div>
-      <div class="setting-row" style="font-size:10px;color:var(--dim);line-height:1.5;">
-        <span data-i18n="scenariosFolderHint">将 .md 副本文件放入打开的文件夹，点「刷新」即可自动加载</span>
-      </div>
+      <div class="settings-hint" data-i18n="scenariosFolderHint">将 .md 副本文件放入打开的文件夹，点「刷新」即可自动加载</div>
       <div class="settings-section-title">存档同步</div>
-      <div id="sync-row" class="setting-row" style="flex-direction:column;align-items:stretch;gap:4px;">
-        <div id="sync-status" style="font-size:10px;color:var(--dim);">未设置</div>
-        <div style="display:flex;gap:6px;">
+      <div class="settings-row-col">
+        <div class="settings-status" id="sync-status">未设置</div>
+        <div class="settings-row-btns">
           <button id="btn-select-sync-dir" style="flex:1;">选择同步目录</button>
           <button id="btn-sync-now" style="flex:1;">立即同步</button>
         </div>
       </div>
+      <div class="settings-section-title">启动与更新</div>
       <div class="setting-row" style="justify-content:flex-start;gap:6px;">
         <input type="checkbox" id="chk-auto-start" style="accent-color:var(--fg);" />
         <label for="chk-auto-start" style="font-size:11px;color:var(--fg);">开机自动启动</label>
       </div>
-      <div class="settings-section-title" style="color:var(--dim);font-size:10px;">版本更新</div>
-      <div id="update-row" class="setting-row" style="flex-direction:column;align-items:stretch;gap:4px;">
-        <div style="display:flex;gap:6px;">
+      <div class="settings-row-col">
+        <div class="settings-status">当前版本: <span id="update-current-version"></span></div>
+        <div class="settings-row-btns">
           <button id="btn-check-update" style="flex:1;">检查更新</button>
           <button id="btn-dl-proxy" class="hidden" style="flex:1;">国内加速下载</button>
         </div>
-        <div id="update-status" style="font-size:10px;color:var(--dim);">当前版本: <span id="update-current-version"></span></div>
+        <div class="settings-status" id="update-status"></div>
       </div>
-      <div class="settings-section-title" style="color:var(--dim);font-size:10px;margin-top:4px;">危险操作</div>
+      <div class="settings-section-title" style="margin-top:4px;">危险操作</div>
       <div class="setting-row">
         <button id="btn-delete-save" style="color:#f44;border-color:#f44;">删除所有存档</button>
       </div>
       <div class="settings-section-title" data-i18n="feedbackTitle">反馈与支持</div>
-      <div class="setting-row" style="display:flex;gap:6px;flex-wrap:wrap;">
+      <div class="setting-row">
         <button id="btn-github-repo" data-i18n="openGitHub">在 GitHub 提交 Issue</button>
         <button id="btn-export-logs" data-i18n="feedbackExportBtn">导出日志到桌面</button>
         <button id="btn-open-log-folder" data-i18n="feedbackOpenFolder">打开日志文件夹</button>
       </div>
-      <div class="setting-row" style="font-size:10px;color:var(--dim);line-height:1.5;">
-        <span data-i18n="feedbackHint">提交 Issue 时附上日志文件有助于排查问题</span>
-      </div>
+      <div class="settings-hint" data-i18n="feedbackHint">提交 Issue 时附上日志文件有助于排查问题</div>
     </div>
   </div>
 
