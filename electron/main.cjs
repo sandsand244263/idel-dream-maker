@@ -493,7 +493,20 @@ function resetGameForScenario(scenario, alias) {
   if (initEvent) {
     gameState.triggeredEvents.push(initEvent.id);
     const title = getCurrentTitle(currentScenario, gameState.level);
-    const luPayload = { level: gameState.level, title: title?.name || '', titleColor: title?.color || '#888', titleDesc: title?.desc || '', eventText: initEvent.text };
+    // Choice detection
+    if (initEvent.choice1 && initEvent.choice1Target) {
+      const choices = [];
+      if (initEvent.choice1Target) choices.push({ text: initEvent.choice1, target: initEvent.choice1Target });
+      if (initEvent.choice2Target) choices.push({ text: initEvent.choice2, target: initEvent.choice2Target });
+      gameState.pendingChoiceEvent = {
+        eventId: initEvent.id, scenarioId: gameState.scenarioId,
+        title: '抉择', text: initEvent.text, choices,
+      };
+      const cp = { title: '抉择', text: initEvent.text, choices, _eventId: initEvent.id };
+      try { mainWindow.webContents.send('choice-event', cp); } catch {}
+      forwardToPet('choice-event', cp);
+    }
+    const luPayload = { level: gameState.level, title: title?.name || '', titleColor: title?.color || '#888', titleDesc: title?.desc || '', eventText: initEvent.choice1 ? null : initEvent.text };
     try { mainWindow.webContents.send('level-up', luPayload); } catch {}
     forwardToPet('level-up', luPayload);
   }
@@ -1764,7 +1777,19 @@ app.whenReady().then(() => {
     if (initEvent) {
       gameState.triggeredEvents.push(initEvent.id);
       const title = getCurrentTitle(currentScenario, gameState.level);
-      const luPayload = { level: gameState.level, title: title?.name || '', titleColor: title?.color || '#888', titleDesc: title?.desc || '', eventText: initEvent.text };
+      if (initEvent.choice1 && initEvent.choice1Target) {
+        const choices = [];
+        if (initEvent.choice1Target) choices.push({ text: initEvent.choice1, target: initEvent.choice1Target });
+        if (initEvent.choice2Target) choices.push({ text: initEvent.choice2, target: initEvent.choice2Target });
+        gameState.pendingChoiceEvent = {
+          eventId: initEvent.id, scenarioId: gameState.scenarioId,
+          title: '抉择', text: initEvent.text, choices,
+        };
+        const cp = { title: '抉择', text: initEvent.text, choices, _eventId: initEvent.id };
+        try { mainWindow.webContents.send('choice-event', cp); } catch {}
+        forwardToPet('choice-event', cp);
+      }
+      const luPayload = { level: gameState.level, title: title?.name || '', titleColor: title?.color || '#888', titleDesc: title?.desc || '', eventText: initEvent.choice1 ? null : initEvent.text };
       try { mainWindow.webContents.send('level-up', luPayload); } catch {}
       forwardToPet('level-up', luPayload);
     }
