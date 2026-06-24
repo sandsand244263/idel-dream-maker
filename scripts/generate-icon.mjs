@@ -119,6 +119,31 @@ async function main() {
   const ico = Buffer.concat(parts);
   writeFileSync(join(ROOT, 'icons', 'icon.ico'), ico);
   console.log(`icon.ico generated: ${ico.length} bytes (${sizes.join('/')})`);
+
+  // ── Generate .icns for macOS ──
+  const icnsSizes = [
+    { size: 16, type: 'ic04' },
+    { size: 32, type: 'ic05' },
+    { size: 128, type: 'ic07' },
+    { size: 256, type: 'ic08' },
+    { size: 512, type: 'ic09' },
+  ];
+  const icnsEntries = await Promise.all(icnsSizes.map(async ({ size, type }) => {
+    const cloned = src.clone().resize({ w: size });
+    const buf = await cloned.getBuffer('image/png');
+    const entry = Buffer.alloc(8 + buf.length);
+    entry.write(type, 0, 4, 'ascii');
+    entry.writeUInt32BE(8 + buf.length, 4);
+    buf.copy(entry, 8);
+    return entry;
+  }));
+  const icnsBody = Buffer.concat(icnsEntries);
+  const icnsHeader = Buffer.alloc(8);
+  icnsHeader.write('icns', 0, 4, 'ascii');
+  icnsHeader.writeUInt32BE(8 + icnsBody.length, 4);
+  const icns = Buffer.concat([icnsHeader, icnsBody]);
+  writeFileSync(join(ROOT, 'icons', 'icon.icns'), icns);
+  console.log(`icon.icns generated: ${icns.length} bytes (${icnsSizes.map(s => s.size).join('/')})`);
 }
 
 main().catch(e => { console.error(e); process.exit(1); });

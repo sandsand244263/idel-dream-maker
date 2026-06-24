@@ -384,9 +384,8 @@ let tooltipInterval = null;
 // ── Key Counter ──
 let keyListener = null;
 const KEY_STREAK_WINDOW = 3000;
-const KEY_REPEAT_MS = 40;
 let keyStream = [];
-let lastKeyTime = {};
+let keyDown = {};
 let comboMilestones = [];
 
 const COMBO_GRADES = [
@@ -410,7 +409,6 @@ function initKeyListener() {
   try {
     keyListener = new GlobalKeyboardListener();
     keyListener.addListener((e, release) => {
-      if (e.state !== 'DOWN') return;
       const vk = e.vKey;
       if (vk <= 7) return;
       if (vk === 16 || vk === 17 || vk === 18 || vk === 20) return;
@@ -421,9 +419,17 @@ function initKeyListener() {
 
       if (!gameState) return;
       const now = Date.now();
-      // Filter auto-repeat (long press)
-      if (lastKeyTime[vk] && now - lastKeyTime[vk] < KEY_REPEAT_MS) return;
-      lastKeyTime[vk] = now;
+
+      if (e.state === 'DOWN') {
+        // Already held down → skip (auto-repeat)
+        if (keyDown[vk]) return;
+        keyDown[vk] = true;
+      } else if (e.state === 'UP') {
+        keyDown[vk] = false;
+        return;
+      } else {
+        return;
+      }
       gameState.totalKeyPresses = (gameState.totalKeyPresses || 0) + 1;
       gameState.dailyKeyPresses = (gameState.dailyKeyPresses || 0) + 1;
 
