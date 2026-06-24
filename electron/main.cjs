@@ -237,7 +237,8 @@ function checkSyncOnStartup() {
   try {
     const cfg = readSyncConfig();
     if (!cfg || !cfg.path || !mainWindow) return;
-    const syncSavePath = path.join(cfg.path, 'save.json');
+    const cloudDir = path.join(cfg.path, 'Idel-DreamMaker-Sync');
+    const syncSavePath = path.join(cloudDir, 'save.json');
     if (!fs.existsSync(syncSavePath)) return;
     const syncData = JSON.parse(fs.readFileSync(syncSavePath, 'utf-8'));
     const localTime = gameState?.lastWriteTimestamp || '';
@@ -258,6 +259,15 @@ function checkSyncOnStartup() {
       Object.assign(gameState, imported);
       gameState._version = SAVE_VERSION;
       writeSave(gameState);
+      // Sync logs back from cloud
+      const cloudLogDir = path.join(cloudDir, 'logs');
+      if (fs.existsSync(cloudLogDir)) {
+        const localLogDir = getLogDir();
+        if (!fs.existsSync(localLogDir)) fs.mkdirSync(localLogDir, { recursive: true });
+        for (const f of fs.readdirSync(cloudLogDir).filter(f => f.endsWith('.json'))) {
+          fs.copyFileSync(path.join(cloudLogDir, f), path.join(localLogDir, f));
+        }
+      }
       // Recalculate
       hubLevel = calcLevel(gameState.hubTotalExp);
       if (gameState.scenarioId && !gameState.isInHub) {
@@ -293,17 +303,29 @@ function writeSave(data) {
     const dir = getAppDataPath();
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, 'save.json'), JSON.stringify(data, null, 2), 'utf-8');
-    // Dual write to sync dir if configured
+    // Sync to cloud if configured
     const syncCfg = readSyncConfig();
-    if (syncCfg && syncCfg.path) {
-      try {
-        const syncDir = syncCfg.path;
-        if (fs.existsSync(syncDir)) {
-          fs.writeFileSync(path.join(syncDir, 'save.json'), JSON.stringify(data, null, 2), 'utf-8');
-        }
-      } catch {}
-    }
+    if (syncCfg && syncCfg.path) syncToCloud(syncCfg);
   } catch (e) { console.error('Save failed:', e); }
+}
+
+function syncToCloud(cfg) {
+  try {
+    const cloudDir = path.join(cfg.path, 'Idel-DreamMaker-Sync');
+    if (!fs.existsSync(cloudDir)) fs.mkdirSync(cloudDir, { recursive: true });
+    // save.json
+    const localSave = path.join(getAppDataPath(), 'save.json');
+    if (fs.existsSync(localSave)) fs.copyFileSync(localSave, path.join(cloudDir, 'save.json'));
+    // logs/
+    const logDir = getLogDir();
+    if (fs.existsSync(logDir)) {
+      const cloudLogDir = path.join(cloudDir, 'logs');
+      if (!fs.existsSync(cloudLogDir)) fs.mkdirSync(cloudLogDir, { recursive: true });
+      for (const f of fs.readdirSync(logDir).filter(f => f.endsWith('.json'))) {
+        fs.copyFileSync(path.join(logDir, f), path.join(cloudLogDir, f));
+      }
+    }
+  } catch {}
 }
 
 // Read scenarios data
@@ -751,6 +773,9 @@ function startGameLoop() {
       return;
     }
 
+    // Pending choice blocks all progress
+    if (gameState.pendingChoiceEvent) return;
+
     gameState.totalRuntimeMs += delta;
     let expMultiplier = 1;
     const mechanic = currentScenario?.mechanic || 'standard';
@@ -904,7 +929,6 @@ function startGameLoop() {
           color: '#FFD700',
           text: '新的一天开始了。你抖落身上的尘土，准备继续你的旅程。',
         };
-        try { mainWindow.webContents.send('event-triggered', ritualPayload); } catch {}
         forwardToPet('event-triggered', ritualPayload);
       }
     }
@@ -1005,7 +1029,6 @@ function registerIpcHandlers() {
     // 如果当前正在副本内，先保存当前副本进度再切换
     if (!gameState.isInHub && gameState.scenarioId && gameState.scenarioId !== id) {
       try { forwardToPet('dismiss-choice', {}); } catch {}
-      gameState.pendingChoiceEvent = null; // clear data when switching to different scenario
       const oldSid = gameState.scenarioId;
       if (!gameState.scenarioProgress) gameState.scenarioProgress = {};
       const prevExp = gameState.scenarioProgress[oldSid]?.totalExpEarned || 0;
@@ -1028,8 +1051,8 @@ function registerIpcHandlers() {
     if (!scenario) throw new Error(`Scenario '${id}' not found`);
     const aliasStr = alias || '';
     resetGameForScenario(scenario, aliasStr);
-    // Re-send pending choice if exists
-    if (gameState.pendingChoiceEvent) {
+    // Re-send pending choice if exists for this scenario
+    if (gameState.pendingChoiceEvent && gameState.pendingChoiceEvent.scenarioId === scenario.id) {
       const pe = gameState.pendingChoiceEvent;
       const cp = { title: pe.title, text: pe.text, choices: pe.choices, _eventId: pe.eventId };
       try { mainWindow.webContents.send('choice-event', cp); } catch {}
