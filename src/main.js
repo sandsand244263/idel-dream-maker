@@ -529,6 +529,11 @@ statsClose.addEventListener('click', () => statsPanel.classList.add('hidden'));
 
 function openSettingsPanel() {
   refreshSyncStatus();
+  // Sync auto-start checkbox
+  window.electron.invoke('get-auto-start').then(r => {
+    const cb = document.getElementById('chk-auto-start');
+    if (cb) cb.checked = r.enabled;
+  }).catch(() => {});
   settingsName.value = gameState?.player_name || '';
   const verEl = document.getElementById('settings-version');
   if (verEl) verEl.textContent = appVersion;
@@ -551,6 +556,11 @@ settingsNameSave.addEventListener('click', async () => { const n = settingsName.
 document.getElementById('btn-tutorial').addEventListener('click', async () => {
   if (onboardingInput) onboardingInput.value = gameState?.player_name || '';
   if (onboardingModal) onboardingModal.classList.remove('hidden');
+});
+
+// ── Auto-start ──
+document.getElementById('chk-auto-start')?.addEventListener('change', async (e) => {
+  try { await window.electron.invoke('set-auto-start', { enabled: e.target.checked }); } catch {}
 });
 
 // ── 版本更新 ──

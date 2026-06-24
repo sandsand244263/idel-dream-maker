@@ -1733,6 +1733,13 @@ function registerIpcHandlers() {
   ipcMain.handle('trigger-update', () => {
     try { autoUpdater.quitAndInstall(); return { success: true }; } catch (e) { return { success: false, error: e.message }; }
   });
+  // ── Auto-start ──
+  ipcMain.handle('set-auto-start', (_, { enabled }) => {
+    try { app.setLoginItemSettings({ openAtLogin: enabled }); return { success: true }; } catch (e) { return { success: false, error: e.message }; }
+  });
+  ipcMain.handle('get-auto-start', () => {
+    try { return { enabled: app.getLoginItemSettings().openAtLogin }; } catch { return { enabled: false }; }
+  });
 }
 
 // ── App Lifecycle ──
@@ -1835,8 +1842,14 @@ app.whenReady().then(() => {
   // Restore pending choice event if saved
   if (gameState.pendingChoiceEvent && mainWindow) {
     const pe = gameState.pendingChoiceEvent;
-    try { mainWindow.webContents.send('choice-event', { title: pe.title, text: pe.text, choices: pe.choices }); } catch {}
-    forwardToPet('choice-event', { title: pe.title, text: pe.text, choices: pe.choices });
+    const scenario = findScenarioById(pe.scenarioId);
+    if (scenario) {
+      try { mainWindow.webContents.send('choice-event', { title: pe.title, text: pe.text, choices: pe.choices }); } catch {}
+      forwardToPet('choice-event', { title: pe.title, text: pe.text, choices: pe.choices });
+    } else {
+      gameState.pendingChoiceEvent = null;
+      writeSave(gameState);
+    }
   }
 
   // Trigger initial story for restored scenarios

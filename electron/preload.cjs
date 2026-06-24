@@ -23,6 +23,7 @@ contextBridge.exposeInMainWorld('electron', {
       'get-key-stats', 'choice-selected',
       'get-sync-path', 'set-sync-path', 'select-sync-directory', 'sync-now', 'delete-save',
       'check-for-update', 'open-update-url', 'get-proxy-download', 'trigger-update',
+      'set-auto-start', 'get-auto-start',
     ];
     if (validChannels.includes(channel)) {
       return ipcRenderer.invoke(channel, ...args);
