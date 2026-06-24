@@ -142,10 +142,7 @@ function setupAppMenu() {
 }
 
 const APP_VERSION = (() => {
-  try {
-    const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf-8'));
-    return pkg.version || '1.0.0';
-  } catch { return '1.0.0'; }
+  try { return app.getVersion(); } catch { return '1.0.0'; }
 })();
 
 function createWindow() {
