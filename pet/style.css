@@ -68,7 +68,7 @@ body { font-family:var(--font); color:var(--fg); }
 
 #exp-pct { display:none; }
 #exp-detail { font-size:10px;color:color-mix(in srgb,var(--fg) 50%,transparent);line-height:1;text-shadow:0 1px 1px rgba(0,0,0,0.9); }
-#key-detail { font-size:10px;color:color-mix(in srgb,var(--fg) 50%,transparent);line-height:1;text-shadow:0 1px 1px rgba(0,0,0,0.9);opacity:0.3;transition:opacity 0.2s ease; }
+#key-detail { font-size:10px;color:color-mix(in srgb,var(--fg) 50%,transparent);line-height:1;text-shadow:0 1px 1px rgba(0,0,0,0.9); }
 
 .hidden { display:none !important; }
 @media (prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;}}
