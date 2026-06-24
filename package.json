@@ -41,19 +41,16 @@
       "target": [
         "portable",
         "zip",
-        {
-          "target": "nsis",
-          "arch": ["x64"]
-        }
+        "nsis"
       ],
-      "signAndEditExecutable": false,
-      "nsis": {
-        "oneClick": false,
-        "allowToChangeInstallationDirectory": true,
-        "createDesktopShortcut": true,
-        "createStartMenuShortcut": true,
-        "shortcutName": "Idel-DreamMaker"
-      }
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Idel-DreamMaker"
     },
     "mac": {
       "icon": "icons/icon.icns",
