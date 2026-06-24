@@ -1,7 +1,7 @@
 {
   "name": "idel-dream-maker",
   "private": true,
-  "version": "3.1.1",
+  "version": "3.1.2",
   "type": "module",
   "main": "electron/main.cjs",
   "scripts": {
@@ -41,9 +41,19 @@
       "target": [
         "portable",
         "zip",
-        "nsis"
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
       ],
-      "signAndEditExecutable": false
+      "signAndEditExecutable": false,
+      "nsis": {
+        "oneClick": false,
+        "allowToChangeInstallationDirectory": true,
+        "createDesktopShortcut": true,
+        "createStartMenuShortcut": true,
+        "shortcutName": "Idel-DreamMaker"
+      }
     },
     "mac": {
       "icon": "icons/icon.icns",
