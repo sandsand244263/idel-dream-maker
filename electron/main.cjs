@@ -14,7 +14,7 @@ let tray = null;
 let isQuitting = false;
 
 const isMac = process.platform === 'darwin';
-const SAVE_VERSION = 1;
+const SAVE_VERSION = 2;
 
 const HUB_TITLES = [
   { level: 1, name: '新人', desc: '刚踏上旅途' },
@@ -219,27 +219,16 @@ function readSave() {
   try {
     const sp = path.join(getAppDataPath(), 'save.json');
     if (!fs.existsSync(sp)) return null;
-    const gameState = JSON.parse(fs.readFileSync(sp, 'utf-8'));
-    // Version migration
-    if (!gameState._version || gameState._version < SAVE_VERSION) {
-      if (!gameState._version) {
-        // v1 migration: add filler-related fields
-        if (gameState.lastLoginDay === undefined) gameState.lastLoginDay = '';
-        if (gameState.fillerCountToday === undefined) gameState.fillerCountToday = 0;
-        if (gameState.hubEquippedTitles === undefined) gameState.hubEquippedTitles = {};
-        if (gameState.dailyBonus === undefined) gameState.dailyBonus = false;
-        if (gameState.rebirthCounts === undefined) gameState.rebirthCounts = {};
-        if (gameState.rebirthExpBonus === undefined) gameState.rebirthExpBonus = 0;
-        if (gameState.fillerRebirthBonus === undefined) gameState.fillerRebirthBonus = 0;
-        if (gameState.gameCompletions === undefined) gameState.gameCompletions = [];
-        if (gameState.unlockedCompletionTitles === undefined) gameState.unlockedCompletionTitles = [];
-        if (gameState.equippedCompletionTitle === undefined) gameState.equippedCompletionTitle = null;
-        if (gameState.archivedScenarios === undefined) gameState.archivedScenarios = [];
-        if (gameState.promptDismissedAtScenarioCount === undefined) gameState.promptDismissedAtScenarioCount = null;
-      }
-      gameState._version = SAVE_VERSION;
+    const gs = JSON.parse(fs.readFileSync(sp, 'utf-8'));
+    // v3.0.0: clear old saves (pre-v2), start fresh
+    if (!gs._version || gs._version < SAVE_VERSION) {
+      // Delete old save, logs, and sync config to start clean
+      try { fs.unlinkSync(sp); } catch {}
+      try { const logDir = getLogDir(); if (fs.existsSync(logDir)) fs.rmSync(logDir, { recursive: true, force: true }); } catch {}
+      try { const scp = getSyncConfigPath(); if (fs.existsSync(scp)) fs.unlinkSync(scp); } catch {}
+      return null;
     }
-    return gameState;
+    return gs;
   } catch { return null; }
 }
 
