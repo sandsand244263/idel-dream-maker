@@ -1005,6 +1005,7 @@ function registerIpcHandlers() {
     // 如果当前正在副本内，先保存当前副本进度再切换
     if (!gameState.isInHub && gameState.scenarioId && gameState.scenarioId !== id) {
       try { forwardToPet('dismiss-choice', {}); } catch {}
+      gameState.pendingChoiceEvent = null; // clear data when switching to different scenario
       const oldSid = gameState.scenarioId;
       if (!gameState.scenarioProgress) gameState.scenarioProgress = {};
       const prevExp = gameState.scenarioProgress[oldSid]?.totalExpEarned || 0;
