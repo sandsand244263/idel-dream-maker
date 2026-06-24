@@ -1625,9 +1625,16 @@ function registerIpcHandlers() {
           try {
             const r = JSON.parse(data);
             const assets = r.assets || [];
-            const plat = process.platform; // win32/darwin/linux
-            const ext = plat === 'win32' ? 'win' : plat === 'darwin' ? 'dmg' : 'tar.gz';
-            const asset = assets.find(a => a.name && a.name.includes(ext));
+            const plat = process.platform;
+            let asset = null;
+            if (plat === 'win32') {
+              asset = assets.find(a => a.name && a.name.endsWith('.exe'));
+              if (!asset) asset = assets.find(a => a.name && a.name.includes('win'));
+            } else if (plat === 'darwin') {
+              asset = assets.find(a => a.name && a.name.includes('dmg'));
+            } else {
+              asset = assets.find(a => a.name && a.name.includes('tar.gz'));
+            }
             if (asset) {
               resolve({ success: true, url: 'https://gh-proxy.com/' + asset.browser_download_url, name: asset.name });
             } else {
