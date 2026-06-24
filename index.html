@@ -144,6 +144,18 @@
       <div class="setting-row" style="font-size:10px;color:var(--dim);line-height:1.5;">
         <span data-i18n="scenariosFolderHint">将 .md 副本文件放入打开的文件夹，点「刷新」即可自动加载</span>
       </div>
+      <div class="settings-section-title">存档同步</div>
+      <div id="sync-row" class="setting-row" style="flex-direction:column;align-items:stretch;gap:4px;">
+        <div id="sync-status" style="font-size:10px;color:var(--dim);">未设置</div>
+        <div style="display:flex;gap:6px;">
+          <button id="btn-select-sync-dir" style="flex:1;">选择同步目录</button>
+          <button id="btn-sync-now" style="flex:1;">立即同步</button>
+        </div>
+      </div>
+      <div class="settings-section-title" style="color:var(--dim);font-size:10px;margin-top:4px;">危险操作</div>
+      <div class="setting-row">
+        <button id="btn-delete-save" style="color:#f44;border-color:#f44;">删除所有存档</button>
+      </div>
       <div class="settings-section-title" data-i18n="feedbackTitle">反馈与支持</div>
       <div class="setting-row" style="display:flex;gap:6px;flex-wrap:wrap;">
         <button id="btn-github-repo" data-i18n="openGitHub">在 GitHub 提交 Issue</button>

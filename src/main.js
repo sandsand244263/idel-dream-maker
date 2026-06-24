@@ -528,6 +528,7 @@ eventClose.addEventListener('click', () => eventPanel.classList.add('hidden'));
 statsClose.addEventListener('click', () => statsPanel.classList.add('hidden'));
 
 function openSettingsPanel() {
+  refreshSyncStatus();
   settingsName.value = gameState?.player_name || '';
   const verEl = document.getElementById('settings-version');
   if (verEl) verEl.textContent = appVersion;
@@ -576,6 +577,38 @@ document.getElementById('btn-open-log-folder')?.addEventListener('click', async 
   try { await window.electron.invoke('open-log-folder'); } catch {}
 });
 
+// ── 存档同步 ──
+async function refreshSyncStatus() {
+  try {
+    const r = await window.electron.invoke('get-sync-path');
+    const el = document.getElementById('sync-status');
+    if (r && r.path) {
+      el.textContent = '已同步至: ' + r.path;
+      el.style.color = 'var(--fg)';
+    } else {
+      el.textContent = '未设置';
+      el.style.color = 'var(--dim)';
+    }
+  } catch {}
+}
+document.getElementById('btn-select-sync-dir')?.addEventListener('click', async () => {
+  try { await window.electron.invoke('select-sync-directory'); refreshSyncStatus(); } catch {}
+});
+document.getElementById('btn-sync-now')?.addEventListener('click', async () => {
+  try {
+    const r = await window.electron.invoke('sync-now');
+    if (r.success) showToast('同步完成', 'info');
+    else showToast('同步失败: ' + (r.error || ''), 'error');
+  } catch { showToast('同步失败', 'error'); }
+});
+document.getElementById('btn-delete-save')?.addEventListener('click', async () => {
+  const ok = await showConfirmModal('确定删除所有存档？此操作不可撤销。');
+  if (!ok) return;
+  try {
+    await window.electron.invoke('delete-save');
+    window.location.reload();
+  } catch { showToast('删除失败', 'error'); }
+});
 const THEMES = [
   { id:'red', label:'红', fg:'#FF6B8A', bg:'#1A0508', dim:'#A85570' },
   { id:'orange', label:'橙', fg:'#FFA552', bg:'#1A0C00', dim:'#B07030' },

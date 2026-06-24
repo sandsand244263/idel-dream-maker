@@ -243,12 +243,40 @@ function readSave() {
   } catch { return null; }
 }
 
+function getSyncConfigPath() {
+  return path.join(getAppDataPath(), 'sync-config.json');
+}
+
+function readSyncConfig() {
+  try {
+    const p = getSyncConfigPath();
+    if (!fs.existsSync(p)) return null;
+    return JSON.parse(fs.readFileSync(p, 'utf-8'));
+  } catch { return null; }
+}
+
+function writeSyncConfig(cfg) {
+  try {
+    fs.writeFileSync(getSyncConfigPath(), JSON.stringify(cfg, null, 2), 'utf-8');
+  } catch {}
+}
+
 function writeSave(data) {
   try {
     data._version = SAVE_VERSION;
     const dir = getAppDataPath();
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, 'save.json'), JSON.stringify(data, null, 2), 'utf-8');
+    // Dual write to sync dir if configured
+    const syncCfg = readSyncConfig();
+    if (syncCfg && syncCfg.path) {
+      try {
+        const syncDir = syncCfg.path;
+        if (fs.existsSync(syncDir)) {
+          fs.writeFileSync(path.join(syncDir, 'save.json'), JSON.stringify(data, null, 2), 'utf-8');
+        }
+      } catch {}
+    }
   } catch (e) { console.error('Save failed:', e); }
 }
 
@@ -1462,6 +1490,70 @@ function registerIpcHandlers() {
       grade,
       milestones: gameState.comboMilestones || [],
     };
+  });
+
+  // ── Sync ──
+  ipcMain.handle('get-sync-path', () => {
+    const cfg = readSyncConfig();
+    return cfg ? { path: cfg.path } : null;
+  });
+  ipcMain.handle('set-sync-path', (_, { path }) => {
+    writeSyncConfig({ path, deviceId: require('os').hostname(), lastSync: new Date().toISOString() });
+    return { success: true };
+  });
+  ipcMain.handle('select-sync-directory', async () => {
+    const { dialog } = require('electron');
+    const result = await dialog.showOpenDialog({ properties: ['openDirectory'] });
+    if (!result.canceled && result.filePaths.length > 0) {
+      writeSyncConfig({ path: result.filePaths[0], deviceId: require('os').hostname(), lastSync: new Date().toISOString() });
+      return { success: true, path: result.filePaths[0] };
+    }
+    return { success: false };
+  });
+  ipcMain.handle('sync-now', () => {
+    try {
+      const cfg = readSyncConfig();
+      if (!cfg || !cfg.path) return { success: false, error: '未设置同步目录' };
+      if (gameState) writeSave(gameState);
+      return { success: true };
+    } catch (e) { return { success: false, error: e.message }; }
+  });
+  // ── Delete save ──
+  ipcMain.handle('delete-save', () => {
+    try {
+      // Clear save
+      const sp = path.join(getAppDataPath(), 'save.json');
+      if (fs.existsSync(sp)) fs.unlinkSync(sp);
+      // Clear logs
+      const logDir = getLogDir();
+      if (fs.existsSync(logDir)) fs.rmSync(logDir, { recursive: true, force: true });
+      // Clear sync config
+      const scp = getSyncConfigPath();
+      if (fs.existsSync(scp)) fs.unlinkSync(scp);
+      // Reset gameState to default
+      const defaultScenario = allScenarios[0];
+      gameState = {
+        playerName: 'Worker',
+        scenarioId: defaultScenario ? defaultScenario.id : '',
+        level: 1, exp: 0, totalExpEarned: 0, totalRuntimeMs: 0,
+        equippedTitleIndex: 0, isInHub: true, hubTotalExp: 0,
+        language: 'zh', aiOutputLanguage: 'zh', selectedFontTheme: 'green',
+        scenarioAlias: '', unlockedTitleSets: {}, scenarioProgress: {},
+        triggeredEvents: [], unlockedAchievements: [],
+        petSelectedIndex: 0, hasSeenOnboarding: false,
+        lastLoginDay: '', fillerCountToday: 0, hubEquippedTitles: {},
+        dailyBonus: false, rebirthCounts: {}, rebirthExpBonus: 0, fillerRebirthBonus: 0,
+        gameCompletions: [], unlockedCompletionTitles: [], equippedCompletionTitle: null,
+        archivedScenarios: [], promptDismissedAtScenarioCount: null,
+        totalKeyPresses: 0, dailyKeyPresses: 0,
+        keyPressDate: new Date().toISOString().slice(0, 10), comboMilestones: [],
+        choiceFlags: {}, pendingChoiceEvent: null,
+      };
+      hubLevel = 1;
+      currentScenario = null;
+      currentTitle = null;
+      return { success: true };
+    } catch (e) { return { success: false, error: e.message }; }
   });
 }
 
