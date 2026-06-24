@@ -281,24 +281,24 @@ function drawCombo(){
   const now=Date.now();
   for(let i=comboHits.length-1;i>=0;i--){
     const h=comboHits[i],a=(now-h.t)/1000;
-    if(a>1.8){comboHits.splice(i,1);continue;}
+    if(a>1.0){comboHits.splice(i,1);continue;}
     let sc,shx=0,shy=0,dy=0,op=1;
-    if(a<0.07){
-      const t=a/0.07;
+    if(a<0.05){
+      const t=a/0.05;
       sc=1+t*1.6;
       shx=Math.sin(t*Math.PI*3)*5*(1-t);
       shy=Math.cos(t*Math.PI*3)*3*(1-t);
       dy=t*2;
-    }else if(a<0.2){
-      const t=(a-0.07)/0.13;
+    }else if(a<0.15){
+      const t=(a-0.05)/0.10;
       sc=1.6-t*0.6;
       shx=Math.sin(t*Math.PI*4)*3*(1-t);
       shy=Math.cos(t*Math.PI*4)*2*(1-t);
       dy=2-t*4;
-    }else if(a<0.5){
+    }else if(a<0.3){
       sc=1;dy=0;
     }else{
-      const t=(a-0.5)/1.3;
+      const t=(a-0.3)/0.7;
       sc=1-t*0.2;
       dy=-t*15;
       op=1-t*t;
@@ -309,10 +309,14 @@ function drawCombo(){
     ctx.scale(sc,sc);
     ctx.textAlign='right';ctx.textBaseline='bottom';
     ctx.font='bold 22px MapleMonoNFCN,Courier New,monospace';
+    ctx.strokeStyle='rgba(0,0,0,0.6)';ctx.lineWidth=1.5;ctx.lineJoin='round';
+    ctx.strokeText(h.grade,0,22);
     ctx.fillStyle=h.col[0];
     ctx.fillText(h.grade,0,22);
     ctx.textAlign='left';
     ctx.font='bold 13px MapleMonoNFCN,Courier New,monospace';
+    ctx.strokeStyle='rgba(0,0,0,0.6)';ctx.lineWidth=1;ctx.lineJoin='round';
+    ctx.strokeText(''+h.streak,2,24);
     ctx.fillStyle=h.col[1];
     ctx.fillText(''+h.streak,2,24);
     ctx.restore();
