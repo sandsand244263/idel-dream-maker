@@ -98,8 +98,8 @@ window.ctxMenu.invoke('get-toggle-state').then(r => {
   }
   updateUI();
   initTools();
-  toggleView();
-}).catch(() => { updateUI(); initTools(); toggleView(); });
+  document.getElementById('ctx-fold-body').classList.add('closed');
+}).catch(() => { updateUI(); initTools(); document.getElementById('ctx-fold-body').classList.add('closed'); });
 
 document.addEventListener('click', (e) => {
   if (e.target === document.body) window.ctxMenu.invoke('close-menu').catch(() => {});

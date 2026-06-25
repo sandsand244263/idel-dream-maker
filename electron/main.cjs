@@ -547,6 +547,7 @@ function initKeyListener() {
           buffGradeTime = 0;
         }
       }
+    });
   } catch (e) {
     console.error('Failed to init key listener:', e);
   }

@@ -51,7 +51,7 @@ function initContextMenu(app, petWin) {
 function doShow() {
   if (!contextWindow || contextWindow.isDestroyed() || !petWindowRef || petWindowRef.isDestroyed()) return;
   const petBounds = petWindowRef.getBounds();
-  const cw = 170, ch = 220;
+  const cw = 170, ch = 260;
   let x = petBounds.x + petBounds.width + 5;
   const screen = require('electron').screen.getPrimaryDisplay().workAreaSize;
   if (x + cw > screen.width) x = Math.max(0, petBounds.x - cw - 5);
