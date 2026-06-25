@@ -1967,6 +1967,21 @@ app.whenReady().then(() => {
   setupAutoUpdater();
   autoUpdater.checkForUpdates().catch(() => {});
 
+  // ── Clean up old installer files ──
+  try {
+    const updateDir = path.join(app.getPath('userData'), '__update__');
+    if (fs.existsSync(updateDir)) {
+      const files = fs.readdirSync(updateDir);
+      for (const f of files) {
+        if (f.endsWith('.exe') || f.endsWith('.dmg')) {
+          fs.unlinkSync(path.join(updateDir, f));
+        }
+      }
+      // Remove empty dir
+      if (fs.readdirSync(updateDir).length === 0) fs.rmdirSync(updateDir);
+    }
+  } catch {}
+
   // Tooltip update every 5s
   tooltipInterval = setInterval(() => {
     if (!gameState || !tray) return;
