@@ -118,6 +118,7 @@ const permaText = document.getElementById('perma-text');
 const saveDot = document.getElementById('save-dot');
 const expBarFill = document.getElementById('exp-bar-fill');
 const expBarText = document.getElementById('exp-bar-text');
+const expBuffBadge = document.getElementById('exp-buff-badge');
 const eventPanel = document.getElementById('event-panel');
 const eventClose = document.getElementById('event-close');
 const eventListEl = document.getElementById('event-list');
@@ -173,6 +174,16 @@ async function init() {
       gameState = { ...gameState, ...p };
       lastRuntime = gameState.total_runtime_ms;
       updateUI();
+    }
+    if (expBuffBadge) {
+      const bm = p.buff_multiplier || 1;
+      const br = p.buff_remaining || 0;
+      if (bm > 1 && br > 0) {
+        expBuffBadge.textContent = 'x' + bm;
+        expBuffBadge.classList.remove('hidden');
+      } else {
+        expBuffBadge.classList.add('hidden');
+      }
     }
   });
   window.electron.on('event-triggered', (event) => { addLog('event', event.text); showEventOverlay(event.title, event.color, event.text); });

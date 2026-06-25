@@ -69,6 +69,8 @@ body { font-family:var(--font); color:var(--fg); }
 #exp-pct { display:none; }
 #exp-detail { font-size:10px;color:color-mix(in srgb,var(--fg) 50%,transparent);line-height:1;text-shadow:0 1px 1px rgba(0,0,0,0.9); }
 #key-detail { font-size:10px;color:color-mix(in srgb,var(--fg) 50%,transparent);line-height:1;text-shadow:0 1px 1px rgba(0,0,0,0.9); }
+#buff-badge { font-size:11px;font-weight:bold;color:#FFD700;text-shadow:0 0 6px rgba(255,215,0,0.6);line-height:1;animation:buffPulse 0.8s ease-in-out infinite; }
+@keyframes buffPulse { 0%,100% { transform:scale(1);opacity:0.9; } 50% { transform:scale(1.15);opacity:1; } }
 
 .hidden { display:none !important; }
 @media (prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;}}

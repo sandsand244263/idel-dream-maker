@@ -432,6 +432,24 @@ function getGrade(streak) {
   return null;
 }
 
+function getComboMultiplier(grade) {
+  switch (grade) {
+    case 'SSS': return 20;
+    case 'SS': return 8;
+    case 'S': return 5;
+    case 'A': return 3;
+    case 'B': return 2;
+    case 'C': return 1.5;
+    case 'D': return 1.2;
+    default: return 1;
+  }
+}
+
+let buffExpireTime = 0;
+let buffMultiplier = 1;
+let buffGradeTime = 0;
+let buffCooldownUntil = 0;
+
 function initKeyListener() {
   try {
     keyListener = new GlobalKeyboardListener();
@@ -472,6 +490,67 @@ function initKeyListener() {
       }
 
       try { forwardToPet('key-combo', { streak, grade, total: gameState.totalKeyPresses, daily: gameState.dailyKeyPresses }); } catch {}
+
+      // ── Typing EXP ──
+      const mult = getComboMultiplier(grade);
+      const keyExp = 0.3 * mult * buffMultiplier;
+      gameState.exp = (gameState.exp || 0) + keyExp;
+      gameState.totalExpEarned = (gameState.totalExpEarned || 0) + keyExp;
+
+      // Level up check — merge with story event
+      const ol = gameState.level;
+      gameState.level = calcLevel(gameState.totalExpEarned);
+      if (gameState.level > ol) {
+        if (gameState.pendingChoiceEvent) {
+          const title = getCurrentTitle(currentScenario, gameState.level);
+          if (title) { currentTitle = title; if (currentScenario) gameState.equippedTitleIndex = currentScenario.titles.indexOf(title); }
+          const luPayload = { level: gameState.level, title: title ? title.name : null, titleColor: title ? title.color : null, titleDesc: title ? title.desc : null, eventText: null };
+          try { mainWindow.webContents.send('level-up', luPayload); } catch {}
+          forwardToPet('level-up', luPayload);
+        } else {
+          const title = getCurrentTitle(currentScenario, gameState.level);
+          const storyEvent = findUnusedEvent('story', gameState.level);
+          if (storyEvent) gameState.triggeredEvents.push(storyEvent.id);
+          if (title) {
+            currentTitle = title;
+            if (currentScenario) gameState.equippedTitleIndex = currentScenario.titles.indexOf(title);
+          }
+          if (storyEvent && storyEvent.choice1 && storyEvent.choice1Target) {
+            const choices = [];
+            if (storyEvent.choice1Target) choices.push({ text: storyEvent.choice1, target: storyEvent.choice1Target });
+            if (storyEvent.choice2Target) choices.push({ text: storyEvent.choice2, target: storyEvent.choice2Target });
+            gameState.pendingChoiceEvent = {
+              eventId: storyEvent.id, scenarioId: gameState.scenarioId,
+              title: '抉择', text: storyEvent.text, choices,
+            };
+            const choicePayload = { title: '抉择', text: storyEvent.text, choices, _eventId: storyEvent.id };
+            try { mainWindow.webContents.send('choice-event', choicePayload); } catch {}
+            forwardToPet('choice-event', choicePayload);
+          }
+          const luPayload = { level: gameState.level, title: title ? title.name : null, titleColor: title ? title.color : null, titleDesc: title ? title.desc : null, eventText: storyEvent && !storyEvent.choice1 ? storyEvent.text : null };
+          try { mainWindow.webContents.send('level-up', luPayload); } catch {}
+          forwardToPet('level-up', luPayload);
+        }
+      }
+
+      // ── Buff trigger: maintain B/A for 10s → buff ──
+      if (grade && now >= buffCooldownUntil) {
+        if (!buffGradeTime) buffGradeTime = now;
+        if (!buffExpireTime && now - buffGradeTime >= 10000) {
+          if (['A','S','SS','SSS'].includes(grade)) {
+            buffMultiplier = 3;
+            buffExpireTime = now + 120000;
+          } else {
+            buffMultiplier = 2;
+            buffExpireTime = now + 60000;
+          }
+          const dur = buffExpireTime - now;
+          forwardToPet('buff-triggered', { multiplier: buffMultiplier, duration: dur });
+          buffGradeTime = 0;
+        }
+      } else if (!grade) {
+        buffGradeTime = 0;
+      }
     });
   } catch (e) {
     console.error('Failed to init key listener:', e);
@@ -787,6 +866,8 @@ function startGameLoop() {
       hub_title: gameState?.equippedCompletionTitle?.title || getHubTitle(hubLevel).name,
       total_key_presses: gameState.totalKeyPresses || 0,
       daily_key_presses: gameState.dailyKeyPresses || 0,
+      buff_multiplier: buffMultiplier,
+      buff_remaining: buffExpireTime ? Math.max(0, buffExpireTime - Date.now()) : 0,
     };
     try { mainWindow.webContents.send('game-tick', payload); } catch {}
     forwardToPet('game-tick', payload);
@@ -844,9 +925,16 @@ function startGameLoop() {
       const month = new Date().getMonth();
       if (month >= 11 || month <= 2) expMultiplier = 0.5;  // 12-2 月冬季
     }
-    const expGain = (delta / 1000) * expMultiplier * (1 + (gameState.rebirthExpBonus || 0));
+    const expGain = (delta / 1000) * expMultiplier * (1 + (gameState.rebirthExpBonus || 0)) * buffMultiplier;
     gameState.exp += expGain;
     gameState.totalExpEarned += expGain;
+
+    // Buff expiry check
+    if (buffExpireTime && Date.now() >= buffExpireTime) {
+      buffExpireTime = 0;
+      buffMultiplier = 1;
+      buffCooldownUntil = Date.now() + 30000;
+    }
 
     // Level up check — merge with story event
     const oldLevel = gameState.level;

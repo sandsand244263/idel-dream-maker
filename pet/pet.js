@@ -9,6 +9,7 @@ const expWrap = document.getElementById('exp-wrap');
 const expPct = document.getElementById('exp-pct');
 const expDetail = document.getElementById('exp-detail');
 const keyDetail = document.getElementById('key-detail');
+const buffBadge = document.getElementById('buff-badge');
 const guidePanel = document.getElementById('no-pet-guide');
 const guideOpenFolder = document.getElementById('guide-open-folder');
 const guidePetdex = document.getElementById('guide-petdex');
@@ -409,6 +410,16 @@ window.pet.on('game-tick',d=>{
   gameInfo.ach=(d.unlockedAchievements||[]).length;
   if(d.theme&&d.theme!==gameInfo.theme){gameInfo.theme=d.theme;applyTheme(d.theme, d.customTheme);}
   if(keyDetail){const tk=d.total_key_presses||0,dk=d.daily_key_presses||0;keyDetail.textContent=`⌨ ${shortNum(tk)}   今日 ${shortNum(dk)}`;}
+  if (buffBadge) {
+    const bm = d.buff_multiplier || 1;
+    const br = d.buff_remaining || 0;
+    if (bm > 1 && br > 0) {
+      buffBadge.textContent = 'x' + bm;
+      buffBadge.classList.remove('hidden');
+    } else {
+      buffBadge.classList.add('hidden');
+    }
+  }
   updateInfoBar();
 });
 window.pet.on('theme-changed',(d)=>{if(d){gameInfo.theme=d.theme;applyTheme(d.theme, d.customTheme);}});
@@ -447,6 +458,15 @@ window.pet.on('key-combo',(d)=>{
   gameInfo.dailyKeyPresses=d.daily||0;
   if(keyDetail)keyDetail.textContent=`⌨ ${shortNum(d.total||0)}   今日 ${shortNum(d.daily||0)}`;
   if(d.grade)newComboHit(d.grade,d.streak||0);
+});
+window.pet.on('buff-triggered',(d)=>{
+  if (buffBadge) {
+    buffBadge.textContent = 'x' + d.multiplier;
+    buffBadge.classList.remove('hidden');
+    setTimeout(() => {
+      if (buffBadge) buffBadge.classList.add('hidden');
+    }, d.duration || 60000);
+  }
 });
 window.pet.on('bubble-closed',()=>{nq.close();});
 
