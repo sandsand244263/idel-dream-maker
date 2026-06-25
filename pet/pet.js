@@ -458,6 +458,13 @@ window.pet.on('key-combo',(d)=>{
   gameInfo.dailyKeyPresses=d.daily||0;
   if(keyDetail)keyDetail.textContent=`⌨ ${shortNum(d.total||0)}   今日 ${shortNum(d.daily||0)}`;
   if(d.grade)newComboHit(d.grade,d.streak||0);
+  if (getToggle('shake', true)) {
+    const c = document.getElementById('container');
+    c.classList.remove('shaking');
+    void c.offsetWidth;
+    c.classList.add('shaking');
+    setTimeout(() => c.classList.remove('shaking'), 180);
+  }
 });
 window.pet.on('buff-triggered',(d)=>{
   if (buffBadge) {

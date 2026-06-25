@@ -409,6 +409,7 @@ function setupAutoUpdater() {
   });
   autoUpdater.on('update-downloaded', () => {
     try { mainWindow?.webContents.send('update-status', { type: 'downloaded' }); } catch {}
+    setTimeout(() => { try { autoUpdater.quitAndInstall(); } catch {} }, 2000);
   });
   autoUpdater.on('error', (e) => {
     try { mainWindow?.webContents.send('update-status', { type: 'error', message: e?.message || '更新出错' }); } catch {}
