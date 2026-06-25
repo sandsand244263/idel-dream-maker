@@ -280,11 +280,11 @@ function randComboPos(){
   return{x,y};
 }
 
-function newComboHit(grade,streak){
+function newComboHit(grade,streak,keyChar){
   if(!grade||streak<2)return;
   const p=randComboPos();
   const cl=COMBO_COLORS[grade]||['#fff','#ccc'];
-  comboHits.push({grade,streak,x:p.x,y:p.y,t:Date.now(),col:cl});
+  comboHits.push({grade,streak,keyChar:keyChar||grade,x:p.x,y:p.y,t:Date.now(),col:cl});
 }
 
 function drawCombo(){
@@ -320,9 +320,9 @@ function drawCombo(){
     ctx.textAlign='right';ctx.textBaseline='bottom';
     ctx.font='bold 22px MapleMonoNFCN,Courier New,monospace';
     ctx.strokeStyle='rgba(0,0,0,0.6)';ctx.lineWidth=1.5;ctx.lineJoin='round';
-    ctx.strokeText(h.grade,0,22);
+    ctx.strokeText(h.keyChar,0,22);
     ctx.fillStyle=h.col[0];
-    ctx.fillText(h.grade,0,22);
+    ctx.fillText(h.keyChar,0,22);
     ctx.textAlign='left';
     ctx.font='bold 13px MapleMonoNFCN,Courier New,monospace';
     ctx.strokeStyle='rgba(0,0,0,0.6)';ctx.lineWidth=1;ctx.lineJoin='round';
@@ -457,7 +457,7 @@ window.pet.on('key-combo',(d)=>{
   gameInfo.totalKeyPresses=d.total||0;
   gameInfo.dailyKeyPresses=d.daily||0;
   if(keyDetail)keyDetail.textContent=`⌨ ${shortNum(d.total||0)}   今日 ${shortNum(d.daily||0)}`;
-  if(d.grade)newComboHit(d.grade,d.streak||0);
+  if(d.grade)newComboHit(d.grade,d.streak||0,d.keyChar);
   if (getToggle('shake', true)) {
     const c = document.getElementById('container');
     c.classList.remove('shaking');

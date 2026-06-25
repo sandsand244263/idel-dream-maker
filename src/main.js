@@ -513,8 +513,8 @@ async function renderStatsPanel() {
     const items = [
       `<div class="stats-row"><span class="stats-label">总按键</span><span class="stats-value">${(s.total || 0).toLocaleString()}</span></div>`,
       `<div class="stats-row"><span class="stats-label">今日按键</span><span class="stats-value">${(s.daily || 0).toLocaleString()}</span></div>`,
-      `<div class="stats-row"><span class="stats-label">当前连击</span><span class="stats-value">${s.grade ? s.grade + ' ' + s.streak : '—'}</span></div>`,
-      `<div class="stats-row"><span class="stats-label">达成段位</span><span class="stats-value">${s.milestones && s.milestones.length > 0 ? s.milestones.join(' · ') : '—'}</span></div>`,
+      `<div class="stats-row"><span class="stats-label">当前连击</span><span class="stats-value">${s.keyChar ? s.keyChar + ' ×' + s.streak : '—'}</span></div>`,
+      `<div class="stats-row"><span class="stats-label">最高连击</span><span class="stats-value">${(s.highestStreak || 0).toLocaleString()}</span></div>`,
     ];
     statsListEl.innerHTML = items.join('');
   } catch { statsListEl.innerHTML = '<div class="stats-row" style="color:var(--dim)">加载失败</div>'; }

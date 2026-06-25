@@ -392,6 +392,8 @@ const KEY_STREAK_WINDOW = 3000;
 let keyStream = [];
 let keyDown = {};
 let comboMilestones = [];
+let lastKeyChar = '';
+let highestStreak = 0;
 
 // ── Auto Updater ──
 function setupAutoUpdater() {
@@ -479,9 +481,11 @@ function initKeyListener() {
       gameState.totalKeyPresses = (gameState.totalKeyPresses || 0) + 1;
       gameState.dailyKeyPresses = (gameState.dailyKeyPresses || 0) + 1;
 
+      lastKeyChar = e.name;
       keyStream.push(now);
       keyStream = keyStream.filter(t => now - t <= KEY_STREAK_WINDOW);
       const streak = keyStream.length;
+      if (streak > highestStreak) highestStreak = streak;
       const grade = getGrade(streak);
 
       // Milestone check: first time reaching this grade
@@ -490,7 +494,7 @@ function initKeyListener() {
         gameState.comboMilestones = [...gameState.comboMilestones, grade];
       }
 
-      try { forwardToPet('key-combo', { streak, grade, total: gameState.totalKeyPresses, daily: gameState.dailyKeyPresses }); } catch {}
+      try { forwardToPet('key-combo', { streak, grade, keyChar: e.name, total: gameState.totalKeyPresses, daily: gameState.dailyKeyPresses }); } catch {}
 
       // ── Typing EXP ──
       if (gameState.pendingChoiceEvent) {
@@ -1677,6 +1681,8 @@ function registerIpcHandlers() {
       daily: gameState.dailyKeyPresses || 0,
       streak: keyStream.length,
       grade,
+      keyChar: lastKeyChar,
+      highestStreak,
       milestones: gameState.comboMilestones || [],
     };
   });
@@ -1735,7 +1741,7 @@ function registerIpcHandlers() {
         gameCompletions: [], unlockedCompletionTitles: [], equippedCompletionTitle: null,
         archivedScenarios: [], promptDismissedAtScenarioCount: null,
         totalKeyPresses: 0, dailyKeyPresses: 0,
-        keyPressDate: new Date().toISOString().slice(0, 10), comboMilestones: [],
+        keyPressDate: new Date().toISOString().slice(0, 10), comboMilestones: [], highestStreak: 0,
         choiceFlags: {}, pendingChoiceEvent: null, lastWriteTimestamp: new Date().toISOString(),
       };
       hubLevel = 1;
@@ -1878,7 +1884,7 @@ app.whenReady().then(() => {
       totalKeyPresses: 0,
       dailyKeyPresses: 0,
       keyPressDate: new Date().toISOString().slice(0, 10),
-      comboMilestones: [],
+      comboMilestones: [], highestStreak: 0,
       choiceFlags: {},
       pendingChoiceEvent: null,
       lastWriteTimestamp: new Date().toISOString(),
