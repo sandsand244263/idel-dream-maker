@@ -42,18 +42,17 @@ jobs:
       - name: Build web assets
         run: npx vite build
 
-      - name: Generate icons
+      - name: Package (Windows)
         if: matrix.os == 'windows-latest'
-        run: node scripts/generate-icon.mjs
-
-      - name: Package (${{ matrix.asset-name }})
-        run: npx electron-builder ${{ matrix.target }}
+        run: npx electron-builder --win --config.win.signAndEditExecutable=true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Inject icon (Windows)
-        if: matrix.os == 'windows-latest'
-        run: node scripts/inject-icon.cjs
+      - name: Package (Non-Windows)
+        if: matrix.os != 'windows-latest'
+        run: npx electron-builder ${{ matrix.target }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
