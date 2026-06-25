@@ -492,22 +492,18 @@ function initKeyListener() {
       try { forwardToPet('key-combo', { streak, grade, total: gameState.totalKeyPresses, daily: gameState.dailyKeyPresses }); } catch {}
 
       // ── Typing EXP ──
-      const mult = getComboMultiplier(grade);
-      const keyExp = 0.3 * mult * buffMultiplier;
-      gameState.exp = (gameState.exp || 0) + keyExp;
-      gameState.totalExpEarned = (gameState.totalExpEarned || 0) + keyExp;
+      if (gameState.pendingChoiceEvent) {
+        buffGradeTime = 0;
+      } else {
+        const mult = getComboMultiplier(grade);
+        const keyExp = 0.3 * mult * buffMultiplier;
+        gameState.exp = (gameState.exp || 0) + keyExp;
+        gameState.totalExpEarned = (gameState.totalExpEarned || 0) + keyExp;
 
-      // Level up check — merge with story event
-      const ol = gameState.level;
-      gameState.level = calcLevel(gameState.totalExpEarned);
-      if (gameState.level > ol) {
-        if (gameState.pendingChoiceEvent) {
-          const title = getCurrentTitle(currentScenario, gameState.level);
-          if (title) { currentTitle = title; if (currentScenario) gameState.equippedTitleIndex = currentScenario.titles.indexOf(title); }
-          const luPayload = { level: gameState.level, title: title ? title.name : null, titleColor: title ? title.color : null, titleDesc: title ? title.desc : null, eventText: null };
-          try { mainWindow.webContents.send('level-up', luPayload); } catch {}
-          forwardToPet('level-up', luPayload);
-        } else {
+        // Level up check — merge with story event
+        const ol = gameState.level;
+        gameState.level = calcLevel(gameState.totalExpEarned);
+        if (gameState.level > ol) {
           const title = getCurrentTitle(currentScenario, gameState.level);
           const storyEvent = findUnusedEvent('story', gameState.level);
           if (storyEvent) gameState.triggeredEvents.push(storyEvent.id);
@@ -531,27 +527,26 @@ function initKeyListener() {
           try { mainWindow.webContents.send('level-up', luPayload); } catch {}
           forwardToPet('level-up', luPayload);
         }
-      }
 
-      // ── Buff trigger: maintain B/A for 10s → buff ──
-      if (grade && now >= buffCooldownUntil) {
-        if (!buffGradeTime) buffGradeTime = now;
-        if (!buffExpireTime && now - buffGradeTime >= 10000) {
-          if (['A','S','SS','SSS'].includes(grade)) {
-            buffMultiplier = 3;
-            buffExpireTime = now + 120000;
-          } else {
-            buffMultiplier = 2;
-            buffExpireTime = now + 60000;
+        // ── Buff trigger: maintain B/A for 10s → buff ──
+        if (grade && now >= buffCooldownUntil) {
+          if (!buffGradeTime) buffGradeTime = now;
+          if (!buffExpireTime && now - buffGradeTime >= 10000) {
+            if (['A','S','SS','SSS'].includes(grade)) {
+              buffMultiplier = 3;
+              buffExpireTime = now + 120000;
+            } else {
+              buffMultiplier = 2;
+              buffExpireTime = now + 60000;
+            }
+            const dur = buffExpireTime - now;
+            forwardToPet('buff-triggered', { multiplier: buffMultiplier, duration: dur });
+            buffGradeTime = 0;
           }
-          const dur = buffExpireTime - now;
-          forwardToPet('buff-triggered', { multiplier: buffMultiplier, duration: dur });
+        } else if (!grade) {
           buffGradeTime = 0;
         }
-      } else if (!grade) {
-        buffGradeTime = 0;
       }
-    });
   } catch (e) {
     console.error('Failed to init key listener:', e);
   }
