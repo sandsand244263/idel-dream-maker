@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>连击段位预览 — 按键字符 vs 等级段位</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1a1a2e;display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:'Segoe UI',system-ui,sans-serif;color:#eee}
+.container{display:flex;gap:40px;padding:40px;flex-wrap:wrap;justify-content:center}
+.panel{background:#16213e;border-radius:16px;padding:24px;width:400px;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.panel h2{font-size:16px;margin-bottom:12px;text-align:center;font-weight:600}
+.panel h2 span{opacity:.5;font-weight:400;font-size:12px;display:block;margin-top:2px}
+canvas{display:block;width:100%;height:300px;border-radius:10px;background:#0f1628;margin-bottom:16px}
+.controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.controls button{padding:8px 16px;border:none;border-radius:8px;background:#1a3a6b;color:#eee;cursor:pointer;font-size:13px;transition:background .15s}
+.controls button:hover{background:#2a5a9b}
+.controls button:active{transform:scale(.95)}
+.controls .key-input{flex:1;min-width:80px;padding:8px 12px;border:none;border-radius:8px;background:#0f1628;color:#eee;font-size:16px;text-align:center;font-weight:700;outline:1px solid #2a3a5b}
+.controls .key-input:focus{outline-color:#6bf}
+.stats{display:flex;gap:12px;margin-top:12px;justify-content:center;font-size:12px;opacity:.7}
+.toggle-row{display:flex;align-items:center;gap:8px;margin-top:12px;justify-content:center;font-size:12px}
+.toggle-row input[type=checkbox]{accent-color:#6bf}
+.legend{font-size:11px;opacity:.5;text-align:center;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- 左：当前（段位字母） -->
+  <div class="panel">
+    <h2>当前：段位字母 <span>D/C/B/A/S/SS/SSS + 连击数</span></h2>
+    <canvas id="cOld" width="400" height="300"></canvas>
+    <div class="controls">
+      <button onclick="simKey('old','A')">按 A</button>
+      <button onclick="simKey('old','B')">按 B</button>
+      <button onclick="simKey('old','Space')">按 Space</button>
+      <button onclick="resetCanvas('old')">清空</button>
+    </div>
+    <div class="stats">
+      <span id="oldStreak">连击: 0</span>
+      <span id="oldGrade">段位: —</span>
+    </div>
+  </div>
+
+  <!-- 右：新方案（按键字符） -->
+  <div class="panel">
+    <h2>新方案：按键字符 <span>按下的键名 + 连击数</span></h2>
+    <canvas id="cNew" width="400" height="300"></canvas>
+    <div class="controls">
+      <button onclick="simKey('new','A')">按 A</button>
+      <button onclick="simKey('new','B')">按 B</button>
+      <button onclick="simKey('new','D')">按 D</button>
+      <button onclick="simKey('new','Space')">按 Space</button>
+      <button onclick="resetCanvas('new')">清空</button>
+    </div>
+    <div class="controls" style="margin-top:8px">
+      <input class="key-input" id="customKey" placeholder="自定义字符" maxlength="6" value="X">
+      <button onclick="simCustomKey()">按自定义</button>
+    </div>
+    <div class="stats">
+      <span id="newStreak">连击: 0</span>
+      <span id="newGrade">段位: —</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const COMBO_COLORS = {
+  'D': ['#888','#666'], 'C': ['#aaa','#888'], 'B': ['#6b6','#484'],
+  'A': ['#6bf','#48a'], 'S': ['#ff6','#cc4'], 'SS': ['#f80','#c60'], 'SSS': ['#f44','#c22'],
+};
+const GRADES = [{min:40,g:'SSS'},{min:25,g:'SS'},{min:15,g:'S'},{min:10,g:'A'},{min:6,g:'B'},{min:4,g:'C'},{min:2,g:'D'}];
+function getGrade(s){for(const g of GRADES)if(s>=g.min)return g.g;return null}
+
+// ── Canvas pool ──
+const oldCvs = document.getElementById('cOld'), oldCtx = oldCvs.getContext('2d');
+const newCvs = document.getElementById('cNew'), newCtx = newCvs.getContext('2d');
+const pools = { old: [], new: [] };
+let streaks = { old: 0, new: 0 };
+const W = 400, H = 300;
+
+function randPos(){let x,y;do{x=30+Math.random()*(W-60);y=30+Math.random()*(H-80)}while(x>W-100&&y<50);return{x,y}}
+
+// 当前（段位字母）
+function spawnOld(){
+  streaks.old++;
+  const g = getGrade(streaks.old);
+  if(!g)return;
+  const p = randPos(), cl = COMBO_COLORS[g] || ['#fff','#ccc'];
+  pools.old.push({display: g, streak: streaks.old, x: p.x, y: p.y, t: Date.now(), col: cl, grade: g});
+  if(g && !document.getElementById('oldGrade').textContent.includes(g)) updateMilestone('old', g);
+}
+
+function spawnNew(keyChar){
+  streaks.new++;
+  const g = getGrade(streaks.new);
+  if(!g)return;
+  const p = randPos(), cl = COMBO_COLORS[g] || ['#fff','#ccc'];
+  pools.new.push({display: keyChar, streak: streaks.new, x: p.x, y: p.y, t: Date.now(), col: cl, grade: g});
+  if(g) updateMilestone('new', g);
+}
+
+function drawPool(ctx, pool, streakEl, gradeEl){
+  ctx.clearRect(0,0,W,H);
+  const now = Date.now();
+  let streakCount = 0;
+  for(let i=pool.length-1;i>=0;i--){
+    const h = pool[i], a = (now - h.t)/1000;
+    if(a > 1.0){ pool.splice(i,1); continue; }
+    streakCount = h.streak;
+    let sc = 1, shx = 0, shy = 0, dy = 0, op = 1;
+    if(a < 0.05){
+      const t = a/0.05;
+      sc = 1 + t*1.6;
+      shx = Math.sin(t*Math.PI*3)*5*(1-t);
+      shy = Math.cos(t*Math.PI*3)*3*(1-t);
+      dy = t*2;
+    }else if(a < 0.15){
+      const t = (a-0.05)/0.10;
+      sc = 1.6 - t*0.6;
+      shx = Math.sin(t*Math.PI*4)*3*(1-t);
+      shy = Math.cos(t*Math.PI*4)*2*(1-t);
+      dy = 2 - t*4;
+    }else if(a < 0.3){
+      sc = 1; dy = 0;
+    }else{
+      const t = (a-0.3)/0.7;
+      sc = 1 - t*0.2;
+      dy = -t*15;
+      op = 1 - t*t;
+    }
+    ctx.save();
+    ctx.globalAlpha = op;
+    ctx.translate(h.x + shx, h.y + shy + dy);
+    ctx.scale(sc, sc);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+    ctx.font = 'bold 22px "Segoe UI","Courier New",monospace';
+    ctx.strokeStyle = 'rgba(0,0,0,0.6)'; ctx.lineWidth = 1.5; ctx.lineJoin = 'round';
+    ctx.strokeText(h.display, 0, 22);
+    ctx.fillStyle = h.col[0];
+    ctx.fillText(h.display, 0, 22);
+    ctx.textAlign = 'left';
+    ctx.font = 'bold 13px "Segoe UI","Courier New",monospace';
+    ctx.strokeStyle = 'rgba(0,0,0,0.6)'; ctx.lineWidth = 1; ctx.lineJoin = 'round';
+    ctx.strokeText(''+h.streak, 2, 24);
+    ctx.fillStyle = h.col[1];
+    ctx.fillText(''+h.streak, 2, 24);
+    ctx.restore();
+  }
+  streakEl.textContent = '连击: ' + streakCount;
+  const g = getGrade(streakCount);
+  gradeEl.textContent = '段位: ' + (g || '—');
+}
+
+function loop(){
+  drawPool(oldCtx, pools.old, document.getElementById('oldStreak'), document.getElementById('oldGrade'));
+  drawPool(newCtx, pools.new, document.getElementById('newStreak'), document.getElementById('newGrade'));
+  requestAnimationFrame(loop);
+}
+loop();
+
+let milestones = { old: [], new: [] };
+function updateMilestone(side, g){
+  if(!milestones[side].includes(g)){
+    milestones[side].push(g);
+    document.getElementById(side+'Grade').textContent += ' ★';
+  }
+}
+
+function simKey(side, key){
+  if(side === 'old'){ spawnOld(); }
+  else { spawnNew(key); }
+}
+
+function simCustomKey(){
+  const v = document.getElementById('customKey').value || '?';
+  spawnNew(v.slice(0,6));
+}
+
+function resetCanvas(side){
+  if(side === 'old'){ pools.old = []; streaks.old = 0; milestones.old = []; }
+  else { pools.new = []; streaks.new = 0; milestones.new = []; }
+}
+
+// 键盘实时模拟（页面聚焦时按下任意键）
+document.addEventListener('keydown', (e) => {
+  if(e.target.tagName === 'INPUT') return; // 不拦截输入框
+  e.preventDefault();
+  const key = e.key.length === 1 ? e.key.toUpperCase() : e.key;
+  simKey('old', key);
+  simKey('new', key);
+});
+</script>
+</body>
+</html>
