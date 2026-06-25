@@ -1,5 +1,6 @@
-const { BrowserWindow, ipcMain } = require('electron');
+const { BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
+const { exec } = require('child_process');
 
 const HIDE_POS = { x: -9999, y: -9999 };
 let contextWindow = null;
@@ -8,7 +9,7 @@ let appRef = null;
 
 function hideWindow() {
   if (!contextWindow || contextWindow.isDestroyed()) return;
-  contextWindow.setBounds({ x: HIDE_POS.x, y: HIDE_POS.y, width: 170, height: 240 });
+  contextWindow.setBounds({ x: HIDE_POS.x, y: HIDE_POS.y, width: 170, height: 260 });
   contextWindow.setOpacity(0);
 }
 
@@ -18,7 +19,7 @@ function initContextMenu(app, petWin) {
 
   const ctxOpts = {
     width: 170,
-    height: 240,
+    height: 260,
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
@@ -38,7 +39,7 @@ function initContextMenu(app, petWin) {
   contextWindow.loadFile(path.join(__dirname, '..', 'pet-context-menu', 'index.html'));
 
   contextWindow.webContents.once('did-finish-load', () => {
-    contextWindow.setBounds({ x: HIDE_POS.x, y: HIDE_POS.y, width: 170, height: 240 });
+    contextWindow.setBounds({ x: HIDE_POS.x, y: HIDE_POS.y, width: 170, height: 260 });
     contextWindow.show();
     contextWindow.setOpacity(0);
   });
@@ -89,6 +90,37 @@ function registerContextMenuIpcHandlers() {
       try { petWindowRef.webContents.send('pet-guide', {}); } catch {}
     }
     return true;
+  });
+
+  ipcMain.handle('get-available-tools', () => {
+    const platform = process.platform;
+    const tools = [];
+    if (platform === 'win32' || platform === 'darwin') {
+      tools.push('calculator');
+      tools.push('screenshot');
+    }
+    return tools;
+  });
+
+  ipcMain.handle('launch-system-tool', (_, { tool }) => {
+    const platform = process.platform;
+    try {
+      if (tool === 'calculator') {
+        if (platform === 'win32') { exec('calc.exe'); }
+        else if (platform === 'darwin') { exec('open -a Calculator'); }
+        else { return { success: false, error: '不支持' }; }
+        return { success: true };
+      }
+      if (tool === 'screenshot') {
+        if (platform === 'win32') { exec('explorer.exe ms-screenclip:'); }
+        else if (platform === 'darwin') { exec('screencapture -i'); }
+        else { return { success: false, error: '不支持' }; }
+        return { success: true };
+      }
+      return { success: false, error: '未知工具' };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
   });
 }
 

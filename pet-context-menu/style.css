@@ -26,4 +26,17 @@ html,body { width:100%;background:transparent;user-select:none;font-family:var(-
 .ctx-item.ctx-off { color:color-mix(in srgb,var(--fg) 35%,transparent); }
 .ctx-arrow { float:right; }
 .ctx-sep { height:1px;background:var(--border);margin:2px 0; }
+
+/* View fold */
+.fold-header { cursor:pointer;user-select:none; }
+.fold-header:hover { background:color-mix(in srgb,var(--fg) 10%,transparent); }
+.fold-header .fold-arrow { display:inline-block;transition:transform 0.15s ease;font-size:10px;margin-right:4px; }
+.fold-header .fold-arrow.open { transform:rotate(90deg); }
+.fold-body.open { display:block; }
+.fold-body.closed { display:none; }
+.ctx-sub { padding-left:24px!important;font-size:10px!important; }
+
+/* Quick tools */
+.ctx-tool { cursor:pointer;color:color-mix(in srgb,var(--fg) 65%,transparent);font-size:11px;padding:4px 14px;white-space:nowrap;transition:background 0.12s; }
+.ctx-tool:hover { background:color-mix(in srgb,var(--fg) 10%,transparent);color:var(--fg); }
 @media (prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;}}

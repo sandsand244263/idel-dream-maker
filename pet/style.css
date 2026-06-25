@@ -40,6 +40,13 @@ body { font-family:var(--font); color:var(--fg); }
 #guide-buttons button:hover { background:color-mix(in srgb,var(--fg) 18%,transparent); }
 #guide-buttons button:active { transform:scale(0.96); }
 
+/* Operation hints in no-pet guide */
+#op-hints { width:100%;padding:4px 14px 0;text-align:center; }
+#op-hints-title { font-size:10px;color:color-mix(in srgb,var(--fg) 35%,transparent);margin-bottom:2px;letter-spacing:0.5px;text-align:center; }
+#op-hints-list { list-style:none;padding:0;margin:0;text-align:center; }
+#op-hints-list li { font-size:10px;color:color-mix(in srgb,var(--fg) 45%,transparent);line-height:1.8; }
+#op-hints-list li::before { content:'\2192';margin-right:6px;color:color-mix(in srgb,var(--fg) 25%,transparent); }
+
 /* Canvas wrap */
 #canvas-wrap { position:relative;width:120px;height:140px;flex-shrink:0; }
 #pet-canvas { width:120px;height:140px;image-rendering:pixelated;cursor:grab;display:block; }

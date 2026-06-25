@@ -2,7 +2,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('ctxMenu', {
   invoke: (channel, ...args) => {
-    const valid = ['show-pet-selector', 'toggle-pet-feature', 'hide-pet-window', 'close-menu', 'get-toggle-state', 'get-current-theme', 'pet-guide'];
+    const valid = ['show-pet-selector', 'toggle-pet-feature', 'hide-pet-window', 'close-menu', 'get-toggle-state', 'get-current-theme', 'pet-guide', 'launch-system-tool', 'get-available-tools'];
     if (valid.includes(channel)) return ipcRenderer.invoke(channel, ...args);
     return Promise.reject(new Error('Invalid ctxMenu channel: ' + channel));
   },
