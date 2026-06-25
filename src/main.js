@@ -619,10 +619,6 @@ document.getElementById('btn-check-update')?.addEventListener('click', async () 
   btn.textContent = '检查更新';
   btn.disabled = false;
 });
-// Init current version display
-const versionEl = document.getElementById('update-current-version');
-if (versionEl) versionEl.textContent = appVersion;
-
 // ── Auto-update listener ──
 window.electron.on('update-status', (d) => {
   const status = document.getElementById('update-status');
@@ -1083,7 +1079,10 @@ document.getElementById('btn-refresh-scenarios')?.addEventListener('click', asyn
 bindCt('ct-fg'); bindCt('ct-bg'); bindCt('ct-dim'); bindCt('ct-border');
 
 init().then(() => {
-  document.title = `Idel-DreamMaker v${appVersion}`; applyTheme(gameState?.selected_font_theme || 'green');
+  document.title = `Idel-DreamMaker v${appVersion}`;
+  const versionEl = document.getElementById('update-current-version');
+  if (versionEl) versionEl.textContent = appVersion;
+  applyTheme(gameState?.selected_font_theme || 'green');
   if (gameState?.is_in_hub) addLog('system', `Idel-DreamMaker v${appVersion} ${t('logStartHub')}`);
   else if (gameState) { switchView(false); addLog('info', tf('logStartScenario', formatRuntime(gameState.total_runtime_ms), gameState.level)); }
   updateUI(); updateTooltip(); setInterval(updateTooltip, 5000);
