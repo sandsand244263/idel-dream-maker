@@ -14,10 +14,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: windows-latest
+          - os: windows-2022
             target: --win
             asset-name: Windows
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             target: --linux
             asset-name: Linux
           - os: macos-latest
@@ -35,10 +35,10 @@ jobs:
           cache: npm
 
       - name: Install build dependencies (Linux)
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-24.04'
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq libx11-dev libxtst-dev libxkbcommon-dev libxrandr-dev
+          sudo apt-get install -y -qq libx11-dev libxtst-dev libxkbcommon-dev libxrandr-dev libxt-dev
 
       - name: Install build dependencies (macOS)
         if: matrix.os == 'macos-latest'
@@ -54,13 +54,13 @@ jobs:
         run: npx vite build
 
       - name: Package (Windows)
-        if: matrix.os == 'windows-latest'
+        if: matrix.os == 'windows-2022'
         run: npx electron-builder --win --config.win.signAndEditExecutable=true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Package (Non-Windows)
-        if: matrix.os != 'windows-latest'
+        if: matrix.os != 'windows-2022'
         run: npx electron-builder ${{ matrix.target }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
