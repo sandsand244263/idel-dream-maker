@@ -11,6 +11,7 @@ permissions:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: windows-latest
@@ -37,7 +38,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq libx11-dev libxtst-dev libxkbcommon-dev
+          sudo apt-get install -y -qq libx11-dev libxtst-dev libxkbcommon-dev libxrandr-dev
 
       - name: Install build dependencies (macOS)
         if: matrix.os == 'macos-latest'
