@@ -511,7 +511,7 @@ async function renderStatsPanel() {
   try {
     const s = await window.electron.invoke('get-key-stats');
     const items = [
-      `<div class="stats-row"><span class="stats-label">总按键</span><span class="stats-value">${(s.total || 0).toLocaleString()}</span></div>`,
+      `<div class="stats-row"><span class="stats-label">总输入</span><span class="stats-value">${(s.total || 0).toLocaleString()}</span></div>`,
       `<div class="stats-row"><span class="stats-label">今日按键</span><span class="stats-value">${(s.daily || 0).toLocaleString()}</span></div>`,
       `<div class="stats-row"><span class="stats-label">当前连击</span><span class="stats-value">${s.keyChar ? s.keyChar + ' ×' + s.streak : '—'}</span></div>`,
       `<div class="stats-row"><span class="stats-label">最高连击</span><span class="stats-value">${(s.highestStreak || 0).toLocaleString()}</span></div>`,

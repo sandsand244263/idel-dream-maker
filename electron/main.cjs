@@ -8,7 +8,7 @@ const { createTray, setToolTip, getTray, updateMenu } = require('./tray.cjs');
 const { registerPetIpcHandlers, forwardToPet, initPet, broadcastTheme, setOnPetSelected } = require('./pet.cjs');
 const { getTodaysHolidayId, getUpcomingHolidayId, getHolidayName, getHolidayIcon, getHolidayEventFromScenario, getRandomHolidayEvent } = require('./holiday.cjs');
 const { parseScenarioMd } = require('../src/scenario-parser.cjs');
-const { GlobalKeyboardListener } = require('node-global-key-listener');
+const { uIOhook, UiohookKey } = require('uiohook-napi');
 const { autoUpdater } = require('electron-updater');
 
 autoUpdater.autoDownload = true;
@@ -387,7 +387,6 @@ let gameLoopInterval = null;
 let tooltipInterval = null;
 
 // ── Key Counter ──
-let keyListener = null;
 const KEY_STREAK_WINDOW = 3000;
 let keyStream = [];
 let keyDown = {};
@@ -453,108 +452,129 @@ let buffMultiplier = 1;
 let buffGradeTime = 0;
 let buffCooldownUntil = 0;
 
-function initKeyListener() {
+// Build keycode → display name mapping from UiohookKey
+const KEYCODE_TO_NAME = {};
+for (const name in UiohookKey) {
+  if (typeof name === 'string' && typeof UiohookKey[name] === 'number') {
+    KEYCODE_TO_NAME[UiohookKey[name]] = name;
+  }
+}
+
+function isNonPrintableKey(vk) {
+  if (vk === UiohookKey.Escape) return true;
+  if (vk === UiohookKey.Ctrl || vk === 3613) return true;
+  if (vk === UiohookKey.Shift || vk === UiohookKey.ShiftRight) return true;
+  if (vk === UiohookKey.Alt || vk === UiohookKey.AltRight) return true;
+  if (vk === UiohookKey.Meta || vk === UiohookKey.MetaRight) return true;
+  if (vk === UiohookKey.CapsLock || vk === UiohookKey.NumLock || vk === UiohookKey.ScrollLock) return true;
+  if (vk >= UiohookKey.F1 && vk <= 107) return true;
+  if (vk === 3639) return true;
+  if (vk === 3612 || vk === 3637) return true;
+  if (vk >= 57416 && vk <= 57424) return true;
+  if (vk >= 60999 && vk <= 61011) return true;
+  return false;
+}
+
+function handleInputDown(keyId, keyChar, now) {
+  if (!gameState) return;
+  if (keyDown[keyId]) return;
+  keyDown[keyId] = true;
+
+  gameState.totalKeyPresses = (gameState.totalKeyPresses || 0) + 1;
+  gameState.dailyKeyPresses = (gameState.dailyKeyPresses || 0) + 1;
+
+  lastKeyChar = keyChar;
+  keyStream.push(now);
+  keyStream = keyStream.filter(t => now - t <= KEY_STREAK_WINDOW);
+  const streak = keyStream.length;
+  if (streak > highestStreak) highestStreak = streak;
+  const grade = getGrade(streak);
+
+  if (grade && !gameState.comboMilestones) gameState.comboMilestones = [];
+  if (grade && !gameState.comboMilestones.includes(grade)) {
+    gameState.comboMilestones = [...gameState.comboMilestones, grade];
+  }
+
+  try { forwardToPet('key-combo', { streak, grade, keyChar, total: gameState.totalKeyPresses, daily: gameState.dailyKeyPresses }); } catch {}
+
+  if (gameState.pendingChoiceEvent) {
+    buffGradeTime = 0;
+    return;
+  }
+
+  const mult = getComboMultiplier(grade);
+  const keyExp = 0.3 * mult * buffMultiplier;
+  gameState.exp = (gameState.exp || 0) + keyExp;
+  gameState.totalExpEarned = (gameState.totalExpEarned || 0) + keyExp;
+
+  const ol = gameState.level;
+  gameState.level = calcLevel(gameState.totalExpEarned);
+  if (gameState.level > ol) {
+    const title = getCurrentTitle(currentScenario, gameState.level);
+    const storyEvent = findUnusedEvent('story', gameState.level);
+    if (storyEvent) gameState.triggeredEvents.push(storyEvent.id);
+    if (title) {
+      currentTitle = title;
+      if (currentScenario) gameState.equippedTitleIndex = currentScenario.titles.indexOf(title);
+    }
+    if (storyEvent && storyEvent.choice1 && storyEvent.choice1Target) {
+      const choices = [];
+      if (storyEvent.choice1Target) choices.push({ text: storyEvent.choice1, target: storyEvent.choice1Target });
+      if (storyEvent.choice2Target) choices.push({ text: storyEvent.choice2, target: storyEvent.choice2Target });
+      gameState.pendingChoiceEvent = {
+        eventId: storyEvent.id, scenarioId: gameState.scenarioId,
+        title: '抉择', text: storyEvent.text, choices,
+      };
+      const choicePayload = { title: '抉择', text: storyEvent.text, choices, _eventId: storyEvent.id };
+      try { mainWindow.webContents.send('choice-event', choicePayload); } catch {}
+      forwardToPet('choice-event', choicePayload);
+    }
+    const luPayload = { level: gameState.level, title: title ? title.name : null, titleColor: title ? title.color : null, titleDesc: title ? title.desc : null, eventText: storyEvent && !storyEvent.choice1 ? storyEvent.text : null };
+    try { mainWindow.webContents.send('level-up', luPayload); } catch {}
+    forwardToPet('level-up', luPayload);
+  }
+
+  if (grade && now >= buffCooldownUntil) {
+    if (!buffGradeTime) buffGradeTime = now;
+    if (!buffExpireTime && now - buffGradeTime >= 10000) {
+      if (['A','S','SS','SSS'].includes(grade)) {
+        buffMultiplier = 3;
+        buffExpireTime = now + 120000;
+      } else {
+        buffMultiplier = 2;
+        buffExpireTime = now + 60000;
+      }
+      const dur = buffExpireTime - now;
+      forwardToPet('buff-triggered', { multiplier: buffMultiplier, duration: dur });
+      buffGradeTime = 0;
+    }
+  } else if (!grade) {
+    buffGradeTime = 0;
+  }
+}
+
+function initInputListener() {
   try {
-    keyListener = new GlobalKeyboardListener();
-    keyListener.addListener((e, release) => {
-      const vk = e.vKey;
-      if (vk <= 7) return;
-      if (vk === 16 || vk === 17 || vk === 18 || vk === 20) return;
-      if (vk === 27) return;
-      if (vk >= 91 && vk <= 93) return;
-      if (vk >= 112 && vk <= 135) return;
-      if (vk === 144 || vk === 145) return;
-
-      if (!gameState) return;
-      const now = Date.now();
-
-      if (e.state === 'DOWN') {
-        // Already held down → skip (auto-repeat)
-        if (keyDown[vk]) return;
-        keyDown[vk] = true;
-      } else if (e.state === 'UP') {
-        keyDown[vk] = false;
-        return;
-      } else {
-        return;
-      }
-      gameState.totalKeyPresses = (gameState.totalKeyPresses || 0) + 1;
-      gameState.dailyKeyPresses = (gameState.dailyKeyPresses || 0) + 1;
-
-      lastKeyChar = e.name;
-      keyStream.push(now);
-      keyStream = keyStream.filter(t => now - t <= KEY_STREAK_WINDOW);
-      const streak = keyStream.length;
-      if (streak > highestStreak) highestStreak = streak;
-      const grade = getGrade(streak);
-
-      // Milestone check: first time reaching this grade
-      if (grade && !gameState.comboMilestones) gameState.comboMilestones = [];
-      if (grade && !gameState.comboMilestones.includes(grade)) {
-        gameState.comboMilestones = [...gameState.comboMilestones, grade];
-      }
-
-      try { forwardToPet('key-combo', { streak, grade, keyChar: e.name, total: gameState.totalKeyPresses, daily: gameState.dailyKeyPresses }); } catch {}
-
-      // ── Typing EXP ──
-      if (gameState.pendingChoiceEvent) {
-        buffGradeTime = 0;
-      } else {
-        const mult = getComboMultiplier(grade);
-        const keyExp = 0.3 * mult * buffMultiplier;
-        gameState.exp = (gameState.exp || 0) + keyExp;
-        gameState.totalExpEarned = (gameState.totalExpEarned || 0) + keyExp;
-
-        // Level up check — merge with story event
-        const ol = gameState.level;
-        gameState.level = calcLevel(gameState.totalExpEarned);
-        if (gameState.level > ol) {
-          const title = getCurrentTitle(currentScenario, gameState.level);
-          const storyEvent = findUnusedEvent('story', gameState.level);
-          if (storyEvent) gameState.triggeredEvents.push(storyEvent.id);
-          if (title) {
-            currentTitle = title;
-            if (currentScenario) gameState.equippedTitleIndex = currentScenario.titles.indexOf(title);
-          }
-          if (storyEvent && storyEvent.choice1 && storyEvent.choice1Target) {
-            const choices = [];
-            if (storyEvent.choice1Target) choices.push({ text: storyEvent.choice1, target: storyEvent.choice1Target });
-            if (storyEvent.choice2Target) choices.push({ text: storyEvent.choice2, target: storyEvent.choice2Target });
-            gameState.pendingChoiceEvent = {
-              eventId: storyEvent.id, scenarioId: gameState.scenarioId,
-              title: '抉择', text: storyEvent.text, choices,
-            };
-            const choicePayload = { title: '抉择', text: storyEvent.text, choices, _eventId: storyEvent.id };
-            try { mainWindow.webContents.send('choice-event', choicePayload); } catch {}
-            forwardToPet('choice-event', choicePayload);
-          }
-          const luPayload = { level: gameState.level, title: title ? title.name : null, titleColor: title ? title.color : null, titleDesc: title ? title.desc : null, eventText: storyEvent && !storyEvent.choice1 ? storyEvent.text : null };
-          try { mainWindow.webContents.send('level-up', luPayload); } catch {}
-          forwardToPet('level-up', luPayload);
-        }
-
-        // ── Buff trigger: maintain B/A for 10s → buff ──
-        if (grade && now >= buffCooldownUntil) {
-          if (!buffGradeTime) buffGradeTime = now;
-          if (!buffExpireTime && now - buffGradeTime >= 10000) {
-            if (['A','S','SS','SSS'].includes(grade)) {
-              buffMultiplier = 3;
-              buffExpireTime = now + 120000;
-            } else {
-              buffMultiplier = 2;
-              buffExpireTime = now + 60000;
-            }
-            const dur = buffExpireTime - now;
-            forwardToPet('buff-triggered', { multiplier: buffMultiplier, duration: dur });
-            buffGradeTime = 0;
-          }
-        } else if (!grade) {
-          buffGradeTime = 0;
-        }
-      }
+    uIOhook.on('keydown', (e) => {
+      if (isNonPrintableKey(e.keycode)) return;
+      handleInputDown(e.keycode, KEYCODE_TO_NAME[e.keycode] || '?', Date.now());
     });
+    uIOhook.on('keyup', (e) => {
+      keyDown[e.keycode] = false;
+    });
+    uIOhook.on('mousedown', (e) => {
+      if (e.button < 1 || e.button > 3) return;
+      const keyId = 'mouse_' + e.button;
+      const keyChar = e.button === 1 ? '🖱L' : e.button === 2 ? '🖱R' : '🖱M';
+      handleInputDown(keyId, keyChar, Date.now());
+    });
+    uIOhook.on('mouseup', (e) => {
+      if (e.button < 1 || e.button > 3) return;
+      keyDown['mouse_' + e.button] = false;
+    });
+    uIOhook.start();
   } catch (e) {
-    console.error('Failed to init key listener:', e);
+    console.error('Failed to init input listener:', e);
   }
 }
 
@@ -1970,7 +1990,7 @@ app.whenReady().then(() => {
   }
 
   startGameLoop();
-  initKeyListener();
+  initInputListener();
   setupAutoUpdater();
   autoUpdater.checkForUpdates().catch(() => {});
 
@@ -2015,7 +2035,7 @@ app.on('before-quit', () => {
   isQuitting = true;
   stopGameLoop();
   if (tooltipInterval) clearInterval(tooltipInterval);
-  if (keyListener) try { keyListener.kill(); } catch {}
+  try { uIOhook.stop(); } catch {}
   try { const { forwardToPet, getPetWindow } = require('./pet.cjs'); const pw = getPetWindow(); if (pw) pw._isQuitting = true; } catch {}
   if (gameState) {
     if (mainWindow) {
