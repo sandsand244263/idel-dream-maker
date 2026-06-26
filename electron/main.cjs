@@ -461,17 +461,6 @@ for (const name in UiohookKey) {
 }
 
 function isNonPrintableKey(vk) {
-  if (vk === UiohookKey.Escape) return true;
-  if (vk === UiohookKey.Ctrl || vk === 3613) return true;
-  if (vk === UiohookKey.Shift || vk === UiohookKey.ShiftRight) return true;
-  if (vk === UiohookKey.Alt || vk === UiohookKey.AltRight) return true;
-  if (vk === UiohookKey.Meta || vk === UiohookKey.MetaRight) return true;
-  if (vk === UiohookKey.CapsLock || vk === UiohookKey.NumLock || vk === UiohookKey.ScrollLock) return true;
-  if (vk >= UiohookKey.F1 && vk <= 107) return true;
-  if (vk === 3639) return true;
-  if (vk === 3612 || vk === 3637) return true;
-  if (vk >= 57416 && vk <= 57424) return true;
-  if (vk >= 60999 && vk <= 61011) return true;
   return false;
 }
 
