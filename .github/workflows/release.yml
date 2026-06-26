@@ -41,8 +41,7 @@ jobs:
 
       - name: Install build dependencies (macOS)
         if: matrix.os == 'macos-latest'
-        run: |
-          pip3 install setuptools 2>/dev/null || python3 -m pip install setuptools
+        run: PIP_REQUIRE_VIRTUAL_ENV=false pip3 install setuptools
 
       - name: Install build dependencies (Windows)
         if: matrix.os == 'windows-latest'
