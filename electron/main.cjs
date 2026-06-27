@@ -486,8 +486,8 @@ function handleInputDown(keyId, keyChar, now) {
 
   try { forwardToPet('key-combo', { streak, grade, keyChar, total: gameState.totalKeyPresses, daily: gameState.dailyKeyPresses }); } catch {}
 
-  if (gameState.pendingChoiceEvent) {
-    buffGradeTime = 0;
+  if (gameState.isInHub || gameState.pendingChoiceEvent) {
+    if (gameState.pendingChoiceEvent) buffGradeTime = 0;
     return;
   }
 
