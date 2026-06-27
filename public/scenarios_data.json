@@ -7,6 +7,7 @@
     "player_title": "拾荒者",
     "mechanic": "standard",
     "max_rebirth": 3,
+    "branches": [],
     "unlock_requirement": {
       "hub_level": 0,
       "completions": 0

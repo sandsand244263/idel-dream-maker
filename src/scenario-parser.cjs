@@ -19,6 +19,12 @@ const COL_NORM = {
   'holidayid': 'holidayid', 'holiday_id': 'holidayid', 'holidayId': 'holidayid', '节日id': 'holidayid',
   'choice1': 'choice1', 'choice1target': 'choice1target', 'choice_1_target': 'choice1target',
   'choice2': 'choice2', 'choice2target': 'choice2target', 'choice_2_target': 'choice2target',
+  'choice3': 'choice3', 'choice3target': 'choice3target', 'choice_3_target': 'choice3target',
+  'choice4': 'choice4', 'choice4target': 'choice4target', 'choice_4_target': 'choice4target',
+  'branch': 'branch', '分支': 'branch',
+  'flagset': 'flagset', 'flag_set': 'flagset', 'flagSet': 'flagset',
+  'flagrequire': 'flagrequire', 'flag_require': 'flagrequire', 'flagRequire': 'flagrequire',
+  'completiontitle': 'completiontitle', 'completion_title': 'completiontitle', 'completionTitle': 'completiontitle',
 };
 
 function normCol(name) {
@@ -143,6 +149,14 @@ function parseEvents(bodyLines) {
   const choice1TargetIdx = headers.indexOf('choice1target');
   const choice2Idx = headers.indexOf('choice2');
   const choice2TargetIdx = headers.indexOf('choice2target');
+  const choice3Idx = headers.indexOf('choice3');
+  const choice3TargetIdx = headers.indexOf('choice3target');
+  const choice4Idx = headers.indexOf('choice4');
+  const choice4TargetIdx = headers.indexOf('choice4target');
+  const branchIdx = headers.indexOf('branch');
+  const flagSetIdx = headers.indexOf('flagset');
+  const flagRequireIdx = headers.indexOf('flagrequire');
+  const completionTitleIdx = headers.indexOf('completiontitle');
 
   const events = [];
   const ids = new Set();
@@ -172,6 +186,30 @@ function parseEvents(bodyLines) {
     }
     if (choice2TargetIdx !== -1 && row.length > choice2TargetIdx && row[choice2TargetIdx]) {
       ev.choice2Target = row[choice2TargetIdx];
+    }
+    if (choice3Idx !== -1 && row.length > choice3Idx && row[choice3Idx]) {
+      ev.choice3 = row[choice3Idx];
+    }
+    if (choice3TargetIdx !== -1 && row.length > choice3TargetIdx && row[choice3TargetIdx]) {
+      ev.choice3Target = row[choice3TargetIdx];
+    }
+    if (choice4Idx !== -1 && row.length > choice4Idx && row[choice4Idx]) {
+      ev.choice4 = row[choice4Idx];
+    }
+    if (choice4TargetIdx !== -1 && row.length > choice4TargetIdx && row[choice4TargetIdx]) {
+      ev.choice4Target = row[choice4TargetIdx];
+    }
+    if (branchIdx !== -1 && row.length > branchIdx && row[branchIdx]) {
+      ev.branch = row[branchIdx].trim();
+    }
+    if (flagSetIdx !== -1 && row.length > flagSetIdx && row[flagSetIdx]) {
+      ev.flagSet = row[flagSetIdx].trim();
+    }
+    if (flagRequireIdx !== -1 && row.length > flagRequireIdx && row[flagRequireIdx]) {
+      ev.flagRequire = row[flagRequireIdx].trim();
+    }
+    if (completionTitleIdx !== -1 && row.length > completionTitleIdx && row[completionTitleIdx]) {
+      ev.completionTitle = row[completionTitleIdx].trim();
     }
     events.push(ev);
   }
@@ -290,6 +328,12 @@ function validateScenario(scenario) {
     if (event.choice2 && event.choice2Target && !eventIds.has(event.choice2Target)) {
       throw new Error(`Event '${event.id}' choice2Target '${event.choice2Target}' not found in events`);
     }
+    if (event.choice3 && event.choice3Target && !eventIds.has(event.choice3Target)) {
+      throw new Error(`Event '${event.id}' choice3Target '${event.choice3Target}' not found in events`);
+    }
+    if (event.choice4 && event.choice4Target && !eventIds.has(event.choice4Target)) {
+      throw new Error(`Event '${event.id}' choice4Target '${event.choice4Target}' not found in events`);
+    }
   }
   for (const ach of scenario.achievements) {
     if (ach.condition.type === 'level' && ach.condition.value > 1000) {
@@ -326,6 +370,7 @@ function parseScenarioMd(content) {
     player_title: meta.player_title,
     mechanic: meta.mechanic || 'standard',
     max_rebirth: meta.max_rebirth || 0,
+    branches: meta.branches || [],
     unlock_requirement: meta.unlock_requirement || {},
     completion_title: meta.completion_title || '',
     titles,

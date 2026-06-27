@@ -95,10 +95,10 @@ function canArchiveScenario(scenarioId) {
   if (!scenario) return false;
   const hasCompleted = (gameState.gameCompletions || []).some(c => c.scenarioId === scenarioId);
   if (!hasCompleted) return false;
-  const maxR = scenario.max_rebirth || 0;
-  if (maxR === 0) return true;
-  const currentR = (gameState.rebirthCounts || {})[scenarioId] || 0;
-  return currentR >= maxR;
+  const branches = scenario.branches || [];
+  if (branches.length === 0) return true;
+  const cb = gameState.completedBranches || [];
+  return branches.every(b => cb.includes(b));
 }
 
 function setupAppMenu() {
@@ -507,9 +507,7 @@ function handleInputDown(keyId, keyChar, now) {
       if (currentScenario) gameState.equippedTitleIndex = currentScenario.titles.indexOf(title);
     }
     if (storyEvent && storyEvent.choice1 && storyEvent.choice1Target) {
-      const choices = [];
-      if (storyEvent.choice1Target) choices.push({ text: storyEvent.choice1, target: storyEvent.choice1Target });
-      if (storyEvent.choice2Target) choices.push({ text: storyEvent.choice2, target: storyEvent.choice2Target });
+      const choices = buildChoices(storyEvent);
       gameState.pendingChoiceEvent = {
         eventId: storyEvent.id, scenarioId: gameState.scenarioId,
         title: '抉择', text: storyEvent.text, choices,
@@ -639,9 +637,7 @@ function resetGameForScenario(scenario, alias) {
     const title = getCurrentTitle(currentScenario, gameState.level);
     // Choice detection
     if (initEvent.choice1 && initEvent.choice1Target) {
-      const choices = [];
-      if (initEvent.choice1Target) choices.push({ text: initEvent.choice1, target: initEvent.choice1Target });
-      if (initEvent.choice2Target) choices.push({ text: initEvent.choice2, target: initEvent.choice2Target });
+      const choices = buildChoices(initEvent);
       gameState.pendingChoiceEvent = {
         eventId: initEvent.id, scenarioId: gameState.scenarioId,
         title: '抉择', text: initEvent.text, choices,
@@ -683,80 +679,92 @@ function exitToHub() {
   hubLevel = calcLevel(gameState.hubTotalExp);
 }
 
+function checkFlagRequire(flagRequire) {
+  if (!flagRequire) return true;
+  const flags = gameState.flags || {};
+  const parts = flagRequire.split('&');
+  for (const part of parts) {
+    const orParts = part.split('|');
+    let anyMatch = false;
+    for (const op of orParts) {
+      const trimmed = op.trim();
+      if (!trimmed) continue;
+      const match = trimmed.match(/^([a-zA-Z_]\w*)\s*(>|>=|==|<=|<|=)\s*(.+)$/);
+      if (!match) return false;
+      const [, key, opStr, valStr] = match;
+      const val = isNaN(Number(valStr)) ? valStr : Number(valStr);
+      const flagVal = flags[key];
+      if (flagVal === undefined) continue;
+      switch (opStr) {
+        case '=': case '==': if (flagVal == val) anyMatch = true; break;
+        case '>': if (flagVal > val) anyMatch = true; break;
+        case '>=': if (flagVal >= val) anyMatch = true; break;
+        case '<': if (flagVal < val) anyMatch = true; break;
+        case '<=': if (flagVal <= val) anyMatch = true; break;
+      }
+    }
+    if (!anyMatch) return false;
+  }
+  return true;
+}
+
+function applyFlagSet(flagSet) {
+  if (!flagSet) return;
+  if (!gameState.flags) gameState.flags = {};
+  const parts = flagSet.split(';');
+  for (const part of parts) {
+    const trimmed = part.trim();
+    if (!trimmed) continue;
+    const match = trimmed.match(/^([a-zA-Z_]\w*)\s*(\+=|-=|=)\s*(.+)$/);
+    if (!match) continue;
+    const [, key, op, valStr] = match;
+    const val = isNaN(Number(valStr)) ? valStr : Number(valStr);
+    if (typeof val === 'number') {
+      if (op === '+=') gameState.flags[key] = (gameState.flags[key] || 0) + val;
+      else if (op === '-=') gameState.flags[key] = (gameState.flags[key] || 0) - val;
+      else gameState.flags[key] = val;
+    } else {
+      gameState.flags[key] = val;
+    }
+  }
+}
+
+function buildChoices(storyEvent) {
+  const choices = [];
+  if (storyEvent.choice1 && storyEvent.choice1Target) choices.push({ text: storyEvent.choice1, target: storyEvent.choice1Target });
+  if (storyEvent.choice2 && storyEvent.choice2Target) choices.push({ text: storyEvent.choice2, target: storyEvent.choice2Target });
+  if (storyEvent.choice3 && storyEvent.choice3Target) choices.push({ text: storyEvent.choice3, target: storyEvent.choice3Target });
+  if (storyEvent.choice4 && storyEvent.choice4Target) choices.push({ text: storyEvent.choice4, target: storyEvent.choice4Target });
+  return choices;
+}
+
 function findUnusedEvent(type, level) {
   if (!currentScenario || !currentScenario.events || gameState.isInHub) return null;
-  const currentRebirth = (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0;
+  const cb = gameState.currentBranch || '';
   const pool = currentScenario.events.filter(e => {
     if (e.type && e.type !== type) return false;
     if (e.minLevel && e.minLevel > level) return false;
-    if (e.minRebirth && e.minRebirth > currentRebirth) return false;
     if (e.once && gameState.triggeredEvents.includes(e.id)) return false;
+    if (e.branch && e.branch !== '' && e.branch !== cb) return false;
+    if (!checkFlagRequire(e.flagRequire)) return false;
     return true;
   });
   if (pool.length === 0) return null;
   return pool[0];
 }
 
-function checkAndTriggerEvent(typeFilter) {
-  if (!currentScenario || !currentScenario.events || gameState.isInHub) return;
-
-  const runtimeHours = gameState.totalRuntimeMs / 3600000;
-  let prob;
-  if (runtimeHours < 12) prob = 0.4;
-  else if (runtimeHours < 72) prob = 0.3;
-  else prob = 0.15;
-
-  if (Math.random() < prob) {
-    // Check holiday: 当天 first, then 临近
-    const todayHoliday = getTodaysHolidayId();
-    const upcomingHoliday = !todayHoliday ? getUpcomingHolidayId() : null;
-    const holidayInfo = todayHoliday || upcomingHoliday;
-
-    if (holidayInfo) {
-      const holidayKey = 'holiday_' + holidayInfo.id + '_' + holidayInfo.type;
-      // Skip if already triggered, fall through to normal events
-      if (!gameState.triggeredEvents.includes(holidayKey)) {
-        const he = getHolidayEventFromScenario(currentScenario, holidayInfo.id, holidayInfo.type);
-        if (he) {
-          gameState.triggeredEvents.push(holidayKey);
-          return {
-            id: holidayKey,
-            title: he.holidayName,
-            color: '#FFD700',
-            text: he.text,
-            isHoliday: true,
-          };
-        }
-      }
-    }
-
-    const pool = currentScenario.events.filter(e => {
-      if (typeFilter && e.type && e.type !== typeFilter) return false;
-      if (e.minLevel && e.minLevel > gameState.level) return false;
-      if (e.minHours && e.minHours > runtimeHours) return false;
-      if (e.minRebirth && e.minRebirth > ((gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0)) return false;
-      // Filler: only trigger events exactly matching current rebirth (not lower rebirth's filler)
-      if (e.type === 'filler' && e.minRebirth !== ((gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0)) return false;
-      if (e.once && gameState.triggeredEvents.includes(e.id)) return false;
-      return true;
-    });
-    // Filler daily cap: dynamic — 8 + floor(挂机小时/4) + 每日仪式 2 + 重生加成
-    const fillerCap = 8 + Math.floor(runtimeHours / 4) + (gameState.dailyBonus ? 2 : 0) + (gameState.fillerRebirthBonus || 0);
-    if (typeFilter === 'filler' && (gameState.fillerCountToday || 0) >= fillerCap) return null;
-
-    if (pool.length > 0) {
-      const totalWeight = pool.reduce((sum, e) => sum + (e.weight || 1), 0);
-      let r = Math.random() * totalWeight;
-      for (const e of pool) {
-        r -= (e.weight || 1);
-        if (r <= 0) {
-          gameState.triggeredEvents.push(e.id);
-          return e;
-        }
-      }
-    }
-  }
-  return null;
+function checkHolidayEvent() {
+  if (!currentScenario || !currentScenario.events || gameState.isInHub) return null;
+  const todayHoliday = getTodaysHolidayId();
+  const upcomingHoliday = !todayHoliday ? getUpcomingHolidayId() : null;
+  const holidayInfo = todayHoliday || upcomingHoliday;
+  if (!holidayInfo) return null;
+  const holidayKey = 'holiday_' + holidayInfo.id + '_' + holidayInfo.type;
+  if (gameState.triggeredEvents.includes(holidayKey)) return null;
+  const he = getHolidayEventFromScenario(currentScenario, holidayInfo.id, holidayInfo.type);
+  if (!he) return null;
+  gameState.triggeredEvents.push(holidayKey);
+  return { id: holidayKey, title: he.holidayName, color: '#FFD700', text: he.text, isHoliday: true };
 }
 
 const MILESTONES = [
@@ -786,11 +794,9 @@ function checkAchievements() {
     return [];
   }
 
-  const currentRebirth = (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0;
   const unlocked = [];
   for (const a of currentScenario.achievements) {
     if (gameState.unlockedAchievements.includes(a.id)) continue;
-    if (a.minRebirth !== undefined && a.minRebirth !== currentRebirth) continue;
     let met = false;
     switch (a.condition.type) {
       case 'level':
@@ -819,10 +825,7 @@ function allScenariosFullyCompleted() {
   return allScenarios.every(s => {
     const hasCompletion = (gameState.gameCompletions || []).some(c => c.scenarioId === s.id);
     if (!hasCompletion) return false;
-    const maxR = s.max_rebirth || 0;
-    if (maxR === 0) return true;
-    const currentR = (gameState.rebirthCounts || {})[s.id] || 0;
-    return currentR >= maxR;
+    return canArchiveScenario(s.id);
   });
 }
 
@@ -871,7 +874,9 @@ function startGameLoop() {
       theme: gameState.selectedFontTheme || 'green',
       custom_theme: gameState.customTheme || null,
       hub_level: calcLevel(gameState.hubTotalExp),
-      rebirth_count: (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0,
+      current_branch: gameState.currentBranch || '',
+      completed_branches: gameState.completedBranches || [],
+      flags: gameState.flags || {},
       mechanic: currentScenario ? (currentScenario.mechanic || 'standard') : 'standard',
       hub_title: gameState?.equippedCompletionTitle?.title || getHubTitle(hubLevel).name,
       total_key_presses: gameState.totalKeyPresses || 0,
@@ -899,6 +904,26 @@ function startGameLoop() {
 
     // Pending choice blocks all progress
     if (gameState.pendingChoiceEvent) return;
+
+    // Catch-up mode: queue story events from old save level
+    if (gameState._catchUpQueue && gameState._catchUpQueue.length > 0) {
+      const next = gameState._catchUpQueue.shift();
+      const evPayload = { id: next.id, title: '事件', color: '#00BFFF', text: next.text };
+      try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
+      forwardToPet('event-triggered', evPayload);
+      if (next.choice1 && next.choice1Target) {
+        gameState.pendingChoiceEvent = {
+          eventId: next.id, scenarioId: gameState.scenarioId,
+          title: '抉择', text: next.text, choices: buildChoices(next),
+        };
+        const cp = { title: '抉择', text: next.text, choices: buildChoices(next), _eventId: next.id };
+        try { mainWindow.webContents.send('choice-event', cp); } catch {}
+        forwardToPet('choice-event', cp);
+        gameState._catchUpPaused = true;
+      }
+      return;
+    }
+    if (gameState._catchUpPaused) return;
 
     gameState.totalRuntimeMs += delta;
     let expMultiplier = 1;
@@ -935,7 +960,7 @@ function startGameLoop() {
       const month = new Date().getMonth();
       if (month >= 11 || month <= 2) expMultiplier = 0.5;  // 12-2 月冬季
     }
-    const expGain = (delta / 1000) * expMultiplier * (1 + (gameState.rebirthExpBonus || 0)) * buffMultiplier;
+    const expGain = (delta / 1000) * expMultiplier * buffMultiplier;
     gameState.exp += expGain;
     gameState.totalExpEarned += expGain;
 
@@ -968,16 +993,8 @@ function startGameLoop() {
       }
       // Check if this is a choice event
       if (storyEvent && storyEvent.choice1 && storyEvent.choice1Target) {
-        const choices = [];
-        if (storyEvent.choice1Target) choices.push({ text: storyEvent.choice1, target: storyEvent.choice1Target });
-        if (storyEvent.choice2Target) choices.push({ text: storyEvent.choice2, target: storyEvent.choice2Target });
-        gameState.pendingChoiceEvent = {
-          eventId: storyEvent.id,
-          scenarioId: gameState.scenarioId,
-          title: '抉择',
-          text: storyEvent.text,
-          choices,
-        };
+        const choices = buildChoices(storyEvent);
+        gameState.pendingChoiceEvent = { eventId: storyEvent.id, scenarioId: gameState.scenarioId, title: '抉择', text: storyEvent.text, choices };
         const choicePayload = { title: '抉择', text: storyEvent.text, choices, _eventId: storyEvent.id };
         try { mainWindow.webContents.send('choice-event', choicePayload); } catch {}
         forwardToPet('choice-event', choicePayload);
@@ -990,12 +1007,32 @@ function startGameLoop() {
     // Ending check — LV500 triggers scenario ending
     if (gameState.level >= 500 && !gameState.triggeredEvents.includes('scenario_ending_' + gameState.scenarioId)) {
       gameState.triggeredEvents.push('scenario_ending_' + gameState.scenarioId);
-      const storyEvents = currentScenario.events.filter(e => e.type === 'story');
-      const endingEvent = storyEvents[storyEvents.length - 1];
+      // Find ending event by flag require
+      const storyEvents = currentScenario.events.filter(e => e.type === 'story' && checkFlagRequire(e.flagRequire));
+      const endingEvent = storyEvents[storyEvents.length - 1] || currentScenario.events.filter(e => e.type === 'story')[storyEvents.length - 1];
+      // Record completion for this branch
+      const cb = gameState.currentBranch || '';
+      if (!gameState.completedBranches) gameState.completedBranches = [];
+      if (!gameState.completedBranches.includes(cb)) gameState.completedBranches.push(cb);
+      // Unlock branch completion title (from ending event's completionTitle)
+      const endingTitle = endingEvent?.completionTitle || currentScenario.completion_title;
+      if (endingTitle) {
+        if (!gameState.unlockedCompletionTitles) gameState.unlockedCompletionTitles = [];
+        if (!gameState.unlockedCompletionTitles.find(c => c.scenarioId === gameState.scenarioId && c.title === endingTitle)) {
+          gameState.unlockedCompletionTitles.push({
+            scenarioId: gameState.scenarioId,
+            scenarioName: currentScenario.name_cn || currentScenario.nameCN || currentScenario.name,
+            title: endingTitle,
+            branch: cb,
+          });
+        }
+      }
       const endingPayload = {
         scenarioId: gameState.scenarioId,
         scenarioName: currentScenario.name_cn || currentScenario.nameCN || currentScenario.name,
         text: endingEvent ? endingEvent.text : '你的旅程已达终点。',
+        endingTitle: endingTitle || '',
+        branch: cb,
       };
       try { mainWindow.webContents.send('scenario-ending', endingPayload); } catch {}
       // 首次通关解锁永久成就
@@ -1010,19 +1047,7 @@ function startGameLoop() {
       if (!gameState.gameCompletions) gameState.gameCompletions = [];
       const existingIdx = gameState.gameCompletions.findIndex(c => c.scenarioId === gameState.scenarioId);
       if (existingIdx === -1) {
-        gameState.gameCompletions.push({ scenarioId: gameState.scenarioId, date: new Date().toISOString().slice(0,10), rebirthCount: (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0 });
-      }
-      // 首次通关解锁通关称号（来自 .md completion_title）
-      if (currentScenario.completion_title) {
-        if (!gameState.unlockedCompletionTitles) gameState.unlockedCompletionTitles = [];
-        const alreadyUnlocked = gameState.unlockedCompletionTitles.find(c => c.scenarioId === gameState.scenarioId);
-        if (!alreadyUnlocked) {
-          gameState.unlockedCompletionTitles.push({
-            scenarioId: gameState.scenarioId,
-            scenarioName: currentScenario.name_cn || currentScenario.nameCN || currentScenario.name,
-            title: currentScenario.completion_title,
-          });
-        }
+        gameState.gameCompletions.push({ scenarioId: gameState.scenarioId, date: new Date().toISOString().slice(0,10), rebirthCount: (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0, branch: cb });
       }
       // 检查大厅成就
       checkHubAchievements();
@@ -1036,12 +1061,11 @@ function startGameLoop() {
       forwardToPet('event-triggered', evPayload);
     }
 
-    // Event check — filler only (every ~60s)
+    // Holiday event check (roughly every ~60s)
     if (Math.random() < delta / 60000) {
-      const event = checkAndTriggerEvent('filler');
-      if (event) {
-        gameState.fillerCountToday = (gameState.fillerCountToday || 0) + 1;
-        const evPayload = { id: event.id, title: event.title || '事件', color: event.color || '#FFA500', text: event.text };
+      const holidayEvent = checkHolidayEvent();
+      if (holidayEvent) {
+        const evPayload = { id: holidayEvent.id, title: holidayEvent.title, color: holidayEvent.color, text: holidayEvent.text };
         try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
         forwardToPet('event-triggered', evPayload);
       }
@@ -1052,8 +1076,6 @@ function startGameLoop() {
       const today = new Date().toISOString().slice(0, 10);
       if (gameState.lastLoginDay !== today) {
         gameState.lastLoginDay = today;
-        gameState.fillerCountToday = 0;
-        gameState.dailyBonus = true;
         const ritualPayload = {
           id: 'daily_ritual_' + today,
           title: '新的一日',
@@ -1182,6 +1204,21 @@ function registerIpcHandlers() {
     if (!scenario) throw new Error(`Scenario '${id}' not found`);
     const aliasStr = alias || '';
     resetGameForScenario(scenario, aliasStr);
+    // Catch-up: queue story events up to current level for old saves
+    const catchUpLevel = gameState.level;
+    if (catchUpLevel > 1 && scenario.events) {
+      const queue = scenario.events.filter(e => e.type === 'story' && e.minLevel <= catchUpLevel && !gameState.triggeredEvents.includes(e.id));
+      queue.sort((a, b) => a.minLevel - b.minLevel);
+      if (queue.length > 0) {
+        gameState._catchUpQueue = queue;
+        gameState.triggeredEvents.push(...queue.map(e => e.id));
+        // Inject exp to bypass normal level-up triggers during catch-up
+        const expForLevel = calcExpForLevel(catchUpLevel);
+        gameState.totalExpEarned = expForLevel;
+        gameState.exp = expForLevel;
+        gameState.level = catchUpLevel;
+      }
+    }
     // Re-send pending choice if exists for this scenario
     if (gameState.pendingChoiceEvent && gameState.pendingChoiceEvent.scenarioId === scenario.id) {
       const pe = gameState.pendingChoiceEvent;
@@ -1460,32 +1497,38 @@ function registerIpcHandlers() {
     return getLogEntries(date);
   });
 
-  // ── Rebirth ──
+  // ── Rebirth (choose another branch) ──
   ipcMain.handle('rebirth-scenario', (_, { scenarioId }) => {
     const sid = scenarioId || gameState.scenarioId;
     if (!sid) return { success: false, error: '无副本ID' };
-    // 检查重生上限
+    // 检查所有分支是否已走完
     const scenario = findScenarioById(sid);
-    const maxR = scenario?.max_rebirth ?? 0;
-    const currentR = gameState.rebirthCounts?.[sid] || 0;
-    if (maxR > 0 && currentR >= maxR) {
-      return { success: false, error: '已达到该副本重生上限' };
+    const branches = scenario?.branches || [];
+    const cb = gameState.completedBranches || [];
+    if (branches.length > 0 && cb.length >= branches.length) {
+      return { success: false, error: '所有分支已探索' };
     }
-    // 增加重生次数
+    // 增加重生次数（保留在原字段以兼容）
     if (!gameState.rebirthCounts) gameState.rebirthCounts = {};
     gameState.rebirthCounts[sid] = (gameState.rebirthCounts[sid] || 0) + 1;
     // 计算总重生次数（所有副本）
     const totalRebirths = Object.values(gameState.rebirthCounts).reduce((a, b) => a + b, 0);
-    // 经验加成：每次 +10%，封顶 +50%
+    // 经验加成：每次 +10%，封顶 +50%（保留）
     gameState.rebirthExpBonus = Math.min(0.5, totalRebirths * 0.1);
-    // filler 上限加成：每次 +5，封顶 +25
-    gameState.fillerRebirthBonus = Math.min(25, totalRebirths * 5);
     // 清空该副本进度
     if (gameState.scenarioProgress) delete gameState.scenarioProgress[sid];
-    // 清空通关记录中该副本的（保留成就）
-    if (gameState.gameCompletions) {
-      gameState.gameCompletions = gameState.gameCompletions.filter(c => c.scenarioId !== sid);
-    }
+    // 保留通关记录（不删）
+    // 重置副本内状态
+    gameState.level = 1;
+    gameState.exp = 0;
+    gameState.totalExpEarned = 0;
+    gameState.totalRuntimeMs = 0;
+    gameState.triggeredEvents = [];
+    gameState.currentBranch = '';
+    gameState.flags = {};
+    gameState.pendingChoiceEvent = null;
+    gameState._catchUpQueue = null;
+    gameState._catchUpPaused = false;
     // 返回大厅
     gameState.scenarioId = '';
     gameState.isInHub = true;
@@ -1672,12 +1715,18 @@ function registerIpcHandlers() {
       const targetEvent = currentScenario && currentScenario.events.find(e => e.id === choice.target);
       if (targetEvent && !gameState.triggeredEvents.includes(targetEvent.id)) {
         gameState.triggeredEvents.push(targetEvent.id);
+        // Set current branch from target event's branch
+        if (targetEvent.branch && targetEvent.branch !== '') gameState.currentBranch = targetEvent.branch;
+        // Apply flag set from target event
+        applyFlagSet(targetEvent.flagSet);
         const evPayload = { id: targetEvent.id, title: '事件', color: '#00BFFF', text: targetEvent.text };
         try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
         forwardToPet('event-triggered', evPayload);
       }
     }
     gameState.pendingChoiceEvent = null;
+    // Resume catch-up if paused
+    if (gameState._catchUpPaused) gameState._catchUpPaused = false;
     writeSave(gameState);
     return { success: true, choiceFlag: gameState.choiceFlags[pe.scenarioId]?.[pe.eventId] };
   });
@@ -1745,8 +1794,9 @@ function registerIpcHandlers() {
         scenarioAlias: '', unlockedTitleSets: {}, scenarioProgress: {},
         triggeredEvents: [], unlockedAchievements: [],
         petSelectedIndex: 0, hasSeenOnboarding: false,
-        lastLoginDay: '', fillerCountToday: 0, hubEquippedTitles: {},
-        dailyBonus: false, rebirthCounts: {}, rebirthExpBonus: 0, fillerRebirthBonus: 0,
+        lastLoginDay: '', hubEquippedTitles: {},
+        dailyBonus: false, rebirthCounts: {}, rebirthExpBonus: 0,
+        currentBranch: '', completedBranches: [], flags: {},
         gameCompletions: [], unlockedCompletionTitles: [], equippedCompletionTitle: null,
         archivedScenarios: [], promptDismissedAtScenarioCount: null,
         totalKeyPresses: 0, dailyKeyPresses: 0,
@@ -1879,12 +1929,13 @@ app.whenReady().then(() => {
       petSelectedIndex: 0,
       hasSeenOnboarding: false,
       lastLoginDay: '',
-      fillerCountToday: 0,
       hubEquippedTitles: {},
       dailyBonus: false,
       rebirthCounts: {},
       rebirthExpBonus: 0,
-      fillerRebirthBonus: 0,
+      currentBranch: '',
+      completedBranches: [],
+      flags: {},
       gameCompletions: [],
       unlockedCompletionTitles: [],
       equippedCompletionTitle: null,
@@ -1899,6 +1950,35 @@ app.whenReady().then(() => {
       lastWriteTimestamp: new Date().toISOString(),
     };
   }
+
+  // ── Old save migration (v3.3.1 → v3.4.0) ──
+  if (gameState.rebirthCounts && Object.keys(gameState.rebirthCounts).length > 0) {
+    const wastelandBranches = ['scavenger', 'merchant', 'soldier', 'ai'];
+    const oldRebirths = gameState.rebirthCounts['wasteland'] || 0;
+    if (oldRebirths > 0) {
+      // Map old rebirths to completed branches
+      if (!gameState.completedBranches) gameState.completedBranches = [];
+      for (let i = 0; i < Math.min(oldRebirths, wastelandBranches.length); i++) {
+        if (!gameState.completedBranches.includes(wastelandBranches[i])) {
+          gameState.completedBranches.push(wastelandBranches[i]);
+        }
+      }
+      // Award hub exp bonus for rebirths
+      gameState.hubTotalExp = (gameState.hubTotalExp || 0) + gameState.totalExpEarned * 0.1 * oldRebirths;
+      // Clean old data
+      delete gameState.rebirthCounts['wasteland'];
+      // Reset scenario to hub to avoid stale state
+      gameState.scenarioId = '';
+      gameState.isInHub = true;
+      gameState.currentBranch = '';
+      gameState.flags = gameState.flags || {};
+      console.log(`[migration] Mapped ${oldRebirths} rebirths → ${gameState.completedBranches.length} branches, awarded hub EXP bonus`);
+    }
+  }
+  // Ensure new fields exist
+  if (!gameState.currentBranch) gameState.currentBranch = '';
+  if (!gameState.completedBranches) gameState.completedBranches = [];
+  if (!gameState.flags) gameState.flags = {};
 
   // Set current scenario
   if (gameState.scenarioId && !gameState.isInHub) {
@@ -1961,9 +2041,7 @@ app.whenReady().then(() => {
       gameState.triggeredEvents.push(initEvent.id);
       const title = getCurrentTitle(currentScenario, gameState.level);
       if (initEvent.choice1 && initEvent.choice1Target) {
-        const choices = [];
-        if (initEvent.choice1Target) choices.push({ text: initEvent.choice1, target: initEvent.choice1Target });
-        if (initEvent.choice2Target) choices.push({ text: initEvent.choice2, target: initEvent.choice2Target });
+        const choices = buildChoices(initEvent);
         gameState.pendingChoiceEvent = {
           eventId: initEvent.id, scenarioId: gameState.scenarioId,
           title: '抉择', text: initEvent.text, choices,
