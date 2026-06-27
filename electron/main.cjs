@@ -905,12 +905,11 @@ function startGameLoop() {
     // Pending choice blocks all progress
     if (gameState.pendingChoiceEvent) return;
 
-    // Catch-up mode: queue story events from old save level
+    // Catch-up mode: wait for user to close bubble before sending next
     if (gameState._catchUpQueue && gameState._catchUpQueue.length > 0) {
+      if (gameState._catchUpBlocked) return;
       const next = gameState._catchUpQueue.shift();
-      const evPayload = { id: next.id, title: '事件', color: '#00BFFF', text: next.text };
-      try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
-      forwardToPet('event-triggered', evPayload);
+      gameState._catchUpBlocked = true;
       if (next.choice1 && next.choice1Target) {
         gameState.pendingChoiceEvent = {
           eventId: next.id, scenarioId: gameState.scenarioId,
@@ -919,11 +918,13 @@ function startGameLoop() {
         const cp = { title: '抉择', text: next.text, choices: buildChoices(next), _eventId: next.id };
         try { mainWindow.webContents.send('choice-event', cp); } catch {}
         forwardToPet('choice-event', cp);
-        gameState._catchUpPaused = true;
+      } else {
+        const evPayload = { id: next.id, title: '事件', color: '#00BFFF', text: next.text };
+        try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
+        forwardToPet('event-triggered', evPayload);
       }
       return;
     }
-    if (gameState._catchUpPaused) return;
 
     gameState.totalRuntimeMs += delta;
     let expMultiplier = 1;
@@ -1207,11 +1208,19 @@ function registerIpcHandlers() {
     // Catch-up: queue story events up to current level for old saves
     const catchUpLevel = gameState.level;
     if (catchUpLevel > 1 && scenario.events) {
-      const queue = scenario.events.filter(e => e.type === 'story' && e.minLevel <= catchUpLevel && !gameState.triggeredEvents.includes(e.id));
+      // Collect all IDs that are choice targets, so we don't pre-show them
+      const allTargetIds = new Set();
+      scenario.events.forEach(e => {
+        if (e.choice1Target) allTargetIds.add(e.choice1Target);
+        if (e.choice2Target) allTargetIds.add(e.choice2Target);
+        if (e.choice3Target) allTargetIds.add(e.choice3Target);
+        if (e.choice4Target) allTargetIds.add(e.choice4Target);
+      });
+      let queue = scenario.events.filter(e => e.type === 'story' && e.minLevel <= catchUpLevel && !allTargetIds.has(e.id));
       queue.sort((a, b) => a.minLevel - b.minLevel);
       if (queue.length > 0) {
         gameState._catchUpQueue = queue;
-        gameState.triggeredEvents.push(...queue.map(e => e.id));
+        gameState._catchUpBlocked = false;
         // Inject exp to bypass normal level-up triggers during catch-up
         const expForLevel = calcExpForLevel(catchUpLevel);
         gameState.totalExpEarned = expForLevel;
@@ -1725,10 +1734,16 @@ function registerIpcHandlers() {
       }
     }
     gameState.pendingChoiceEvent = null;
-    // Resume catch-up if paused
-    if (gameState._catchUpPaused) gameState._catchUpPaused = false;
+    // Resume catch-up: choice handled, unblock to send next
+    if (gameState._catchUpBlocked) gameState._catchUpBlocked = false;
     writeSave(gameState);
     return { success: true, choiceFlag: gameState.choiceFlags[pe.scenarioId]?.[pe.eventId] };
+  });
+
+  // ── Catch-up advance (called when user dismisses a bubble in catch-up mode) ──
+  ipcMain.handle('catch-up-advance', () => {
+    if (gameState._catchUpBlocked) gameState._catchUpBlocked = false;
+    return true;
   });
 
   ipcMain.handle('get-key-stats', () => {

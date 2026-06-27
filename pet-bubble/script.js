@@ -28,6 +28,7 @@ function showBubble(data) {
         currentChoices = null;
         currentEventId = null;
         window.petBubble.invoke('close-bubble').catch(() => {});
+        window.petBubble.invoke('catch-up-advance').catch(() => {});
       });
       choicesEl.appendChild(btn);
     });
@@ -46,6 +47,7 @@ document.getElementById('bubble').addEventListener('click', (e) => {
   if (document.body.dataset.type === 'chime') return;
   if (currentChoices) return;
   window.petBubble.invoke('close-bubble').catch(() => {});
+  window.petBubble.invoke('catch-up-advance').catch(() => {});
 });
 
 window.petBubble.on('show-bubble', (data) => { showBubble(data); });
