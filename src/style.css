@@ -54,6 +54,8 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #exp-buff-badge { font-size:10px; font-weight:bold; color:#FFD700; text-shadow:0 0 4px rgba(255,215,0,0.4); white-space:nowrap; animation:mainBuffPulse 0.8s ease-in-out infinite; }
 @keyframes mainBuffPulse { 0%,100% { transform:scale(1);opacity:0.85; } 50% { transform:scale(1.1);opacity:1; } }
 
+/* ── Scenario View (副本内视图，log-area 包装器) ── */
+#scenario-view { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 /* ── Log Area ── */
 #log-area { flex: 1; overflow-y: auto; padding: 4px 10px; scroll-behavior: smooth; }
 #log-area::-webkit-scrollbar { width: 4px; }

@@ -79,6 +79,7 @@ let eventDismissTimer = null, achievementDismissTimer = null;
 let lastRuntime = 0;
 
 const logArea = document.getElementById('log-area');
+const scenarioView = document.getElementById('scenario-view');
 const hubView = document.getElementById('hub-view');
 const hubGreeting = document.getElementById('hub-greeting');
 const hubPlayerName = document.getElementById('hub-player-name');
@@ -235,7 +236,7 @@ endingHubBtn.addEventListener('click', () => {
 endingPanelClose.addEventListener('click', () => endingPanel.classList.add('hidden'));
 
 function switchView(inHub) {
-  hubView.classList.toggle('hidden', !inHub); logArea.classList.toggle('hidden', inHub);
+  hubView.classList.toggle('hidden', !inHub); scenarioView.classList.toggle('hidden', inHub);
   btnBackHub.classList.toggle('hidden', inHub); btnScenario.classList.toggle('hidden', inHub);
 }
 
