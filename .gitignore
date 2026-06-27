@@ -25,6 +25,9 @@ release/
 
 # Player-created scenarios
 scenarios_user/*
+
+# ScenarioWriter temp files
+temp/
 !scenarios_user/README.md
 
 # Local project files (not pushed to GitHub)
