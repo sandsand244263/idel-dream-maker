@@ -110,32 +110,19 @@ function canArchiveScenario(gameState, scenarioId) {
   if (!s) return false;
   const hasCompleted = (gameState.gameCompletions || []).some(c => c.scenarioId === scenarioId);
   if (!hasCompleted) return false;
-  const maxR = s.max_rebirth || 0;
-  if (maxR === 0) return true;
-  return (gameState.rebirthCounts || {})[scenarioId] >= maxR;
+  const branches = s.branches || [];
+  if (branches.length === 0) return true;
+  const cb = gameState.completedBranches || [];
+  return branches.every(b => cb.includes(b));
 }
 
 function allScenariosFullyCompleted(gameState) {
   if (!scenarios || scenarios.length === 0) return false;
-  return scenarios.every(s => {
-    const hasCompletion = (gameState.gameCompletions || []).some(c => c.scenarioId === s.id);
-    if (!hasCompletion) return false;
-    const maxR = s.max_rebirth || 0;
-    if (maxR === 0) return true;
-    return (gameState.rebirthCounts || {})[s.id] >= maxR;
-  });
-}
-
-function calcFillerCap(hours, rebirthBonus) {
-  return 8 + Math.floor(hours / 4) + (2) + Math.min(25, rebirthBonus * 5);
+  return scenarios.every(s => canArchiveScenario(gameState, s.id));
 }
 
 function calcRebirthExpBonus(totalRebirths) {
   return Math.min(0.5, totalRebirths * 0.1);
-}
-
-function calcRebirthFillerBonus(totalRebirths) {
-  return Math.min(25, totalRebirths * 5);
 }
 
 // ── Test Runner ──
@@ -253,33 +240,16 @@ test('副本成就', '所有成就 condition.type 有效', validConditions, true
 
 // ── 8. canArchive ──
 test('canArchive', '无任何记录=false', canArchiveScenario(empty, 'wasteland'), false);
-test('canArchive', '已通关但未重生(需3次)=false', canArchiveScenario(fullCompletion, 'wasteland'), false);
-test('canArchive', '已通关+重生1次=false', canArchiveScenario({ ...fullCompletion, rebirthCounts: { wasteland: 1 } }, 'wasteland'), false);
-test('canArchive', '已通关+重生3次=true', canArchiveScenario({ ...fullCompletion, rebirthCounts: { wasteland: 3 } }, 'wasteland'), true);
+test('canArchive', '已通关+branches空(旧副本)=true', canArchiveScenario(fullCompletion, 'wasteland'), true);
+const partialBranches = { gameCompletions: [{ scenarioId:'wasteland' }], completedBranches: ['scavenger'], scenarioId: 'wasteland', unlockedAchievements: [], triggeredEvents: [], totalRuntimeMs: 0 };
+test('canArchive', '已通关+部分Branch(false)=旧副本branches空=true', canArchiveScenario(partialBranches, 'wasteland'), true);
 test('canArchive', '不存在的副本=false', canArchiveScenario(empty, 'nonexistent'), false);
 
-// ── 9. allScenariosFullyCompleted ──
-test('全部通关', '无记录=false', allScenariosFullyCompleted(empty), false);
-test('全部通关', '仅通关未重生(需max_rebirth=3)=false', allScenariosFullyCompleted(fullCompletion), false);
-const fullyDone = { gameCompletions: [{ scenarioId:'wasteland' }], rebirthCounts: { wasteland: 3 } };
-test('全部通关', '通关+重生3次=true', allScenariosFullyCompleted(fullyDone), true);
-
-// ── 10. filler上限 ──
-test('filler上限', '0小时+0重生 = 8', calcFillerCap(0, 0), 10); // 8 + dailyRitual(2)
-test('filler上限', '4小时+0重生 = 9', calcFillerCap(4, 0), 11); // 8 + 1 + 2
-test('filler上限', '24小时+0重生 = 14', calcFillerCap(24, 0), 16); // 8 + 6 + 2
-test('filler上限', '0小时+5重生(filler+25) = 8+2+25=35', calcFillerCap(0, 5), 35);
-test('filler上限', '48小时+3重生(filler+15) = 8+12+2+15=35', calcFillerCap(48, 3), 37);
-
-// ── 11. 重生加成 ──
+// ── 10. 重生加成 ──
 test('重生加成', 'exp: 0次=0%', calcRebirthExpBonus(0), 0);
 test('重生加成', 'exp: 1次=10%', calcRebirthExpBonus(1), 0.1);
 test('重生加成', 'exp: 5次=50%(封顶)', calcRebirthExpBonus(5), 0.5);
 test('重生加成', 'exp: 10次=50%(超过封顶)', calcRebirthExpBonus(10), 0.5);
-test('重生加成', 'filler: 0次=0', calcRebirthFillerBonus(0), 0);
-test('重生加成', 'filler: 1次=5', calcRebirthFillerBonus(1), 5);
-test('重生加成', 'filler: 5次=25(封顶)', calcRebirthFillerBonus(5), 25);
-test('重生加成', 'filler: 10次=25(超过封顶)', calcRebirthFillerBonus(10), 25);
 
 // ── 12. 副本数据完整性 ──
 scenarios.forEach(s => {
@@ -295,7 +265,6 @@ scenarios.forEach(s => {
 // ── 13. 事件数据完整性 ──
 const allEvents = scenarios.flatMap(s => s.events || []);
 test('事件检查', '有story类型事件', allEvents.some(e => e.type === 'story'), true);
-test('事件检查', '有filler类型事件', allEvents.some(e => e.type === 'filler'), true);
 test('事件检查', 'story事件有minLevel', allEvents.filter(e => e.type === 'story').every(e => typeof e.minLevel === 'number'), true);
 test('事件检查', '所有事件有ID', allEvents.every(e => typeof e.id === 'string' && e.id.length > 0), true);
 test('事件检查', '所有事件有text', allEvents.every(e => typeof e.text === 'string' && e.text.length > 0), true);
@@ -316,16 +285,16 @@ test('节日检查', '节日事件含holiday_id', holidayEvents.every(e => typeo
 test('节日检查', '节日事件含type=advance或day', holidayEvents.every(e => ['advance','day'].includes(e.type)), holidayEvents.length === 0 || true);
 test('节日检查', '节日事件数>=0(当前wasteland无常驻节日事件)', holidayEvents.length >= 0, true);
 
-// ── 16. Rebirth 数据 ──
-const storyByRebirth = {};
+// ── 16. Branch 数据 ──
+const storyByBranch = {};
 allEvents.filter(e => e.type === 'story').forEach(e => {
-  const r = e.minRebirth || 0;
-  if (!storyByRebirth[r]) storyByRebirth[r] = [];
-  storyByRebirth[r].push(e);
+  const b = e.branch || '';
+  if (!storyByBranch[b]) storyByBranch[b] = [];
+  storyByBranch[b].push(e);
 });
-// 检查每个周目都有约500 story
-for (const [r, events] of Object.entries(storyByRebirth)) {
-  test('Rebirth数据', `周目R${r} story数量 ≈500`, events.length >= 400 && events.length <= 600, true);
+// 检查主要分支有足够 story
+for (const [b, events] of Object.entries(storyByBranch)) {
+  test('Branch数据', `branch"${b}" 有story`, events.length > 0, true);
 }
 
 // ── 生成报告 ──
@@ -340,7 +309,7 @@ const report = {
     titles: s.titles.length,
     achievements: s.achievements.length,
     events: s.events.length,
-    max_rebirth: s.max_rebirth,
+    branches: s.branches || [],
     mechanic: s.mechanic,
     completion_title: s.completion_title,
   })),
