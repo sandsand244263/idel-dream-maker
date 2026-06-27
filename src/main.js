@@ -54,7 +54,7 @@ const LANG = {
   hubAchGroup: '大厅成就',
   scenarioAchGroup: '副本成就',
   scenarioLocked: '需要大厅 Lv.{0} 或通关 {1} 个副本',
-  rebirthConfirm: '确定重生吗？该副本进度将清空，你将重新体验所有故事。经验加成 +10%（封顶 +50%），filler 上限 +5（封顶 +25）。',
+  rebirthConfirm: '确定重生吗？该副本进度将清空，你将重新体验其他分支的故事。经验加成 +10%（封顶 +50%）。',
   archivedLabel: '已归档',
   restoreBtn: '恢复',
   scenarioArchived: '已归档',
@@ -128,6 +128,8 @@ const hubCompletionDisplay = document.getElementById('hub-completion-display');
 const endingOverlay = document.getElementById('ending-overlay');
 const endingScenarioName = document.getElementById('ending-scenario-name');
 const endingText = document.getElementById('ending-text');
+const endingTitleEl = document.getElementById('ending-title');
+const endingBranchInfo = document.getElementById('ending-branch-info');
 const endingRebirthBtn = document.getElementById('ending-rebirth');
 const endingHubBtn = document.getElementById('ending-hub');
 const endingPanel = document.getElementById('ending-panel');
@@ -208,6 +210,13 @@ async function init() {
   window.electron.on('scenario-ending', (event) => {
     endingScenarioName.textContent = event.scenarioName;
     endingText.textContent = event.text;
+    if (event.endingTitle) {
+      endingTitleEl.textContent = '解锁称号: ' + event.endingTitle;
+      endingTitleEl.style.display = 'block';
+    } else {
+      endingTitleEl.style.display = 'none';
+    }
+    endingBranchInfo.textContent = event.branch ? '分支: ' + event.branch : '';
     endingOverlay.classList.remove('hidden');
   });
 }
@@ -226,7 +235,7 @@ endingRebirthBtn.addEventListener('click', async () => {
       renderHubView();
       renderHubCards();
       updateUI();
-      addLog('info', '已重生，经验加成 +10%');
+      addLog('info', '已选择其他分支，经验加成 +10%');
     }
   } catch (e) { showToast('重生失败', 'error'); }
 });

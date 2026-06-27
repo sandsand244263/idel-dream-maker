@@ -71,7 +71,8 @@ function doShowBubble(data) {
   isChoiceBubble = !!(data && data.choices);
 
   setImmediate(() => {
-    const extraH = data && data.choices ? 60 : 0;
+    const choiceCount = data && data.choices ? data.choices.length : 0;
+    const extraH = choiceCount * 30;
     bubbleWindow.webContents.executeJavaScript(
       `(function(){
         const body = document.getElementById('bubble-body');
