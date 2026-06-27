@@ -110,8 +110,8 @@ for (const fpath of inputPaths) {
   if (hasEvents) {
     const dataLines = [];
     let inEvents = false;
-    dataLines.push('| ID | Type | MinLevel | MinHours | Weight | Once | MinRebirth | Action | Text |');
-    dataLines.push('|---|---|---|---|---|---|---|---|---|');
+    dataLines.push('| ID | Type | MinLevel | MinHours | Weight | Once | Branch | FlagSet | FlagRequire | CompletionTitle | Choice1 | Choice1Target | Choice2 | Choice2Target | Choice3 | Choice3Target | Choice4 | Choice4Target | Action | Text |');
+    dataLines.push('|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|');
 
     for (const line of lines) {
       const t = line.trim();
