@@ -334,7 +334,18 @@ function renderHubCards() {
       }
       const archiveBtn = (u.unlocked && u.canArchive) ? `<span class="archive-btn" data-sid="${s.id}">[归档]</span>` : '';
       const userTag = s.isUserMade ? `<span class="user-made-tag">${t('labelUserMade')}</span>` : '';
-      card.innerHTML = `<div class="hub-card-name">${s.nameCN} (${s.name})${userTag}</div><div class="hub-card-desc">${s.description}</div><div class="hub-card-meta">${s.eventCount} ${t('scenarioEvent')} · ${s.achievementCount} ${t('scenarioAchievement')}</div>${progressHtml}${archiveBtn}${u.unlocked ? '' : `<div class="hub-card-lock">${tf('scenarioLocked', u.requirement.hub_level || 0, u.requirement.completions || 0)}</div>`}`;
+      const nameDiv = document.createElement('div'); nameDiv.className = 'hub-card-name';
+      nameDiv.textContent = `${s.nameCN} (${s.name})`;
+      if (s.isUserMade) { const tagSpan = document.createElement('span'); tagSpan.className = 'user-made-tag'; tagSpan.textContent = t('labelUserMade'); nameDiv.appendChild(tagSpan); }
+      card.appendChild(nameDiv);
+      const descDiv = document.createElement('div'); descDiv.className = 'hub-card-desc';
+      descDiv.textContent = s.description; card.appendChild(descDiv);
+      const metaDiv = document.createElement('div'); metaDiv.className = 'hub-card-meta';
+      metaDiv.textContent = `${s.eventCount} ${t('scenarioEvent')} · ${s.achievementCount} ${t('scenarioAchievement')}`;
+      card.appendChild(metaDiv);
+      if (progressHtml) { const tmp = document.createElement('div'); tmp.innerHTML = progressHtml; while (tmp.firstChild) card.appendChild(tmp.firstChild); }
+      if (archiveBtn) { const tmp = document.createElement('div'); tmp.innerHTML = archiveBtn; while (tmp.firstChild) card.appendChild(tmp.firstChild); }
+      if (!u.unlocked) { const lockDiv = document.createElement('div'); lockDiv.className = 'hub-card-lock'; lockDiv.textContent = tf('scenarioLocked', u.requirement.hub_level || 0, u.requirement.completions || 0); card.appendChild(lockDiv); }
       if (u.unlocked) {
         card.addEventListener('click', async (e) => {
           if (e.target.closest('.archive-btn')) return;
@@ -365,7 +376,13 @@ function renderHubCards() {
         if (completion) {
           progHtml = `<div class="hub-card-progress"><span class="progress-complete">✓ 通关</span>${rebirthCount > 0 ? `<span class="progress-rebirth">↻ R${rebirthCount}</span>` : ''}</div>`;
         }
-        card.innerHTML = `<div class="hub-card-name">${s.nameCN} (${s.name})</div><div class="hub-card-desc">${s.description}</div>${progHtml}<span class="restore-btn" data-sid="${s.id}">[${t('restoreBtn')}]</span>`;
+        const aNameDiv = document.createElement('div'); aNameDiv.className = 'hub-card-name';
+        aNameDiv.textContent = `${s.nameCN} (${s.name})`; card.appendChild(aNameDiv);
+        const aDescDiv = document.createElement('div'); aDescDiv.className = 'hub-card-desc';
+        aDescDiv.textContent = s.description; card.appendChild(aDescDiv);
+        if (progHtml) { const tmp = document.createElement('div'); tmp.innerHTML = progHtml; while (tmp.firstChild) card.appendChild(tmp.firstChild); }
+        const rstBtn = document.createElement('span'); rstBtn.className = 'restore-btn'; rstBtn.dataset.sid = s.id;
+        rstBtn.textContent = `[${t('restoreBtn')}]`; card.appendChild(rstBtn);
         card.querySelector('.restore-btn').addEventListener('click', async (e) => {
           e.stopPropagation();
           try { await window.electron.invoke('unarchive-scenario', { scenarioId: s.id }); renderHubCards(); } catch {}
@@ -393,7 +410,14 @@ function renderHubCards() {
         const lvl = calcLevel(progress.totalExpEarned || progress.total_exp_earned || 0);
         progressHtml = `<div class="hub-card-progress"><span class="progress-level">Lv.${lvl}</span></div>`;
       }
-      card.innerHTML = `<div class="hub-card-name">${s.nameCN} (${s.name})</div><div class="hub-card-desc">${s.description}</div><div class="hub-card-meta">${s.eventCount} ${t('scenarioEvent')} · ${s.achievementCount} ${t('scenarioAchievement')}</div>${progressHtml}`;
+      const fNameDiv = document.createElement('div'); fNameDiv.className = 'hub-card-name';
+      fNameDiv.textContent = `${s.nameCN} (${s.name})`; card.appendChild(fNameDiv);
+      const fDescDiv = document.createElement('div'); fDescDiv.className = 'hub-card-desc';
+      fDescDiv.textContent = s.description; card.appendChild(fDescDiv);
+      const fMetaDiv = document.createElement('div'); fMetaDiv.className = 'hub-card-meta';
+      fMetaDiv.textContent = `${s.eventCount} ${t('scenarioEvent')} · ${s.achievementCount} ${t('scenarioAchievement')}`;
+      card.appendChild(fMetaDiv);
+      if (progressHtml) { const tmp = document.createElement('div'); tmp.innerHTML = progressHtml; while (tmp.firstChild) card.appendChild(tmp.firstChild); }
       card.addEventListener('click', async () => {
         try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); }
       });
@@ -621,7 +645,10 @@ document.getElementById('btn-check-update')?.addEventListener('click', async () 
       return;
     }
     if (r.hasUpdate) {
-      status.innerHTML = '发现新版本: v' + r.latestVersion + ' &nbsp;<a href="#" id="update-dl-link" style="color:var(--fg);">GitHub 下载</a>';
+      status.textContent = '发现新版本: v' + r.latestVersion + ' ';
+      const dlLink = document.createElement('a'); dlLink.href = '#'; dlLink.id = 'update-dl-link';
+      dlLink.style.cssText = 'color:var(--fg);'; dlLink.textContent = 'GitHub 下载';
+      status.appendChild(dlLink);
       status.style.color = '#ff6';
       dlProxy.classList.remove('hidden');
       dlProxy.onclick = proxyDownload;
@@ -804,16 +831,30 @@ function renderScenarioPanel() {
     const archivedSet = new Set(archivedIds || []);
       scenarioList.filter(s => !archivedSet.has(s.id)).forEach(s => {
         const card = document.createElement('div'); card.className = `scenario-card${s.id === cid ? ' active' : ''}`;
-        const userTag = s.isUserMade ? `<span class="user-made-tag">${t('labelUserMade')}</span>` : '';
-        card.innerHTML = `<div class="scenario-name" style="color:${s.id === cid ? '#0F0' : '#888'}">${s.nameCN} (${s.name})${userTag}</div><div class="scenario-desc">${s.description}</div><div class="scenario-stats"><span>${s.eventCount} ${t('scenarioEvent')}</span><span>${s.achievementCount} ${t('scenarioAchievement')}</span></div>`;
+        const sNameDiv = document.createElement('div'); sNameDiv.className = 'scenario-name'; sNameDiv.style.color = s.id === cid ? '#0F0' : '#888';
+        sNameDiv.textContent = `${s.nameCN} (${s.name})`;
+        if (s.isUserMade) { const tagSpan = document.createElement('span'); tagSpan.className = 'user-made-tag'; tagSpan.textContent = t('labelUserMade'); sNameDiv.appendChild(tagSpan); }
+        card.appendChild(sNameDiv);
+        const sDescDiv = document.createElement('div'); sDescDiv.className = 'scenario-desc';
+        sDescDiv.textContent = s.description; card.appendChild(sDescDiv);
+        const sStatsDiv = document.createElement('div'); sStatsDiv.className = 'scenario-stats';
+        sStatsDiv.textContent = `${s.eventCount} ${t('scenarioEvent')}${s.achievementCount ? ' · ' + s.achievementCount + ' ' + t('scenarioAchievement') : ''}`;
+        card.appendChild(sStatsDiv);
         card.addEventListener('click', async () => { try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); scenarioPanel.classList.add('hidden'); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); } });
         scenarioListEl.appendChild(card);
       });
     }).catch(() => {
       scenarioList.forEach(s => {
         const card = document.createElement('div'); card.className = `scenario-card${s.id === cid ? ' active' : ''}`;
-        const userTag = s.isUserMade ? `<span class="user-made-tag">${t('labelUserMade')}</span>` : '';
-        card.innerHTML = `<div class="scenario-name" style="color:${s.id === cid ? '#0F0' : '#888'}">${s.nameCN} (${s.name})${userTag}</div><div class="scenario-desc">${s.description}</div><div class="scenario-stats"><span>${s.eventCount} ${t('scenarioEvent')}</span><span>${s.achievementCount} ${t('scenarioAchievement')}</span></div>`;
+        const sNameDiv = document.createElement('div'); sNameDiv.className = 'scenario-name'; sNameDiv.style.color = s.id === cid ? '#0F0' : '#888';
+        sNameDiv.textContent = `${s.nameCN} (${s.name})`;
+        if (s.isUserMade) { const tagSpan = document.createElement('span'); tagSpan.className = 'user-made-tag'; tagSpan.textContent = t('labelUserMade'); sNameDiv.appendChild(tagSpan); }
+        card.appendChild(sNameDiv);
+        const sDescDiv = document.createElement('div'); sDescDiv.className = 'scenario-desc';
+        sDescDiv.textContent = s.description; card.appendChild(sDescDiv);
+        const sStatsDiv = document.createElement('div'); sStatsDiv.className = 'scenario-stats';
+        sStatsDiv.textContent = `${s.eventCount} ${t('scenarioEvent')}${s.achievementCount ? ' · ' + s.achievementCount + ' ' + t('scenarioAchievement') : ''}`;
+        card.appendChild(sStatsDiv);
         card.addEventListener('click', async () => { try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); scenarioPanel.classList.add('hidden'); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); } });
         scenarioListEl.appendChild(card);
       });

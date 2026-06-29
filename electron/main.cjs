@@ -190,16 +190,24 @@ function appendLogEntry(type, msg) {
     const now = new Date();
     const dateKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
     const filePath = path.join(getLogDir(), dateKey + '.json');
-    let entries = [];
-    if (fs.existsSync(filePath)) {
-      entries = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-    }
-    entries.push({
+    const entry = {
       t: `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`,
       ty: type,
       m: msg,
-    });
-    fs.writeFileSync(filePath, JSON.stringify(entries), 'utf-8');
+    };
+    const entryLine = JSON.stringify(entry) + '\n';
+    if (!fs.existsSync(filePath)) {
+      fs.appendFileSync(filePath, entryLine, 'utf-8');
+    } else {
+      const content = fs.readFileSync(filePath, 'utf-8');
+      if (content.trimStart().startsWith('[')) {
+        const oldEntries = JSON.parse(content);
+        const lines = oldEntries.map(e => JSON.stringify(e)).join('\n') + '\n' + entryLine;
+        fs.writeFileSync(filePath, lines, 'utf-8');
+      } else {
+        fs.appendFileSync(filePath, entryLine, 'utf-8');
+      }
+    }
   } catch (e) { console.error('appendLogEntry error:', e); }
 }
 
@@ -215,7 +223,12 @@ function getLogEntries(date) {
   try {
     const filePath = path.join(getLogDir(), date + '.json');
     if (!fs.existsSync(filePath)) return [];
-    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    const content = fs.readFileSync(filePath, 'utf-8').trim();
+    if (!content) return [];
+    if (content.startsWith('[')) {
+      return JSON.parse(content);
+    }
+    return content.split('\n').filter(l => l.trim()).map(l => JSON.parse(l));
   } catch { return []; }
 }
 
@@ -2038,6 +2051,7 @@ app.whenReady().then(() => {
         const [x, y] = mainWindow.getPosition();
         gameState.windowX = x;
         gameState.windowY = y;
+        writeSave(gameState);
       }
     }, 300);
   });
