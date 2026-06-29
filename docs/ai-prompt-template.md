@@ -9,10 +9,10 @@
 ## 核心规则
 
 1. 游戏以挂机为主，关键节点会有分支选择让玩家决定故事走向
-2. 每个等级绑定一个故事事件（story），构成完整叙事线
-3. choice 事件是带两个选项的关键节点，玩家选完后剧情走向不同
-4. filler 事件是日常见闻，按时间驱动触发
-5. 所有文本用第二人称"你"来写
+2. 每个等级绑定一条故事事件（story），构成完整叙事线
+3. Lv.5 抉择定方向，玩家选完后固定走一条分支直到 Lv.500
+4. 后续 choice 事件设旗标（Flag），影响后续事件和结局
+5. 所有文本用第二人称"你"来写，30-80 字
 6. 文本风格：简洁平实，不用华丽辞藻
 
 ## 格式规范
@@ -28,11 +28,11 @@ description: 一句话描述   # 副本简介
 player_title: 初始称号    # 进入副本时显示的玩家称号
 language: zh
 mechanic: standard        # standard/cultivation/cyber/tide/polar
-max_rebirth: 3            # 最大重生次数
+branches: [branchA, branchB, branchC, branchD]  # 分支列表，默认 4 个
 unlock_requirement:       # 解锁条件
   hub_level: 0
   completions: 0
-completion_title: 通关称号 # LV500 通关后获得的称号
+completion_title: 通关称号 # 通关后获得的大厅称号（各结局可独立设）
 ---
 ```
 
@@ -42,61 +42,63 @@ completion_title: 通关称号 # LV500 通关后获得的称号
 |---|---|---|---|
 | 1 | 称号名 | #颜色代码 | 称号描述 |
 
-- 建议 30 个称号，分布在 1-500 级
-- 按等级升序排列
-- Level 不一定要连续（可以 1, 2, 3, 5, 8, 12...）
-- Color 用十六进制色值
+- 30 个，分布在 1-500 级
+- 按等级升序排列，跨分支共用
+- Color 用十六进制含 #
 
-### Events 事件表
+### Events 事件表（20 列完整格式）
 
-| ID | Type | MinLevel | Weight | Once | MinRebirth | Choice1 | Choice1Target | Choice2 | Choice2Target | Text |
-|---|---|---|---|---|---|---|---|---|---|---|
-| s_001 | story | 1 | 1 | yes | 0 | | | | | 事件文本... |
-| s_050 | story | 50 | 1 | yes | 0 | 走大道 | s_051a | 穿密林 | s_051b | 你站在岔路口... |
-| s_051a | story | 51 | 1 | yes | 0 | | | | | 你走上大道，遇到一队商队... |
-| s_051b | story | 51 | 1 | yes | 0 | | | | | 你钻入密林，踩到了捕兽夹... |
+| ID | Type | MinLevel | MinHours | Weight | Once | Branch | FlagSet | FlagRequire | CompletionTitle | Choice1 | Choice1Target | Choice2 | Choice2Target | Choice3 | Choice3Target | Choice4 | Choice4Target | Action | Text |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| {id}_e0001 | story | 1 | 0 | 1 | 是 | | | | | | | | | | | | | 行动词 | 30-80 字文本 |
 
-**普通 story 规则：**
-- 每个等级 1 条 story 事件，共约 475 条
-- Type=story, Weight=1, Once=yes
-- MinRebirth 表示周目：0=初始周目, 1=二周目, 2=三周目...
+**ID 命名规则：**
+- 普通 story：`{id}_e{四位编号}`（如 `wasteland_e0001`）
+- choice target 事件：`{id}_e{编号}a` / `{id}_e{编号}b` / `{id}_e{编号}c` / `{id}_e{编号}d`
 
-**choice 事件规则（新增）：**
-- 每周目 20-25 个 choice 事件，放在关键转折点
-- 在普通 story 上加 Choice1/Choice1Target/Choice2/Choice2Target 列
-- Choice1/Choice2 是选项按钮上的文字（10 字以内）
-- Choice1Target/Choice2Target 是选完后弹出的事件 ID
-- target 事件是普通 story，不加 Choice 列
-- target 事件 ID 用 `{编号}a` / `{编号}b` 命名
+**事件类型说明：**
 
-**filler 事件规则：**
-- 约 1700 条/周目，分布于各等级
-- Type=filler, Weight=5, Once=no
-- 内容是日常见闻、环境描写、生活细节
-- 不推进剧情主线
-- 不同周目的 filler 事件应不同
+- **story**：每级 1 条，Type 固定为 story（v3.4.0 起无 filler），Once=是
+- **choice 事件**：在 story 上加 Choice1~Choice4 及对应 Target 列，支持 2-4 个选项
+- **分支抉择**：Lv.5 固定 4 选项，每个 target 的 Branch 字段决定分支归属
+- **旗标抉择**：后续 choice 事件设 FlagSet，影响 FlagRequire 匹配
+- **结局事件**：Lv.500 时触发，加 CompletionTitle 可解锁专属通关称号
+
+**分支结构：**
+
+| 部分 | 等级范围 | 事件数 |
+|------|---------|:------:|
+| 共享开头 | Lv.1-4 | 4 |
+| 每条分支 | Lv.5-500 | ~500 |
+
+- 共享开头为所有分支共用
+- Lv.5 抉择后固定走一条分支
+- 分支内事件通过 Branch 列过滤（Branch="" 共享，非空只在该分支触发）
+
+**Flag 语法：**
+- FlagSet：`键名=值`（等于）、`键名+=数值`（累加）、`键名-=数值`（递减），多个用 `;`
+- FlagRequire：`键名=值`（等于）、`键名>5`（数值大于），`&`=AND，`\|`=OR
 
 ### Achievements 成就表
 
-| ID | Name | Description | Icon | ConditionType | ConditionValue |
-|---|---|---|---|---|---|---|
-| ach_001 | 成就名 | 成就描述 | ★ | level | 100 |
+| ID | Name | Description | Icon | ConditionType | ConditionValue | FlagRequire |
+|---|---|---|---|---|---|---|---|
+| {id}_a001 | 成就名 | 成就描述 | ★ | level | 5 | |
 
-- 建议 50 个成就
+- 建议 50 个
 - ConditionType：level(等级)/runtime(毫秒)/events(事件数)/titles(称号数)
+- FlagRequire 可选，不填则任意分支都能解锁
 
 ### HolidayEvents 节日事件表
 
-| ID | HolidayID | Type | Text |
-|---|---|---|---|
-| h_001 | new_year | day | 节日当天的文本... |
+| ID | HolidayID | Type | MinLevel | MinHours | Weight | Once | Text |
+|---|---|---|---|---|---|---|---|
+| {id}_h001 | spring_festival | advance | 1 | 0 | 1 | 是 | 节前 3 天的文本 |
 
-- 约 25 个节日，每个节日 2 条（day + advance）
-- HolidayID 参考：new_year, spring_festival, lantern, valentine, qingming, easter, labor, youth, dragon_boat, child, mid_autumn, national, halloween, christmas 等
+- 26 个节日，每个节日 2 条（advance + day），共 52 条
+- 节日列表：new_year, valentine, women_day, white_day, april_fools, earth_day, labor_day, childrens_day, environment_day, peace_day, halloween, christmas_eve, christmas, new_year_eve, spring_festival, lantern_festival, dragon_boat, qixi, zhongyuan, mid_autumn, double_ninth, qingming, easter, mothers_day, fathers_day, thanksgiving
 
 ## 挂机机制推荐
-
-根据副本主题选择合适的 mechanic：
 
 | 主题 | 推荐机制 | 原因 |
 |------|---------|------|
@@ -106,8 +108,15 @@ completion_title: 通关称号 # LV500 通关后获得的称号
 | 海岛/渔村/航海 | tide | 潮汐规律契合主题 |
 | 极地/雪山 | polar | 季节变化影响生存 |
 
-## 副本格式参考
+## 常见问题
 
-完整格式规范见项目的 `docs/format-rules.md`，最小示例见 `docs/example-hello-world.md`。
+- 每行 pipe table 必须有 20 列，以 `|` 开头和结尾
+- Events 表内部不能有空行
+- 事件文本至少 10 字
+- runtime 条件值单位为**毫秒**（3600000 = 1 小时）
+
+## 参考文档
+
+完整格式规范见 `docs/format-rules.md`，最小可运行示例见 `docs/example-hello-world.md`。
 
 生成完成后保存为 `.md` 文件，放到 `scenarios_user/` 目录下，重启游戏即可加载。
