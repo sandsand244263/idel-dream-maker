@@ -307,7 +307,10 @@ function writeSave(data) {
     data.lastWriteTimestamp = new Date().toISOString();
     const dir = getAppDataPath();
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(path.join(dir, 'save.json'), JSON.stringify(data, null, 2), 'utf-8');
+    const tmpPath = path.join(dir, 'save.json.tmp');
+    const finalPath = path.join(dir, 'save.json');
+    fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf-8');
+    fs.renameSync(tmpPath, finalPath);
     // Sync to cloud if configured
     const syncCfg = readSyncConfig();
     if (syncCfg && syncCfg.path) syncToCloud(syncCfg);
@@ -521,9 +524,9 @@ function handleInputDown(keyId, keyChar, now) {
     forwardToPet('level-up', luPayload);
   }
 
-  if (grade && now >= buffCooldownUntil) {
-    if (!buffGradeTime) buffGradeTime = now;
-    if (!buffExpireTime && now - buffGradeTime >= 10000) {
+  if (grade && Date.now() >= buffCooldownUntil) {
+    if (!buffGradeTime) buffGradeTime = Date.now();
+    if (!buffExpireTime && Date.now() - buffGradeTime >= 10000) {
       if (['A','S','SS','SSS'].includes(grade)) {
         buffMultiplier = 3;
         buffExpireTime = now + 120000;
@@ -832,9 +835,10 @@ function allScenariosFullyCompleted() {
 let hubIdleMs = 0;
 let lastHubReminderMs = 0;
 
+const TICK_MS = 500;
+
 function startGameLoop() {
   if (gameLoopInterval) return;
-  let lastTick = Date.now();
   hubIdleMs = 0;
   lastHubReminderMs = 0;
 
@@ -851,9 +855,7 @@ function startGameLoop() {
 
     resetDailyIfNewDay();
 
-    const now = Date.now();
-    const delta = now - lastTick;
-    lastTick = now;
+    const delta = TICK_MS;
 
     // Send game tick regardless of hub/scenario
     const payload = {
@@ -1912,6 +1914,17 @@ function registerIpcHandlers() {
 // ── App Lifecycle ──
 
 app.whenReady().then(() => {
+  // 单实例锁：防止多开互相覆盖存档
+  const gotTheLock = app.requestSingleInstanceLock();
+  if (!gotTheLock) { app.quit(); return; }
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.show();
+      mainWindow.focus();
+    }
+  });
+
   allScenarios = loadScenarios();
   const userScenarios = loadUserScenarios();
   if (userScenarios.length > 0) {
@@ -2041,8 +2054,8 @@ app.whenReady().then(() => {
     const pe = gameState.pendingChoiceEvent;
     const scenario = findScenarioById(pe.scenarioId);
     if (scenario) {
-      try { mainWindow.webContents.send('choice-event', { title: pe.title, text: pe.text, choices: pe.choices }); } catch {}
-      forwardToPet('choice-event', { title: pe.title, text: pe.text, choices: pe.choices });
+      try { mainWindow.webContents.send('choice-event', { title: pe.title, text: pe.text, choices: pe.choices, _eventId: pe.eventId }); } catch {}
+      forwardToPet('choice-event', { title: pe.title, text: pe.text, choices: pe.choices, _eventId: pe.eventId });
     } else {
       gameState.pendingChoiceEvent = null;
       writeSave(gameState);
