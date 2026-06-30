@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld('pet', {
       'pet-drag-start', 'pet-drag-move', 'pet-drag-end',
       'get-pet-spritesheet', 'hide-pet-window', 'toggle-pet-window', 'toggle-main-window',
       'open-pets-folder', 'open-external-link',
-      'show-pet-selector', 'show-bubble', 'close-bubble',
+      'show-pet-selector', 'show-bubble', 'show-choice-bubble', 'close-bubble',
       'show-context-menu', 'get-current-theme',
     ];
     if (validChannels.includes(channel)) {

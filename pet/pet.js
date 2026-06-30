@@ -445,7 +445,7 @@ window.pet.on('hourly-chime',()=>{
 
 window.pet.on('choice-event',(d)=>{
   if(d&&d.choices){
-    window.pet.invoke('show-bubble',{title:d.title||'抉择',text:d.text,color:'#FF9E64',type:'choice',choices:d.choices,_eventId:d._eventId}).catch(()=>{});
+    window.pet.invoke('show-choice-bubble',{title:d.title||'抉择',text:d.text,color:'#FF9E64',type:'choice',choices:d.choices,_eventId:d._eventId}).catch(()=>{});
   }
 });
 window.pet.on('dismiss-choice',()=>{
