@@ -262,6 +262,9 @@ function checkSyncOnStartup() {
     const localTime = gameState?.lastWriteTimestamp || '';
     const syncTime = syncData.lastWriteTimestamp || '';
     if (!syncTime || syncTime <= localTime) return;
+    const localTotal = (gameState?.hubTotalExp || 0) + (gameState?.totalExpEarned || 0);
+    const cloudTotal = (syncData.hubTotalExp || 0) + (syncData.totalExpEarned || 0);
+    if (cloudTotal < localTotal) return;
     const { dialog } = require('electron');
     const result = dialog.showMessageBoxSync(mainWindow, {
       type: 'question',
@@ -346,6 +349,8 @@ function syncToCloud(cfg) {
         fs.copyFileSync(path.join(logDir, f), path.join(cloudLogDir, f));
       }
     }
+    // Update lastSync timestamp
+    writeSyncConfig({ ...cfg, lastSync: new Date().toISOString() });
   } catch {}
 }
 
@@ -1778,32 +1783,146 @@ function registerIpcHandlers() {
   // ── Sync ──
   ipcMain.handle('get-sync-path', () => {
     const cfg = readSyncConfig();
-    return cfg ? { path: cfg.path } : null;
+    return cfg ? { path: cfg.path, lastSync: cfg.lastSync || null } : null;
   });
   ipcMain.handle('set-sync-path', (_, { path }) => {
     writeSyncConfig({ path, deviceId: require('os').hostname(), lastSync: new Date().toISOString() });
     return { success: true };
   });
+  ipcMain.handle('get-sync-info', ({ path: p }) => {
+    try {
+      const cloudSavePath = path.join(p, 'Idel-DreamMaker-Sync', 'save.json');
+      if (!fs.existsSync(cloudSavePath)) return { hasCloudSave: false };
+      const cloudData = JSON.parse(fs.readFileSync(cloudSavePath, 'utf-8'));
+      const cloud = {
+        playerName: cloudData.playerName || '?',
+        hubTotalExp: cloudData.hubTotalExp || 0,
+        totalExpEarned: cloudData.totalExpEarned || 0,
+        lastWriteTimestamp: cloudData.lastWriteTimestamp || '',
+        hubLevel: calcLevel(cloudData.hubTotalExp || 0),
+      };
+      const local = {
+        playerName: gameState?.playerName || '?',
+        hubTotalExp: gameState?.hubTotalExp || 0,
+        totalExpEarned: gameState?.totalExpEarned || 0,
+        lastWriteTimestamp: gameState?.lastWriteTimestamp || '',
+        hubLevel: calcLevel(gameState?.hubTotalExp || 0),
+      };
+      return { hasCloudSave: true, cloud, local };
+    } catch { return { hasCloudSave: false }; }
+  });
   ipcMain.handle('select-sync-directory', async () => {
     const { dialog } = require('electron');
     const result = await dialog.showOpenDialog({ properties: ['openDirectory'] });
     if (!result.canceled && result.filePaths.length > 0) {
-      writeSyncConfig({ path: result.filePaths[0], deviceId: require('os').hostname(), lastSync: new Date().toISOString() });
       return { success: true, path: result.filePaths[0] };
     }
     return { success: false };
+  });
+  ipcMain.handle('confirm-sync-directory', (_, { path, action }) => {
+    try {
+      writeSyncConfig({ path, deviceId: require('os').hostname(), lastSync: new Date().toISOString() });
+      if (action === 'import') {
+        const cloudSavePath = path.join(path, 'Idel-DreamMaker-Sync', 'save.json');
+        if (fs.existsSync(cloudSavePath)) {
+          const imported = JSON.parse(fs.readFileSync(cloudSavePath, 'utf-8'));
+          Object.assign(gameState, imported);
+          gameState._version = SAVE_VERSION;
+          gameState.lastWriteTimestamp = new Date().toISOString();
+          // Clear runtime fields that should not carry over
+          gameState.pendingChoiceEvent = null;
+          gameState._catchUpQueue = null;
+          gameState._catchUpPaused = false;
+          gameState._catchUpBlocked = false;
+          // Rebuild scenario state
+          hubLevel = calcLevel(gameState.hubTotalExp);
+          if (gameState.scenarioId && !gameState.isInHub) {
+            currentScenario = findScenarioById(gameState.scenarioId);
+            if (currentScenario) currentTitle = getCurrentTitle(currentScenario, gameState.level);
+          } else {
+            currentScenario = null;
+            currentTitle = null;
+          }
+          writeSave(gameState);
+          return { success: true, imported: true };
+        }
+      }
+      return { success: true, imported: false };
+    } catch (e) { return { success: false, error: e.message }; }
   });
   ipcMain.handle('sync-now', () => {
     try {
       const cfg = readSyncConfig();
       if (!cfg || !cfg.path) return { success: false, error: '未设置同步目录' };
-      if (gameState) writeSave(gameState);
+      let imported = false;
+      const cloudPath = path.join(cfg.path, 'Idel-DreamMaker-Sync', 'save.json');
+      if (fs.existsSync(cloudPath)) {
+        try {
+          const cloudData = JSON.parse(fs.readFileSync(cloudPath, 'utf-8'));
+          const localTime = gameState?.lastWriteTimestamp || '';
+          const cloudTime = cloudData.lastWriteTimestamp || '';
+          const localTotal = (gameState?.hubTotalExp || 0) + (gameState?.totalExpEarned || 0);
+          const cloudTotal = (cloudData.hubTotalExp || 0) + (cloudData.totalExpEarned || 0);
+          if (cloudTime > localTime && cloudTotal >= localTotal) {
+            Object.assign(gameState, cloudData);
+            gameState._version = SAVE_VERSION;
+            gameState.lastWriteTimestamp = new Date().toISOString();
+            gameState.pendingChoiceEvent = null;
+            gameState._catchUpQueue = null;
+            gameState._catchUpPaused = false;
+            gameState._catchUpBlocked = false;
+            hubLevel = calcLevel(gameState.hubTotalExp);
+            if (gameState.scenarioId && !gameState.isInHub) {
+              currentScenario = findScenarioById(gameState.scenarioId);
+              if (currentScenario) currentTitle = getCurrentTitle(currentScenario, gameState.level);
+            } else {
+              currentScenario = null;
+              currentTitle = null;
+            }
+            imported = true;
+          }
+        } catch {}
+      }
+      writeSave(gameState);  // Push local to cloud
+      // Notify pet window of new state
+      try {
+        const petState = {
+          hubLevel: calcLevel(gameState.hubTotalExp),
+          isInHub: gameState.isInHub,
+          level: gameState.level,
+        };
+        forwardToPet('pet-state', petState);
+      } catch {}
+      return { success: true, imported };
+    } catch (e) { return { success: false, error: e.message }; }
+  });
+  // ── Clear sync ──
+  ipcMain.handle('clear-sync', () => {
+    try {
+      const cfg = readSyncConfig();
+      if (cfg && cfg.path) {
+        const cloudSave = path.join(cfg.path, 'Idel-DreamMaker-Sync', 'save.json');
+        try { if (fs.existsSync(cloudSave)) fs.unlinkSync(cloudSave); } catch {}
+      }
+      const scp = getSyncConfigPath();
+      try { if (fs.existsSync(scp)) fs.unlinkSync(scp); } catch {}
       return { success: true };
     } catch (e) { return { success: false, error: e.message }; }
   });
   // ── Delete save ──
   ipcMain.handle('delete-save', () => {
     try {
+      // Clear cloud save before cleaning local
+      const scp = getSyncConfigPath();
+      if (fs.existsSync(scp)) {
+        try {
+          const oldCfg = JSON.parse(fs.readFileSync(scp, 'utf-8'));
+          if (oldCfg && oldCfg.path) {
+            const cloudSave = path.join(oldCfg.path, 'Idel-DreamMaker-Sync', 'save.json');
+            if (fs.existsSync(cloudSave)) fs.unlinkSync(cloudSave);
+          }
+        } catch {}
+      }
       // Clear save
       const sp = path.join(getAppDataPath(), 'save.json');
       if (fs.existsSync(sp)) fs.unlinkSync(sp);
@@ -1811,7 +1930,6 @@ function registerIpcHandlers() {
       const logDir = getLogDir();
       if (fs.existsSync(logDir)) fs.rmSync(logDir, { recursive: true, force: true });
       // Clear sync config
-      const scp = getSyncConfigPath();
       if (fs.existsSync(scp)) fs.unlinkSync(scp);
       // Reset gameState to default
       const defaultScenario = allScenarios[0];

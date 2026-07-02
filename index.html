@@ -87,6 +87,26 @@
       </div>
     </div>
   </div>
+  <!-- ── Sync compare modal ── -->
+  <div id="sync-modal" class="hidden">
+    <div id="sync-overlay"></div>
+    <div id="sync-box">
+      <div id="sync-title">检测到云端存档</div>
+      <div id="sync-desc">该同步目录中已有存档记录：</div>
+      <div id="sync-table">
+        <div class="sync-hdr"><span></span><span>本 地</span><span>云 端</span></div>
+        <div class="sync-tr"><span>玩家名</span><span id="sync-local-name"></span><span id="sync-cloud-name"></span></div>
+        <div class="sync-tr"><span>存档时间</span><span id="sync-local-time"></span><span id="sync-cloud-time"></span></div>
+        <div class="sync-tr"><span>大厅等级</span><span id="sync-local-lv"></span><span id="sync-cloud-lv"></span></div>
+      </div>
+      <div id="sync-action-hint">导入云端将覆盖本地进度：</div>
+      <div id="sync-buttons">
+        <button id="sync-cancel" style="color:var(--dim);">取消</button>
+        <button id="sync-use-local">使用本地</button>
+        <button id="sync-import-cloud" style="border-color:var(--fg);">导入云端</button>
+      </div>
+    </div>
+  </div>
   <div id="event-overlay" class="hidden">
     <div id="event-box">
       <div id="event-header"><span id="event-title" data-i18n="eventHeader">事件</span></div>
@@ -146,11 +166,15 @@
       </div>
       <div class="settings-hint" data-i18n="scenariosFolderHint">将 .md 副本文件放入打开的文件夹，点「刷新」即可自动加载</div>
       <div class="settings-section-title">存档同步</div>
+      <div class="settings-hint">仅<b>多设备传档</b>用。单机游玩无需设置，存档自动保存在系统目录。</div>
+      <div class="settings-hint">设置后每30秒自动保存即推送云端，无需手动操作。点「立即同步」手动对齐。</div>
       <div class="settings-row-col">
         <div class="settings-status" id="sync-status">未设置</div>
+        <div class="settings-status" id="sync-time" style="display:none;"></div>
         <div class="settings-row-btns">
           <button id="btn-select-sync-dir" style="flex:1;">选择同步目录</button>
           <button id="btn-sync-now" style="flex:1;">立即同步</button>
+          <button id="btn-clear-sync" style="flex:1;display:none;color:#f44;border-color:#f44;">取消同步</button>
         </div>
       </div>
       <div class="settings-section-title">启动与更新</div>

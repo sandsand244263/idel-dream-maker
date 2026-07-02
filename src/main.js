@@ -711,28 +711,117 @@ document.getElementById('btn-open-log-folder')?.addEventListener('click', async 
 });
 
 // ── 存档同步 ──
+function formatTime(iso) {
+  if (!iso) return '未知';
+  try {
+    const d = new Date(iso);
+    return d.getFullYear() + '-' +
+      String(d.getMonth()+1).padStart(2,'0') + '-' +
+      String(d.getDate()).padStart(2,'0') + ' ' +
+      String(d.getHours()).padStart(2,'0') + ':' +
+      String(d.getMinutes()).padStart(2,'0') + ':' +
+      String(d.getSeconds()).padStart(2,'0');
+  } catch { return iso; }
+}
 async function refreshSyncStatus() {
   try {
     const r = await window.electron.invoke('get-sync-path');
     const el = document.getElementById('sync-status');
+    const timeEl = document.getElementById('sync-time');
+    const clearBtn = document.getElementById('btn-clear-sync');
+    const syncBtn = document.getElementById('btn-sync-now');
     if (r && r.path) {
-      el.textContent = '已同步至: ' + r.path;
+      el.textContent = '同步目录: ' + r.path;
       el.style.color = 'var(--fg)';
+      if (r.lastSync) {
+        timeEl.textContent = '上次同步: ' + formatTime(r.lastSync);
+        timeEl.style.display = 'block';
+      } else {
+        timeEl.style.display = 'none';
+      }
+      clearBtn.style.display = 'inline-block';
+      syncBtn.style.display = 'inline-block';
     } else {
       el.textContent = '未设置';
       el.style.color = 'var(--dim)';
+      timeEl.style.display = 'none';
+      clearBtn.style.display = 'none';
+      syncBtn.style.display = 'inline-block';
     }
   } catch {}
 }
+let syncModalResolve = null;
+document.getElementById('sync-cancel')?.addEventListener('click', () => {
+  document.getElementById('sync-modal').classList.add('hidden');
+  if (syncModalResolve) { syncModalResolve(null); syncModalResolve = null; }
+});
+document.getElementById('sync-use-local')?.addEventListener('click', () => {
+  document.getElementById('sync-modal').classList.add('hidden');
+  if (syncModalResolve) { syncModalResolve('local'); syncModalResolve = null; }
+});
+document.getElementById('sync-import-cloud')?.addEventListener('click', () => {
+  document.getElementById('sync-modal').classList.add('hidden');
+  if (syncModalResolve) { syncModalResolve('import'); syncModalResolve = null; }
+});
 document.getElementById('btn-select-sync-dir')?.addEventListener('click', async () => {
-  try { await window.electron.invoke('select-sync-directory'); refreshSyncStatus(); } catch {}
+  try {
+    const r = await window.electron.invoke('select-sync-directory');
+    if (!r.path) return;
+    const info = await window.electron.invoke('get-sync-info', { path: r.path });
+    if (info.hasCloudSave) {
+      // Show compare modal
+      document.getElementById('sync-local-name').textContent = info.local.playerName;
+      document.getElementById('sync-cloud-name').textContent = info.cloud.playerName;
+      document.getElementById('sync-local-time').textContent = formatTime(info.local.lastWriteTimestamp);
+      document.getElementById('sync-cloud-time').textContent = formatTime(info.cloud.lastWriteTimestamp);
+      document.getElementById('sync-local-lv').textContent = 'Lv.' + info.local.hubLevel;
+      document.getElementById('sync-cloud-lv').textContent = 'Lv.' + info.cloud.hubLevel;
+      document.getElementById('sync-modal').classList.remove('hidden');
+      const action = await new Promise(resolve => { syncModalResolve = resolve; });
+      if (!action) return; // cancelled
+      const cr = await window.electron.invoke('confirm-sync-directory', { path: r.path, action });
+      if (cr.success && cr.imported) {
+        const full = await window.electron.invoke('get-full-state');
+        gameState = full.game;
+        hubLevel = full.hubLevel || 1;
+        currentScenario = full.scenario;
+        currentTitle = full.currentTitle;
+        updateUI();
+        if (gameState.is_in_hub) renderHubView();
+      }
+    } else {
+      await window.electron.invoke('confirm-sync-directory', { path: r.path, action: 'local' });
+    }
+    refreshSyncStatus();
+    showToast('同步目录已设置', 'info');
+  } catch { showToast('设置同步目录失败', 'error'); }
 });
 document.getElementById('btn-sync-now')?.addEventListener('click', async () => {
   try {
     const r = await window.electron.invoke('sync-now');
-    if (r.success) showToast('同步完成', 'info');
-    else showToast('同步失败: ' + (r.error || ''), 'error');
+    if (r.success) {
+      if (r.imported) {
+        const full = await window.electron.invoke('get-full-state');
+        gameState = full.game;
+        hubLevel = full.hubLevel || 1;
+        currentScenario = full.scenario;
+        currentTitle = full.currentTitle;
+        updateUI();
+        if (gameState.is_in_hub) renderHubView();
+      }
+      refreshSyncStatus();
+      showToast('同步完成', 'info');
+    } else {
+      showToast('同步失败: ' + (r.error || ''), 'error');
+    }
   } catch { showToast('同步失败', 'error'); }
+});
+document.getElementById('btn-clear-sync')?.addEventListener('click', async () => {
+  try {
+    await window.electron.invoke('clear-sync');
+    refreshSyncStatus();
+    showToast('已取消同步', 'info');
+  } catch { showToast('取消失败', 'error'); }
 });
 document.getElementById('btn-delete-save')?.addEventListener('click', async () => {
   const ok = await showConfirmModal('确定删除所有存档？此操作不可撤销。');

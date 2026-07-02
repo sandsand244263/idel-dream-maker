@@ -113,6 +113,28 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #confirm-cancel { color:var(--dim) !important; }
 #confirm-cancel:hover { color:var(--fg) !important; }
 
+/* ── Sync Compare Modal ── */
+#sync-modal { position:fixed; top:0; left:0; width:100%; height:100%; z-index:360; display:flex; align-items:center; justify-content:center; }
+#sync-modal.hidden { display:none; }
+#sync-overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); }
+#sync-box { position:relative; background:var(--bg); border:1px solid var(--fg); border-radius:4px; padding:16px; width:260px; box-shadow:0 0 30px rgba(0,255,0,0.15); }
+#sync-title { font-weight:bold; font-size:14px; margin-bottom:4px; }
+#sync-desc { font-size:11px; color:var(--dim); margin-bottom:10px; }
+#sync-table { width:100%; font-size:10px; margin-bottom:8px; }
+.sync-hdr, .sync-tr { display:grid; grid-template-columns:56px 1fr 1fr; gap:4px; padding:3px 4px; border-bottom:1px solid color-mix(in srgb, var(--dim) 20%, transparent); align-items:center; }
+.sync-hdr { color:var(--dim); font-size:10px; }
+.sync-hdr span:first-child { color:transparent; }
+.sync-hdr span:nth-child(2), .sync-hdr span:nth-child(3) { text-align:right; }
+.sync-tr span:first-child { color:var(--dim); }
+.sync-tr span:nth-child(2), .sync-tr span:nth-child(3) { color:var(--fg); text-align:right; }
+#sync-action-hint { font-size:10px; color:var(--dim); margin-bottom:8px; }
+#sync-buttons { display:flex; gap:6px; justify-content:flex-end; }
+#sync-buttons button { background:transparent; border:1px solid var(--dim); color:var(--fg); padding:5px 10px; cursor:pointer; font-family:var(--font); font-size:10px; }
+#sync-buttons button:hover { background:color-mix(in srgb, var(--fg) 8%, transparent); border-color:var(--fg); }
+#sync-buttons button:active { transform:scale(0.96); }
+#sync-cancel { color:var(--dim) !important; }
+#sync-cancel:hover { color:var(--fg) !important; }
+
 /* ── Alias Modal ── */
 #alias-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 300; display: flex; align-items: center; justify-content: center; }
 #alias-modal.hidden { display: none; }
