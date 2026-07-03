@@ -22,6 +22,7 @@ contextBridge.exposeInMainWorld('electron', {
       'export-logs-to-desktop', 'open-log-folder', 'open-github-repo',
       'get-key-stats', 'choice-selected',
       'get-sync-path', 'set-sync-path', 'select-sync-directory', 'sync-now', 'delete-save',
+      'get-sync-info', 'confirm-sync-directory', 'clear-sync', 'catch-up-advance', 'get-current-theme',
       'check-for-update', 'open-update-url', 'get-proxy-download', 'trigger-update',
       'set-auto-start', 'get-auto-start',
     ];

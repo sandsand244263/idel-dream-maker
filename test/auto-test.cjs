@@ -298,6 +298,26 @@ for (const [b, events] of Object.entries(storyByBranch)) {
   test('Branch数据', `branch"${b}" 有story`, events.length > 0, true);
 }
 
+// ── 17. Preload 白名单完整性 ──
+const preloadSrc = fs.readFileSync(path.join(__dirname, '..', 'electron', 'preload.cjs'), 'utf-8');
+const validChannelsMatch = preloadSrc.match(/const\s+validChannels\s*=\s*\[([^\]]+)\]/);
+const preloadChannels = [];
+if (validChannelsMatch) {
+  const raw = validChannelsMatch[1];
+  const re = /'([^']+)'/g;
+  let m;
+  while ((m = re.exec(raw)) !== null) preloadChannels.push(m[1]);
+}
+const mainSrc = fs.readFileSync(path.join(__dirname, '..', 'electron', 'main.cjs'), 'utf-8');
+const mainHandlers = [];
+const mainRe = /ipcMain\.handle\('([^']+)'/g;
+let mainM;
+while ((mainM = mainRe.exec(mainSrc)) !== null) mainHandlers.push(mainM[1]);
+const uniqueMain = [...new Set(mainHandlers)].sort();
+const uniquePreload = [...new Set(preloadChannels)].sort();
+const missing = uniqueMain.filter(h => !uniquePreload.includes(h));
+test('Preload完整性', '所有ipcMain.handle都在preload白名单中', missing.length, 0);
+
 // ── 生成报告 ──
 const passed = results.filter(r => r.pass).length;
 const failed = results.filter(r => !r.pass);
