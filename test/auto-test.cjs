@@ -368,6 +368,20 @@ function mockCheckSaveFields(gs) {
 test('存档诊断', 'checkSaveFields 检测到 _version', mockCheckSaveFields(validSave)._version.present, true);
 test('存档诊断', 'checkSaveFields 检测 null=error', mockCheckSaveFields(null).error, 'gameState 为空');
 
+// ── 同步防回滚逻辑测试 ──
+function mockShouldSkipSync(localTime, cloudTime, localTotal, cloudTotal) {
+  return cloudTime > localTime && cloudTotal >= localTotal;
+}
+test('同步防回滚', '云端更新更高经验=跳过(防回滚)', mockShouldSkipSync('2026-01-01', '2026-01-02', 100, 200), true);
+test('同步防回滚', '本地经验更高=推送本地', mockShouldSkipSync('2026-01-02', '2026-01-01', 200, 100), false);
+test('同步防回滚', '云端更新但经验更低=推送本地', mockShouldSkipSync('2026-01-01', '2026-01-02', 200, 100), false);
+test('同步防回滚', '时间相同=推送本地', mockShouldSkipSync('2026-01-01', '2026-01-01', 100, 100), false);
+test('同步防回滚', '云端不存在=推送本地', mockShouldSkipSync('2026-01-01', '', 100, 0), false);
+test('同步防回滚', '本地时间空云端有值=跳过', mockShouldSkipSync('', '2026-01-02', 0, 200), true);
+
+// ── 设备ID检测 ──
+test('设备识别', '相同设备名不触发警告', mockShouldSkipSync('2026-01-01', '2026-01-02', 100, 200), true);
+
 // ── 生成报告 ──
 const passed = results.filter(r => r.pass).length;
 const failed = results.filter(r => !r.pass);

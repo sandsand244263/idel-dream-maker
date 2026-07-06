@@ -274,17 +274,21 @@ function checkSyncOnStartup() {
     const localTotal = (gameState?.hubTotalExp || 0) + (gameState?.totalExpEarned || 0);
     const cloudTotal = (syncData.hubTotalExp || 0) + (syncData.totalExpEarned || 0);
     if (cloudTotal < localTotal) return;
+    // 设备信息
+    const currentDevice = require('os').hostname();
+    const cloudDevice = cfg.deviceId || '未知';
+    const deviceNote = cloudDevice !== currentDevice ? `\n云端来源设备: ${cloudDevice}\n当前设备: ${currentDevice}` : '';
     const { dialog } = require('electron');
     const result = dialog.showMessageBoxSync(mainWindow, {
       type: 'question',
       title: '发现云端存档',
       message: '检测到云端存档比本地更新，是否导入？',
-      detail: `本地版本: ${localTime.slice(0, 19).replace('T', ' ')}\n云端版本: ${syncTime.slice(0, 19).replace('T', ' ')}`,
+      detail: `本地版本: ${localTime.slice(0, 19).replace('T', ' ')}\n云端版本: ${syncTime.slice(0, 19).replace('T', ' ')}${deviceNote}`,
       buttons: ['使用本地', '导入云端'],
       defaultId: 1,
     });
     if (result === 1) {
-      appendLogEntry('system', `启动同步检查: 导入云端存档(本地exp=${localTotal} 云端exp=${cloudTotal})`);
+      appendLogEntry('system', `启动同步检查: 导入云端存档(本地exp=${localTotal} 云端exp=${cloudTotal} 设备=${cloudDevice})`);
       // Import cloud save
       const imported = JSON.parse(fs.readFileSync(syncSavePath, 'utf-8'));
       Object.assign(gameState, imported);
@@ -306,7 +310,7 @@ function checkSyncOnStartup() {
         if (currentScenario) currentTitle = getCurrentTitle(currentScenario, gameState.level);
       }
     } else {
-      appendLogEntry('system', `启动同步检查: 用户选择保留本地(本地exp=${localTotal} 云端exp=${cloudTotal})`);
+      appendLogEntry('system', `启动同步检查: 用户选择保留本地(本地exp=${localTotal} 云端exp=${cloudTotal} 设备=${cloudDevice})`);
     }
   } catch {}
 }
@@ -350,6 +354,21 @@ function syncToCloud(cfg) {
   try {
     const cloudDir = path.join(cfg.path, 'Idel-DreamMaker-Sync');
     if (!fs.existsSync(cloudDir)) fs.mkdirSync(cloudDir, { recursive: true });
+    // 防回滚：云端存档更新时不覆盖
+    const cloudSavePath = path.join(cloudDir, 'save.json');
+    if (fs.existsSync(cloudSavePath)) {
+      try {
+        const cloudData = JSON.parse(fs.readFileSync(cloudSavePath, 'utf-8'));
+        const localTime = gameState?.lastWriteTimestamp || '';
+        const cloudTime = cloudData.lastWriteTimestamp || '';
+        const localTotal = (gameState?.hubTotalExp || 0) + (gameState?.totalExpEarned || 0);
+        const cloudTotal = (cloudData.hubTotalExp || 0) + (cloudData.totalExpEarned || 0);
+        if (cloudTime > localTime && cloudTotal >= localTotal) {
+          appendLogEntry('system', `防回滚: 跳过云端同步(云端${cloudTotal}新于本地${localTotal})`);
+          return;
+        }
+      } catch {}
+    }
     // save.json
     const localSave = path.join(getAppDataPath(), 'save.json');
     if (fs.existsSync(localSave)) fs.copyFileSync(localSave, path.join(cloudDir, 'save.json'));
