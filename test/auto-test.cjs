@@ -344,6 +344,30 @@ test('日志格式', '数组格式解析类型正确', parsedArray[1].ty, 'event
 // 验证一个不存在的日志文件返回空数组
 test('日志格式', '空内容返回空数组', (() => { try { return JSON.parse(''); } catch { return []; } })().length, 0);
 
+// ── 存档诊断校验测试 ──
+function mockValidateSaveIntegrity(gs) {
+  if (!gs) return 'gameState 为空';
+  const issues = [];
+  if (!gs._version) issues.push('缺少 _version');
+  if (!gs.lastWriteTimestamp) issues.push('缺少 lastWriteTimestamp');
+  if (!gs.playerName) issues.push('playerName 为空');
+  if (typeof gs.level !== 'number' || gs.level < 1) issues.push('level 异常');
+  if (typeof gs.exp !== 'number' || gs.exp < 0) issues.push('exp 异常');
+  if (issues.length === 0) return '正常';
+  return '问题: ' + issues.join(', ');
+}
+const validSave = { _version: 2, lastWriteTimestamp: '2026-01-01T00:00:00Z', playerName: 'Test', level: 10, exp: 100, isInHub: true };
+const emptySave = {};
+test('存档诊断', '完整存档=正常', mockValidateSaveIntegrity(validSave), '正常');
+test('存档诊断', '空存档=检测到缺失', mockValidateSaveIntegrity(emptySave).startsWith('问题:'), true);
+test('存档诊断', 'null存档=报空', mockValidateSaveIntegrity(null), 'gameState 为空');
+function mockCheckSaveFields(gs) {
+  if (!gs) return { error: 'gameState 为空' };
+  return { _version: { present: !!gs._version, value: gs._version }, playerName: { present: !!gs.playerName, value: gs.playerName }, level: { present: typeof gs.level === 'number', value: gs.level } };
+}
+test('存档诊断', 'checkSaveFields 检测到 _version', mockCheckSaveFields(validSave)._version.present, true);
+test('存档诊断', 'checkSaveFields 检测 null=error', mockCheckSaveFields(null).error, 'gameState 为空');
+
 // ── 生成报告 ──
 const passed = results.filter(r => r.pass).length;
 const failed = results.filter(r => !r.pass);

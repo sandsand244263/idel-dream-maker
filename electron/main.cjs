@@ -368,6 +368,44 @@ function syncToCloud(cfg) {
   } catch (e) { appendLogEntry('system', `云端同步失败: ${e.message}`); }
 }
 
+// ── 存档完整性校验 ──
+function validateSaveIntegrity() {
+  try {
+    if (!gameState) return 'gameState 为空';
+    const issues = [];
+    if (!gameState._version) issues.push('缺少 _version');
+    if (!gameState.lastWriteTimestamp) issues.push('缺少 lastWriteTimestamp');
+    if (!gameState.playerName) issues.push('playerName 为空');
+    if (typeof gameState.level !== 'number' || gameState.level < 1) issues.push('level 异常');
+    if (typeof gameState.exp !== 'number' || gameState.exp < 0) issues.push('exp 异常');
+    if (typeof gameState.totalRuntimeMs !== 'number') issues.push('totalRuntimeMs 异常');
+    if (gameState.isInHub === undefined) issues.push('isInHub 缺失');
+    if (issues.length === 0) return '正常';
+    return '问题: ' + issues.join(', ');
+  } catch { return '校验异常'; }
+}
+function checkSaveFields(gs) {
+  try {
+    if (!gs) return { error: 'gameState 为空' };
+    return {
+      _version: { present: !!gs._version, value: gs._version },
+      lastWriteTimestamp: { present: !!gs.lastWriteTimestamp, value: gs.lastWriteTimestamp },
+      playerName: { present: !!gs.playerName, value: gs.playerName },
+      level: { present: typeof gs.level === 'number', value: gs.level },
+      exp: { present: typeof gs.exp === 'number', value: gs.exp },
+      totalExpEarned: { present: typeof gs.totalExpEarned === 'number', value: gs.totalExpEarned },
+      hubTotalExp: { present: typeof gs.hubTotalExp === 'number', value: gs.hubTotalExp },
+      totalRuntimeMs: { present: typeof gs.totalRuntimeMs === 'number', value: gs.totalRuntimeMs },
+      isInHub: { present: gs.isInHub !== undefined, value: gs.isInHub },
+      totalKeyPresses: { present: typeof gs.totalKeyPresses === 'number', value: gs.totalKeyPresses },
+      highestStreak: { present: typeof gs.highestStreak === 'number', value: gs.highestStreak },
+      unlockedAchievements: { present: Array.isArray(gs.unlockedAchievements), count: (gs.unlockedAchievements || []).length },
+      triggeredEvents: { present: Array.isArray(gs.triggeredEvents), count: (gs.triggeredEvents || []).length },
+      gameCompletions: { present: Array.isArray(gs.gameCompletions), count: (gs.gameCompletions || []).length },
+    };
+  } catch { return { error: '校验异常' }; }
+}
+
 // Read scenarios data
 function loadScenarios() {
   try {
@@ -1696,35 +1734,155 @@ function registerIpcHandlers() {
   // ── Export / feedback ──
   ipcMain.handle('export-logs-to-desktop', () => {
     try {
-      const desktop = path.join(require('os').homedir(), 'Desktop');
-      const exportDir = path.join(desktop, `Idel-DreamMaker-日志-${new Date().toISOString().slice(0,10)}`);
-      if (!fs.existsSync(exportDir)) fs.mkdirSync(exportDir, { recursive: true });
-      // Copy log files
+      // 桌面路径：app.getPath + 双重 fallback
+      let desktop;
+      try { desktop = app.getPath('desktop'); } catch {}
+      if (!desktop) desktop = path.join(require('os').homedir(), 'Desktop');
+      if (!fs.existsSync(desktop)) desktop = require('os').homedir();
+      const ts = new Date();
+      const dateStr = ts.toISOString().slice(0,10);
+      const timeStr = `${String(ts.getHours()).padStart(2,'0')}${String(ts.getMinutes()).padStart(2,'0')}`;
+      const exportDir = path.join(desktop, `IdelDreamMaker-Debug-${dateStr}_${timeStr}`);
+      fs.mkdirSync(exportDir, { recursive: true });
+
+      // 1. Copy log files
       const logDir = getLogDir();
+      let logCount = 0, logSize = 0;
       if (fs.existsSync(logDir)) {
         fs.readdirSync(logDir).forEach(f => {
           const src = path.join(logDir, f);
-          if (fs.statSync(src).isFile()) fs.copyFileSync(src, path.join(exportDir, f));
+          if (fs.statSync(src).isFile()) {
+            fs.copyFileSync(src, path.join(exportDir, f));
+            logCount++;
+            logSize += fs.statSync(src).size;
+          }
         });
       }
-      // Copy save file
+
+      // 2. Copy save file
       const savePath = path.join(getAppDataPath(), 'save.json');
       if (fs.existsSync(savePath)) fs.copyFileSync(savePath, path.join(exportDir, 'save.json'));
-      // Write version info
-      const verInfo = [
-        `Idel-DreamMaker v${APP_VERSION}`,
-        `导出时间: ${new Date().toLocaleString('zh-CN')}`,
-        `系统: ${process.platform} ${process.arch}`,
-        `Node: ${process.version}`,
+
+      // 3. Build diagnostic report
+      const isInHub = gameState.isInHub;
+      const hubExp = gameState.hubTotalExp || 0;
+      const scenarioExp = gameState.totalExpEarned || 0;
+      const totalExp = hubExp + scenarioExp;
+      const gameLevel = gameState.level || 1;
+      const syncCfg = readSyncConfig();
+
+      // 3a. Sync comparison (if configured)
+      let syncInfo = '未配置同步';
+      if (syncCfg && syncCfg.path) {
+        const cloudSavePath = path.join(syncCfg.path, 'Idel-DreamMaker-Sync', 'save.json');
+        if (fs.existsSync(cloudSavePath)) {
+          try {
+            const cloudData = JSON.parse(fs.readFileSync(cloudSavePath, 'utf-8'));
+            const cloudTotal = (cloudData.hubTotalExp || 0) + (cloudData.totalExpEarned || 0);
+            const cloudLevel = calcLevel(cloudData.hubTotalExp || 0);
+            syncInfo = [
+              `同步目录: ${syncCfg.path}`,
+              `上次同步: ${syncCfg.lastSync || '未知'}`,
+              `设备ID: ${syncCfg.deviceId || '未知'}`,
+              `云端玩家: ${cloudData.playerName || '未知'}`,
+              `云端大厅等级: ${cloudLevel}`,
+              `云端总经验: ${cloudTotal}`,
+              `本地总经验: ${totalExp}`,
+              `经验差: ${totalExp - cloudTotal}`,
+            ].join('\n');
+          } catch {}
+        } else {
+          syncInfo = `同步目录已配置但云端存档不存在\n路径: ${syncCfg.path}`;
+        }
+      }
+
+      // 3b. Error log
+      const errorLogPath = path.join(getAppDataPath(), 'errors.log');
+      let errorHistory = '无';
+      if (fs.existsSync(errorLogPath)) {
+        const lines = fs.readFileSync(errorLogPath, 'utf-8').split('\n').filter(l => l.trim()).slice(-20);
+        if (lines.length > 0) errorHistory = lines.join('\n');
+      }
+
+      // 3c. Log stats
+      const logDates = getLogDates();
+
+      // 3d. Completed scenarios
+      const completions = gameState.gameCompletions || [];
+      const uniqueCompletions = completions.filter((c,i,a) => a.findIndex(x=>x.scenarioId===c.scenarioId)===i);
+
+      // Build report text
+      const reportHeader = `===== Idel-DreamMaker Debug 诊断报告 =====\n生成时间: ${ts.toLocaleString('zh-CN')}\n应用版本: v${APP_VERSION} | 存档版本: v${SAVE_VERSION}\n${'='.repeat(50)}\n`;
+
+      const systemSection = [
+        `--- 1. 系统环境 ---`,
+        `操作系统: ${process.platform} ${process.arch}`,
+        `系统语言: ${process.env.LANG || process.env.LC_ALL || '(未设置)'}`,
+        `Node.js: ${process.version}`,
         `Electron: ${process.versions.electron}`,
-        `存档路径: ${getAppDataPath()}`,
-        `副本数: ${allScenarios.length}`,
-        `已通关: ${(gameState.gameCompletions || []).filter((c,i,a) => a.findIndex(x=>x.scenarioId===c.scenarioId)===i).length}`,
-        `大厅等级: ${hubLevel}`,
+        `Chrome: ${process.versions.chrome}`,
+        `桌面路径(解析后): ${desktop}`,
+        `AppData: ${getAppDataPath()}`,
+        `日志目录: ${logDir}`,
+        `日志文件数: ${logCount}`,
+        `日志总大小: ${(logSize / 1024).toFixed(1)} KB`,
+        `屏幕分辨率: ${mainWindow ? mainWindow.getContentBounds() : 'N/A'}`,
       ].join('\n');
-      fs.writeFileSync(path.join(exportDir, '版本信息.txt'), verInfo, 'utf-8');
+
+      const saveSection = [
+        `--- 2. 存档状态 ---`,
+        `最后写入: ${gameState.lastWriteTimestamp || '无'}`,
+        `玩家名称: ${gameState.playerName || '无'}`,
+        `大厅等级: ${hubLevel}`,
+        `大厅经验: ${hubExp}`,
+        `副本内等级: ${gameLevel}`,
+        `副本内经验: ${gameState.exp || 0}`,
+        `总经验(大厅+副本): ${totalExp}`,
+        `运行总时长: ${Math.floor((gameState.totalRuntimeMs || 0) / 1000 / 60)} 分钟`,
+        `已通关数: ${uniqueCompletions.length}`,
+        `成就解锁: ${(gameState.unlockedAchievements || []).length}`,
+        `称号解锁: ${Object.values(gameState.unlockedTitleSets || {}).reduce((a,b) => a + (Array.isArray(b) ? b.length : 0), 0) || 0}`,
+        `总按键: ${gameState.totalKeyPresses || 0}`,
+        `最高连击: ${gameState.highestStreak || 0}`,
+        `存档完整性: ${validateSaveIntegrity()}`,
+      ].join('\n');
+
+      const runtimeSection = [
+        `--- 3. 运行时状态 ---`,
+        `是否在大厅: ${isInHub}`,
+        `当前副本: ${gameState.scenarioId || '无'}`,
+        `待决选择事件: ${gameState.pendingChoiceEvent ? `是(eventId=${gameState.pendingChoiceEvent.eventId})` : '无'}`,
+        `激活Buff: ${Date.now() < buffExpireTime ? `倍数=${buffMultiplier}` : '无'}`,
+        `今日按键: ${gameState.dailyKeyPresses || 0}`,
+        `副本列表: ${allScenarios.length} 个`,
+      ].join('\n');
+
+      const syncSection = [
+        `--- 4. 同步诊断 ---`,
+        syncInfo,
+      ].join('\n');
+
+      const errorSection = [
+        `--- 5. 错误历史 (最近20条) ---`,
+        errorHistory,
+      ].join('\n');
+
+      const report = [reportHeader, systemSection, '', saveSection, '', runtimeSection, '', syncSection, '', errorSection].join('\n');
+      fs.writeFileSync(path.join(exportDir, '诊断报告.txt'), report, 'utf-8');
+
+      // 4. Save validation
+      const validation = {
+        ts: ts.toISOString(),
+        appVersion: APP_VERSION,
+        saveVersion: SAVE_VERSION,
+        fields: checkSaveFields(gameState),
+      };
+      fs.writeFileSync(path.join(exportDir, '存档校验.json'), JSON.stringify(validation, null, 2), 'utf-8');
+
+      appendLogEntry('system', `诊断包已导出到桌面: ${exportDir} (${logCount}个日志文件)`);
       return { success: true, path: exportDir };
     } catch (e) {
+      appendLogEntry('error', `诊断包导出失败: ${e.message}`);
       return { success: false, error: e.message };
     }
   });
