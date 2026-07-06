@@ -708,10 +708,11 @@ document.getElementById('btn-export-logs')?.addEventListener('click', async () =
     const r = await window.electron.invoke('export-logs-to-desktop');
     if (r.success) {
       showToast(t('feedbackExported'), 'info');
+      window.electron.invoke('open-path', { path: r.path }).catch(() => {});
     } else {
-      showToast(t('feedbackExportFail'), 'error');
+      showToast(t('feedbackExportFail') + ': ' + (r.error || '未知错误'), 'error');
     }
-  } catch { showToast(t('feedbackExportFail'), 'error'); }
+  } catch (e) { showToast(t('feedbackExportFail') + ': ' + (e.message || '未知错误'), 'error'); }
   btn.textContent = origText;
   btn.disabled = false;
 });

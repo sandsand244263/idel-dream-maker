@@ -1915,6 +1915,15 @@ function registerIpcHandlers() {
       return { success: false, error: e.message };
     }
   });
+  ipcMain.handle('open-path', (_, { path: targetPath }) => {
+    try {
+      const { shell } = require('electron');
+      shell.openPath(targetPath);
+      return { success: true };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  });
 
   // ── Key stats ──
   // ── Choice events ──
