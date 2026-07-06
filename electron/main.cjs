@@ -196,18 +196,22 @@ function appendLogEntry(type, msg) {
       m: msg,
     };
     const entryLine = JSON.stringify(entry) + '\n';
-    if (!fs.existsSync(filePath)) {
-      fs.appendFileSync(filePath, entryLine, 'utf-8');
-    } else {
-      const content = fs.readFileSync(filePath, 'utf-8');
-      if (content.trimStart().startsWith('[')) {
-        const oldEntries = JSON.parse(content);
+    // Pure append mode: never read full file unless migrating old format
+    if (fs.existsSync(filePath)) {
+      // One-time migration: old format starts with '[' (JSON array)
+      const fd = fs.openSync(filePath, 'r');
+      const buf = Buffer.alloc(1);
+      fs.readSync(fd, buf, 0, 1, 0);
+      const firstChar = buf[0];
+      fs.closeSync(fd);
+      if (firstChar === 0x5b) {
+        const oldEntries = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
         const lines = oldEntries.map(e => JSON.stringify(e)).join('\n') + '\n' + entryLine;
         fs.writeFileSync(filePath, lines, 'utf-8');
-      } else {
-        fs.appendFileSync(filePath, entryLine, 'utf-8');
+        return;
       }
     }
+    fs.appendFileSync(filePath, entryLine, 'utf-8');
   } catch (e) { console.error('appendLogEntry error:', e); }
 }
 
@@ -237,7 +241,10 @@ function getLogEntries(date) {
 function readSave() {
   try {
     const sp = path.join(getAppDataPath(), 'save.json');
-    if (!fs.existsSync(sp)) return null;
+    if (!fs.existsSync(sp)) {
+      appendLogEntry('system', '存档文件不存在，将创建新存档');
+      return null;
+    }
     const gs = JSON.parse(fs.readFileSync(sp, 'utf-8'));
     // v3.0.0: clear old saves (pre-v2), start fresh
     if (!gs._version || gs._version < SAVE_VERSION) {
@@ -245,8 +252,10 @@ function readSave() {
       try { fs.unlinkSync(sp); } catch {}
       try { const logDir = getLogDir(); if (fs.existsSync(logDir)) fs.rmSync(logDir, { recursive: true, force: true }); } catch {}
       try { const scp = getSyncConfigPath(); if (fs.existsSync(scp)) fs.unlinkSync(scp); } catch {}
+      appendLogEntry('system', `存档版本不兼容(v${gs._version}<${SAVE_VERSION})，已清空`);
       return null;
     }
+    appendLogEntry('system', `存档读取成功，玩家: ${gs.playerName}, 大厅等级: ${calcLevel(gs.hubTotalExp||0)}, 总经验: ${(gs.hubTotalExp||0)+(gs.totalExpEarned||0)}`);
     return gs;
   } catch { return null; }
 }
@@ -275,6 +284,7 @@ function checkSyncOnStartup() {
       defaultId: 1,
     });
     if (result === 1) {
+      appendLogEntry('system', `启动同步检查: 导入云端存档(本地exp=${localTotal} 云端exp=${cloudTotal})`);
       // Import cloud save
       const imported = JSON.parse(fs.readFileSync(syncSavePath, 'utf-8'));
       Object.assign(gameState, imported);
@@ -295,6 +305,8 @@ function checkSyncOnStartup() {
         currentScenario = findScenarioById(gameState.scenarioId);
         if (currentScenario) currentTitle = getCurrentTitle(currentScenario, gameState.level);
       }
+    } else {
+      appendLogEntry('system', `启动同步检查: 用户选择保留本地(本地exp=${localTotal} 云端exp=${cloudTotal})`);
     }
   } catch {}
 }
@@ -327,10 +339,11 @@ function writeSave(data) {
     const finalPath = path.join(dir, 'save.json');
     fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf-8');
     fs.renameSync(tmpPath, finalPath);
+    appendLogEntry('system', `存档已保存(Lv.${data.level||1} exp=${data.exp||0} 总经验=${(data.hubTotalExp||0)+(data.totalExpEarned||0)})`);
     // Sync to cloud if configured
     const syncCfg = readSyncConfig();
     if (syncCfg && syncCfg.path) syncToCloud(syncCfg);
-  } catch (e) { console.error('Save failed:', e); }
+  } catch (e) { console.error('Save failed:', e); appendLogEntry('system', `存档写入失败: ${e.message}`); }
 }
 
 function syncToCloud(cfg) {
@@ -351,7 +364,8 @@ function syncToCloud(cfg) {
     }
     // Update lastSync timestamp
     writeSyncConfig({ ...cfg, lastSync: new Date().toISOString() });
-  } catch {}
+    appendLogEntry('system', `已同步到云端: ${cfg.path}`);
+  } catch (e) { appendLogEntry('system', `云端同步失败: ${e.message}`); }
 }
 
 // Read scenarios data
@@ -1864,6 +1878,7 @@ function registerIpcHandlers() {
           const localTotal = (gameState?.hubTotalExp || 0) + (gameState?.totalExpEarned || 0);
           const cloudTotal = (cloudData.hubTotalExp || 0) + (cloudData.totalExpEarned || 0);
           if (cloudTime > localTime && cloudTotal >= localTotal) {
+            appendLogEntry('system', `手动同步: 导入云端存档(本地exp=${localTotal} 云端exp=${cloudTotal})`);
             Object.assign(gameState, cloudData);
             gameState._version = SAVE_VERSION;
             gameState.lastWriteTimestamp = new Date().toISOString();
@@ -1880,8 +1895,12 @@ function registerIpcHandlers() {
               currentTitle = null;
             }
             imported = true;
+          } else {
+            appendLogEntry('system', `手动同步: 本地已是最新(本地exp=${localTotal} 云端exp=${cloudTotal})`);
           }
-        } catch {}
+        } catch (e) { appendLogEntry('system', `手动同步: 读取云端存档失败 ${e.message}`); }
+      } else {
+        appendLogEntry('system', '手动同步: 云端存档不存在，推送本地');
       }
       writeSave(gameState);  // Push local to cloud
       // Notify pet window of new state
@@ -1894,7 +1913,7 @@ function registerIpcHandlers() {
         forwardToPet('pet-state', petState);
       } catch {}
       return { success: true, imported };
-    } catch (e) { return { success: false, error: e.message }; }
+    } catch (e) { appendLogEntry('system', `手动同步失败: ${e.message}`); return { success: false, error: e.message }; }
   });
   // ── Clear sync ──
   ipcMain.handle('clear-sync', () => {
@@ -2048,6 +2067,28 @@ app.whenReady().then(() => {
   // 单实例锁：防止多开互相覆盖存档
   const gotTheLock = app.requestSingleInstanceLock();
   if (!gotTheLock) { app.quit(); return; }
+
+  // 全局错误捕获
+  const errorLogPath = path.join(getAppDataPath(), 'errors.log');
+  function writeErrorLog(msg) {
+    try {
+      const dir = path.dirname(errorLogPath);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.appendFileSync(errorLogPath, `[${new Date().toISOString()}] ${msg}\n`, 'utf-8');
+    } catch {}
+  }
+  process.on('uncaughtException', (err) => {
+    const msg = `[UNCAUGHT] ${err?.message || err}\n${err?.stack || ''}`;
+    console.error(msg);
+    writeErrorLog(msg);
+    try { appendLogEntry('error', msg.slice(0, 500)); } catch {}
+  });
+  process.on('unhandledRejection', (reason) => {
+    const msg = `[UNHANDLED] ${reason?.message || reason || 'unknown'}\n${reason?.stack || ''}`;
+    console.error(msg);
+    writeErrorLog(msg);
+    try { appendLogEntry('error', msg.slice(0, 500)); } catch {}
+  });
   app.on('second-instance', () => {
     if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore();
@@ -2152,6 +2193,7 @@ app.whenReady().then(() => {
 
   hubLevel = calcLevel(gameState.hubTotalExp);
 
+  appendLogEntry('system', `程序启动 v${APP_VERSION}(存档v${SAVE_VERSION}) 平台=${process.platform} 语言=${gameState.language} 玩家=${gameState.playerName}`);
   setupAppMenu();
   createWindow();
 

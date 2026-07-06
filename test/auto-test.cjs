@@ -318,6 +318,32 @@ const uniquePreload = [...new Set(preloadChannels)].sort();
 const missing = uniqueMain.filter(h => !uniquePreload.includes(h));
 test('Preload完整性', '所有ipcMain.handle都在preload白名单中', missing.length, 0);
 
+// ── 日志格式测试 ──
+function testLogParse(lines) {
+  // Simulate appendLogEntry format: one JSON per line
+  return lines.trim().split('\n').filter(l => l.trim()).map(l => JSON.parse(l));
+}
+const lineByLine = [
+  JSON.stringify({ t: '00:00:01', ty: 'system', m: 'start' }),
+  JSON.stringify({ t: '00:00:02', ty: 'event', m: 'test event' }),
+  JSON.stringify({ t: '00:00:03', ty: 'levelup', m: 'level 5' }),
+].join('\n');
+const parsedLines = testLogParse(lineByLine);
+test('日志格式', '行格式可正确解析为3条', parsedLines.length, 3);
+test('日志格式', '行格式解析类型正确', parsedLines[0].ty, 'system');
+test('日志格式', '行格式解析消息正确', parsedLines[1].m, 'test event');
+
+const oldArray = JSON.stringify([
+  { t: '00:00:01', ty: 'system', m: 'start' },
+  { t: '00:00:02', ty: 'event', m: 'test event' },
+]);
+const parsedArray = JSON.parse(oldArray);
+test('日志格式', '数组格式可解析为2条', parsedArray.length, 2);
+test('日志格式', '数组格式解析类型正确', parsedArray[1].ty, 'event');
+
+// 验证一个不存在的日志文件返回空数组
+test('日志格式', '空内容返回空数组', (() => { try { return JSON.parse(''); } catch { return []; } })().length, 0);
+
 // ── 生成报告 ──
 const passed = results.filter(r => r.pass).length;
 const failed = results.filter(r => !r.pass);

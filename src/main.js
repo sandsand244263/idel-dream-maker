@@ -71,6 +71,17 @@ const LANG = {
   feedbackExportFail: '导出失败',
 };
 
+// 前端错误捕获：将运行时错误写入日志
+window.addEventListener('error', (e) => {
+  const msg = `[FRONTEND_ERROR] ${e.message} ${e.filename ? 'at '+e.filename+':'+e.lineno : ''}`;
+  try { window.electron.invoke('add-log-entry', { type: 'error', msg: msg.slice(0, 500) }).catch(() => {}); } catch {}
+});
+window.addEventListener('unhandledrejection', (e) => {
+  const reason = e.reason;
+  const msg = `[FRONTEND_UNHANDLED] ${reason?.message || reason || 'unknown'}`;
+  try { window.electron.invoke('add-log-entry', { type: 'error', msg: msg.slice(0, 500) }).catch(() => {}); } catch {}
+});
+
 function t(key) { return LANG[key] || key; }
 function tf(key, ...args) { let s = t(key); args.forEach((a, i) => { s = s.replace(`{${i}}`, String(a)); }); return s; }
 
@@ -502,10 +513,8 @@ function addLog(type, message) {
   entry.appendChild(ts); entry.appendChild(msg); logArea.appendChild(entry);
   logArea.scrollTop = logArea.scrollHeight;
 
-  // Persist event and levelup entries
-  if (type === 'event' || type === 'levelup') {
-    window.electron.invoke('add-log-entry', { type, msg: message }).catch(() => {});
-  }
+  // Persist all log types to disk
+  window.electron.invoke('add-log-entry', { type, msg: message }).catch(() => {});
 }
 
 function dismissEventOverlay() {
