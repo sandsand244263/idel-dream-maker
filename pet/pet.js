@@ -389,7 +389,6 @@ dotEl.addEventListener('click',(e)=>{
 function getToggle(key, def) { const v = localStorage.getItem('pet_' + key); return v !== null ? v === 'true' : def; }
 function setToggle(key, val) { localStorage.setItem('pet_' + key, val); }
 function applyPetSettings() {
-  document.getElementById('container').classList.toggle('border-hidden', !getToggle('showBorder', true));
   document.getElementById('info-bar').style.display = getToggle('showInfoBar', true) ? '' : 'none';
   document.getElementById('exp-wrap').style.display = getToggle('showExpBar', true) ? '' : 'none';
 }
@@ -398,7 +397,7 @@ function applyPetSettings() {
 window.pet.on('pet-list',d=>{pets=d.pets||[];selIdx=d.selected||0;loadPet(selIdx);applyPetSettings();});
 window.pet.on('pet-selected',d=>{selIdx=d.index;loadPet(selIdx);});
 window.pet.on('toggle-feature', d => {
-  const keyMap = { border:'showBorder', infobar:'showInfoBar', expbar:'showExpBar' };
+  const keyMap = { infobar:'showInfoBar', expbar:'showExpBar' };
   const key = keyMap[d.feature] || d.feature;
   setToggle(key, d.value);
   applyPetSettings();
