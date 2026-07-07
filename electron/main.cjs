@@ -1,4 +1,4 @@
-const { app, ipcMain, Menu, dialog, shell } = require('electron');
+const { app, ipcMain, Menu, dialog, shell, powerMonitor } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const https = require('https');
@@ -20,6 +20,7 @@ let isQuitting = false;
 
 const isMac = process.platform === 'darwin';
 const SAVE_VERSION = 2;
+let syncLogCounter = 0;
 
 const HUB_TITLES = [
   { level: 1, name: '新人', desc: '刚踏上旅途' },
@@ -333,7 +334,7 @@ function writeSyncConfig(cfg) {
   } catch {}
 }
 
-function writeSave(data) {
+function writeSave(data, silent) {
   try {
     data._version = SAVE_VERSION;
     data.lastWriteTimestamp = new Date().toISOString();
@@ -343,14 +344,13 @@ function writeSave(data) {
     const finalPath = path.join(dir, 'save.json');
     fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf-8');
     fs.renameSync(tmpPath, finalPath);
-    appendLogEntry('system', `存档已保存(Lv.${data.level||1} exp=${data.exp||0} 总经验=${(data.hubTotalExp||0)+(data.totalExpEarned||0)})`);
-    // Sync to cloud if configured
+    if (!silent) appendLogEntry('system', `存档已保存(Lv.${data.level||1} exp=${data.exp||0} 总经验=${(data.hubTotalExp||0)+(data.totalExpEarned||0)})`);
     const syncCfg = readSyncConfig();
-    if (syncCfg && syncCfg.path) syncToCloud(syncCfg);
+    if (syncCfg && syncCfg.path) syncToCloud(syncCfg, silent);
   } catch (e) { console.error('Save failed:', e); appendLogEntry('system', `存档写入失败: ${e.message}`); }
 }
 
-function syncToCloud(cfg) {
+function syncToCloud(cfg, silent) {
   try {
     const cloudDir = path.join(cfg.path, 'Idel-DreamMaker-Sync');
     if (!fs.existsSync(cloudDir)) fs.mkdirSync(cloudDir, { recursive: true });
@@ -364,7 +364,7 @@ function syncToCloud(cfg) {
         const localTotal = (gameState?.hubTotalExp || 0) + (gameState?.totalExpEarned || 0);
         const cloudTotal = (cloudData.hubTotalExp || 0) + (cloudData.totalExpEarned || 0);
         if (cloudTime > localTime && cloudTotal >= localTotal) {
-          appendLogEntry('system', `防回滚: 跳过云端同步(云端${cloudTotal}新于本地${localTotal})`);
+          if (!silent) appendLogEntry('system', `防回滚: 跳过云端同步(云端${cloudTotal}新于本地${localTotal})`);
           return;
         }
       } catch {}
@@ -383,7 +383,8 @@ function syncToCloud(cfg) {
     }
     // Update lastSync timestamp
     writeSyncConfig({ ...cfg, lastSync: new Date().toISOString() });
-    appendLogEntry('system', `已同步到云端: ${cfg.path}`);
+    syncLogCounter++;
+    if (!silent || syncLogCounter % 10 === 0) appendLogEntry('system', `已同步到云端: ${cfg.path}`);
   } catch (e) { appendLogEntry('system', `云端同步失败: ${e.message}`); }
 }
 
@@ -1205,7 +1206,7 @@ function startGameLoop() {
 
     // Auto-save every 30s
     if (gameState.totalRuntimeMs % 30000 < delta) {
-      writeSave(gameState);
+      writeSave(gameState, true);
       try { mainWindow.webContents.send('auto-save', {}); } catch {}
     }
   }, 500);
@@ -2493,6 +2494,10 @@ app.whenReady().then(() => {
   mainWindow.show();
   mainWindow.focus();
   setTimeout(() => { if (mainWindow) mainWindow._ignoreBlur = false; }, 500);
+});
+
+powerMonitor.on('shutdown', () => {
+  if (gameState) writeSave(gameState, true);
 });
 
 app.on('before-quit', () => {
