@@ -584,7 +584,7 @@ function handleInputDown(keyId, keyChar, now) {
   }
 
   const mult = getComboMultiplier(grade);
-  const keyExp = 0.3 * mult * buffMultiplier;
+  const keyExp = 1.0 * mult * (1 + (gameState.rebirthExpBonus || 0));
   gameState.exp = (gameState.exp || 0) + keyExp;
   gameState.totalExpEarned = (gameState.totalExpEarned || 0) + keyExp;
 
@@ -670,14 +670,18 @@ function resetDailyIfNewDay() {
 
 function calcLevel(exp) {
   if (exp <= 0) return 1;
-  if (exp <= 980100) return Math.floor(Math.sqrt(exp / 100)) + 1;  // LV1-100 原公式
-  return 100 + Math.floor((exp - 980100) / 6000);                   // LV100+ 线性加速
+  if (exp <= 980100) return Math.floor(Math.sqrt(exp / 100)) + 1;
+  // LV100+ 等差数列：首项 4000，每级递增 10
+  const r = exp - 980100;
+  return 100 + Math.floor((-3995 + Math.sqrt(15960025 + 20 * r)) / 10);
 }
 
 function calcExpForLevel(level) {
   if (level <= 1) return 0;
   if (level <= 100) return 100 * (level - 1) * (level - 1);
-  return 980100 + (level - 100) * 6000;   // LV100+ 线性段反推
+  // LV100+ 等差数列反推
+  const n = level - 100;
+  return 980100 + n * (2 * 4000 + (n - 1) * 10) / 2;
 }
 
 function getCurrentTitle(scenario, level) {
@@ -932,11 +936,16 @@ function startGameLoop() {
   lastHubReminderMs = 0;
 
   const HUB_REMINDERS = [
+    '大厅的挂钟滴答作响，空气中有一丝茶香。',
+    '窗外似乎有什么东西一闪而过。',
+    '墙上的地图又多了几道你不记得画过的痕迹。',
+    '壁炉里的火苗轻轻跳动着。',
+    '角落里那把旧椅子看起来比上次更旧了。',
     '在大厅挂机不涨经验，进副本才有。',
-    '已经在大厅待了5分钟，不选个副本开始吗？',
-    '大厅只能管理和浏览，经验在副本里。',
+    '已经在大厅待了好一会儿，不选个副本开始吗？',
     '副本才是挂机的地方——选一个进去吧。',
     '在大厅不会有事件触发，副本里才有故事。',
+    '大厅只能管理和浏览，经验在副本里。',
   ];
 
   gameLoopInterval = setInterval(() => {
@@ -1052,7 +1061,7 @@ function startGameLoop() {
       const month = new Date().getMonth();
       if (month >= 11 || month <= 2) expMultiplier = 0.5;  // 12-2 月冬季
     }
-    const expGain = (delta / 1000) * expMultiplier * buffMultiplier;
+    const expGain = (delta / 1000) * expMultiplier * buffMultiplier * (1 + (gameState.rebirthExpBonus || 0));
     gameState.exp += expGain;
     gameState.totalExpEarned += expGain;
 
@@ -1614,7 +1623,7 @@ function registerIpcHandlers() {
     // 计算总重生次数（所有副本）
     const totalRebirths = Object.values(gameState.rebirthCounts).reduce((a, b) => a + b, 0);
     // 经验加成：每次 +10%，封顶 +50%（保留）
-    gameState.rebirthExpBonus = Math.min(0.5, totalRebirths * 0.1);
+    gameState.rebirthExpBonus = Math.min(1.0, totalRebirths * 0.25);
     // 清空该副本进度
     if (gameState.scenarioProgress) delete gameState.scenarioProgress[sid];
     // 保留通关记录（不删）

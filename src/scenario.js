@@ -3,13 +3,15 @@ const isNode = typeof process !== 'undefined' && process.versions && process.ver
 export function calculateLevel(totalExpEarned) {
   if (totalExpEarned <= 0) return 1;
   if (totalExpEarned <= 980100) return Math.floor(Math.sqrt(totalExpEarned / 100)) + 1;
-  return 100 + Math.floor((totalExpEarned - 980100) / 6000);
+  const r = totalExpEarned - 980100;
+  return 100 + Math.floor((-3995 + Math.sqrt(15960025 + 20 * r)) / 10);
 }
 
 export function calcExpForLevel(level) {
   if (level <= 1) return 0;
   if (level <= 100) return 100 * (level - 1) * (level - 1);
-  return 980100 + (level - 100) * 6000;
+  const n = level - 100;
+  return 980100 + n * (2 * 4000 + (n - 1) * 10) / 2;
 }
 
 export function getCurrentTitle(scenario, level) {

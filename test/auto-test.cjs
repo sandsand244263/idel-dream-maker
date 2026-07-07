@@ -9,13 +9,15 @@ const scenarios = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'public'
 function calcLevel(exp) {
   if (exp <= 0) return 1;
   if (exp <= 980100) return Math.floor(Math.sqrt(exp / 100)) + 1;
-  return 100 + Math.floor((exp - 980100) / 6000);
+  const r = exp - 980100;
+  return 100 + Math.floor((-3995 + Math.sqrt(15960025 + 20 * r)) / 10);
 }
 
 function calcExpForLevel(level) {
   if (level <= 1) return 0;
   if (level <= 100) return 100 * (level - 1) * (level - 1);
-  return 980100 + (level - 100) * 6000;
+  const n = level - 100;
+  return 980100 + n * (2 * 4000 + (n - 1) * 10) / 2;
 }
 
 function getCurrentTitle(scenario, level) {
@@ -122,7 +124,7 @@ function allScenariosFullyCompleted(gameState) {
 }
 
 function calcRebirthExpBonus(totalRebirths) {
-  return Math.min(0.5, totalRebirths * 0.1);
+  return Math.min(1.0, totalRebirths * 0.25);
 }
 
 // ── Test Runner ──
@@ -142,9 +144,9 @@ test('等级计算', 'exp=400 → Lv.3', calcLevel(400), 3);
 test('等级计算', 'exp=10000 → Lv.11', calcLevel(10000), 11);
 test('等级计算', 'exp=980100 → Lv.100 (分段边界)', calcLevel(980100), 100);
 test('等级计算', 'exp=980101 → Lv.100 (边界+1)', calcLevel(980101), 100);
-test('等级计算', 'exp=986100 → Lv.101 (线性第一级)', calcLevel(986100), 101);
-test('等级计算', 'exp=3380100 → Lv.500', calcLevel(3380100), 500);
-test('等级计算', 'exp=10000000 → Lv.1603', calcLevel(10000000), 1603);
+test('等级计算', 'exp=984100 → Lv.101 (等差数列第一级)', calcLevel(984100), 101);
+test('等级计算', 'exp=3378100 → Lv.500', calcLevel(3378100), 500);
+test('等级计算', 'exp=10000000 → Lv.1101', calcLevel(10000000), 1101);
 
 // ── 2. 经验级距 ──
 test('经验级距', 'Lv.1 → exp=0', calcExpForLevel(1), 0);
@@ -152,8 +154,8 @@ test('经验级距', 'Lv.2 → exp=100', calcExpForLevel(2), 100);
 test('经验级距', 'Lv.10 → exp=8100', calcExpForLevel(10), 8100);
 test('经验级距', 'Lv.50 → exp=240100', calcExpForLevel(50), 240100);
 test('经验级距', 'Lv.100 → exp=980100 (分段边界)', calcExpForLevel(100), 980100);
-test('经验级距', 'Lv.101 → exp=986100', calcExpForLevel(101), 986100);
-test('经验级距', 'Lv.500 → exp=3380100', calcExpForLevel(500), 3380100);
+test('经验级距', 'Lv.101 → exp=984100', calcExpForLevel(101), 984100);
+test('经验级距', 'Lv.500 → exp=3378100', calcExpForLevel(500), 3378100);
 
 // ── 3. Round-trip 验证 ──
 for (const lv of [1, 2, 5, 10, 50, 100, 101, 200, 500, 600]) {
@@ -162,6 +164,27 @@ for (const lv of [1, 2, 5, 10, 50, 100, 101, 200, 500, 600]) {
   test('循环验证', `calcLevel(calcExpForLevel(${lv})) == ${lv}`, calcLevel(exp) === lv, true);
   test('循环验证', `calcExpForLevel(${lv}) <= calcExpForLevel(${lv}+1)`, calcExpForLevel(lv) < calcExpForLevel(lv + 1), true);
 }
+
+// ── 3b. 新曲线边界验证 ──
+const curveCheck = [101, 110, 150, 200, 300, 400, 500];
+for (const lv of curveCheck) {
+  const exp = calcExpForLevel(lv);
+  test('曲线验证', `Lv.${lv}: 正向+反向一致`, calcLevel(exp) === lv, true);
+}
+test('曲线验证', '等差数列递增性: Lv.101 < Lv.200', calcExpForLevel(101) < calcExpForLevel(200), true);
+test('曲线验证', '等差数列递增性: Lv.200 < Lv.300', calcExpForLevel(200) < calcExpForLevel(300), true);
+test('曲线验证', '等差数列递增性: Lv.300 < Lv.400', calcExpForLevel(300) < calcExpForLevel(400), true);
+test('曲线验证', '等差数列递增性: Lv.400 < Lv.500', calcExpForLevel(400) < calcExpForLevel(500), true);
+
+// ── 3c. 重生加成验证 ──
+function calcRebirthBonus(totalRebirths) { return Math.min(1.0, totalRebirths * 0.25); }
+test('重生加成', '0次=0%', calcRebirthBonus(0), 0);
+test('重生加成', '1次=25%', calcRebirthBonus(1), 0.25);
+test('重生加成', '2次=50%', calcRebirthBonus(2), 0.5);
+test('重生加成', '3次=75%', calcRebirthBonus(3), 0.75);
+test('重生加成', '4次=100%(封顶)', calcRebirthBonus(4), 1.0);
+test('重生加成', '5次=100%(超过封顶)', calcRebirthBonus(5), 1.0);
+test('重生加成', '10次=100%(远超封顶)', calcRebirthBonus(10), 1.0);
 
 // ── 4. 副本称号 ──
 const w = scenarios.find(s => s.id === 'wasteland');
@@ -248,9 +271,9 @@ test('canArchive', '不存在的副本=false', canArchiveScenario(empty, 'nonexi
 
 // ── 10. 重生加成 ──
 test('重生加成', 'exp: 0次=0%', calcRebirthExpBonus(0), 0);
-test('重生加成', 'exp: 1次=10%', calcRebirthExpBonus(1), 0.1);
-test('重生加成', 'exp: 5次=50%(封顶)', calcRebirthExpBonus(5), 0.5);
-test('重生加成', 'exp: 10次=50%(超过封顶)', calcRebirthExpBonus(10), 0.5);
+test('重生加成', 'exp: 1次=25%', calcRebirthExpBonus(1), 0.25);
+test('重生加成', 'exp: 4次=100%(封顶)', calcRebirthExpBonus(4), 1.0);
+test('重生加成', 'exp: 10次=100%(超过封顶)', calcRebirthExpBonus(10), 1.0);
 
 // ── 12. 副本数据完整性 ──
 scenarios.forEach(s => {

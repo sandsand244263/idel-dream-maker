@@ -186,7 +186,7 @@ function transitionTo(s){
 }
 function animToIdle(){if(curState!=='idle')play('idle');}
 
-function calcExpForLevel(lv){if(lv<=1)return 0;if(lv<=100)return 100*(lv-1)*(lv-1);return 980100+(lv-100)*30000;}
+function calcExpForLevel(lv){if(lv<=1)return 0;if(lv<=100)return 100*(lv-1)*(lv-1);const n=lv-100;return 980100+n*(2*4000+(n-1)*10)/2;}
 
 function loadSpritesheet(b64,ext,cfg){
   if(!b64||b64.length<100)return;
@@ -272,6 +272,7 @@ const COMBO_COLORS={
   'D':['#888','#666'],'C':['#aaa','#888'],'B':['#6b6','#484'],
   'A':['#6bf','#48a'],'S':['#ff6','#cc4'],'SS':['#f80','#c60'],'SSS':['#f44','#c22'],
 };
+const COMBO_STYLES={'D':{fs:18,bs:1.5},'C':{fs:20,bs:1.8},'B':{fs:22,bs:2.0},'A':{fs:24,bs:2.2},'S':{fs:26,bs:2.5},'SS':{fs:28,bs:2.8},'SSS':{fs:30,bs:3.0}};
 let comboHits=[];
 
 function randComboPos(){
@@ -284,24 +285,26 @@ function newComboHit(grade,streak,keyChar){
   if(!grade||streak<2)return;
   const p=randComboPos();
   const cl=COMBO_COLORS[grade]||['#fff','#ccc'];
-  comboHits.push({grade,streak,keyChar:keyChar||grade,x:p.x,y:p.y,t:Date.now(),col:cl});
+  const st=COMBO_STYLES[grade]||{fs:22,bs:2.6};
+  comboHits.push({grade,streak,keyChar:keyChar||grade,x:p.x,y:p.y,t:Date.now(),col:cl,st});
 }
 
 function drawCombo(){
   const now=Date.now();
   for(let i=comboHits.length-1;i>=0;i--){
-    const h=comboHits[i],a=(now-h.t)/1000;
+    const h=comboHits[i],a=(now-h.t)/1000,st=h.st||{fs:22,bs:2.6};
     if(a>1.0){comboHits.splice(i,1);continue;}
     let sc,shx=0,shy=0,dy=0,op=1;
+    const bs=st.bs;
     if(a<0.05){
       const t=a/0.05;
-      sc=1+t*1.6;
+      sc=1+t*(bs-1);
       shx=Math.sin(t*Math.PI*3)*5*(1-t);
       shy=Math.cos(t*Math.PI*3)*3*(1-t);
       dy=t*2;
     }else if(a<0.15){
       const t=(a-0.05)/0.10;
-      sc=1.6-t*0.6;
+      sc=bs-t*(bs-1);
       shx=Math.sin(t*Math.PI*4)*3*(1-t);
       shy=Math.cos(t*Math.PI*4)*2*(1-t);
       dy=2-t*4;
@@ -313,22 +316,23 @@ function drawCombo(){
       dy=-t*15;
       op=1-t*t;
     }
+    const fs=st.fs,sf=fs/22;
     ctx.save();
     ctx.globalAlpha=op;
     ctx.translate(h.x+shx,h.y+shy+dy);
     ctx.scale(sc,sc);
     ctx.textAlign='right';ctx.textBaseline='bottom';
-    ctx.font='bold 22px MapleMonoNFCN,Courier New,monospace';
-    ctx.strokeStyle='rgba(0,0,0,0.6)';ctx.lineWidth=1.5;ctx.lineJoin='round';
-    ctx.strokeText(h.keyChar,0,22);
+    ctx.font='bold '+fs+'px MapleMonoNFCN,Courier New,monospace';
+    ctx.strokeStyle='rgba(0,0,0,0.6)';ctx.lineWidth=1.5*sf;ctx.lineJoin='round';
+    ctx.strokeText(h.keyChar,0,fs);
     ctx.fillStyle=h.col[0];
-    ctx.fillText(h.keyChar,0,22);
+    ctx.fillText(h.keyChar,0,fs);
     ctx.textAlign='left';
-    ctx.font='bold 13px MapleMonoNFCN,Courier New,monospace';
-    ctx.strokeStyle='rgba(0,0,0,0.6)';ctx.lineWidth=1;ctx.lineJoin='round';
-    ctx.strokeText(''+h.streak,2,24);
+    ctx.font='bold '+Math.round(fs/1.7)+'px MapleMonoNFCN,Courier New,monospace';
+    ctx.strokeStyle='rgba(0,0,0,0.6)';ctx.lineWidth=1*sf;ctx.lineJoin='round';
+    ctx.strokeText(''+h.streak,2,fs+2);
     ctx.fillStyle=h.col[1];
-    ctx.fillText(''+h.streak,2,24);
+    ctx.fillText(''+h.streak,2,fs+2);
     ctx.restore();
   }
 }

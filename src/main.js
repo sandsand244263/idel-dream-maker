@@ -263,9 +263,10 @@ function switchView(inHub) {
 function calcLevel(exp) {
   if (exp <= 0) return 1;
   if (exp <= 980100) return Math.floor(Math.sqrt(exp / 100)) + 1;
-  return 100 + Math.floor((exp - 980100) / 6000);
+  const r = exp - 980100;
+  return 100 + Math.floor((-3995 + Math.sqrt(15960025 + 20 * r)) / 10);
 }
-function calcExpForLevel(level) { if (level <= 1) return 0; if (level <= 100) return 100 * (level - 1) * (level - 1); return 980100 + (level - 100) * 6000; }
+function calcExpForLevel(level) { if (level <= 1) return 0; if (level <= 100) return 100 * (level - 1) * (level - 1); const n = level - 100; return 980100 + n * (2 * 4000 + (n - 1) * 10) / 2; }
 function formatRuntime(ms) { const s = Math.floor(ms / 1000); const h = Math.floor(s / 3600); const m = Math.floor((s % 3600) / 60); const sec = s % 60; return `${h}h${m}m${sec}s`; }
 function pad(n) { return n.toString().padStart(2, '0'); }
 
