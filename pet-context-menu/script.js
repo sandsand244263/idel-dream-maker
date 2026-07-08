@@ -1,4 +1,4 @@
-const LANG = { selectPet:'选择宠物', view:'视图', infobar:'信息栏', expbar:'进度条', chime:'整点报时', shake:'打击震动', calculator:'计算器', screenshot:'截图', guide:'操作说明', hide:'隐藏宠物界面' };
+const LANG = { selectPet:'选择宠物', view:'视图', compact:'简洁模式', chime:'整点报时', shake:'打击震动', calculator:'计算器', screenshot:'截图', guide:'操作说明', hide:'隐藏宠物界面' };
 function t(key) { return LANG[key] || key; }
 
 function setToggle(key, val) { localStorage.setItem('pet_' + key, val); }
@@ -33,10 +33,10 @@ function toggleView() {
 
 function updateUI() {
   applyLanguage();
-  ['infobar','expbar','chime','shake'].forEach(k => {
+  ['compact','chime','shake'].forEach(k => {
     const el = document.getElementById('ctx-toggle-' + k);
-    const def = k === 'chime' ? true : k === 'shake' ? true : true;
-    const key = k === 'chime' ? 'chime' : k === 'shake' ? 'shake' : 'show' + k.charAt(0).toUpperCase() + k.slice(1);
+    const def = k === 'compact' ? false : k === 'chime' ? true : k === 'shake' ? true : true;
+    const key = k === 'compact' ? 'compactMode' : k === 'chime' ? 'chime' : k === 'shake' ? 'shake' : 'show' + k.charAt(0).toUpperCase() + k.slice(1);
     const on = getToggle(key, def);
     el.childNodes[0].textContent = on ? '\u2713 ' : '\u2717 ';
     el.className = 'ctx-item ctx-toggle ctx-sub' + (on ? ' ctx-on' : ' ctx-off');
@@ -69,10 +69,11 @@ document.getElementById('ctx-select-pet').addEventListener('click', () => {
   window.ctxMenu.invoke('close-menu').catch(() => {});
 });
 
-['infobar','expbar','chime','shake'].forEach(k => {
+['compact','chime','shake'].forEach(k => {
   document.getElementById('ctx-toggle-' + k).addEventListener('click', () => {
-    const key = k === 'chime' ? 'chime' : k === 'shake' ? 'shake' : 'show' + k.charAt(0).toUpperCase() + k.slice(1);
-    const val = !getToggle(key, true);
+    const key = k === 'compact' ? 'compactMode' : k === 'chime' ? 'chime' : k === 'shake' ? 'shake' : 'show' + k.charAt(0).toUpperCase() + k.slice(1);
+    const def = k === 'compact' ? false : true;
+    const val = !getToggle(key, def);
     setToggle(key, val);
     window.ctxMenu.invoke('toggle-pet-feature', { feature: k, value: val }).catch(() => {});
     updateUI();
@@ -91,8 +92,8 @@ document.getElementById('ctx-close').addEventListener('click', () => {
 
 window.ctxMenu.invoke('get-toggle-state').then(r => {
   if (r) {
-    ['infobar','expbar','chime','shake'].forEach(k => {
-      const key = k === 'chime' ? 'chime' : k === 'shake' ? 'shake' : 'show' + k.charAt(0).toUpperCase() + k.slice(1);
+    ['compact','chime','shake'].forEach(k => {
+      const key = k === 'compact' ? 'compactMode' : k === 'chime' ? 'chime' : k === 'shake' ? 'shake' : 'show' + k.charAt(0).toUpperCase() + k.slice(1);
       if (r[key] !== undefined) setToggle(key, r[key]);
     });
   }
