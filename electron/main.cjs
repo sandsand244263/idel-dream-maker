@@ -2494,7 +2494,7 @@ app.whenReady().then(() => {
         for (const line of lines) {
           try {
             const e = JSON.parse(line);
-            if (e.ty === 'system' || e.ty === 'info') { needsRewrite = true; continue; }
+            if (e.ty === 'system' || e.ty === 'info' || e.ty === 'error') { needsRewrite = true; continue; }
             if (e.t && e.t.length < 10 && fileDateKey) {
               e.t = `${fileDateKey} ${e.t}`;
               needsRewrite = true;
