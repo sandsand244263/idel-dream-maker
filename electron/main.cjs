@@ -2490,16 +2490,18 @@ app.whenReady().then(() => {
             fileDateKey = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
           } catch {}
         }
-        const fixedLines = lines.map(line => {
+        const fixedLines = [];
+        for (const line of lines) {
           try {
             const e = JSON.parse(line);
+            if (e.ty === 'system' || e.ty === 'info') { needsRewrite = true; continue; }
             if (e.t && e.t.length < 10 && fileDateKey) {
               e.t = `${fileDateKey} ${e.t}`;
               needsRewrite = true;
             }
-            return JSON.stringify(e);
-          } catch { return line; }
-        });
+            fixedLines.push(JSON.stringify(e));
+          } catch { fixedLines.push(line); }
+        }
         if (needsRewrite) {
           fs.writeFileSync(filePath, fixedLines.join('\n') + '\n', 'utf-8');
         }
