@@ -216,7 +216,7 @@ async function init() {
     updateUI();
   });
   window.electron.on('achievement-unlocked', (event) => { const { name, desc, icon } = event; addLog('achievement', `${name}: ${desc}`); showAchievementOverlay(icon, name, desc); updateUI(); });
-  window.electron.on('scenario-changed', (event) => { gameState = event.game; currentScenario = event.scenario; currentTitle = { name: event.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); });
+  window.electron.on('scenario-changed', (event) => { gameState = event.game; currentScenario = event.scenario; currentTitle = { name: event.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('system', tf('systemEntered', currentScenario.nameCN)); updateUI(); });
   window.electron.on('auto-save', () => { flashSaveDot(); });
   window.electron.on('scenario-ending', (event) => {
     endingScenarioName.textContent = event.scenarioName;
@@ -361,7 +361,7 @@ function renderHubCards() {
       if (u.unlocked) {
         card.addEventListener('click', async (e) => {
           if (e.target.closest('.archive-btn')) return;
-          try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); }
+          try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('system', tf('systemEntered', currentScenario.nameCN)); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); }
         });
         card.querySelector('.archive-btn')?.addEventListener('click', async (e) => {
           e.stopPropagation();
@@ -431,7 +431,7 @@ function renderHubCards() {
       card.appendChild(fMetaDiv);
       if (progressHtml) { const tmp = document.createElement('div'); tmp.innerHTML = progressHtml; while (tmp.firstChild) card.appendChild(tmp.firstChild); }
       card.addEventListener('click', async () => {
-        try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); }
+        try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('system', tf('systemEntered', currentScenario.nameCN)); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); }
       });
       hubScenarioList.appendChild(card);
     });
@@ -456,7 +456,7 @@ function renderAllCompletePrompt() {
 btnBackHub.addEventListener('click', async () => {
   const ok = await showConfirmModal(t('confirmDesc'));
   if (!ok) return;
-  try { const r = await window.electron.invoke('exit-to-hub'); gameState.hub_total_exp = r.hubTotalExp; hubLevel = r.hubLevel; gameState.is_in_hub = true; switchView(true); renderHubView(); renderHubCards(); addLog('info', tf('systemBack', hubLevel)); updateUI(); lastRuntime = 0; } catch (e) { showToast(t('systemBackFail'), 'error'); }
+  try { const r = await window.electron.invoke('exit-to-hub'); gameState.hub_total_exp = r.hubTotalExp; hubLevel = r.hubLevel; gameState.is_in_hub = true; switchView(true); renderHubView(); renderHubCards(); addLog('system', tf('systemBack', hubLevel)); updateUI(); lastRuntime = 0; } catch (e) { showToast(t('systemBackFail'), 'error'); }
 });
 
 // ── UI ──
@@ -940,7 +940,7 @@ function renderScenarioPanel() {
         const sStatsDiv = document.createElement('div'); sStatsDiv.className = 'scenario-stats';
         sStatsDiv.textContent = `${s.eventCount} ${t('scenarioEvent')}${s.achievementCount ? ' · ' + s.achievementCount + ' ' + t('scenarioAchievement') : ''}`;
         card.appendChild(sStatsDiv);
-        card.addEventListener('click', async () => { try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); scenarioPanel.classList.add('hidden'); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); } });
+        card.addEventListener('click', async () => { try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('system', tf('systemEntered', currentScenario.nameCN)); scenarioPanel.classList.add('hidden'); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); } });
         scenarioListEl.appendChild(card);
       });
     }).catch(() => {
@@ -955,7 +955,7 @@ function renderScenarioPanel() {
         const sStatsDiv = document.createElement('div'); sStatsDiv.className = 'scenario-stats';
         sStatsDiv.textContent = `${s.eventCount} ${t('scenarioEvent')}${s.achievementCount ? ' · ' + s.achievementCount + ' ' + t('scenarioAchievement') : ''}`;
         card.appendChild(sStatsDiv);
-        card.addEventListener('click', async () => { try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('info', tf('systemEntered', currentScenario.nameCN)); scenarioPanel.classList.add('hidden'); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); } });
+        card.addEventListener('click', async () => { try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('system', tf('systemEntered', currentScenario.nameCN)); scenarioPanel.classList.add('hidden'); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); } });
         scenarioListEl.appendChild(card);
       });
   });
@@ -1246,7 +1246,7 @@ init().then(() => {
   if (versionEl) versionEl.textContent = appVersion;
   applyTheme(gameState?.selected_font_theme || 'green');
   if (gameState?.is_in_hub) {}
-  else if (gameState) { switchView(false); addLog('info', tf('logStartScenario', formatRuntime(gameState.total_runtime_ms), gameState.level)); }
+  else if (gameState) { switchView(false); addLog('system', tf('logStartScenario', formatRuntime(gameState.total_runtime_ms), gameState.level)); }
   updateUI(); updateTooltip(); setInterval(updateTooltip, 5000);
 
   // Load today's events from persistence

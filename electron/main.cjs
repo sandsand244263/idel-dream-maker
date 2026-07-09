@@ -187,8 +187,6 @@ function getLogDir() {
 }
 
 let _currentLogFile = null;
-let _logCache = null;
-let _logCacheMtime = 0;
 
 function setLogSession(sessionId) {
   const now = new Date();
@@ -216,11 +214,7 @@ function appendLogEntry(type, msg) {
 function _readAllLogFiles() {
   try {
     const dir = getLogDir();
-    const logPath = path.join(dir, 'placeholder');
-    let mtime = 0;
-    try { mtime = fs.statSync(dir).mtimeMs; } catch {}
-    if (_logCache && _logCacheMtime === mtime) return _logCache;
-    if (!fs.existsSync(dir)) { _logCache = []; _logCacheMtime = mtime; return []; }
+    if (!fs.existsSync(dir)) return [];
     const files = fs.readdirSync(dir).filter(f => f.endsWith('.log'));
     const all = [];
     for (const f of files) {
@@ -232,8 +226,6 @@ function _readAllLogFiles() {
         }
       } catch {}
     }
-    _logCache = all;
-    _logCacheMtime = mtime;
     return all;
   } catch { return []; }
 }
@@ -2454,17 +2446,20 @@ app.whenReady().then(() => {
       const ts = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}${String(now.getSeconds()).padStart(2,'0')}`;
       const legacyPath = path.join(logDir, `_legacy_${ts}.log`);
       for (const f of oldFiles) {
+        const dateKey = f.replace('.json', '');
         try {
           const content = fs.readFileSync(path.join(logDir, f), 'utf-8').trim();
           if (!content) continue;
+          const writeEntry = (e) => {
+            const t = e.t && e.t.length < 10 ? `${dateKey} ${e.t}` : (e.t || '');
+            fs.appendFileSync(legacyPath, JSON.stringify({ t, ty: e.ty || 'event', m: e.m || '' }) + '\n', 'utf-8');
+          };
           if (content.startsWith('[')) {
             const entries = JSON.parse(content);
-            for (const e of entries) {
-              fs.appendFileSync(legacyPath, JSON.stringify({ t: e.t, ty: e.ty || 'event', m: e.m || '' }) + '\n', 'utf-8');
-            }
+            for (const e of entries) writeEntry(e);
           } else {
             for (const line of content.split('\n')) {
-              try { JSON.parse(line); fs.appendFileSync(legacyPath, line + '\n', 'utf-8'); } catch {}
+              try { const e = JSON.parse(line); writeEntry(e); } catch {}
             }
           }
         } catch {}
@@ -2474,6 +2469,42 @@ app.whenReady().then(() => {
       }
     }
     try { fs.writeFileSync(migrateMarker, '', 'utf-8'); } catch {}
+  }
+
+  // Recovery: fix date-less entries in existing .log files
+  if (fs.existsSync(logDir)) {
+    for (const f of fs.readdirSync(logDir).filter(f => f.endsWith('.log'))) {
+      const filePath = path.join(logDir, f);
+      try {
+        const content = fs.readFileSync(filePath, 'utf-8');
+        let needsRewrite = false;
+        const lines = content.split('\n').filter(l => l.trim());
+        let fileDateKey = null;
+        const legacyMatch = f.match(/^_legacy_(\d{4})(\d{2})(\d{2})_/);
+        if (legacyMatch) {
+          fileDateKey = `${legacyMatch[1]}-${legacyMatch[2]}-${legacyMatch[3]}`;
+        } else {
+          try {
+            const st = fs.statSync(filePath);
+            const d = st.mtime;
+            fileDateKey = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+          } catch {}
+        }
+        const fixedLines = lines.map(line => {
+          try {
+            const e = JSON.parse(line);
+            if (e.t && e.t.length < 10 && fileDateKey) {
+              e.t = `${fileDateKey} ${e.t}`;
+              needsRewrite = true;
+            }
+            return JSON.stringify(e);
+          } catch { return line; }
+        });
+        if (needsRewrite) {
+          fs.writeFileSync(filePath, fixedLines.join('\n') + '\n', 'utf-8');
+        }
+      } catch {}
+    }
   }
 
   setupAppMenu();
