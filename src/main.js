@@ -1245,7 +1245,7 @@ init().then(() => {
   const versionEl = document.getElementById('update-current-version');
   if (versionEl) versionEl.textContent = appVersion;
   applyTheme(gameState?.selected_font_theme || 'green');
-  if (gameState?.is_in_hub) addLog('system', `Idel-DreamMaker v${appVersion} ${t('logStartHub')}`);
+  if (gameState?.is_in_hub) {}
   else if (gameState) { switchView(false); addLog('info', tf('logStartScenario', formatRuntime(gameState.total_runtime_ms), gameState.level)); }
   updateUI(); updateTooltip(); setInterval(updateTooltip, 5000);
 

@@ -11,7 +11,7 @@ const { parseScenarioMd } = require('../src/scenario-parser.cjs');
 const { uIOhook, UiohookKey } = require('uiohook-napi');
 const { autoUpdater } = require('electron-updater');
 
-autoUpdater.autoDownload = true;
+autoUpdater.autoDownload = false;
 autoUpdater.autoInstallOnAppQuit = true;
 
 let mainWindow = null;
@@ -186,54 +186,74 @@ function getLogDir() {
   return dir;
 }
 
+let _currentLogFile = null;
+let _logCache = null;
+let _logCacheMtime = 0;
+
+function setLogSession(sessionId) {
+  const now = new Date();
+  const ts = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}${String(now.getSeconds()).padStart(2,'0')}`;
+  _currentLogFile = path.join(getLogDir(), `${sessionId}_${ts}.log`);
+}
+
+function clearLogSession() {
+  _currentLogFile = null;
+}
+
 function appendLogEntry(type, msg) {
+  if (!_currentLogFile) return;
   try {
     const now = new Date();
-    const dateKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-    const filePath = path.join(getLogDir(), dateKey + '.json');
     const entry = {
-      t: `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`,
+      t: `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`,
       ty: type,
       m: msg,
     };
-    const entryLine = JSON.stringify(entry) + '\n';
-    // Pure append mode: never read full file unless migrating old format
-    if (fs.existsSync(filePath)) {
-      // One-time migration: old format starts with '[' (JSON array)
-      const fd = fs.openSync(filePath, 'r');
-      const buf = Buffer.alloc(1);
-      fs.readSync(fd, buf, 0, 1, 0);
-      const firstChar = buf[0];
-      fs.closeSync(fd);
-      if (firstChar === 0x5b) {
-        const oldEntries = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-        const lines = oldEntries.map(e => JSON.stringify(e)).join('\n') + '\n' + entryLine;
-        fs.writeFileSync(filePath, lines, 'utf-8');
-        return;
-      }
-    }
-    fs.appendFileSync(filePath, entryLine, 'utf-8');
+    fs.appendFileSync(_currentLogFile, JSON.stringify(entry) + '\n', 'utf-8');
   } catch (e) { console.error('appendLogEntry error:', e); }
+}
+
+function _readAllLogFiles() {
+  try {
+    const dir = getLogDir();
+    const logPath = path.join(dir, 'placeholder');
+    let mtime = 0;
+    try { mtime = fs.statSync(dir).mtimeMs; } catch {}
+    if (_logCache && _logCacheMtime === mtime) return _logCache;
+    if (!fs.existsSync(dir)) { _logCache = []; _logCacheMtime = mtime; return []; }
+    const files = fs.readdirSync(dir).filter(f => f.endsWith('.log'));
+    const all = [];
+    for (const f of files) {
+      try {
+        const content = fs.readFileSync(path.join(dir, f), 'utf-8').trim();
+        if (!content) continue;
+        for (const line of content.split('\n')) {
+          try { all.push(JSON.parse(line)); } catch {}
+        }
+      } catch {}
+    }
+    _logCache = all;
+    _logCacheMtime = mtime;
+    return all;
+  } catch { return []; }
 }
 
 function getLogDates() {
   try {
-    const dir = getLogDir();
-    const files = fs.readdirSync(dir).filter(f => f.endsWith('.json'));
-    return files.map(f => f.replace('.json', '')).sort();
+    const entries = _readAllLogFiles();
+    const dates = new Set();
+    for (const e of entries) {
+      if (e.t && e.t.length >= 10) dates.add(e.t.slice(0, 10));
+    }
+    return [...dates].sort();
   } catch { return []; }
 }
 
 function getLogEntries(date) {
   try {
-    const filePath = path.join(getLogDir(), date + '.json');
-    if (!fs.existsSync(filePath)) return [];
-    const content = fs.readFileSync(filePath, 'utf-8').trim();
-    if (!content) return [];
-    if (content.startsWith('[')) {
-      return JSON.parse(content);
-    }
-    return content.split('\n').filter(l => l.trim()).map(l => JSON.parse(l));
+    const entries = _readAllLogFiles();
+    if (!date) return entries;
+    return entries.filter(e => e.t && e.t.startsWith(date));
   } catch { return []; }
 }
 
@@ -243,7 +263,6 @@ function readSave() {
   try {
     const sp = path.join(getAppDataPath(), 'save.json');
     if (!fs.existsSync(sp)) {
-      appendLogEntry('system', '存档文件不存在，将创建新存档');
       return null;
     }
     const gs = JSON.parse(fs.readFileSync(sp, 'utf-8'));
@@ -253,10 +272,8 @@ function readSave() {
       try { fs.unlinkSync(sp); } catch {}
       try { const logDir = getLogDir(); if (fs.existsSync(logDir)) fs.rmSync(logDir, { recursive: true, force: true }); } catch {}
       try { const scp = getSyncConfigPath(); if (fs.existsSync(scp)) fs.unlinkSync(scp); } catch {}
-      appendLogEntry('system', `存档版本不兼容(v${gs._version}<${SAVE_VERSION})，已清空`);
       return null;
     }
-    appendLogEntry('system', `存档读取成功，玩家: ${gs.playerName}, 大厅等级: ${calcLevel(gs.hubTotalExp||0)}, 总经验: ${(gs.hubTotalExp||0)+(gs.totalExpEarned||0)}`);
     return gs;
   } catch { return null; }
 }
@@ -289,7 +306,6 @@ function checkSyncOnStartup() {
       defaultId: 1,
     });
     if (result === 1) {
-      appendLogEntry('system', `启动同步检查: 导入云端存档(本地exp=${localTotal} 云端exp=${cloudTotal} 设备=${cloudDevice})`);
       // Import cloud save
       const imported = JSON.parse(fs.readFileSync(syncSavePath, 'utf-8'));
       Object.assign(gameState, imported);
@@ -300,7 +316,7 @@ function checkSyncOnStartup() {
       if (fs.existsSync(cloudLogDir)) {
         const localLogDir = getLogDir();
         if (!fs.existsSync(localLogDir)) fs.mkdirSync(localLogDir, { recursive: true });
-        for (const f of fs.readdirSync(cloudLogDir).filter(f => f.endsWith('.json'))) {
+        for (const f of fs.readdirSync(cloudLogDir).filter(f => f.endsWith('.log'))) {
           fs.copyFileSync(path.join(cloudLogDir, f), path.join(localLogDir, f));
         }
       }
@@ -311,7 +327,6 @@ function checkSyncOnStartup() {
         if (currentScenario) currentTitle = getCurrentTitle(currentScenario, gameState.level);
       }
     } else {
-      appendLogEntry('system', `启动同步检查: 用户选择保留本地(本地exp=${localTotal} 云端exp=${cloudTotal} 设备=${cloudDevice})`);
     }
   } catch {}
 }
@@ -344,10 +359,9 @@ function writeSave(data, silent) {
     const finalPath = path.join(dir, 'save.json');
     fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf-8');
     fs.renameSync(tmpPath, finalPath);
-    if (!silent) appendLogEntry('system', `存档已保存(Lv.${data.level||1} exp=${data.exp||0} 总经验=${(data.hubTotalExp||0)+(data.totalExpEarned||0)})`);
     const syncCfg = readSyncConfig();
     if (syncCfg && syncCfg.path) syncToCloud(syncCfg, silent);
-  } catch (e) { console.error('Save failed:', e); appendLogEntry('system', `存档写入失败: ${e.message}`); }
+  } catch (e) { console.error('Save failed:', e); appendLogEntry('error', `存档写入失败: ${e.message}`); }
 }
 
 function syncToCloud(cfg, silent) {
@@ -364,7 +378,6 @@ function syncToCloud(cfg, silent) {
         const localTotal = (gameState?.hubTotalExp || 0) + (gameState?.totalExpEarned || 0);
         const cloudTotal = (cloudData.hubTotalExp || 0) + (cloudData.totalExpEarned || 0);
         if (cloudTime > localTime && cloudTotal >= localTotal) {
-          if (!silent) appendLogEntry('system', `防回滚: 跳过云端同步(云端${cloudTotal}新于本地${localTotal})`);
           return;
         }
       } catch {}
@@ -377,15 +390,14 @@ function syncToCloud(cfg, silent) {
     if (fs.existsSync(logDir)) {
       const cloudLogDir = path.join(cloudDir, 'logs');
       if (!fs.existsSync(cloudLogDir)) fs.mkdirSync(cloudLogDir, { recursive: true });
-      for (const f of fs.readdirSync(logDir).filter(f => f.endsWith('.json'))) {
+      for (const f of fs.readdirSync(logDir).filter(f => f.endsWith('.log'))) {
         fs.copyFileSync(path.join(logDir, f), path.join(cloudLogDir, f));
       }
     }
     // Update lastSync timestamp
     writeSyncConfig({ ...cfg, lastSync: new Date().toISOString() });
     syncLogCounter++;
-    if (!silent || syncLogCounter % 10 === 0) appendLogEntry('system', `已同步到云端: ${cfg.path}`);
-  } catch (e) { appendLogEntry('system', `云端同步失败: ${e.message}`); }
+  } catch (e) {}
 }
 
 // ── 存档完整性校验 ──
@@ -747,9 +759,11 @@ function resetGameForScenario(scenario, alias) {
     try { mainWindow.webContents.send('level-up', luPayload); } catch {}
     forwardToPet('level-up', luPayload);
   }
+  setLogSession(scenario.id);
 }
 
 function exitToHub() {
+  clearLogSession();
   const unlocked = getUnlockedTitles(currentScenario, gameState.level).map(t => t.name);
   const sid = gameState.scenarioId;
   if (sid) {
@@ -1595,6 +1609,7 @@ function registerIpcHandlers() {
   });
 
   ipcMain.handle('add-log-entry', (_, { type, msg }) => {
+    if (type === 'system') return true;
     appendLogEntry(type, msg);
     return true;
   });
@@ -1908,7 +1923,6 @@ function registerIpcHandlers() {
       };
       fs.writeFileSync(path.join(exportDir, '存档校验.json'), JSON.stringify(validation, null, 2), 'utf-8');
 
-      appendLogEntry('system', `诊断包已导出到桌面: ${exportDir} (${logCount}个日志文件)`);
       return { success: true, path: exportDir };
     } catch (e) {
       appendLogEntry('error', `诊断包导出失败: ${e.message}`);
@@ -2074,7 +2088,6 @@ function registerIpcHandlers() {
           const localTotal = (gameState?.hubTotalExp || 0) + (gameState?.totalExpEarned || 0);
           const cloudTotal = (cloudData.hubTotalExp || 0) + (cloudData.totalExpEarned || 0);
           if (cloudTime > localTime && cloudTotal >= localTotal) {
-            appendLogEntry('system', `手动同步: 导入云端存档(本地exp=${localTotal} 云端exp=${cloudTotal})`);
             Object.assign(gameState, cloudData);
             gameState._version = SAVE_VERSION;
             gameState.lastWriteTimestamp = new Date().toISOString();
@@ -2091,12 +2104,8 @@ function registerIpcHandlers() {
               currentTitle = null;
             }
             imported = true;
-          } else {
-            appendLogEntry('system', `手动同步: 本地已是最新(本地exp=${localTotal} 云端exp=${cloudTotal})`);
           }
-        } catch (e) { appendLogEntry('system', `手动同步: 读取云端存档失败 ${e.message}`); }
-      } else {
-        appendLogEntry('system', '手动同步: 云端存档不存在，推送本地');
+        } catch (e) {}
       }
       writeSave(gameState);  // Push local to cloud
       // Notify pet window of new state
@@ -2109,7 +2118,7 @@ function registerIpcHandlers() {
         forwardToPet('pet-state', petState);
       } catch {}
       return { success: true, imported };
-    } catch (e) { appendLogEntry('system', `手动同步失败: ${e.message}`); return { success: false, error: e.message }; }
+    } catch (e) { return { success: false, error: e.message }; }
   });
   // ── Clear sync ──
   ipcMain.handle('clear-sync', () => {
@@ -2204,8 +2213,20 @@ function registerIpcHandlers() {
       req.on('timeout', () => { req.destroy(); resolve({ success: false, error: '请求超时' }); });
     });
   });
+  let _bestMirror = null;
+
   ipcMain.handle('get-proxy-download', () => {
     return new Promise((resolve) => {
+      if (_bestMirror) {
+        resolve({ success: true, url: _bestMirror, name: '' });
+        return;
+      }
+      const MIRRORS = [
+        'https://gh-proxy.com',
+        'https://ghproxy.homeboyc.cn',
+        'https://moeyy.cn/gh-proxy',
+      ];
+      // Step 1: get download URL from GitHub API
       const req = https.get('https://api.github.com/repos/sandsand244263/idel-dream-maker/releases/latest', {
         headers: { 'User-Agent': 'idel-dream-maker', 'Accept': 'application/vnd.github.v3+json' },
         timeout: 8000,
@@ -2227,10 +2248,43 @@ function registerIpcHandlers() {
             } else {
               asset = assets.find(a => a.name && a.name.includes('tar.gz'));
             }
-            if (asset) {
-              resolve({ success: true, url: 'https://gh-proxy.com/' + asset.browser_download_url, name: asset.name });
-            } else {
+            if (!asset) {
               resolve({ success: false, error: '未找到匹配的安装包' });
+              return;
+            }
+            const rawUrl = asset.browser_download_url;
+            const name = asset.name;
+            // Step 2: parallel HEAD check all mirrors
+            let fastest = null;
+            let fastestTime = Infinity;
+            let completed = 0;
+            const total = MIRRORS.length;
+            for (const m of MIRRORS) {
+              const mirrorUrl = m + '/' + rawUrl;
+              const start = Date.now();
+              const headReq = https.request(mirrorUrl, { method: 'HEAD', timeout: 3000 }, (headRes) => {
+                const elapsed = Date.now() - start;
+                if (headRes.statusCode < 400 && elapsed < fastestTime) {
+                  fastestTime = elapsed;
+                  fastest = mirrorUrl;
+                }
+                headReq.destroy();
+                checkDone();
+              });
+              headReq.on('error', () => { checkDone(); });
+              headReq.on('timeout', () => { headReq.destroy(); checkDone(); });
+              headReq.end();
+            }
+            function checkDone() {
+              completed++;
+              if (completed < total) return;
+              if (fastest) {
+                _bestMirror = fastest;
+                resolve({ success: true, url: fastest, name });
+              } else {
+                _bestMirror = rawUrl;
+                resolve({ success: true, url: rawUrl, name });
+              }
             }
           } catch {
             resolve({ success: false, error: '解析响应失败' });
@@ -2381,6 +2435,7 @@ app.whenReady().then(() => {
     currentScenario = findScenarioById(gameState.scenarioId);
     if (currentScenario) {
       currentTitle = getCurrentTitle(currentScenario, gameState.level);
+      setLogSession(gameState.scenarioId);
     }
   } else {
     currentScenario = null;
@@ -2389,7 +2444,38 @@ app.whenReady().then(() => {
 
   hubLevel = calcLevel(gameState.hubTotalExp);
 
-  appendLogEntry('system', `程序启动 v${APP_VERSION}(存档v${SAVE_VERSION}) 平台=${process.platform} 语言=${gameState.language} 玩家=${gameState.playerName}`);
+  // Migrate old .json logs to .log format (one-time)
+  const logDir = getLogDir();
+  const migrateMarker = path.join(logDir, '.migrated');
+  if (fs.existsSync(logDir) && !fs.existsSync(migrateMarker)) {
+    const oldFiles = fs.readdirSync(logDir).filter(f => f.endsWith('.json'));
+    if (oldFiles.length > 0) {
+      const now = new Date();
+      const ts = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}${String(now.getSeconds()).padStart(2,'0')}`;
+      const legacyPath = path.join(logDir, `_legacy_${ts}.log`);
+      for (const f of oldFiles) {
+        try {
+          const content = fs.readFileSync(path.join(logDir, f), 'utf-8').trim();
+          if (!content) continue;
+          if (content.startsWith('[')) {
+            const entries = JSON.parse(content);
+            for (const e of entries) {
+              fs.appendFileSync(legacyPath, JSON.stringify({ t: e.t, ty: e.ty || 'event', m: e.m || '' }) + '\n', 'utf-8');
+            }
+          } else {
+            for (const line of content.split('\n')) {
+              try { JSON.parse(line); fs.appendFileSync(legacyPath, line + '\n', 'utf-8'); } catch {}
+            }
+          }
+        } catch {}
+      }
+      for (const f of oldFiles) {
+        try { fs.unlinkSync(path.join(logDir, f)); } catch {}
+      }
+    }
+    try { fs.writeFileSync(migrateMarker, '', 'utf-8'); } catch {}
+  }
+
   setupAppMenu();
   createWindow();
 
