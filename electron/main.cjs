@@ -218,11 +218,16 @@ function _readAllLogFiles() {
     const files = fs.readdirSync(dir).filter(f => f.endsWith('.log'));
     const all = [];
     for (const f of files) {
+      const scenarioId = f.startsWith('_legacy_') ? '_legacy' : f.replace(/_\d{8}_\d{6}\.log$/, '');
       try {
         const content = fs.readFileSync(path.join(dir, f), 'utf-8').trim();
         if (!content) continue;
         for (const line of content.split('\n')) {
-          try { all.push(JSON.parse(line)); } catch {}
+          try {
+            const entry = JSON.parse(line);
+            entry.scenario = scenarioId;
+            all.push(entry);
+          } catch {}
         }
       } catch {}
     }
@@ -241,11 +246,26 @@ function getLogDates() {
   } catch { return []; }
 }
 
-function getLogEntries(date) {
+function getLogEntries(date, scenario) {
   try {
-    const entries = _readAllLogFiles();
-    if (!date) return entries;
-    return entries.filter(e => e.t && e.t.startsWith(date));
+    let entries = _readAllLogFiles();
+    if (date) entries = entries.filter(e => e.t && e.t.startsWith(date));
+    if (scenario) entries = entries.filter(e => e.scenario === scenario);
+    return entries;
+  } catch { return []; }
+}
+
+function getLogScenarios() {
+  try {
+    const dir = getLogDir();
+    if (!fs.existsSync(dir)) return [];
+    const files = fs.readdirSync(dir).filter(f => f.endsWith('.log'));
+    const ids = new Set();
+    for (const f of files) {
+      const id = f.startsWith('_legacy_') ? '_legacy' : f.replace(/_\d{8}_\d{6}\.log$/, '');
+      ids.add(id);
+    }
+    return [...ids];
   } catch { return []; }
 }
 
@@ -1610,8 +1630,12 @@ function registerIpcHandlers() {
     return getLogDates();
   });
 
-  ipcMain.handle('get-log-entries', (_, { date }) => {
-    return getLogEntries(date);
+  ipcMain.handle('get-log-entries', (_, { date, scenario }) => {
+    return getLogEntries(date, scenario);
+  });
+
+  ipcMain.handle('get-log-scenarios', () => {
+    return getLogScenarios();
   });
 
   // ── Rebirth (choose another branch) ──

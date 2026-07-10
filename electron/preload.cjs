@@ -16,7 +16,7 @@ contextBridge.exposeInMainWorld('electron', {
       'set-onboarding-seen', 'set-custom-theme',
       'hide-pet-window', 'toggle-pet-window', 'toggle-main-window',
       'open-user-scenarios-folder', 'refresh-user-scenarios',
-      'add-log-entry', 'get-log-dates', 'get-log-entries',
+      'add-log-entry', 'get-log-dates', 'get-log-entries', 'get-log-scenarios',
       'archive-scenario', 'unarchive-scenario', 'get-archived-scenarios',
       'get-all-complete-prompt', 'dismiss-all-complete-prompt',
       'export-logs-to-desktop', 'open-log-folder', 'open-github-repo', 'open-path',

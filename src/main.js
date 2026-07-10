@@ -1138,50 +1138,73 @@ function dayLabel(d) {
 async function renderEventPanel() {
   eventListEl.innerHTML = '<div class="skeleton"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div>';
   try {
-    const dates = await window.electron.invoke('get-log-dates');
-    if (!dates || dates.length === 0) {
+    const entries = await window.electron.invoke('get-log-entries', {});
+    if (!entries || entries.length === 0) {
       eventListEl.innerHTML = '<div class="hub-empty-text">暂无事件记录</div>';
       return;
     }
-    eventListEl.innerHTML = '';
-    const today = `${new Date().getFullYear()}-${pad(new Date().getMonth()+1)}-${pad(new Date().getDate())}`;
-    for (const d of dates) {
-      const expanded = (d === today);
-      const entries = expanded ? (await window.electron.invoke('get-log-entries', { date: d }) || []) : [];
-      const grp = document.createElement('div'); grp.className = 'date-group';
-      const hdr = document.createElement('div'); hdr.className = 'date-header';
-      hdr.dataset.date = d;
-      hdr.dataset.loaded = expanded ? '1' : '0';
-      hdr.innerHTML = expanded ? `▼ ${dayLabel(d)}` : `▶ ${dayLabel(d)}`;
-      const body = document.createElement('div'); body.className = 'date-body' + (expanded ? '' : ' hidden');
-      if (expanded) {
-        entries.forEach(e => {
-          const item = document.createElement('div'); item.className = 'log-entry event';
-          item.innerHTML = `<span class="ts">[${e.t}]</span><span class="msg">${e.m}</span>`;
-          body.appendChild(item);
-        });
-      } else {
-        hdr.dataset.count = '0';
+    let currentTitle = null;
+    let currentLevel = 0;
+    const chapters = {};
+    const titleOrder = [];
+    const titleLevelCache = {};
+    for (const e of entries) {
+      const titleMatch = e.m.match(/等级\s*(\d+)\s*[!！]\s*([^\s—\-―]+)/);
+      if (titleMatch) {
+        currentLevel = parseInt(titleMatch[1]);
+        currentTitle = titleMatch[2];
+        if (!chapters[currentTitle]) {
+          chapters[currentTitle] = { entries: [], minLevel: currentLevel, maxLevel: currentLevel };
+          titleOrder.push(currentTitle);
+        } else {
+          if (currentLevel < chapters[currentTitle].minLevel) chapters[currentTitle].minLevel = currentLevel;
+          if (currentLevel > chapters[currentTitle].maxLevel) chapters[currentTitle].maxLevel = currentLevel;
+        }
+        chapters[currentTitle].entries.push({ data: e, level: currentLevel });
+      } else if (currentTitle) {
+        chapters[currentTitle].entries.push({ data: e, level: currentLevel });
       }
-      hdr.addEventListener('click', async () => {
-        const isCollapsed = body.classList.contains('hidden');
-        if (isCollapsed) {
-          body.innerHTML = '<div class="skeleton"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div>';
+    }
+    for (const ch of Object.values(chapters)) {
+      ch.entries.sort((a, b) => (a.level || 0) - (b.level || 0));
+    }
+    titleOrder.sort((a, b) => chapters[a].minLevel - chapters[b].minLevel);
+    let latestTitle = '';
+    let highestLevel = 0;
+    for (const t of titleOrder) {
+      if (chapters[t].maxLevel > highestLevel) {
+        highestLevel = chapters[t].maxLevel;
+        latestTitle = t;
+      }
+    }
+    eventListEl.innerHTML = '';
+    for (const title of titleOrder) {
+      const ch = chapters[title];
+      const isLatest = (title === latestTitle);
+      const range = ch.minLevel === ch.maxLevel ? `Lv.${ch.minLevel}` : `Lv.${ch.minLevel}-${ch.maxLevel}`;
+      const grp = document.createElement('div'); grp.className = 'chapter-group';
+      const hdr = document.createElement('div'); hdr.className = 'chapter-header';
+      hdr.innerHTML = isLatest ? `▼ ${title} ${range}` : `▶ ${title} ${range}`;
+      grp.appendChild(hdr);
+      const body = document.createElement('div'); body.className = 'chapter-body' + (isLatest ? '' : ' hidden');
+      for (const { data: e } of ch.entries) {
+        const item = document.createElement('div'); item.className = 'log-entry ' + (e.ty || 'event');
+        const tsStr = e.t && e.t.length >= 16 ? e.t.slice(11, 16) : (e.t || '');
+        item.innerHTML = `<span class="ts">[${tsStr}]</span><span class="msg">${e.m}</span>`;
+        body.appendChild(item);
+      }
+      grp.appendChild(body);
+      hdr.addEventListener('click', () => {
+        const hidden = body.classList.contains('hidden');
+        if (hidden) {
           body.classList.remove('hidden');
-          const items = await window.electron.invoke('get-log-entries', { date: d }) || [];
-          body.innerHTML = '';
-          items.forEach(e => {
-            const item = document.createElement('div'); item.className = 'log-entry event';
-            item.innerHTML = `<span class="ts">[${e.t}]</span><span class="msg">${e.m}</span>`;
-            body.appendChild(item);
-          });
-          hdr.innerHTML = `▼ ${dayLabel(d)}`;
+          hdr.innerHTML = `▼ ${title} ${range}`;
         } else {
           body.classList.add('hidden');
-          hdr.innerHTML = `▶ ${dayLabel(d)}`;
+          hdr.innerHTML = `▶ ${title} ${range}`;
         }
       });
-      grp.appendChild(hdr); grp.appendChild(body); eventListEl.appendChild(grp);
+      eventListEl.appendChild(grp);
     }
   } catch (e) { eventListEl.innerHTML = '<div class="hub-empty-text">加载失败</div>'; }
 }
@@ -1249,18 +1272,20 @@ init().then(() => {
   else if (gameState) { switchView(false); addLog('system', tf('logStartScenario', formatRuntime(gameState.total_runtime_ms), gameState.level)); }
   updateUI(); updateTooltip(); setInterval(updateTooltip, 5000);
 
-  // Load today's events from persistence
-  const today = `${new Date().getFullYear()}-${pad(new Date().getMonth()+1)}-${pad(new Date().getDate())}`;
-  window.electron.invoke('get-log-entries', { date: today }).then(entries => {
-    if (entries && entries.length > 0) {
-      entries.forEach(e => {
-        const entry = document.createElement('div'); entry.className = `log-entry ${e.ty || 'event'}`;
-        const ts = document.createElement('span'); ts.className = 'ts';
-        ts.textContent = `[${e.t}]`;
-        const msg = document.createElement('span'); msg.className = 'msg'; msg.textContent = e.m;
-        entry.appendChild(ts); entry.appendChild(msg); logArea.appendChild(entry);
-      });
-      logArea.scrollTop = logArea.scrollHeight;
-    }
-  }).catch(() => {});
+  // Load current scenario's events from persistence
+  const sid = gameState?.scenario_id || gameState?.scenarioId;
+  if (sid) {
+    window.electron.invoke('get-log-entries', { scenario: sid }).then(entries => {
+      if (entries && entries.length > 0) {
+        entries.forEach(e => {
+          const entry = document.createElement('div'); entry.className = `log-entry ${e.ty || 'event'}`;
+          const ts = document.createElement('span'); ts.className = 'ts';
+          ts.textContent = `[${e.t}]`;
+          const msg = document.createElement('span'); msg.className = 'msg'; msg.textContent = e.m;
+          entry.appendChild(ts); entry.appendChild(msg); logArea.appendChild(entry);
+        });
+        logArea.scrollTop = logArea.scrollHeight;
+      }
+    }).catch(() => {});
+  }
 });
