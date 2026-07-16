@@ -175,6 +175,12 @@ function setupTray() {
   tray = createTray(mainWindow);
 }
 
+const IS_DEV = process.argv.includes('--dev');
+
+function getSaveFileName() {
+  return IS_DEV ? 'save_dev.json' : 'save.json';
+}
+
 function getAppDataPath() {
   const base = app.getPath('appData');
   return path.join(base, 'Idel-DreamMaker');
@@ -269,11 +275,133 @@ function getLogScenarios() {
   } catch { return []; }
 }
 
+/**
+ * Clean up log files after migration/selfcheck.
+ * Removes:
+ * - Achievement entries whose condition is no longer met by current game
+ *   state (even if the achievement was never in unlockedAchievements).
+ * - Event/levelup entries whose source event text doesn't match any
+ *   event still in the valid triggeredEvents list.
+ */
+function cleanupLogFiles(scenario, gs) {
+  try {
+    const dir = getLogDir();
+    if (!fs.existsSync(dir)) return;
+    // Compute achievement validity based on current game state
+    const invalidAchNames = new Set();
+    if (scenario && scenario.achievements && gs) {
+      const titles = (scenario.titles || []).filter(t => t.level <= (gs.level || 1));
+      for (const ach of scenario.achievements) {
+        if (!ach.condition) continue;
+        let ok = false;
+        switch (ach.condition.type) {
+          case 'level': ok = (gs.level || 0) >= ach.condition.value; break;
+          case 'events': ok = (gs.triggeredEvents?.length || 0) >= ach.condition.value; break;
+          case 'runtime': ok = (gs.totalRuntimeMs || 0) >= ach.condition.value; break;
+          case 'titles': ok = titles.length >= ach.condition.value; break;
+          default: ok = true;
+        }
+        if (!ok) invalidAchNames.add(ach.name);
+      }
+    }
+    // Build a map of event text → event (for validating log entries)
+    const eventTextMap = {};
+    const validIds = gs?.triggeredEvents || [];
+    if (scenario && scenario.events && validIds.length > 0) {
+      for (const e of scenario.events) {
+        if (e.text && validIds.includes(e.id)) {
+          eventTextMap[e.text] = e;
+        }
+      }
+    }
+    // Build a map: branch → { level → event } for finding the correct event
+    // at a given level in the player's current branch.
+    const branchEventsByLevel = {};
+    if (scenario && scenario.events) {
+      const cb = gs?.currentBranch || '';
+      for (const e of scenario.events) {
+        const br = e.branch || '';
+        if (br && br !== cb) continue;
+        const lv = e.minLevel || 0;
+        if (!branchEventsByLevel[lv]) branchEventsByLevel[lv] = [];
+        branchEventsByLevel[lv].push(e);
+      }
+    }
+    const logFiles = fs.readdirSync(dir).filter(f => f.endsWith('.log'));
+    for (const fName of logFiles) {
+      const fPath = path.join(dir, fName);
+      const content = fs.readFileSync(fPath, 'utf-8');
+      const lines = content.split('\n').filter(l => l.trim());
+      const kept = [];
+      let changed = false;
+      for (const line of lines) {
+        let entry;
+        try { entry = JSON.parse(line); } catch { kept.push(line); continue; }
+        // Filter achievement entries that are no longer valid
+        if (entry.ty === 'achievement' && invalidAchNames.size > 0) {
+          const colonIdx = entry.m ? entry.m.indexOf(':') : -1;
+          const achName = colonIdx > 0 ? entry.m.slice(0, colonIdx) : '';
+          if (invalidAchNames.has(achName)) { changed = true; continue; }
+        }
+        // Validate event/levelup entries: check that text matches an event
+        // in the current triggeredEvents list, AND for levelup entries that
+        // the log level matches the event's minLevel (fixing wrong-level
+        // entries by replacing text with the correct event for that level).
+        if ((entry.ty === 'event' || entry.ty === 'levelup') && Object.keys(eventTextMap).length > 0) {
+          let eText = entry.m || '';
+          let logLevel = 0;
+          if (entry.ty === 'levelup') {
+            const lvMatch = entry.m.match(/等级\s*(\d+)/);
+            logLevel = lvMatch ? parseInt(lvMatch[1]) : 0;
+            const sepIdx = eText.indexOf('—');
+            if (sepIdx >= 0) eText = eText.slice(sepIdx + 1).trim();
+            else { kept.push(line); continue; }
+          }
+          const matchedEvent = eventTextMap[eText];
+          if (!matchedEvent) {
+            changed = true; continue; // text not in valid events → remove
+          }
+          // For levelup entries: if the log level doesn't match the event's
+          // minLevel, this was triggered at the wrong level. Replace with
+          // the correct event text for that level.
+          if (logLevel > 0 && logLevel !== (matchedEvent.minLevel || 0)) {
+            const candidates = branchEventsByLevel[logLevel] || [];
+            // Pick the first non-choice story event at that level
+            const correct = candidates.find(e => validIds.includes(e.id) && !e.choice1 && e.text);
+            if (correct) {
+              const title = getCurrentTitle(scenario, logLevel);
+              const titleStr = title ? title.name : '';
+              const newMsg = '等级 ' + logLevel + '！' + titleStr + ' — ' + correct.text;
+              entry.m = newMsg;
+              entry = JSON.parse(JSON.stringify(entry)); // ensure plain obj
+              changed = true;
+            } else {
+              // No correct event found → remove this stray entry
+              changed = true; continue;
+            }
+          }
+        }
+        kept.push(JSON.stringify(entry));
+      }
+      // Deduplicate consecutive identical entries (artifact from text replacement)
+      const deduped = [];
+      for (let i = 0; i < kept.length; i++) {
+        if (i === 0 || kept[i] !== kept[i - 1]) deduped.push(kept[i]);
+      }
+      if (changed) {
+        const outContent = deduped.join('\n') + (deduped.length > 0 ? '\n' : '');
+        fs.writeFileSync(fPath, outContent, 'utf-8');
+        console.log('[cleanup-logs] cleaned ' + fName + ': removed ' + (lines.length - deduped.length) + ' entries');
+      }
+    }
+  } catch (e) { console.error('[cleanup-logs] error:', e.message); }
+}
+
 // ── IPC Handlers ──
 
 function readSave() {
   try {
-    const sp = path.join(getAppDataPath(), 'save.json');
+    const sp = path.join(getAppDataPath(), getSaveFileName());
     if (!fs.existsSync(sp)) {
       return null;
     }
@@ -291,6 +419,7 @@ function readSave() {
 }
 
 function checkSyncOnStartup() {
+  if (IS_DEV) return; // dev 模式禁用存档同步
   try {
     const cfg = readSyncConfig();
     if (!cfg || !cfg.path || !mainWindow) return;
@@ -367,8 +496,9 @@ function writeSave(data, silent) {
     data.lastWriteTimestamp = new Date().toISOString();
     const dir = getAppDataPath();
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    const tmpPath = path.join(dir, 'save.json.tmp');
-    const finalPath = path.join(dir, 'save.json');
+    const fileName = getSaveFileName();
+    const tmpPath = path.join(dir, fileName + '.tmp');
+    const finalPath = path.join(dir, fileName);
     fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf-8');
     fs.renameSync(tmpPath, finalPath);
     const syncCfg = readSyncConfig();
@@ -838,8 +968,11 @@ function applyFlagSet(flagSet) {
   for (const part of parts) {
     const trimmed = part.trim();
     if (!trimmed) continue;
-    const match = trimmed.match(/^([a-zA-Z_]\w*)\s*(\+=|-=|=)\s*(.+)$/);
-    if (!match) continue;
+    let match = trimmed.match(/^([a-zA-Z_]\w*)\s*(\+=|-=|=)\s*(.+)$/);
+    if (!match) {
+      gameState.flags[trimmed] = true;
+      continue;
+    }
     const [, key, op, valStr] = match;
     const val = isNaN(Number(valStr)) ? valStr : Number(valStr);
     if (typeof val === 'number') {
@@ -1642,6 +1775,56 @@ function registerIpcHandlers() {
     return getLogScenarios();
   });
 
+  ipcMain.handle('reload-scenario-data', () => {
+    try {
+      // Reload scenarios from scenarios_data.json and rebuild allScenarios.
+      const dataPath = path.join(__dirname, '..', 'public', 'scenarios_data.json');
+      if (fs.existsSync(dataPath)) {
+        const loaded = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
+        if (loaded && loaded.length > 0) {
+          const oldLen = allScenarios.length;
+          allScenarios = loaded;
+          if (currentScenario) {
+            const refreshed = findScenarioById(currentScenario.id);
+            if (refreshed) currentScenario = refreshed;
+          }
+          console.log(`[hotfix] Reloaded ${allScenarios.length} scenarios from scenarios_data.json`);
+        }
+      }
+      return { success: true };
+    } catch (e) { return { success: false, error: e.message }; }
+  });
+
+  ipcMain.handle('get-choice-history', () => {
+    if (!gameState || !gameState.choiceFlags) return [];
+    const result = [];
+    for (const [scenarioId, choices] of Object.entries(gameState.choiceFlags)) {
+      const scenario = findScenarioById(scenarioId);
+      if (!scenario) continue;
+      const scName = scenario.nameCN || scenario.name || scenarioId;
+      for (const [eventId, choiceKey] of Object.entries(choices)) {
+        const event = scenario.events.find(e => e.id === eventId);
+        if (!event) continue;
+        const choiceText = event[choiceKey];
+        if (!choiceText) continue;
+        const minLevel = event.minLevel || 0;
+        // Get target event text (what happened as a result of the choice)
+        const targetId = event[choiceKey + 'Target'];
+        const targetEvent = targetId ? scenario.events.find(e => e.id === targetId) : null;
+        result.push({
+          scenarioId,
+          eventId,
+          eventText: event.text || '',
+          choiceText,
+          targetText: targetEvent ? targetEvent.text : '',
+          minLevel,
+          scenarioName: scName,
+        });
+      }
+    }
+    return result;
+  });
+
   // ── Rebirth (choose another branch) ──
   ipcMain.handle('rebirth-scenario', (_, { scenarioId }) => {
     const sid = scenarioId || gameState.scenarioId;
@@ -1983,6 +2166,8 @@ function registerIpcHandlers() {
     if (!gameState.choiceFlags) gameState.choiceFlags = {};
     if (!gameState.choiceFlags[pe.scenarioId]) gameState.choiceFlags[pe.scenarioId] = {};
     gameState.choiceFlags[pe.scenarioId][pe.eventId] = choiceIndex === 0 ? 'choice1' : 'choice2';
+    const scName = (currentScenario?.nameCN || currentScenario?.name || pe.scenarioId);
+    appendLogEntry('choice', '【' + scName + ' Lv.' + gameState.level + '】选择了「' + choice.text + '」');
     // Fire target event
     if (choice.target) {
       const targetEvent = currentScenario && currentScenario.events.find(e => e.id === choice.target);
@@ -2462,6 +2647,76 @@ app.whenReady().then(() => {
     currentTitle = null;
   }
 
+  // Migrate: auto-acknowledge new events with minLevel below current level
+  // Only acknowledges events belonging to the current branch, preventing
+  // cross-branch events from contaminating the player's triggered list.
+  if (currentScenario && gameState && !gameState.isInHub && gameState.level > 1) {
+    const cb = gameState.currentBranch || '';
+    const oldLen = gameState.triggeredEvents.length;
+    // Add new events that belong to this branch
+    const toAdd = currentScenario.events.filter(e =>
+      e.once && !gameState.triggeredEvents.includes(e.id) &&
+      e.minLevel && e.minLevel < gameState.level &&
+      (!e.branch || e.branch === '' || e.branch === cb)
+    );
+    if (toAdd.length > 0) {
+      for (const ev of toAdd) gameState.triggeredEvents.push(ev.id);
+      console.log(`[migration] auto-acknowledged ${toAdd.length} new events below Lv.${gameState.level}`);
+    }
+    // Clean up cross-branch events that were wrongly added (e.g. from a
+    // previous migration without branch filtering).
+    const cleaned = gameState.triggeredEvents.filter(id => {
+      if (id.startsWith('ms_') || id.startsWith('holiday_') || id.startsWith('scenario_ending_')) return true;
+      const ev = currentScenario.events.find(e => e.id === id);
+      if (!ev) return true;
+      if (ev.branch && ev.branch !== '' && ev.branch !== cb) return false;
+      return true;
+    });
+    if (cleaned.length < gameState.triggeredEvents.length) {
+      gameState.triggeredEvents = cleaned;
+      console.log(`[migration] cleaned ${oldLen - cleaned.length} cross-branch events from triggered list`);
+    }
+    // Achievement self-check: remove achievements whose conditions are no
+    // longer met (e.g. event-count achievements unlocked by cross-branch
+    // contamination that are now invalid after cleanup).
+    if (currentScenario && currentScenario.achievements && gameState.unlockedAchievements) {
+      const removedAch = [];
+      const keepAch = [];
+      for (const aid of gameState.unlockedAchievements) {
+        const ach = currentScenario.achievements.find(a => a.id === aid);
+        if (!ach || !ach.condition) { keepAch.push(aid); continue; }
+        let ok = false;
+        switch (ach.condition.type) {
+          case 'level':
+            ok = gameState.level >= ach.condition.value;
+            break;
+          case 'events':
+            ok = gameState.triggeredEvents.length >= ach.condition.value;
+            break;
+          case 'runtime':
+            ok = gameState.totalRuntimeMs >= ach.condition.value;
+            break;
+          case 'titles': {
+            const titles = getUnlockedTitles(currentScenario, gameState.level);
+            ok = titles.length >= ach.condition.value;
+            break;
+          }
+          default: ok = true;
+        }
+        if (!ok) removedAch.push(aid);
+        else keepAch.push(aid);
+      }
+      if (removedAch.length > 0) {
+        gameState.unlockedAchievements = keepAch;
+        console.log(`[selfcheck] removed ${removedAch.length} invalid achievements: ${removedAch.join(', ')}`);
+      }
+      // Clean up log files: remove achievement/event entries that don't
+      // match current game state, regardless of whether the achievement
+      // was in unlockedAchievements.
+      cleanupLogFiles(currentScenario, gameState);
+    }
+  }
+
   hubLevel = calcLevel(gameState.hubTotalExp);
 
   // Hub totalExp 0.5x conversion for v3.7.5
@@ -2612,6 +2867,53 @@ app.whenReady().then(() => {
   initInputListener();
   setupAutoUpdater();
   autoUpdater.checkForUpdates().catch(() => {});
+
+  // DEV mode: poll .reload_flag for test-utils hotfix notifications
+  if (IS_DEV) {
+    const reloadFlagPath = path.join(getAppDataPath(), '.reload_flag');
+    let lastSeq = 0;
+    const reloadTimer = setInterval(() => {
+      try {
+        if (!fs.existsSync(reloadFlagPath)) return;
+        const content = fs.readFileSync(reloadFlagPath, 'utf-8').trim();
+        if (!content) { fs.unlinkSync(reloadFlagPath); return; }
+        const data = JSON.parse(content);
+        if (data.seq && data.seq > lastSeq) {
+          lastSeq = data.seq;
+          // Reload scenario data
+          const dataPath = path.join(__dirname, '..', 'public', 'scenarios_data.json');
+          if (fs.existsSync(dataPath)) {
+            const loaded = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
+            if (loaded && loaded.length > 0) {
+              allScenarios = loaded;
+              if (currentScenario) {
+                const refreshed = findScenarioById(currentScenario.id);
+                if (refreshed) currentScenario = refreshed;
+              }
+              console.log('[reload] Hotfix applied, scenarios reloaded (seq=' + data.seq + ')');
+            }
+          }
+          // Re-read dev save
+          if (!gameState.isInHub && currentScenario) {
+            const sp = path.join(getAppDataPath(), getSaveFileName());
+            if (fs.existsSync(sp)) {
+              const newState = JSON.parse(fs.readFileSync(sp, 'utf-8'));
+              Object.assign(gameState, newState);
+              gameState._version = SAVE_VERSION;
+            }
+          }
+          fs.unlinkSync(reloadFlagPath);
+        } else if (data.seq <= lastSeq) {
+          // Old notification, clean up
+          fs.unlinkSync(reloadFlagPath);
+        }
+      } catch {}
+    }, 2000);
+    app.on('before-quit', () => {
+      clearInterval(reloadTimer);
+      try { if (fs.existsSync(reloadFlagPath)) fs.unlinkSync(reloadFlagPath); } catch {}
+    });
+  }
 
   // ── Clean up old installer files ──
   try {
