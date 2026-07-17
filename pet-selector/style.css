@@ -3,7 +3,7 @@ html,body { width:100%;height:100%;overflow:hidden;background:transparent;user-s
 *::-webkit-scrollbar { width:4px;background:var(--bg); }
 *::-webkit-scrollbar-track { background:var(--bg); }
 *::-webkit-scrollbar-thumb { background:var(--dim);border-radius:2px; }
-:root { --fg:#00FF00; --dim:#00AA00; --bg:rgba(10,10,10,0.85); --border:rgba(0,255,0,0.2); --font:'MapleMonoNFCN','Courier New',monospace; }
+:root { --fg:#00FF00; --dim:#00AA00; --bg:rgba(10,10,10,0.85); --border:rgba(0,255,0,0.2); --font:'MapleMonoNFCN','Courier New',monospace; --ease-out:cubic-bezier(0.23,1,0.32,1); --ease-in-out:cubic-bezier(0.77,0,0.175,1); }
 .theme-red { --fg:#F38BA8; --dim:#BA7D8F; --bg:rgba(30,10,16,0.85); --border:rgba(243,139,168,0.2); }
 .theme-red-orange { --fg:#FAB387; --dim:#BF9E82; --bg:rgba(30,18,10,0.85); --border:rgba(250,179,135,0.2); }
 .theme-orange { --fg:#FF9E64; --dim:#C47D3A; --bg:rgba(30,16,0,0.85); --border:rgba(255,158,100,0.2); }

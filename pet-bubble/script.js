@@ -40,14 +40,19 @@ function showBubble(data) {
   }
 
   document.getElementById('bubble').style.display = 'block';
+  document.getElementById('bubble').classList.remove('closing');
 }
 
 document.getElementById('bubble').addEventListener('click', (e) => {
   if (e.target.closest('.choice-btn')) return;
   if (document.body.dataset.type === 'chime') return;
   if (currentChoices) return;
-  window.petBubble.invoke('close-bubble').catch(() => {});
-  window.petBubble.invoke('catch-up-advance').catch(() => {});
+  const bubble = document.getElementById('bubble');
+  bubble.classList.add('closing');
+  bubble.addEventListener('animationend', () => {
+    window.petBubble.invoke('close-bubble').catch(() => {});
+    window.petBubble.invoke('catch-up-advance').catch(() => {});
+  }, { once: true });
 });
 
 window.petBubble.on('show-bubble', (data) => { showBubble(data); });

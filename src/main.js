@@ -157,11 +157,11 @@ let confirmResolver = null;
 function showConfirmModal(desc) {
   return new Promise((resolve) => {
     document.getElementById('confirm-desc').textContent = desc;
-    confirmModal.classList.remove('hidden'); confirmResolver = resolve;
+    confirmModal.classList.remove('closing'); confirmModal.classList.remove('hidden'); confirmResolver = resolve;
   });
 }
-confirmOk.addEventListener('click', () => { confirmModal.classList.add('hidden'); if (confirmResolver) { confirmResolver(true); confirmResolver = null; } });
-confirmCancel.addEventListener('click', () => { confirmModal.classList.add('hidden'); if (confirmResolver) { confirmResolver(false); confirmResolver = null; } });
+confirmOk.addEventListener('click', () => { closeWithAnimation(confirmModal); if (confirmResolver) { confirmResolver(true); confirmResolver = null; } });
+confirmCancel.addEventListener('click', () => { closeWithAnimation(confirmModal); if (confirmResolver) { confirmResolver(false); confirmResolver = null; } });
 
 function getTitleByIndex(idx) {
   if (!currentScenario?.titles) return null;
@@ -228,6 +228,7 @@ async function init() {
       endingTitleEl.style.display = 'none';
     }
     endingBranchInfo.textContent = event.branch ? '分支: ' + event.branch : '';
+    endingOverlay.classList.remove('closing');
     endingOverlay.classList.remove('hidden');
   });
 }
@@ -241,7 +242,7 @@ endingRebirthBtn.addEventListener('click', async () => {
       gameState.is_in_hub = true;
       gameState.scenario_id = '';
       hubLevel = r.hubLevel;
-      endingOverlay.classList.add('hidden');
+      closeWithAnimation(endingOverlay);
       switchView(true);
       renderHubView();
       renderHubCards();
@@ -251,9 +252,9 @@ endingRebirthBtn.addEventListener('click', async () => {
   } catch (e) { showToast('重生失败', 'error'); }
 });
 endingHubBtn.addEventListener('click', () => {
-  endingOverlay.classList.add('hidden');
+  closeWithAnimation(endingOverlay);
 });
-endingPanelClose.addEventListener('click', () => endingPanel.classList.add('hidden'));
+endingPanelClose.addEventListener('click', () => closeWithAnimation(endingPanel));
 
 function switchView(inHub) {
   hubView.classList.toggle('hidden', !inHub); scenarioView.classList.toggle('hidden', inHub);
@@ -289,6 +290,17 @@ function showToast(msg, type) {
 document.getElementById('toast').addEventListener('animationend', () => {
   const el = document.getElementById('toast');
   if (el.classList.contains('closing')) { el.classList.add('hidden'); el.classList.remove('closing'); }
+});
+
+function closeWithAnimation(el) {
+  if (!el || el.classList.contains('hidden') || el.classList.contains('closing')) return;
+  el.classList.add('closing');
+}
+document.addEventListener('animationend', (e) => {
+  if (e.target.classList.contains('closing') && !e.target.id.startsWith('toast')) {
+    e.target.classList.add('hidden');
+    e.target.classList.remove('closing');
+  }
 });
 
 // ── Hub View ──
@@ -548,7 +560,7 @@ achievementOverlay.addEventListener('animationend', () => {
 });
 achievementOverlay.addEventListener('click', () => { dismissAchievementOverlay(); if (achievementDismissTimer) clearTimeout(achievementDismissTimer); });
 
-btnScenario.addEventListener('click', async () => { try { scenarioList = await window.electron.invoke('get-scenario-list'); } catch (e) { showToast(t('systemDetailFail'), 'error'); } renderScenarioPanel(); scenarioPanel.classList.remove('hidden'); });
+btnScenario.addEventListener('click', async () => { try { scenarioList = await window.electron.invoke('get-scenario-list'); } catch (e) { showToast(t('systemDetailFail'), 'error'); } renderScenarioPanel(); scenarioPanel.classList.remove('closing'); scenarioPanel.classList.remove('hidden'); });
 
 // ── Stats Panel ──
 async function renderStatsPanel() {
@@ -572,15 +584,15 @@ document.querySelectorAll('.jm-item').forEach(el => {
   el.addEventListener('click', () => {
     journeyMenu.classList.add('hidden');
     const action = el.dataset.action;
-    if (action === 'titles') { renderTitlesPanel(); titlesPanel.classList.remove('hidden'); }
-    else if (action === 'achievement') { renderAchievementPanel(); achievementPanel.classList.remove('hidden'); }
-    else if (action === 'event') { renderEventPanel(); eventPanel.classList.remove('hidden'); }
-    else if (action === 'ending') { renderEndingPanel(); endingPanel.classList.remove('hidden'); }
-    else if (action === 'stats') { renderStatsPanel(); statsPanel.classList.remove('hidden'); }
+    if (action === 'titles') { renderTitlesPanel(); titlesPanel.classList.remove('closing'); titlesPanel.classList.remove('hidden'); }
+    else if (action === 'achievement') { renderAchievementPanel(); achievementPanel.classList.remove('closing'); achievementPanel.classList.remove('hidden'); }
+    else if (action === 'event') { renderEventPanel(); eventPanel.classList.remove('closing'); eventPanel.classList.remove('hidden'); }
+    else if (action === 'ending') { renderEndingPanel(); endingPanel.classList.remove('closing'); endingPanel.classList.remove('hidden'); }
+    else if (action === 'stats') { renderStatsPanel(); statsPanel.classList.remove('closing'); statsPanel.classList.remove('hidden'); }
   });
 });
-eventClose.addEventListener('click', () => eventPanel.classList.add('hidden'));
-statsClose.addEventListener('click', () => statsPanel.classList.add('hidden'));
+eventClose.addEventListener('click', () => closeWithAnimation(eventPanel));
+statsClose.addEventListener('click', () => closeWithAnimation(statsPanel));
 
 function openSettingsPanel() {
   refreshSyncStatus();
@@ -601,14 +613,15 @@ function openSettingsPanel() {
     document.getElementById('custom-theme').classList.add('hidden');
   }
   renderThemeSwatches();
+  settingsPanel.classList.remove('closing');
   settingsPanel.classList.remove('hidden');
 }
 btnSettings.addEventListener('click', openSettingsPanel);
-settingsClose.addEventListener('click', () => settingsPanel.classList.add('hidden'));
+settingsClose.addEventListener('click', () => closeWithAnimation(settingsPanel));
 settingsNameSave.addEventListener('click', async () => { const n = settingsName.value.trim(); if (!n) return; try { await window.electron.invoke('set-player-name', { name: n }); if (gameState) gameState.player_name = n; renderHubView(); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); } });
 document.getElementById('btn-tutorial').addEventListener('click', async () => {
   if (onboardingInput) onboardingInput.value = gameState?.player_name || '';
-  if (onboardingModal) onboardingModal.classList.remove('hidden');
+  if (onboardingModal) { onboardingModal.classList.remove('closing'); onboardingModal.classList.remove('hidden'); }
 });
 
 // ── Auto-start ──
@@ -763,15 +776,15 @@ async function refreshSyncStatus() {
 }
 let syncModalResolve = null;
 document.getElementById('sync-cancel')?.addEventListener('click', () => {
-  document.getElementById('sync-modal').classList.add('hidden');
+  closeWithAnimation(document.getElementById('sync-modal'));
   if (syncModalResolve) { syncModalResolve(null); syncModalResolve = null; }
 });
 document.getElementById('sync-use-local')?.addEventListener('click', () => {
-  document.getElementById('sync-modal').classList.add('hidden');
+  closeWithAnimation(document.getElementById('sync-modal'));
   if (syncModalResolve) { syncModalResolve('local'); syncModalResolve = null; }
 });
 document.getElementById('sync-import-cloud')?.addEventListener('click', () => {
-  document.getElementById('sync-modal').classList.add('hidden');
+  closeWithAnimation(document.getElementById('sync-modal'));
   if (syncModalResolve) { syncModalResolve('import'); syncModalResolve = null; }
 });
 document.getElementById('btn-select-sync-dir')?.addEventListener('click', async () => {
@@ -787,6 +800,7 @@ document.getElementById('btn-select-sync-dir')?.addEventListener('click', async 
       document.getElementById('sync-cloud-time').textContent = formatTime(info.cloud.lastWriteTimestamp);
       document.getElementById('sync-local-lv').textContent = 'Lv.' + info.local.hubLevel;
       document.getElementById('sync-cloud-lv').textContent = 'Lv.' + info.cloud.hubLevel;
+      document.getElementById('sync-modal').classList.remove('closing');
       document.getElementById('sync-modal').classList.remove('hidden');
       const action = await new Promise(resolve => { syncModalResolve = resolve; });
       if (!action) return; // cancelled
@@ -961,9 +975,9 @@ function renderScenarioPanel() {
   });
 }
 document.getElementById('btn-close').addEventListener('click', () => window.electron.invoke('hide-window'));
-scenarioClose.addEventListener('click', () => scenarioPanel.classList.add('hidden'));
-titlesClose.addEventListener('click', () => titlesPanel.classList.add('hidden'));
-achievementClose.addEventListener('click', () => achievementPanel.classList.add('hidden'));
+scenarioClose.addEventListener('click', () => closeWithAnimation(scenarioPanel));
+titlesClose.addEventListener('click', () => closeWithAnimation(titlesPanel));
+achievementClose.addEventListener('click', () => closeWithAnimation(achievementPanel));
 
 async function renderTitlesPanel() {
   titlesListEl.innerHTML = '';
@@ -1242,7 +1256,7 @@ const onboardingOk = document.getElementById('onboarding-ok');
 onboardingOk.addEventListener('click', async () => {
   const n = onboardingInput.value.trim();
   if (n) { try { await window.electron.invoke('set-player-name', { name: n }); if (gameState) gameState.player_name = n; } catch {} }
-  onboardingModal.classList.add('hidden');
+  closeWithAnimation(onboardingModal);
   window.electron.invoke('set-onboarding-seen').catch(() => {});
   renderHubView(); renderHubCards(); updateUI();
 });
