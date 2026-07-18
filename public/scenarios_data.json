@@ -289,7 +289,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "喉咙干得像砂纸。你翻遍背包，水壶已经见底。废土生存的第一课——没有水，你活不过三天。",
+        "text": "你摸了摸空荡荡的水壶，想起在避难所里从不需要担心水的问题。那时候你从没想过，有一天一口水会变得这么珍贵。",
         "branch": "survivor"
       },
       {
@@ -333,7 +333,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "在一片居民废墟里你翻到一件破旧防风衣，袖子破了个洞但总比没有强。废土的夜晚冷得刺骨。",
+        "text": "你走进一栋倒塌的民居。墙壁上还贴着褪色的壁纸，餐桌上的碗碟落满了灰。一切都停在某个平常的日子——核弹落下来之前，这里还有人吃着早饭。",
         "branch": "survivor"
       },
       {
@@ -377,7 +377,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "在河床附近一辆废车里你翻到一本破烂的地图册。大部分页面已经模糊不清，但至少能辨认出大致的地形走向。",
+        "text": "你翻开那本破旧的地图册，手指划过那些陌生的地名——有些还在，有些已经不在了。你找到自己所在的位置，在边上画了一个小小的圈。",
         "branch": "survivor"
       },
       {
@@ -568,7 +568,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你在残骸里搜寻。驾驶员座位下一把军用匕首卡在缝隙里。你拔出来，刃口有些钝但依然锋利。好刀。",
+        "text": "你爬进直升机残骸的驾驶舱。座椅上还有干涸的血迹，仪表盘碎了大半。你在夹缝里找到一把军用匕首——它曾经是某个人的最后一道防线。",
         "branch": "survivor"
       },
       {
@@ -656,7 +656,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "在一辆翻倒的军用卡车里你找到一件厚重的防辐射服。虽然又闷又重，但在经过辐射区的时候它能保你的命。",
+        "text": "你拖着防辐射服从卡车里爬出来，累得坐在沙地上喘气。远处那片辐射区的天空泛着怪异的紫色。你盯着那个方向看了很久——不知道里面有什么在等着你。",
         "branch": "survivor"
       },
       {
@@ -689,7 +689,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "在一栋政府办公楼里搜寻，文件散了一地被风踩得到处都是。在抽屉的角落里你摸到了一盒完好的火柴。",
+        "text": "办公楼大厅的墙上贴着几十张泛黄的照片——都是普通人的面孔，笑容灿烂。你站在那面墙前看了很久。他们谁都不知道自己即将成为废土的一部分。",
         "branch": "survivor"
       },
       {
@@ -1192,7 +1192,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "一片洼地里长着些绿色植物——你在手册上见过，这是一种可食用的野菜富含水分。你蹲下来采了一大把。",
+        "text": "你蹲下来采野菜的时候，手指碰到了湿润的泥土。这个触感让你愣了一下——在废土上你已经很久没摸到过有水分的东西了。你把手按在泥土上感受了一会儿才松开。",
         "branch": "survivor"
       },
       {
@@ -1296,7 +1296,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你用匕首削尖一根树枝做成鱼叉站在溪边等着。水里的鱼不大但在废土上任何蛋白质都是宝贵的。",
+        "text": "你站在溪边举着鱼叉一动不动。水里的鱼在你脚边游来游去，完全不知道头顶悬着什么。你忽然觉得这个画面有点好笑——在核战之前，有人也是这样打发时间的。",
         "branch": "survivor"
       },
       {
@@ -1319,7 +1319,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你花了一天时间沿着峡谷两边的山脊探索，发现了几处可以设置陷阱的位置，还有野兔活动的痕迹。",
+        "text": "你在山脊上发现了一棵歪脖子树，树干上刻着一行字——「到此一游，核战前三年」。你伸手摸了摸那些刻痕。上一个在这里休息的人，现在不知道在哪里。",
         "branch": "survivor"
       },
       {
@@ -1353,7 +1353,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "在峡谷深处发现一辆废弃的越野车，车身已经锈得不成样子。后备箱里翻到一个完好的望远镜和一套工具。",
+        "text": "你从废后备箱里翻出望远镜，擦了擦镜片举到眼前。世界一下子被拉近了——远方的山脊、天上的云、一只飞过的鸟。你已经很久没有这么清楚地看过远处了。",
         "branch": "survivor"
       },
       {
@@ -2201,7 +2201,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你站在选择的岔路口，前方各有不同的命运在等待。你深吸一口气，做出了决定。",
+        "text": "旺财的腿还在渗血，它安静地舔着伤口，偶尔抬头看你一眼。桌上那台盖革计数器就摆在急救包旁边，红灯一闪一闪。三公里外的辐射区，或者相信自己的双手——你只有几秒钟做决定。",
         "choice1": "去辐射区找药",
         "choice1Target": "wasteland_e0170a",
         "choice2": "用保守方法慢慢治",
@@ -2942,7 +2942,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "小树苗活下来了。在废土上每一棵活下来的树都是奇迹。你蹲在旁边看了好一会儿，心里涌起一股说不清的踏实感。",
+        "text": "小树苗活下来了。你蹲在旁边看着那两片嫩叶，伸出手指轻轻碰了碰。它是你在这里种下的第一个活着的东西——你要看着它长大。",
         "branch": "survivor"
       },
       {
@@ -3130,7 +3130,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你用剩下的兽皮给自己缝了一副简陋的手套，针脚歪歪扭扭但够厚实。冬天快到了，你一个人也得做好过冬的准备。",
+        "text": "你用剩下的兽皮给自己缝了一副手套。针脚歪歪扭扭，食指部分还缝反了，但戴上去那一刻掌心传来的暖意让你愣了一下——这是你自己做的。",
         "branch": "survivor"
       },
       {
@@ -3447,7 +3447,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你用粗藤编了一把躺椅放在屋门口。手艺没阿强好，坐上去吱呀作响但勉强能用。傍晚你躺上去看天，旺财叼着木骨头跳到你肚子上趴着。",
+        "text": "你学着阿强的手法编了一把躺椅。手艺差得远，坐上去吱呀乱响，但你懒得再改了。傍晚你躺上去看天，旺财叼着木骨头跳到你肚子上——至少这狗不嫌你手艺差。",
         "branch": "survivor",
         "flagRequire": "invited_ahqiang=1; fed_wangcai=1"
       },
@@ -3507,7 +3507,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你决定明天去溪流下游看看能不能自己垒一道鱼坝。山谷的生活简单到只剩一件接一件的小事，但没有人教你，你就得自己摸索。",
+        "text": "你蹲在溪边盯着水流看了很久，想不出鱼坝该怎么垒。阿强在的时候你从没操心过这些事。你站起来拍了拍膝盖上的土——明天先搬石头再说。",
         "branch": "survivor"
       },
       {
@@ -3530,9 +3530,21 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你卷起裤腿站在冰凉的溪水里用石头垒鱼坝。旺财在岸边来回跑激动地叫了两声，像是在给你喊号子。没有人帮忙，你搬了整整一个下午。",
+        "text": "你卷起裤腿站在冰凉的溪水里，一块一块搬石头垒鱼坝。旺财在岸边来回跑，激动地叫唤着给你喊号子。没有人搭把手，你的手被石头磨破了皮，但鱼坝的雏形总算出来了。",
         "branch": "survivor",
         "flagRequire": "fed_wangcai=1"
+      },
+      {
+        "id": "wasteland_e0261b",
+        "type": "story",
+        "minLevel": 261,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你正在溪边洗手，忽然听到身后有脚步声。回头一看——是那个你救过的旅人。他看起来好了很多，背上多了个背包。\"找了你很久，\"他说，\"想当面说声谢谢。\"",
+        "branch": "survivor",
+        "flagRequire": "saved_stranger=1"
       },
       {
         "id": "wasteland_e0262",
@@ -3554,7 +3566,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "鱼坝建好的第一天就拦住了两条巴掌大的鱼。你伸手从水里捞出来，咧嘴笑了笑——虽然只有一个人，但你自己做到了。",
+        "text": "鱼坝建好的第一天就拦住了两条鱼。你伸手从水里捞出来，举到阳光下——银色的鳞片还在发光。没有人看到这一刻，但你对着手里的鱼笑了笑。",
         "branch": "survivor"
       },
       {
@@ -3577,7 +3589,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你试着用松枝熏鱼，凭印象中老人说的方法操作。鱼挂在棚子里滴着油，香味飘出很远。旺财蹲在棚子门口不肯走，你也不赶它。",
+        "text": "你试着用松枝熏鱼，方法全靠自己琢磨。鱼挂在棚子里滴着油，香味飘出很远。旺财蹲在门口不肯走，鼻头一抽一抽的。你也不赶它——有它在旁边守着，这鱼好像就成功了一半。",
         "branch": "survivor",
         "flagRequire": "fed_wangcai=1"
       },
@@ -3601,7 +3613,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你在菜地边又搭了一个工具棚放农具和渔具。活一个人干慢了不少，但完成的时候你直起腰看了看——还像那么回事。",
+        "text": "你在菜地边又搭了一个工具棚。一个人搬木料、削木桩、钉钉子，干到天黑才把架子立起来。你直起腰捶了捶后背，借着月光看了看——歪是歪了点，但不会倒。",
         "branch": "survivor"
       },
       {
@@ -3683,7 +3695,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你在后山打到一只野山羊，费了很大力气才拖回山谷。你把羊皮鞣好铺在床上当褥子——冬天近了，你一个人更需要做好准备。",
+        "text": "你在后山打到一只野山羊。拖回山谷的路上你在它倒下的地方坐了一会儿，喘匀了气才开始动手剥皮。你把羊皮鞣好铺在床上躺上去试了试——比草垫子暖和多了。",
         "branch": "survivor"
       },
       {
@@ -3718,7 +3730,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你一个人忙了整整三天储备过冬物资——干柴堆成小山，食物棚塞满。你搓了搓冻僵的手想到，今年冬天得全靠自己了。",
+        "text": "你一个人忙了三天。干柴堆成小山，食物棚塞得满满当当。你搓了搓冻僵的手坐在地上歇了口气——以前阿强在的时候，他负责说\"够了够了\"，你负责继续塞。现在没人说够了，你反而不知道什么时候才算够。",
         "branch": "survivor"
       },
       {
@@ -4293,6 +4305,18 @@
         "flagRequire": "invited_ahqiang=1"
       },
       {
+        "id": "wasteland_e0302b",
+        "type": "story",
+        "minLevel": 302,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "旺财在你脚边打了个滚，露出肚皮让你摸。你蹲下来挠了挠它的肚子，目光落在它腿上那道浅浅的疤上——那是你闯辐射区换回来的印记。",
+        "branch": "survivor",
+        "flagRequire": "risked_for_medicine=1"
+      },
+      {
         "id": "wasteland_e0303",
         "type": "story",
         "minLevel": 303,
@@ -4782,6 +4806,18 @@
         "flagRequire": "invited_ahqiang=1"
       },
       {
+        "id": "wasteland_e0340b",
+        "type": "story",
+        "minLevel": 340,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "一个瘦弱的男人出现在谷口，手里举着一面白旗。他说他那边的营地还有老有小，听说这个山谷的主人愿意谈判，想来找条活路。你看着他——你做的那个选择正在改变别人。",
+        "branch": "survivor",
+        "flagRequire": "negotiated=1"
+      },
+      {
         "id": "wasteland_e0341",
         "type": "story",
         "minLevel": 341,
@@ -5137,6 +5173,18 @@
         "text": "阿强又一次醒了过来。他看了看你嘴唇动了动。你凑近去听他说的是——别管我了，带着狗走吧。你摇头说不。",
         "branch": "survivor",
         "flagRequire": "invited_ahqiang=1"
+      },
+      {
+        "id": "wasteland_e0370b",
+        "type": "story",
+        "minLevel": 370,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在加固谷口工事时发现了一块被人放在石头上的铁片。上面刻着几个字——「这里的人不好惹，绕道走。」署名是一个连名字都不知道的过路人。你把铁片钉在了木栅栏上。",
+        "branch": "survivor",
+        "flagRequire": "fought_raiders=1"
       },
       {
         "id": "wasteland_e0371",
@@ -5970,6 +6018,18 @@
         "branch": "survivor"
       },
       {
+        "id": "wasteland_e0422a",
+        "type": "story",
+        "minLevel": 422,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在一处山坡上停下来休息。这里开满了野花。你蹲下来摘了一朵放在石头上——如果旺财还在，它肯定会在这些花丛里打滚。风吹过来，花动了动，像是替它回应了你。",
+        "branch": "survivor",
+        "flagRequire": "carried_wangcai=1"
+      },
+      {
         "id": "wasteland_e0423",
         "type": "story",
         "minLevel": 423,
@@ -6288,6 +6348,18 @@
         "flagRequire": "fed_wangcai=1"
       },
       {
+        "id": "wasteland_e0450a",
+        "type": "story",
+        "minLevel": 450,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你坐在篝火边低头看了看自己的手。辐射区那次回来之后，你的指尖偶尔会发麻。你握了握拳头又松开——那点代价换旺财的命，值。",
+        "branch": "survivor",
+        "flagRequire": "risked_for_medicine=1"
+      },
+      {
         "id": "wasteland_e0451",
         "type": "story",
         "minLevel": 451,
@@ -6454,6 +6526,18 @@
         "text": "你走了一天之后停下来休息。你拿出旺财的木骨头握在手心里。木头的纹路已经被磨得光滑了。你对着木骨头笑了一下。",
         "branch": "survivor",
         "flagRequire": "fed_wangcai=1"
+      },
+      {
+        "id": "wasteland_e0465a",
+        "type": "story",
+        "minLevel": 465,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你从怀里掏出阿强的打火机，咔哒一声打着火。火苗在风中晃了晃但没有灭。你盯着那簇火看了很久——它还亮着，阿强也还在。",
+        "branch": "survivor",
+        "flagRequire": "saved_ahqiang=1"
       },
       {
         "id": "wasteland_e0466",
@@ -6705,6 +6789,18 @@
         "branch": "survivor"
       },
       {
+        "id": "wasteland_e0485a",
+        "type": "story",
+        "minLevel": 485,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在路边发现了一个简易的木棚，门口挂着一块牌子——「此处有干净水，过路客人请自取」。下面画了一个小小的记号，是你当年留给那个旅人的。他把它传下去了。",
+        "branch": "survivor",
+        "flagRequire": "saved_stranger=1"
+      },
+      {
         "id": "wasteland_e0486",
         "type": "story",
         "minLevel": 486,
@@ -6759,6 +6855,18 @@
         "once": true,
         "text": "你躺在篝火边闭上了眼睛。你的心跳平稳呼吸均匀。你不再害怕黑夜不再害怕孤独。你已经成为了一个真正的废土客。",
         "branch": "survivor"
+      },
+      {
+        "id": "wasteland_e0490a",
+        "type": "story",
+        "minLevel": 490,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山谷里现在住了三户人家。都是走投无路找来的。你给他们划了地皮，教他们种菜储水。傍晚你站在高处看着炊烟从不同的烟囱里升起——这里正在变成一个村子。",
+        "branch": "survivor",
+        "flagRequire": "negotiated=1"
       },
       {
         "id": "wasteland_e0491",
@@ -6816,6 +6924,18 @@
         "text": "你从背包里拿出阿强的砍刀和旺财的木骨头。你找了一块平整的石头把它们并排放在上面。你对着它们看了很久然后收好继续赶路。",
         "branch": "survivor",
         "flagRequire": "fed_wangcai=1"
+      },
+      {
+        "id": "wasteland_e0495a",
+        "type": "story",
+        "minLevel": 495,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你的名字在废土上传开了。有人说你是那个跟掠夺者干了一仗还没死的人，有人说你是那个在山谷里收留流浪者的傻子。你听到后半句笑了笑——傻就傻吧，总比冷血好。",
+        "branch": "survivor",
+        "flagRequire": "fought_raiders=1"
       },
       {
         "id": "wasteland_e0496",
@@ -9684,6 +9804,18 @@
         "branch": "merchant"
       },
       {
+        "id": "wasteland_e0740a",
+        "type": "story",
+        "minLevel": 240,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那个你收留的年轻人现在能独立带队了。他站在你面前，背挺得笔直，说想接下东边那条线路。你看着他——他刚来的时候连滤芯和子弹都分不清。",
+        "branch": "merchant",
+        "flagRequire": "hired_helper=1"
+      },
+      {
         "id": "wasteland_e0741",
         "type": "story",
         "minLevel": 241,
@@ -10010,7 +10142,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你完成了这个选择，继续踏上废土上的旅程。",
+        "text": "收发器里那段信号你已经听了整整一夜。它重复着同一段坐标——十三区，旧时代最后一个避难所的编号。是陷阱还是机会？你的手悬在开关上方，迟迟没有按下去。",
         "choice1": "去查看",
         "choice1Target": "wasteland_e0770a",
         "choice2": "记录信号位置",
@@ -10272,6 +10404,18 @@
         "once": true,
         "text": "第三天中午你看到了关口远处的炊烟——老公路确实能绕过土匪区",
         "branch": "merchant"
+      },
+      {
+        "id": "wasteland_e0790a",
+        "type": "story",
+        "minLevel": 290,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "夜里你又一次打开那份信号记录。频率、坐标、时间——你反复确认。十三区还在发送信号，一段接一段，像是有个人在那边等着什么人回复。你合上笔记本，心想也许真的要去一趟。",
+        "branch": "merchant",
+        "flagRequire": "recorded_signal=1"
       },
       {
         "id": "wasteland_e0791",
@@ -10600,7 +10744,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你完成了这个选择，继续踏上废土上的旅程。",
+        "text": "西行的商路被掐断两个月了。斥候带回来的消息一次比一次糟——人数更多了，装备更好了。你摊开地图，手指在唯一条通道上敲了三下。绕路多走半个月，硬闯可能死人，放弃——你咽不下这口气。",
         "choice1": "以牙还牙堵住西边",
         "choice1Target": "wasteland_e0820a",
         "choice2": "另辟新路绕过土匪",
@@ -10974,6 +11118,18 @@
         "branch": "merchant"
       },
       {
+        "id": "wasteland_e0850a",
+        "type": "story",
+        "minLevel": 350,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "西边的商路现在成了你的主线。你在这条路上设了三个补给站，雇了十来个护卫。前两天有人路过时感叹——这条路终于不用提心吊胆了。你没说什么，但心里是得意的。",
+        "branch": "merchant",
+        "flagRequire": "opened_west_route=1"
+      },
+      {
         "id": "wasteland_e0851",
         "type": "story",
         "minLevel": 351,
@@ -11300,7 +11456,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你完成了这个选择，继续踏上废土上的旅程。",
+        "text": "马有带走的不只是钱——他带走的是你这么多年攒下的信任。废土教会你信任是奢侈品，背叛是常态。但你发现你真正纠结的不是损失了多少货——而是你居然还想着给他留条活路。",
         "choice1": "以牙还牙追回货物",
         "choice1Target": "wasteland_e0880a",
         "choice2": "原谅他到此为止",
@@ -11562,6 +11718,18 @@
         "once": true,
         "text": "你看着那行歪字忍不住笑了出来，笑完又沉默了",
         "branch": "merchant"
+      },
+      {
+        "id": "wasteland_e0900a",
+        "type": "story",
+        "minLevel": 400,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人在商路上遇到马有，说他在另一个镇子摆摊，生意不大但安稳。听说他还问起过你。你没有追问细节，只是点了点头——废土上每个人都有第二次机会。你给过他了。",
+        "branch": "merchant",
+        "flagRequire": "forgiven_traitor=1"
       },
       {
         "id": "wasteland_e0901",
@@ -12028,6 +12196,18 @@
         "once": true,
         "text": "经过断桥镇时你放慢了速度——镇子比从前繁荣了很多，桥上人来人往",
         "branch": "merchant"
+      },
+      {
+        "id": "wasteland_e0940a",
+        "type": "story",
+        "minLevel": 440,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你终于决定出发去十三区了。卡车装满了油和物资，副驾上放着那本记着坐标的笔记本。你坐进驾驶室发动引擎——废土的尽头到底是什么，你很快就能知道了。",
+        "branch": "merchant",
+        "flagRequire": "recorded_signal=1"
       },
       {
         "id": "wasteland_e0941",
