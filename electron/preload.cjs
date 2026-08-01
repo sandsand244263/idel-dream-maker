@@ -5,7 +5,7 @@ contextBridge.exposeInMainWorld('electron', {
     const validChannels = [
       'get-full-state', 'get-scenario-list', 'set-player-name',
       'select-scenario', 'exit-to-hub',
-      'get-hub-titles', 'set-title', 'get-hub-completion-titles', 'set-completion-title', 'set-language',
+      'get-hub-titles', 'set-title', 'get-hub-completion-titles', 'set-completion-title',
       'set-font-theme',
       'hide-window', 'start-dragging', 'set-window-mode',
       'window-minimize', 'window-toggle-maximize',

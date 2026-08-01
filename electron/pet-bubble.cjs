@@ -5,7 +5,6 @@ const HIDE_POS = { x: -9999, y: -9999 };
 let bubbleWindow = null;
 let petWindowRef = null;
 let appRef = null;
-let currentData = null;
 
 function sendToBubble(channel, data) {
   if (bubbleWindow && !bubbleWindow.isDestroyed()) {
@@ -56,7 +55,7 @@ function initBubble(app, petWin) {
   });
 
   bubbleWindow.on('blur', () => { hideBubble(); });
-  bubbleWindow.on('closed', () => { bubbleWindow = null; currentData = null; });
+  bubbleWindow.on('closed', () => { bubbleWindow = null; });
 }
 
 let isChoiceBubble = false;
@@ -67,7 +66,7 @@ function doShowBubble(data) {
   const bw = 260;
   const screen = require('electron').screen.getPrimaryDisplay().workAreaSize;
 
-  if (data) { currentData = data; sendToBubble('show-bubble', data); }
+  if (data) { sendToBubble('show-bubble', data); }
   isChoiceBubble = !!(data && data.choices);
 
   setImmediate(() => {

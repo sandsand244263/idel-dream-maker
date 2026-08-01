@@ -391,19 +391,132 @@ function mockCheckSaveFields(gs) {
 test('存档诊断', 'checkSaveFields 检测到 _version', mockCheckSaveFields(validSave)._version.present, true);
 test('存档诊断', 'checkSaveFields 检测 null=error', mockCheckSaveFields(null).error, 'gameState 为空');
 
-// ── 同步防回滚逻辑测试 ──
+// ── 同步防回滚逻辑测试（v3.7.9：进度为主防线，时间戳不再参与） ──
 function mockShouldSkipSync(localTime, cloudTime, localTotal, cloudTotal) {
-  return cloudTime > localTime && cloudTotal >= localTotal;
+  return cloudTotal > localTotal;
 }
-test('同步防回滚', '云端更新更高经验=跳过(防回滚)', mockShouldSkipSync('2026-01-01', '2026-01-02', 100, 200), true);
+test('同步防回滚', '云端进度更高=跳过(防回滚)', mockShouldSkipSync('2026-01-01', '2026-01-02', 100, 200), true);
 test('同步防回滚', '本地经验更高=推送本地', mockShouldSkipSync('2026-01-02', '2026-01-01', 200, 100), false);
-test('同步防回滚', '云端更新但经验更低=推送本地', mockShouldSkipSync('2026-01-01', '2026-01-02', 200, 100), false);
+test('同步防回滚', '云端更新时间新但进度低=推送本地(进度为准)', mockShouldSkipSync('2026-01-01', '2026-01-02', 200, 100), false);
 test('同步防回滚', '时间相同=推送本地', mockShouldSkipSync('2026-01-01', '2026-01-01', 100, 100), false);
 test('同步防回滚', '云端不存在=推送本地', mockShouldSkipSync('2026-01-01', '', 100, 0), false);
 test('同步防回滚', '本地时间空云端有值=跳过', mockShouldSkipSync('', '2026-01-02', 0, 200), true);
+test('同步防回滚', '进度相等不覆盖(内容相同)', mockShouldSkipSync('2026-01-01', '2026-01-02', 100, 100), false);
 
 // ── 设备ID检测 ──
 test('设备识别', '相同设备名不触发警告', mockShouldSkipSync('2026-01-01', '2026-01-02', 100, 200), true);
+
+// ── flag 系统（checkFlagRequire v3.7.9 语义） ──
+function mockCheckFlagRequire(flagRequire, flags) {
+  if (!flagRequire) return true;
+  const parts = flagRequire.split(/[;&]/);
+  for (const part of parts) {
+    const orParts = part.split('|');
+    let anyMatch = false;
+    for (const op of orParts) {
+      const trimmed = op.trim();
+      if (!trimmed) continue;
+      const match = trimmed.match(/^([a-zA-Z_]\w*)\s*(>=|<=|==|=|>|<)\s*(.+)$/);
+      if (!match) {
+        if (flags[trimmed]) anyMatch = true;
+        continue;
+      }
+      const [, key, opStr, valStr] = match;
+      const flagVal = flags[key];
+      if (flagVal === undefined) continue;
+      const numA = flagVal === '' ? NaN : Number(flagVal);
+      const numB = valStr.trim() === '' ? NaN : Number(valStr);
+      const numeric = !isNaN(numA) && !isNaN(numB);
+      let ok = false;
+      switch (opStr) {
+        case '>': ok = numeric ? numA > numB : String(flagVal) > String(valStr).trim(); break;
+        case '>=': ok = numeric ? numA >= numB : String(flagVal) >= String(valStr).trim(); break;
+        case '<': ok = numeric ? numA < numB : String(flagVal) < String(valStr).trim(); break;
+        case '<=': ok = numeric ? numA <= numB : String(flagVal) <= String(valStr).trim(); break;
+        case '==': case '=': ok = String(flagVal) === String(valStr).trim(); break;
+      }
+      if (ok) anyMatch = true;
+    }
+    if (!anyMatch) return false;
+  }
+  return true;
+}
+test('flag系统', ';分隔多条件全部满足=true', mockCheckFlagRequire('invited_ahqiang=1; fed_wangcai=1', { invited_ahqiang: 1, fed_wangcai: 1 }), true);
+test('flag系统', ';分隔任一不满足=false', mockCheckFlagRequire('invited_ahqiang=1; fed_wangcai=1', { invited_ahqiang: 1 }), false);
+test('flag系统', '裸flag名存在=true', mockCheckFlagRequire('shut_down_completely', { shut_down_completely: true }), true);
+test('flag系统', '裸flag名不存在=false', mockCheckFlagRequire('shut_down_completely', {}), false);
+test('flag系统', '布尔字符串false匹配=false字面量', mockCheckFlagRequire('saved_ahqiang=false', { saved_ahqiang: 'false' }), true);
+test('flag系统', '布尔字符串false不匹配true', mockCheckFlagRequire('saved_ahqiang=false', { saved_ahqiang: 'true' }), false);
+test('flag系统', '>= 运算符(正则顺序修复)', mockCheckFlagRequire('count>=5', { count: 5 }), true);
+test('flag系统', '>= 运算符小于=false', mockCheckFlagRequire('count>=5', { count: 4 }), false);
+test('flag系统', '> 与 >= 区分', mockCheckFlagRequire('count>5', { count: 5 }), false);
+test('flag系统', '& 组合 AND', mockCheckFlagRequire('a=1&b=2', { a: 1, b: 2 }), true);
+test('flag系统', '& 组合任一缺失=false', mockCheckFlagRequire('a=1&b=2', { a: 1 }), false);
+test('flag系统', '| 组合 OR', mockCheckFlagRequire('a=1|b=2', { b: 2 }), true);
+test('flag系统', '数字与字符串比较', mockCheckFlagRequire('fed_wangcai=1', { fed_wangcai: '1' }), true);
+test('flag系统', '未设置flag=false', mockCheckFlagRequire('fed_wangcai=1', {}), false);
+test('flag系统', '空条件=true', mockCheckFlagRequire('', {}), true);
+test('flag系统', 'undefined条件=true', mockCheckFlagRequire(undefined, {}), true);
+
+// ── ending 事件选择（v3.7.9：分支过滤 + 取分支内最后一个满足flag的） ──
+function mockPickEnding(events, branch, flags) {
+  const cb = branch || '';
+  const branchPool = events.filter(e => e.type === 'story' && (!e.branch || e.branch === cb));
+  const ending = branchPool.filter(e => mockCheckFlagRequire(e.flagRequire, flags)).pop() || branchPool.pop();
+  return ending ? ending.id : null;
+}
+const mockEvents = [
+  { id: 'e4', type: 'story', branch: '', flagRequire: '' },
+  { id: 'e1', type: 'story', branch: 'survivor', flagRequire: '' },
+  { id: 'e2', type: 'story', branch: 'survivor', flagRequire: 'saved_ahqiang=false' },
+  { id: 'e3', type: 'story', branch: 'merchant', flagRequire: '' },
+];
+test('ending选择', 'survivor分支取分支内flag满足的最后事件', mockPickEnding(mockEvents, 'survivor', { saved_ahqiang: 'false' }), 'e2');
+test('ending选择', 'survivor分支flag不满足时回退到分支内前一个flag满足事件', mockPickEnding(mockEvents, 'survivor', {}), 'e1');
+test('ending选择', 'merchant分支不取survivor事件', mockPickEnding(mockEvents, 'merchant', {}), 'e3');
+test('ending选择', '无分支事件归属无分支副本', mockPickEnding(mockEvents, '', {}), 'e4');
+
+// ── semver 版本比较（v3.7.9：3.10.0 > 3.9.5） ──
+function mockHasUpdate(latest, current) {
+  const verParts = v => v.split('.').map(n => parseInt(n, 10) || 0);
+  const lp = verParts(latest), cp = verParts(current);
+  for (let i = 0; i < 3; i++) {
+    if ((lp[i] || 0) > (cp[i] || 0)) return true;
+    if ((lp[i] || 0) < (cp[i] || 0)) return false;
+  }
+  return false;
+}
+test('版本比较', '3.10.0 > 3.9.5 有更新', mockHasUpdate('3.10.0', '3.9.5'), true);
+test('版本比较', '3.9.5 < 3.10.0 无更新', mockHasUpdate('3.9.5', '3.10.0'), false);
+test('版本比较', '同版本无更新', mockHasUpdate('3.7.9', '3.7.9'), false);
+test('版本比较', '3.7.10 > 3.7.9', mockHasUpdate('3.7.10', '3.7.9'), true);
+test('版本比较', '4.0.0 > 3.9.9', mockHasUpdate('4.0.0', '3.9.9'), true);
+
+// ── catch-up 经验差额（v3.7.9：只补差额不覆盖） ──
+function mockCatchUpExp(totalExpEarned, catchUpLevel) {
+  const expForLevel = calcExpForLevel(catchUpLevel);
+  if (totalExpEarned < expForLevel) return expForLevel;
+  return totalExpEarned;
+}
+test('catch-up', '经验低于门槛=补到门槛', mockCatchUpExp(500000, 100), 980100);
+test('catch-up', '经验高于门槛=保留超出部分', mockCatchUpExp(1500000, 100), 1500000);
+test('catch-up', '经验等于门槛=不变', mockCatchUpExp(980100, 100), 980100);
+
+// ── 内容完整性：flag 引用（54个flag全部有设置来源且新语义可用） ──
+const w2 = scenarios.find(s => s.id === 'wasteland');
+if (w2) {
+  const flagRequireEvents = w2.events.filter(e => e.flagRequire);
+  test('内容完整性', 'flagRequire 事件数 > 300', flagRequireEvents.length > 300, true);
+  const semi = flagRequireEvents.filter(e => e.flagRequire.includes(';')).length;
+  test('内容完整性', ';分隔条件事件 54 个', semi, 54);
+  const bare = flagRequireEvents.filter(e => !/[=<>;|&]/.test(e.flagRequire)).length;
+  test('内容完整性', '裸flag名事件 3 个(AI结局)', bare, 3);
+  const aiEnding = w2.events.filter(e => e.id === 'wasteland_e2000a' || e.id === 'wasteland_e2000b' || e.id === 'wasteland_e2000c');
+  test('内容完整性', 'AI三个结局事件存在', aiEnding.length, 3);
+  const e0501 = w2.events.find(e => e.id === 'wasteland_e0501');
+  test('内容完整性', 'e0501 用;分隔(修复后可触发)', e0501 && mockCheckFlagRequire(e0501.flagRequire, { saved_ahqiang: 'false', fed_wangcai: 1 }), true);
+  test('内容完整性', 'AI结局裸flag可匹配', aiEnding[0] && mockCheckFlagRequire(aiEnding[0].flagRequire, { shut_down_completely: true }), true);
+}
 
 // ── 生成报告 ──
 const passed = results.filter(r => r.pass).length;

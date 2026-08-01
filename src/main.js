@@ -19,9 +19,6 @@ const LANG = {
   logStartHub: '启动完成', logStartScenario: '已挂机 {0}，等级 {1}',
   scenarioEvent: '事件', scenarioAchievement: '成就',
   hubTitleEmpty: '尚无解锁称号',
-  aliasTitle: '进入副本', aliasPlaceholder: '输入名称（留空用默认）',
-  enterPrompt: '进入「{0}」— 输入名称（留空用默认）',
-  aliasCancel: '取消', aliasConfirm: '进入',
   confirmTitle: '返回大厅', confirmDesc: '确定返回大厅吗？副本进度将保留，经验累入全局等级。',
   confirmCancel: '取消', confirmOk: '确定',
   obWelcome: '欢迎来到', obSubtitle: 'Idel-DreamMaker',
@@ -944,11 +941,6 @@ function applyTheme(id) {
     document.documentElement.style.setProperty('--g2', ct.dim);
   }
 }
-function applyLanguage() {
-  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
-}
-
 function renderScenarioPanel() {
   scenarioListEl.innerHTML = ''; const cid = gameState?.scenario_id;
   window.electron.invoke('get-archived-scenarios').then(archivedIds => {
@@ -1149,14 +1141,6 @@ async function renderAchievementPanel() {
       achievementListEl.appendChild(it);
     });
   } catch (e) { showToast(t('systemDetailFail'), 'error'); }
-}
-
-function dayLabel(d) {
-  const now = new Date();
-  const today = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
-  if (d === today) return t('eventToday');
-  const p = d.split('-');
-  return tf('eventDate', parseInt(p[1]), parseInt(p[2]));
 }
 
 async function renderEventPanel() {

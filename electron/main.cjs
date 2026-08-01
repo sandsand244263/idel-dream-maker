@@ -20,7 +20,6 @@ let isQuitting = false;
 
 const isMac = process.platform === 'darwin';
 const SAVE_VERSION = 2;
-let syncLogCounter = 0;
 
 const HUB_TITLES = [
   { level: 1, name: '新人', desc: '刚踏上旅途' },
@@ -160,9 +159,7 @@ function createWindow() {
   }
 
   mainWindow._isQuitting = false;
-  mainWindow.on('show', () => {
-    forwardToPet('main-shown', {});
-  });
+  mainWindow.on('show', () => {  });
   mainWindow.on('close', (e) => {
     if (!isQuitting && !mainWindow._isQuitting) {
       e.preventDefault();
@@ -205,10 +202,7 @@ function normalizeGameState(gs) {
   if (typeof gs.totalRuntimeMs !== 'number') gs.totalRuntimeMs = 0;
   if (typeof gs.hubTotalExp !== 'number') gs.hubTotalExp = 0;
   gs.pendingChoiceEvent = null;
-  gs._catchUpQueue = null;
-  gs._catchUpPaused = false;
-  gs._catchUpBlocked = false;
-  gs._lastCatchUpTime = 0;
+  gs._catchUpQueue = null;  gs._lastCatchUpTime = 0;
   gs._lastCyberBlock = undefined;
 }
 function getAppDataPath() {
@@ -541,7 +535,7 @@ function writeSave(data, silent) {
     fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf-8');
     fs.renameSync(tmpPath, finalPath);
     const syncCfg = readSyncConfig();
-    if (syncCfg && syncCfg.path) syncToCloud(syncCfg, silent);
+    if (syncCfg && syncCfg.path && !silent) syncToCloud(syncCfg, silent);
   } catch (e) { console.error('Save failed:', e); appendLogEntry('error', `存档写入失败: ${e.message}`); }
 }
 
@@ -576,7 +570,6 @@ function syncToCloud(cfg, silent) {
     }
     // Update lastSync timestamp
     writeSyncConfig({ ...cfg, lastSync: new Date().toISOString() });
-    syncLogCounter++;
   } catch (e) {}
 }
 
@@ -746,7 +739,8 @@ for (const name in UiohookKey) {
 }
 
 function isNonPrintableKey(vk) {
-  return false;
+  const name = KEYCODE_TO_NAME[vk] || '';
+  return /^(ShiftLeft|ShiftRight|CtrlLeft|CtrlRight|AltLeft|AltRight|MetaLeft|MetaRight|CapsLock|NumLock|ScrollLock|Insert|Home|End|PageUp|PageDown|Delete|ArrowUp|ArrowDown|ArrowLeft|ArrowRight)$/.test(name);
 }
 
 function handleInputDown(keyId, keyChar, now) {
@@ -761,7 +755,10 @@ function handleInputDown(keyId, keyChar, now) {
   keyStream.push(now);
   keyStream = keyStream.filter(t => now - t <= KEY_STREAK_WINDOW);
   const streak = keyStream.length;
-  if (streak > highestStreak) highestStreak = streak;
+  if (streak > highestStreak) {
+    highestStreak = streak;
+    gameState.highestStreak = highestStreak;
+  }
   const grade = getGrade(streak);
 
   if (grade && !gameState.comboMilestones) gameState.comboMilestones = [];
@@ -1567,9 +1564,7 @@ function registerIpcHandlers() {
       let queue = scenario.events.filter(e => e.type === 'story' && e.minLevel <= catchUpLevel && !allTargetIds.has(e.id) && !gameState.triggeredEvents.includes(e.id) && (!e.branch || e.branch === '') && checkFlagRequire(e.flagRequire));
       queue.sort((a, b) => a.minLevel - b.minLevel);
       if (queue.length > 0) {
-        gameState._catchUpQueue = queue;
-        gameState._catchUpBlocked = false;
-        // 确保等级至少达到门槛（只补差额，不覆盖超出部分）
+        gameState._catchUpQueue = queue;        // 确保等级至少达到门槛（只补差额，不覆盖超出部分）
         const expForLevel = calcExpForLevel(catchUpLevel);
         if (gameState.totalExpEarned < expForLevel) {
           gameState.totalExpEarned = expForLevel;
@@ -1821,6 +1816,16 @@ function registerIpcHandlers() {
         if (loaded && loaded.length > 0) {
           const oldLen = allScenarios.length;
           allScenarios = loaded;
+          // 合并用户自制副本（避免覆盖丢失）
+          const userDir = path.join(__dirname, '..', 'scenarios_user');
+          if (fs.existsSync(userDir)) {
+            for (const f of fs.readdirSync(userDir).filter(x => x.endsWith('.md') && x !== 'README.md').sort()) {
+              try {
+                const scenario = require('../src/scenario-parser.cjs').parseScenarioMd(fs.readFileSync(path.join(userDir, f), 'utf-8'));
+                if (!allScenarios.find(s => s.id === scenario.id)) allScenarios.push(scenario);
+              } catch (e) { console.warn(`[hotfix] 用户副本解析失败 ${f}: ${e.message}`); }
+            }
+          }
           if (currentScenario) {
             const refreshed = findScenarioById(currentScenario.id);
             if (refreshed) currentScenario = refreshed;
@@ -1878,7 +1883,7 @@ function registerIpcHandlers() {
     gameState.rebirthCounts[sid] = (gameState.rebirthCounts[sid] || 0) + 1;
     // 计算总重生次数（所有副本）
     const totalRebirths = Object.values(gameState.rebirthCounts).reduce((a, b) => a + b, 0);
-    // 经验加成：每次 +10%，封顶 +50%（保留）
+    // 经验加成：每次 +25%，封顶 +100%
     gameState.rebirthExpBonus = Math.min(1.0, totalRebirths * 0.25);
     // 清空该副本进度
     if (gameState.scenarioProgress) delete gameState.scenarioProgress[sid];
@@ -1893,9 +1898,7 @@ function registerIpcHandlers() {
     gameState.flags = {};
     if (gameState.branchProgress) gameState.branchProgress[sid] = [];
     gameState.pendingChoiceEvent = null;
-    gameState._catchUpQueue = null;
-    gameState._catchUpPaused = false;
-    // 返回大厅
+    gameState._catchUpQueue = null;    // 返回大厅
     gameState.scenarioId = '';
     gameState.isInHub = true;
     currentScenario = null;
@@ -2045,8 +2048,8 @@ function registerIpcHandlers() {
       }
 
       // 2. Copy save file
-      const savePath = path.join(getAppDataPath(), 'save.json');
-      if (fs.existsSync(savePath)) fs.copyFileSync(savePath, path.join(exportDir, 'save.json'));
+      const savePath = path.join(getAppDataPath(), getSaveFileName());
+      if (fs.existsSync(savePath)) fs.copyFileSync(savePath, path.join(exportDir, getSaveFileName()));
 
       // 3. Build diagnostic report
       const isInHub = gameState.isInHub;
@@ -2183,6 +2186,18 @@ function registerIpcHandlers() {
   ipcMain.handle('open-path', (_, { path: targetPath }) => {
     try {
       const { shell } = require('electron');
+      if (typeof targetPath !== 'string' || !targetPath) return { success: false, error: '无效路径' };
+      // 只允许打开应用数据/日志/同步/桌面等白名单目录（防渲染层被滥用）
+      const allowed = [getAppDataPath(), getLogDir(), require('os').homedir()];
+      try { allowed.push(app.getPath('desktop')); } catch {}
+      const cfg = readSyncConfig();
+      if (cfg && cfg.path) allowed.push(cfg.path);
+      const norm = path.normalize(targetPath);
+      const ok = allowed.some(base => {
+        const nb = path.normalize(base);
+        return norm === nb || norm.startsWith(nb + path.sep);
+      });
+      if (!ok) return { success: false, error: '路径不在允许范围' };
       shell.openPath(targetPath);
       return { success: true };
     } catch (e) {
@@ -2190,10 +2205,8 @@ function registerIpcHandlers() {
     }
   });
 
-  // ── Key stats ──
   // ── Choice events ──
   ipcMain.handle('choice-selected', (_, { eventId, choiceIndex }) => {
-    console.log('[main-choice] received eventId:', eventId, 'choiceIndex:', choiceIndex, 'pending:', gameState.pendingChoiceEvent?.eventId);
     if (!gameState.pendingChoiceEvent || gameState.pendingChoiceEvent.eventId !== eventId) {
       return { success: false, error: '无待决选择' };
     }
@@ -2221,15 +2234,12 @@ function registerIpcHandlers() {
       }
     }
     gameState.pendingChoiceEvent = null;
-    // Resume catch-up: choice handled, unblock to send next
-    if (gameState._catchUpBlocked) gameState._catchUpBlocked = false;
     writeSave(gameState);
     return { success: true, choiceFlag: gameState.choiceFlags[pe.scenarioId]?.[pe.eventId] };
   });
 
-  // ── Catch-up advance (called when user dismisses a bubble in catch-up mode) ──
+  // Catch-up advance（保留：pet-bubble 仍调用此通道）
   ipcMain.handle('catch-up-advance', () => {
-    if (gameState._catchUpBlocked) gameState._catchUpBlocked = false;
     return true;
   });
 
@@ -2385,7 +2395,7 @@ function registerIpcHandlers() {
         } catch {}
       }
       // Clear save
-      const sp = path.join(getAppDataPath(), 'save.json');
+      const sp = path.join(getAppDataPath(), getSaveFileName());
       if (fs.existsSync(sp)) fs.unlinkSync(sp);
       // Clear logs
       const logDir = getLogDir();
@@ -2540,7 +2550,15 @@ function registerIpcHandlers() {
     });
   });
   ipcMain.handle('open-update-url', (_, { url }) => {
-    try { shell.openExternal(url); return { success: true }; } catch { return { success: false }; }
+    try {
+      // 只允许打开 https 下载链接（镜像域名列表），防渲染层被滥用
+      const ALLOWED_DL_HOSTS = ['github.com', 'gh-proxy.com', 'ghproxy.com', 'ghfast.top', 'gh-proxy.net', 'ghproxy.net', 'mirror.ghproxy.com', 'download.fastgit.org', 'github.moeyy.xyz', 'github.pgp.dev'];
+      if (typeof url !== 'string' || !/^https:\/\//.test(url)) return { success: false };
+      const host = (url.split('/')[2] || '').toLowerCase();
+      if (!ALLOWED_DL_HOSTS.some(h => host === h || host.endsWith('.' + h))) return { success: false };
+      shell.openExternal(url);
+      return { success: true };
+    } catch { return { success: false }; }
   });
   // ── Auto-update ──
   ipcMain.handle('trigger-update', () => {
@@ -2858,7 +2876,7 @@ app.whenReady().then(() => {
     mainWindow.setPosition(gameState.windowX, gameState.windowY);
   }
 
-  // Save window position on move
+  // Save window position on move（静默写盘，不触发云同步）
   let moveTimer = null;
   mainWindow.on('move', () => {
     if (moveTimer) clearTimeout(moveTimer);
@@ -2867,7 +2885,7 @@ app.whenReady().then(() => {
         const [x, y] = mainWindow.getPosition();
         gameState.windowX = x;
         gameState.windowY = y;
-        writeSave(gameState);
+        writeSave(gameState, true);
       }
     }, 300);
   });

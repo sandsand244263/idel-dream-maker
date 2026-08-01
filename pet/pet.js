@@ -114,13 +114,6 @@ class NotificationQueue{
     }
     this.next();
   }
-  clearQueue(){
-    window.pet.invoke('close-bubble').catch(() => {});
-    this.q=[];
-    this.current=null;
-    dotEl.className = 'dot-none';
-    dotSymbol.textContent = '○';
-  }
 }
 const nq=new NotificationQueue();
 
@@ -437,13 +430,6 @@ window.pet.on('level-up',d=>{
   nq.enqueue({text:txt,title:'等级提升',type:'levelup'},2);
 });
 window.pet.on('achievement-unlocked',d=>{transitionTo(Math.random()<0.5?'review':'extra1');nq.enqueue({text:`${d.icon||'★'} ${d.name}`,title:'成就解锁',type:'achievement'},3);});
-
-window.pet.on('hourly-chime',()=>{
-  if(!spritesheet)return;
-  const now=new Date();
-  const h=now.getHours(),m=now.getMinutes()>=30?'30':'00';
-  showChimeBubble(('0'+h).slice(-2)+':'+m);
-});
 
 window.pet.on('choice-event',(d)=>{
   if(d&&d.choices){

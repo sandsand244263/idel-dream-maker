@@ -29,6 +29,10 @@ if (fixed.charCodeAt(0) === 0xFEFF) {
 
 // 2. 检查每个 pipe table 段
 const cleanedLines = fixed.split('\n');
+// 文件末尾换行产生的空元素不是真实空行，去掉以免误报
+if (cleanedLines.length > 0 && cleanedLines[cleanedLines.length - 1] === '') {
+  cleanedLines.pop();
+}
 let inTable = false;
 let tableStart = -1;
 let fixCount = 0;

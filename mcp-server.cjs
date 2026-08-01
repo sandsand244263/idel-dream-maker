@@ -142,7 +142,7 @@ const TOOLS = {
       if (!save) return { success: false, error: '存档文件不存在' };
       if (args.level !== undefined) {
         save.level = args.level;
-        save.exp = args.level <= 100 ? Math.pow(args.level - 1, 2) * 100 : 980100 + (args.level - 100) * 6000;
+        save.exp = args.level <= 100 ? Math.pow(args.level - 1, 2) * 100 : 980100 + (args.level - 100) * (2 * 4000 + (args.level - 100 - 1) * 10) / 2;
       }
       if (args.exp !== undefined) save.exp = args.exp;
       if (args.flags) {
@@ -169,7 +169,7 @@ const TOOLS = {
 
       const newLevel = (save.level || 0) + 1;
       save.level = newLevel;
-      save.exp = newLevel <= 100 ? Math.pow(newLevel - 1, 2) * 100 : 980100 + (newLevel - 100) * 6000;
+      save.exp = newLevel <= 100 ? Math.pow(newLevel - 1, 2) * 100 : 980100 + (newLevel - 100) * (2 * 4000 + (newLevel - 100 - 1) * 10) / 2;
       writeSave(save);
 
       let text = '';
