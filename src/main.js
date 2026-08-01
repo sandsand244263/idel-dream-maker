@@ -304,11 +304,14 @@ document.addEventListener('animationend', (e) => {
 });
 
 // ── Hub View ──
+let _hubStatsTimer = null;
 function renderHubView() {
   if (!gameState) return;
   hubGreeting.textContent = t('hubWelcome'); hubPlayerName.textContent = gameState.player_name;
   hubLevelDisplay.textContent = `${t('hubLevel')}${hubLevel}`;
-  // 加载大厅称号和通关统计
+  // 大厅统计 5 秒节流一次（避免每 500ms tick 空转 IPC）
+  if (_hubStatsTimer) return;
+  _hubStatsTimer = setTimeout(() => { _hubStatsTimer = null; }, 5000);
   window.electron.invoke('get-hub-stats').then(stats => {
     if (hubTitleDisplay) hubTitleDisplay.textContent = stats.hubTitle ? stats.hubTitle.name : '';
     if (hubCompletionDisplay) hubCompletionDisplay.textContent = tf('hubCompletion', stats.completionCount, stats.totalScenarios);
@@ -703,8 +706,8 @@ window.electron.on('update-status', (d) => {
     status.innerHTML = '新版本已下载，<a href="#" id="btn-install-update" style="color:var(--fg);">立即重启安装</a>';
     status.style.color = '#6b6';
     btn.textContent = '立即重启';
-    btn.onclick = () => window.electron.invoke('trigger-update');
-    setTimeout(() => { document.getElementById('btn-install-update')?.addEventListener('click', (e) => { e.preventDefault(); window.electron.invoke('trigger-update'); }); }, 100);
+    const installBtn = document.getElementById('btn-install-update');
+    if (installBtn) installBtn.onclick = (e) => { e.preventDefault(); window.electron.invoke('trigger-update'); };
   }
   else if (d.type === 'error') { status.textContent = '更新失败: ' + (d.message || '未知错误'); status.style.color = '#f44'; btn.textContent = '检查更新'; }
 });
@@ -776,6 +779,10 @@ async function refreshSyncStatus() {
 }
 let syncModalResolve = null;
 document.getElementById('sync-cancel')?.addEventListener('click', () => {
+  closeWithAnimation(document.getElementById('sync-modal'));
+  if (syncModalResolve) { syncModalResolve(null); syncModalResolve = null; }
+});
+document.getElementById('sync-overlay')?.addEventListener('click', () => {
   closeWithAnimation(document.getElementById('sync-modal'));
   if (syncModalResolve) { syncModalResolve(null); syncModalResolve = null; }
 });
@@ -932,6 +939,9 @@ function applyTheme(id) {
     document.documentElement.style.setProperty('--bg', ct.bg);
     document.documentElement.style.setProperty('--dim', ct.dim);
     document.documentElement.style.setProperty('--border', ct.border || ct.dim);
+    // 渐变背景变量 --g1/--g2 由 bg 派生，避免背景渐变失效
+    document.documentElement.style.setProperty('--g1', ct.bg);
+    document.documentElement.style.setProperty('--g2', ct.dim);
   }
 }
 function applyLanguage() {
@@ -1134,7 +1144,7 @@ async function renderAchievementPanel() {
     d.achievements.forEach(a => {
       const u = unlocked.includes(a.id);
       const it = document.createElement('div'); it.className = `title-item${u ? '' : ' locked'}`;
-      const condStr = a.condition.type === 'level' ? `Lv.${a.condition.value}` : a.condition.type === 'runtime' ? `挂机测试` : a.condition.type === 'events' ? `触发${a.condition.value}事件` : `解锁${a.condition.value}称号`;
+      const condStr = a.condition.type === 'level' ? `Lv.${a.condition.value}` : a.condition.type === 'runtime' ? `挂机${Math.max(1, Math.floor(a.condition.value / 60000))}分钟` : a.condition.type === 'events' ? `触发${a.condition.value}事件` : `解锁${a.condition.value}称号`;
       it.innerHTML = `<span class="title-name" style="color:${u ? 'var(--fg)' : 'var(--dim)'}">${u ? a.name : '???'}</span><span class="title-desc">${u ? a.desc : condStr}</span>`;
       achievementListEl.appendChild(it);
     });
@@ -1161,7 +1171,8 @@ async function renderEventPanel() {
     let currentLevel = 0;
     const chapters = {};
     const titleOrder = [];
-    const titleLevelCache = {};
+    const prologueKey = '__prologue__';
+    let hasPrologue = false;
     for (const e of entries) {
       const titleMatch = e.m.match(/等级\s*(\d+)\s*[!！]\s*([^\s—\-―]+)/);
       if (titleMatch) {
@@ -1175,8 +1186,13 @@ async function renderEventPanel() {
           if (currentLevel > chapters[currentTitle].maxLevel) chapters[currentTitle].maxLevel = currentLevel;
         }
         chapters[currentTitle].entries.push({ data: e, level: currentLevel });
-      } else if (currentTitle) {
-        chapters[currentTitle].entries.push({ data: e, level: currentLevel });
+      } else {
+        // 升级之前的早期日志归入"序章"章节，不再丢弃
+        if (!chapters[prologueKey]) {
+          chapters[prologueKey] = { entries: [], minLevel: currentLevel, maxLevel: currentLevel };
+          hasPrologue = true;
+        }
+        chapters[prologueKey].entries.push({ data: e, level: currentLevel });
       }
     }
     for (const ch of Object.values(chapters)) {
@@ -1192,19 +1208,20 @@ async function renderEventPanel() {
       }
     }
     eventListEl.innerHTML = '';
-    for (const title of titleOrder) {
+    const renderChapter = (title, displayName, isLatest) => {
       const ch = chapters[title];
-      const isLatest = (title === latestTitle);
       const range = ch.minLevel === ch.maxLevel ? `Lv.${ch.minLevel}` : `Lv.${ch.minLevel}-${ch.maxLevel}`;
       const grp = document.createElement('div'); grp.className = 'chapter-group';
       const hdr = document.createElement('div'); hdr.className = 'chapter-header';
-      hdr.innerHTML = isLatest ? `▼ ${title} ${range}` : `▶ ${title} ${range}`;
+      hdr.textContent = `${isLatest ? '▼ ' : '▶ '}${displayName} ${range}`;
       grp.appendChild(hdr);
       const body = document.createElement('div'); body.className = 'chapter-body' + (isLatest ? '' : ' hidden');
       for (const { data: e } of ch.entries) {
         const item = document.createElement('div'); item.className = 'log-entry ' + (e.ty || 'event');
         const tsStr = e.t && e.t.length >= 16 ? e.t.slice(11, 16) : (e.t || '');
-        item.innerHTML = `<span class="ts">[${tsStr}]</span><span class="msg">${e.m}</span>`;
+        const ts = document.createElement('span'); ts.className = 'ts'; ts.textContent = `[${tsStr}]`;
+        const msg = document.createElement('span'); msg.className = 'msg'; msg.textContent = e.m;
+        item.appendChild(ts); item.appendChild(msg);
         body.appendChild(item);
       }
       grp.appendChild(body);
@@ -1212,13 +1229,17 @@ async function renderEventPanel() {
         const hidden = body.classList.contains('hidden');
         if (hidden) {
           body.classList.remove('hidden');
-          hdr.innerHTML = `▼ ${title} ${range}`;
+          hdr.textContent = `▼ ${displayName} ${range}`;
         } else {
           body.classList.add('hidden');
-          hdr.innerHTML = `▶ ${title} ${range}`;
+          hdr.textContent = `▶ ${displayName} ${range}`;
         }
       });
       eventListEl.appendChild(grp);
+    };
+    if (hasPrologue) renderChapter(prologueKey, '序章', false);
+    for (const title of titleOrder) {
+      renderChapter(title, title, title === latestTitle);
     }
   } catch (e) { eventListEl.innerHTML = '<div class="hub-empty-text">加载失败</div>'; }
 }
@@ -1235,7 +1256,7 @@ async function renderEndingPanel() {
     stats.completions.forEach(c => {
       const sc = scenarioList.find(s => s.id === c.scenarioId);
       const it = document.createElement('div'); it.className = 'title-item';
-      it.innerHTML = `<span class="title-name" style="color:var(--fg)">${sc ? sc.nameCN : c.scenarioId}</span><span class="title-desc">${tf('endingRecord', c.date, c.rebirthCount + 1, '')}</span>`;
+      it.innerHTML = `<span class="title-name" style="color:var(--fg)">${sc ? sc.nameCN : c.scenarioId}</span><span class="title-desc">${tf('endingRecord', c.date, c.rebirthCount + 1, c.branch || '')}</span>`;
       endingPanelList.appendChild(it);
     });
   } catch (e) { endingPanelList.innerHTML = '<div class="hub-empty-text">加载失败</div>'; }
@@ -1243,7 +1264,7 @@ async function renderEndingPanel() {
 
 async function updateTooltip() {
   if (!gameState) return;
-  const rt = formatRuntime(gameState.total_runtime_ms);
+  const rt = formatRuntime(gameState.total_runtime_ms || 0);
   const title = currentTitle?.name || '?';
   const lv = gameState.is_in_hub ? `${t('hubLevel')}${hubLevel}` : `Lv.${gameState.level}`;
   const sc = currentScenario?.nameCN || (gameState.is_in_hub ? t('statusHub') : '?');

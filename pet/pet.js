@@ -368,10 +368,10 @@ function applyTheme(theme, customTheme){
 }
 
 // ── Drag ──
-let dragging=false,mouseOff={x:0,y:0};
-canvas.addEventListener('mousedown',e=>{dragging=true;dragMoved=false;mouseOff.x=e.screenX-(window.screenLeft||0);mouseOff.y=e.screenY-(window.screenTop||0);});
-document.addEventListener('mousemove',e=>{if(!dragging)return;const dx=Math.abs(e.screenX-(window.screenLeft||0)-mouseOff.x);const dy=Math.abs(e.screenY-(window.screenTop||0)-mouseOff.y);if(dx>3||dy>3)dragMoved=true;window.pet.invoke('pet-drag-move',{x:e.screenX-mouseOff.x,y:e.screenY-mouseOff.y}).catch(()=>{});});
-document.addEventListener('mouseup',()=>{if(dragging){dragging=false;window.pet.invoke('pet-drag-end').catch(()=>{});}});
+let dragging=false,mouseOff={x:0,y:0},lastDragPos=null;
+canvas.addEventListener('mousedown',e=>{dragging=true;dragMoved=false;mouseOff.x=e.screenX-(window.screenLeft||0);mouseOff.y=e.screenY-(window.screenTop||0);lastDragPos=null;});
+document.addEventListener('mousemove',e=>{if(!dragging)return;const dx=Math.abs(e.screenX-(window.screenLeft||0)-mouseOff.x);const dy=Math.abs(e.screenY-(window.screenTop||0)-mouseOff.y);if(dx>3||dy>3)dragMoved=true;lastDragPos={x:e.screenX-mouseOff.x,y:e.screenY-mouseOff.y};window.pet.invoke('pet-drag-move',lastDragPos).catch(()=>{});});
+document.addEventListener('mouseup',()=>{if(dragging){dragging=false;window.pet.invoke('pet-drag-end',lastDragPos||{}).catch(()=>{});}});
 
 // ── Interactions ──
 const CLICK_ANIMS=['wave','review','extra1','extra2'];

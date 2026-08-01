@@ -34,6 +34,7 @@ const LUNAR_HOLIDAYS = [
 // ── Movable holidays ──
 // qingming detected via solarTerm field from getLunar()
 const MOVABLE_HOLIDAYS = [
+  { id: 'qingming',     name: '清明',   icon: '🌿', calcFn: () => null }, // 由节气检测，仅提供名称/图标
   { id: 'easter',      name: '复活节', icon: '🐣', calcFn: calcEaster },
   { id: 'mothers_day', name: '母亲节', icon: '🌸', calcFn: (y) => calcNthWeekday(y, 5, 0, 2) },
   { id: 'fathers_day', name: '父亲节', icon: '🌻', calcFn: (y) => calcNthWeekday(y, 6, 0, 3) },
@@ -83,7 +84,7 @@ function checkDate(year, month, day) {
   // Movable
   for (const h of MOVABLE_HOLIDAYS) {
     const r = h.calcFn(year);
-    if (r.month === month && r.day === day) return h.id;
+    if (r && r.month === month && r.day === day) return h.id;
   }
 
   return null;

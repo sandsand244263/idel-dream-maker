@@ -181,6 +181,36 @@ function getSaveFileName() {
   return IS_DEV ? 'save_dev.json' : 'save.json';
 }
 
+// 本地日期 YYYY-MM-DD（避免 UTC 偏移导致早 8 点前跨天）
+function getLocalDateStr(d) {
+  const date = d || new Date();
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+// 导入的存档补缺省字段 + 清理运行时字段（防 .includes()/.push() TypeError 与状态串扰）
+function normalizeGameState(gs) {
+  if (!gs || typeof gs !== 'object') return;
+  if (!Array.isArray(gs.triggeredEvents)) gs.triggeredEvents = [];
+  if (!Array.isArray(gs.unlockedAchievements)) gs.unlockedAchievements = [];
+  if (!gs.flags || typeof gs.flags !== 'object') gs.flags = {};
+  if (!gs.scenarioProgress || typeof gs.scenarioProgress !== 'object') gs.scenarioProgress = {};
+  if (!Array.isArray(gs.gameCompletions)) gs.gameCompletions = [];
+  if (!gs.rebirthCounts || typeof gs.rebirthCounts !== 'object') gs.rebirthCounts = {};
+  if (!gs.branchProgress || typeof gs.branchProgress !== 'object') gs.branchProgress = {};
+  if (!gs.unlockedTitleSets || typeof gs.unlockedTitleSets !== 'object') gs.unlockedTitleSets = {};
+  if (gs.currentBranch === undefined) gs.currentBranch = '';
+  if (typeof gs.level !== 'number' || gs.level < 1) gs.level = 1;
+  if (typeof gs.exp !== 'number') gs.exp = 0;
+  if (typeof gs.totalExpEarned !== 'number') gs.totalExpEarned = 0;
+  if (typeof gs.totalRuntimeMs !== 'number') gs.totalRuntimeMs = 0;
+  if (typeof gs.hubTotalExp !== 'number') gs.hubTotalExp = 0;
+  gs.pendingChoiceEvent = null;
+  gs._catchUpQueue = null;
+  gs._catchUpPaused = false;
+  gs._catchUpBlocked = false;
+  gs._lastCatchUpTime = 0;
+  gs._lastCyberBlock = undefined;
+}
 function getAppDataPath() {
   const base = app.getPath('appData');
   return path.join(base, 'Idel-DreamMaker');
@@ -314,6 +344,14 @@ function cleanupLogFiles(scenario, gs) {
         }
       }
     }
+    // 节日/里程碑/大厅提醒文本不在场景事件表里，也纳入保留（防止自检误删）
+    if (scenario && scenario.holidayEvents) {
+      for (const h of scenario.holidayEvents) {
+        if (h.text) eventTextMap[h.text] = { minLevel: 0 };
+      }
+    }
+    for (const m of MILESTONES) eventTextMap[m.text] = { minLevel: 0 };
+    for (const t of HUB_REMINDERS) eventTextMap[t] = { minLevel: 0 };
     // Build a map: branch → { level → event } for finding the correct event
     // at a given level in the player's current branch.
     const branchEventsByLevel = {};
@@ -451,6 +489,7 @@ function checkSyncOnStartup() {
       const imported = JSON.parse(fs.readFileSync(syncSavePath, 'utf-8'));
       Object.assign(gameState, imported);
       gameState._version = SAVE_VERSION;
+      normalizeGameState(gameState);
       writeSave(gameState);
       // Sync logs back from cloud
       const cloudLogDir = path.join(cloudDir, 'logs');
@@ -813,7 +852,7 @@ function initInputListener() {
 
 function resetDailyIfNewDay() {
   if (!gameState) return;
-  const today = new Date().toISOString().slice(0, 10);
+  const today = getLocalDateStr();
   if (gameState.keyPressDate !== today) {
     gameState.dailyKeyPresses = 0;
     gameState.keyPressDate = today;
@@ -863,13 +902,15 @@ function resetGameForScenario(scenario, alias) {
     gameState.pendingChoiceEvent = null;
   }
   const p = gameState.scenarioProgress && gameState.scenarioProgress[scenario.id];
+  // 大厅成就与通关成就是全局永久的，切换副本时保留，防止重复解锁弹窗
+  const hubPersist = (gameState.unlockedAchievements || []).filter(id => id.startsWith('hub_') || id.startsWith('completion_'));
   if (p) {
     gameState.totalExpEarned = p.totalExpEarned || 0;
     gameState.level = calcLevel(gameState.totalExpEarned);
     gameState.exp = gameState.totalExpEarned;
     gameState.totalRuntimeMs = p.totalRuntimeMs || 0;
     gameState.triggeredEvents = p.triggeredEvents ? [...p.triggeredEvents] : [];
-    gameState.unlockedAchievements = p.unlockedAchievements ? [...p.unlockedAchievements] : [];
+    gameState.unlockedAchievements = [...new Set([...hubPersist, ...(p.unlockedAchievements || [])])];
     gameState.equippedTitleIndex = p.equippedTitleIndex || 0;
     gameState.currentBranch = p.currentBranch || '';
   } else {
@@ -878,7 +919,7 @@ function resetGameForScenario(scenario, alias) {
     gameState.totalExpEarned = 0;
     gameState.totalRuntimeMs = 0;
     gameState.triggeredEvents = [];
-    gameState.unlockedAchievements = [];
+    gameState.unlockedAchievements = hubPersist;
     gameState.equippedTitleIndex = 0;
     gameState.currentBranch = '';
   }
@@ -1225,12 +1266,15 @@ function startGameLoop() {
       const hour = new Date().getHours();
       expMultiplier = (hour >= 6 && hour < 18) ? 1.5 : 0.7;
     } else if (mechanic === 'cyber') {
-      // 5% 概率故障：每 10 分钟检查一次
+      // 5% 概率故障：每个 10 分钟块只掷一次骰（而非每 tick 掷）
       const tenMinBlock = Math.floor(gameState.totalRuntimeMs / 600000);
-      const cyberKey = 'cyber_fault_' + tenMinBlock;
-      if (!gameState.triggeredEvents.includes(cyberKey) && Math.random() < 0.05) {
-        gameState.triggeredEvents.push(cyberKey);
-        gameState.cyberFaultUntil = Date.now() + 30000;  // 暂停 30 秒
+      if (tenMinBlock !== gameState._lastCyberBlock) {
+        gameState._lastCyberBlock = tenMinBlock;
+        const cyberKey = 'cyber_fault_' + tenMinBlock;
+        if (!gameState.triggeredEvents.includes(cyberKey) && Math.random() < 0.05) {
+          gameState.triggeredEvents.push(cyberKey);
+          gameState.cyberFaultUntil = Date.now() + 30000;  // 暂停 30 秒
+        }
       }
       if (gameState.cyberFaultUntil && Date.now() < gameState.cyberFaultUntil) {
         expMultiplier = 0;  // 故障中
@@ -1341,7 +1385,7 @@ function startGameLoop() {
       if (!gameState.gameCompletions) gameState.gameCompletions = [];
       const existingIdx = gameState.gameCompletions.findIndex(c => c.scenarioId === gameState.scenarioId);
       if (existingIdx === -1) {
-        gameState.gameCompletions.push({ scenarioId: gameState.scenarioId, date: new Date().toISOString().slice(0,10), rebirthCount: (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0, branch: cb });
+        gameState.gameCompletions.push({ scenarioId: gameState.scenarioId, date: getLocalDateStr(), rebirthCount: (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0, branch: cb });
       }
       // 检查大厅成就
       checkHubAchievements();
@@ -1367,7 +1411,7 @@ function startGameLoop() {
 
     // Daily login ritual (once per day)
     if (!gameState.isInHub && currentScenario) {
-      const today = new Date().toISOString().slice(0, 10);
+      const today = getLocalDateStr();
       if (gameState.lastLoginDay !== today) {
         gameState.lastLoginDay = today;
         const ritualPayload = {
@@ -1525,10 +1569,12 @@ function registerIpcHandlers() {
       if (queue.length > 0) {
         gameState._catchUpQueue = queue;
         gameState._catchUpBlocked = false;
-        // Inject exp to bypass normal level-up triggers during catch-up
+        // 确保等级至少达到门槛（只补差额，不覆盖超出部分）
         const expForLevel = calcExpForLevel(catchUpLevel);
-        gameState.totalExpEarned = expForLevel;
-        gameState.exp = expForLevel;
+        if (gameState.totalExpEarned < expForLevel) {
+          gameState.totalExpEarned = expForLevel;
+          gameState.exp = expForLevel;
+        }
         gameState.level = catchUpLevel;
       }
     }
@@ -1979,7 +2025,7 @@ function registerIpcHandlers() {
       if (!desktop) desktop = path.join(require('os').homedir(), 'Desktop');
       if (!fs.existsSync(desktop)) desktop = require('os').homedir();
       const ts = new Date();
-      const dateStr = ts.toISOString().slice(0,10);
+      const dateStr = getLocalDateStr(ts);
       const timeStr = `${String(ts.getHours()).padStart(2,'0')}${String(ts.getMinutes()).padStart(2,'0')}`;
       const exportDir = path.join(desktop, `IdelDreamMaker-Debug-${dateStr}_${timeStr}`);
       fs.mkdirSync(exportDir, { recursive: true });
@@ -2251,11 +2297,7 @@ function registerIpcHandlers() {
           Object.assign(gameState, imported);
           gameState._version = SAVE_VERSION;
           gameState.lastWriteTimestamp = new Date().toISOString();
-          // Clear runtime fields that should not carry over
-          gameState.pendingChoiceEvent = null;
-          gameState._catchUpQueue = null;
-          gameState._catchUpPaused = false;
-          gameState._catchUpBlocked = false;
+          normalizeGameState(gameState);
           // Rebuild scenario state
           hubLevel = calcLevel(gameState.hubTotalExp);
           if (gameState.scenarioId && !gameState.isInHub) {
@@ -2289,10 +2331,7 @@ function registerIpcHandlers() {
             Object.assign(gameState, cloudData);
             gameState._version = SAVE_VERSION;
             gameState.lastWriteTimestamp = new Date().toISOString();
-            gameState.pendingChoiceEvent = null;
-            gameState._catchUpQueue = null;
-            gameState._catchUpPaused = false;
-            gameState._catchUpBlocked = false;
+            normalizeGameState(gameState);
             hubLevel = calcLevel(gameState.hubTotalExp);
             if (gameState.scenarioId && !gameState.isInHub) {
               currentScenario = findScenarioById(gameState.scenarioId);
@@ -2370,7 +2409,7 @@ function registerIpcHandlers() {
         gameCompletions: [], unlockedCompletionTitles: [], equippedCompletionTitle: null,
         archivedScenarios: [], promptDismissedAtScenarioCount: null,
         totalKeyPresses: 0, dailyKeyPresses: 0,
-        keyPressDate: new Date().toISOString().slice(0, 10), comboMilestones: [], highestStreak: 0,
+        keyPressDate: getLocalDateStr(), comboMilestones: [], highestStreak: 0,
         choiceFlags: {}, pendingChoiceEvent: null, lastWriteTimestamp: new Date().toISOString(),
       };
       hubLevel = 1;
@@ -2394,7 +2433,14 @@ function registerIpcHandlers() {
             const r = JSON.parse(data);
             const latest = (r.tag_name || '').replace(/^v/, '');
             const current = APP_VERSION.replace(/^v/, '');
-            const hasUpdate = latest !== current;
+            // semver 比较：'3.10.0' > '3.9.5'（纯字符串比较会误判）
+            const verParts = v => v.split('.').map(n => parseInt(n, 10) || 0);
+            const lp = verParts(latest), cp = verParts(current);
+            let hasUpdate = false;
+            for (let i = 0; i < 3; i++) {
+              if ((lp[i] || 0) > (cp[i] || 0)) { hasUpdate = true; break; }
+              if ((lp[i] || 0) < (cp[i] || 0)) break;
+            }
             resolve({
               success: true,
               hasUpdate,
@@ -2591,7 +2637,7 @@ app.whenReady().then(() => {
       promptDismissedAtScenarioCount: null,
       totalKeyPresses: 0,
       dailyKeyPresses: 0,
-      keyPressDate: new Date().toISOString().slice(0, 10),
+      keyPressDate: getLocalDateStr(),
       comboMilestones: [], highestStreak: 0,
       choiceFlags: {},
       pendingChoiceEvent: null,

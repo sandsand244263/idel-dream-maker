@@ -195,13 +195,14 @@ function registerPetIpcHandlers(mainWindow, app) {
   ipcMain.handle('pet-drag-move', (_, { x, y }) => {
     if (petWindow && !petWindow.isDestroyed()) {
       petWindow.setPosition(x, y);
-      savePetPos(x, y, app);
     }
     return true;
   });
 
-  ipcMain.handle('pet-drag-end', () => {
+  ipcMain.handle('pet-drag-end', (_, { x, y } = {}) => {
     if (petWindow) petWindow._dragOffset = null;
+    // 拖拽结束时落盘一次（避免每帧高频磁盘写入）
+    if (typeof x === 'number' && typeof y === 'number') savePetPos(x, y, app);
     return true;
   });
 
