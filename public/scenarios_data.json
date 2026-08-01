@@ -4305,6 +4305,18 @@
         "flagRequire": "invited_ahqiang=1"
       },
       {
+        "id": "wasteland_e0302a",
+        "type": "story",
+        "minLevel": 302,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "旺财对着谷口的方向竖起耳朵发出低沉的呜咽。你拿起望远镜——远处的山坡上有几个人影在移动。没有阿强在旁边出主意，你只能自己判断该怎么做。",
+        "branch": "survivor",
+        "flagRequire": "invited_ahqiang=1; fed_wangcai=1"
+      },
+      {
         "id": "wasteland_e0302b",
         "type": "story",
         "minLevel": 302,
@@ -4349,6 +4361,18 @@
         "weight": 1,
         "once": true,
         "text": "你们在谷口增设了新的陷阱——深坑、绊索、尖刺排。旺财似乎也明白气氛不对，安静地跟在你们脚边不再乱跑。",
+        "branch": "survivor",
+        "flagRequire": "fed_wangcai=1"
+      },
+      {
+        "id": "wasteland_e0305a",
+        "type": "story",
+        "minLevel": 305,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你一个人在谷口增设了陷阱——深坑、绊索、尖刺排。旺财跟在你身边似乎也明白气氛不对。活干得慢但总比不干强。",
         "branch": "survivor",
         "flagRequire": "fed_wangcai=1"
       },
@@ -4413,6 +4437,18 @@
         "flagRequire": "invited_ahqiang=1; fed_wangcai=1"
       },
       {
+        "id": "wasteland_e0310a",
+        "type": "story",
+        "minLevel": 310,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你坐在桌边一颗一颗地压子弹，旺财趴在门边耳朵转动着听外面的动静。只有你和它了。你摸了摸它的头轻声说别怕。",
+        "branch": "survivor",
+        "flagRequire": "fed_wangcai=1"
+      },
+      {
         "id": "wasteland_e0311",
         "type": "story",
         "minLevel": 311,
@@ -4467,6 +4503,18 @@
         "weight": 1,
         "once": true,
         "text": "这种对峙消耗着你的神经。你睡不安稳吃不下饭，总是在黑暗中瞪着眼睛听动静。旺财也变得焦躁时不时低吼。",
+        "branch": "survivor",
+        "flagRequire": "fed_wangcai=1"
+      },
+      {
+        "id": "wasteland_e0315a",
+        "type": "story",
+        "minLevel": 315,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那些人在山谷外围停留了两天。你和旺财躲在屋里不敢生火，夜里冷得发抖也不敢发出声响。你第一次强烈地感到一个人的局限。",
         "branch": "survivor",
         "flagRequire": "fed_wangcai=1"
       },
@@ -4526,6 +4574,18 @@
         "weight": 1,
         "once": true,
         "text": "连续三天的紧张让你眼眶发青。你的手一直在抖但握枪的时候就不抖了。旺财也瘦了一圈但它始终守在你身边寸步不离。",
+        "branch": "survivor",
+        "flagRequire": "fed_wangcai=1"
+      },
+      {
+        "id": "wasteland_e0320a",
+        "type": "story",
+        "minLevel": 320,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "第三天早上那些人撤走了。你从木屋缝隙里看着他们的背影消失在山脊后，才长长地吐出一口气。旺财也放松了紧绷的身体蹭了蹭你的腿。",
         "branch": "survivor",
         "flagRequire": "fed_wangcai=1"
       },
@@ -4648,6 +4708,17 @@
         "text": "黎明前的黑暗笼罩着山谷。掠夺者的营地隐隐透出火光。阿强压低声音问你怎么干。你有三条路。",
         "branch": "survivor",
         "flagRequire": "invited_ahqiang=1"
+      },
+      {
+        "id": "wasteland_e0330d",
+        "type": "story",
+        "minLevel": 330,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "山谷恢复了平静。你在谷口加固了防御工事，花了好几天时间。活都是一个人干的——慢，但每一锤每一钉都让你觉得这个家更安全。",
+        "branch": "survivor"
       },
       {
         "id": "wasteland_e0330a",
@@ -4806,6 +4877,18 @@
         "flagRequire": "invited_ahqiang=1"
       },
       {
+        "id": "wasteland_e0340a",
+        "type": "story",
+        "minLevel": 340,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "黄昏你和旺财坐在门口看着夕阳。你忽然意识到——你已经一个人撑过了好几个月。没有阿强帮忙，你也活下来了。",
+        "branch": "survivor",
+        "flagRequire": "fed_wangcai=1; invited_ahqiang=1"
+      },
+      {
         "id": "wasteland_e0340b",
         "type": "story",
         "minLevel": 340,
@@ -4937,6 +5020,18 @@
         "flagRequire": "invited_ahqiang=1; fed_wangcai=1"
       },
       {
+        "id": "wasteland_e0350a",
+        "type": "story",
+        "minLevel": 350,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "沙尘暴来的那晚你一个人抱着旺财缩在屋角。风声尖利得像鬼哭，屋顶咯吱作响。你咬着牙对自己说——你可以的。",
+        "branch": "survivor",
+        "flagRequire": "fed_wangcai=1"
+      },
+      {
         "id": "wasteland_e0351",
         "type": "story",
         "minLevel": 351,
@@ -5053,6 +5148,18 @@
         "text": "你一夜没睡守着阿强。每隔一会儿就给他换额头上的湿布。旺财也趴在床边不肯走。阿强在睡梦中含含糊糊地说着什么。",
         "branch": "survivor",
         "flagRequire": "invited_ahqiang=1; fed_wangcai=1"
+      },
+      {
+        "id": "wasteland_e0360a",
+        "type": "story",
+        "minLevel": 360,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "风暴过后屋顶漏了一个大洞。你一个人爬上爬下修补，旺财在下面帮你递木条。活干完的时候你累得瘫在椅子上但屋顶不漏了。",
+        "branch": "survivor",
+        "flagRequire": "fed_wangcai=1"
       },
       {
         "id": "wasteland_e0361",
@@ -5173,6 +5280,18 @@
         "text": "阿强又一次醒了过来。他看了看你嘴唇动了动。你凑近去听他说的是——别管我了，带着狗走吧。你摇头说不。",
         "branch": "survivor",
         "flagRequire": "invited_ahqiang=1"
+      },
+      {
+        "id": "wasteland_e0370a",
+        "type": "story",
+        "minLevel": 370,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "日子又恢复了节奏。你一个人巡逻、种地、打猎、做饭。旺财依然寸步不离。偶尔你会对着空气说句话——然后自己笑自己。",
+        "branch": "survivor",
+        "flagRequire": "fed_wangcai=1"
       },
       {
         "id": "wasteland_e0370b",
@@ -5303,6 +5422,18 @@
         "text": "阿强的呼吸越来越微弱。你知道已经到了必须做决定的时刻——是冲进沙尘中寻找那丝救命的药草还是保护仅剩的物资还是带着旺财躲进山洞保全自己。你的每一个选择都将改变一切。",
         "branch": "survivor",
         "flagRequire": "invited_ahqiang=1; fed_wangcai=1"
+      },
+      {
+        "id": "wasteland_e0380d",
+        "type": "story",
+        "minLevel": 380,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你站在山谷中央，回想起阿强走之前的那个晚上。他问你想留他吗——你说尊重他的选择。现在你依然不后悔那个决定。每个人都有自己的路。",
+        "branch": "survivor",
+        "flagRequire": "invited_ahqiang=1"
       },
       {
         "id": "wasteland_e0380a",
@@ -5459,137 +5590,6 @@
         "weight": 1,
         "once": true,
         "text": "晚上你梦到阿强站在山谷入口朝你挥了挥手然后转身走了。你想追上去但脚像灌了铅。醒来时枕头湿了一片。",
-        "branch": "survivor",
-        "flagRequire": "invited_ahqiang=1"
-      },
-      {
-        "id": "wasteland_e0302a",
-        "type": "story",
-        "minLevel": 302,
-        "minHours": 0,
-        "minRebirth": 0,
-        "weight": 1,
-        "once": true,
-        "text": "旺财对着谷口的方向竖起耳朵发出低沉的呜咽。你拿起望远镜——远处的山坡上有几个人影在移动。没有阿强在旁边出主意，你只能自己判断该怎么做。",
-        "branch": "survivor",
-        "flagRequire": "invited_ahqiang=1; fed_wangcai=1"
-      },
-      {
-        "id": "wasteland_e0305a",
-        "type": "story",
-        "minLevel": 305,
-        "minHours": 0,
-        "minRebirth": 0,
-        "weight": 1,
-        "once": true,
-        "text": "你一个人在谷口增设了陷阱——深坑、绊索、尖刺排。旺财跟在你身边似乎也明白气氛不对。活干得慢但总比不干强。",
-        "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
-      },
-      {
-        "id": "wasteland_e0310a",
-        "type": "story",
-        "minLevel": 310,
-        "minHours": 0,
-        "minRebirth": 0,
-        "weight": 1,
-        "once": true,
-        "text": "你坐在桌边一颗一颗地压子弹，旺财趴在门边耳朵转动着听外面的动静。只有你和它了。你摸了摸它的头轻声说别怕。",
-        "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
-      },
-      {
-        "id": "wasteland_e0315a",
-        "type": "story",
-        "minLevel": 315,
-        "minHours": 0,
-        "minRebirth": 0,
-        "weight": 1,
-        "once": true,
-        "text": "那些人在山谷外围停留了两天。你和旺财躲在屋里不敢生火，夜里冷得发抖也不敢发出声响。你第一次强烈地感到一个人的局限。",
-        "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
-      },
-      {
-        "id": "wasteland_e0320a",
-        "type": "story",
-        "minLevel": 320,
-        "minHours": 0,
-        "minRebirth": 0,
-        "weight": 1,
-        "once": true,
-        "text": "第三天早上那些人撤走了。你从木屋缝隙里看着他们的背影消失在山脊后，才长长地吐出一口气。旺财也放松了紧绷的身体蹭了蹭你的腿。",
-        "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
-      },
-      {
-        "id": "wasteland_e0330d",
-        "type": "story",
-        "minLevel": 330,
-        "minHours": 0,
-        "minRebirth": 0,
-        "weight": 1,
-        "once": true,
-        "text": "山谷恢复了平静。你在谷口加固了防御工事，花了好几天时间。活都是一个人干的——慢，但每一锤每一钉都让你觉得这个家更安全。",
-        "branch": "survivor"
-      },
-      {
-        "id": "wasteland_e0340a",
-        "type": "story",
-        "minLevel": 340,
-        "minHours": 0,
-        "minRebirth": 0,
-        "weight": 1,
-        "once": true,
-        "text": "黄昏你和旺财坐在门口看着夕阳。你忽然意识到——你已经一个人撑过了好几个月。没有阿强帮忙，你也活下来了。",
-        "branch": "survivor",
-        "flagRequire": "fed_wangcai=1; invited_ahqiang=1"
-      },
-      {
-        "id": "wasteland_e0350a",
-        "type": "story",
-        "minLevel": 350,
-        "minHours": 0,
-        "minRebirth": 0,
-        "weight": 1,
-        "once": true,
-        "text": "沙尘暴来的那晚你一个人抱着旺财缩在屋角。风声尖利得像鬼哭，屋顶咯吱作响。你咬着牙对自己说——你可以的。",
-        "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
-      },
-      {
-        "id": "wasteland_e0360a",
-        "type": "story",
-        "minLevel": 360,
-        "minHours": 0,
-        "minRebirth": 0,
-        "weight": 1,
-        "once": true,
-        "text": "风暴过后屋顶漏了一个大洞。你一个人爬上爬下修补，旺财在下面帮你递木条。活干完的时候你累得瘫在椅子上但屋顶不漏了。",
-        "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
-      },
-      {
-        "id": "wasteland_e0370a",
-        "type": "story",
-        "minLevel": 370,
-        "minHours": 0,
-        "minRebirth": 0,
-        "weight": 1,
-        "once": true,
-        "text": "日子又恢复了节奏。你一个人巡逻、种地、打猎、做饭。旺财依然寸步不离。偶尔你会对着空气说句话——然后自己笑自己。",
-        "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
-      },
-      {
-        "id": "wasteland_e0380d",
-        "type": "story",
-        "minLevel": 380,
-        "minHours": 0,
-        "minRebirth": 0,
-        "weight": 1,
-        "once": true,
-        "text": "你站在山谷中央，回想起阿强走之前的那个晚上。他问你想留他吗——你说尊重他的选择。现在你依然不后悔那个决定。每个人都有自己的路。",
         "branch": "survivor",
         "flagRequire": "invited_ahqiang=1"
       },
@@ -12860,7 +12860,6 @@
         "weight": 1,
         "once": true,
         "text": "你完成了这个选择，继续踏上废土上的旅程。",
-        "choice1": "自由行商",
         "branch": "merchant"
       },
       {
@@ -24409,7 +24408,6 @@
         "weight": 1,
         "once": true,
         "text": "你完成了这个选择，继续踏上废土上的旅程。",
-        "choice1": "超体",
         "branch": "ai"
       },
       {

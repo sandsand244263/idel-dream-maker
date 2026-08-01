@@ -68,8 +68,10 @@ for (let i = 0; i < cleanedLines.length; i++) {
     continue;
   }
 
-  if (!raw.endsWith('|')) {
-    cleanedLines[i] = raw + '|';
+  if (!raw.trimEnd().endsWith('|')) {
+    const base = raw.replace(/\r$/, '');
+    const cr = raw.endsWith('\r') ? '\r' : '';
+    cleanedLines[i] = base + '|' + cr;
     fixCount++;
     hasIssue = true;
   }

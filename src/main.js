@@ -258,7 +258,7 @@ endingPanelClose.addEventListener('click', () => closeWithAnimation(endingPanel)
 
 function switchView(inHub) {
   hubView.classList.toggle('hidden', !inHub); scenarioView.classList.toggle('hidden', inHub);
-  btnBackHub.classList.toggle('hidden', inHub); btnScenario.classList.toggle('hidden', inHub);
+  btnBackHub.classList.toggle('hidden', inHub); btnScenario.classList.toggle('hidden', !inHub);
 }
 
 function calcLevel(exp) {
@@ -324,7 +324,7 @@ function renderHubCards() {
   }
   // 新手引导：未进过任何副本时显示
   const hasProgress = gameState?.scenario_progress && Object.keys(gameState.scenario_progress).length > 0;
-  if (!hasProgress && gameState?.has_seen_onboarding) {
+  if (!hasProgress) {
     const guide = document.createElement('div');
     guide.className = 'hub-guide';
     guide.textContent = '→ 点击下方[副本]开始你的第一个故事';
@@ -1282,9 +1282,14 @@ init().then(() => {
   const versionEl = document.getElementById('update-current-version');
   if (versionEl) versionEl.textContent = appVersion;
   applyTheme(gameState?.selected_font_theme || 'green');
-  if (gameState?.is_in_hub) {}
-  else if (gameState) { switchView(false); addLog('system', tf('logStartScenario', formatRuntime(gameState.total_runtime_ms), gameState.level)); }
+  if (gameState && !gameState.is_in_hub) { switchView(false); addLog('system', tf('logStartScenario', formatRuntime(gameState.total_runtime_ms), gameState.level)); }
   updateUI(); updateTooltip(); setInterval(updateTooltip, 5000);
+
+  // 首次启动自动弹出新手引导
+  if (gameState && !gameState.has_seen_onboarding) {
+    if (onboardingInput) onboardingInput.value = gameState.player_name || '';
+    if (onboardingModal) { onboardingModal.classList.remove('closing'); onboardingModal.classList.remove('hidden'); }
+  }
 
   // Load current scenario's events from persistence
   const sid = gameState?.scenario_id || gameState?.scenarioId;

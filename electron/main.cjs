@@ -98,8 +98,8 @@ function canArchiveScenario(scenarioId) {
   if (!hasCompleted) return false;
   const branches = scenario.branches || [];
   if (branches.length === 0) return true;
-  const cb = gameState.completedBranches || [];
-  return branches.every(b => cb.includes(b));
+  const bp = (gameState.branchProgress && gameState.branchProgress[scenarioId]) || [];
+  return branches.every(b => bp.includes(b));
 }
 
 function setupAppMenu() {
@@ -515,11 +515,10 @@ function syncToCloud(cfg, silent) {
     if (fs.existsSync(cloudSavePath)) {
       try {
         const cloudData = JSON.parse(fs.readFileSync(cloudSavePath, 'utf-8'));
-        const localTime = gameState?.lastWriteTimestamp || '';
-        const cloudTime = cloudData.lastWriteTimestamp || '';
         const localTotal = (gameState?.hubTotalExp || 0) + (gameState?.totalExpEarned || 0);
         const cloudTotal = (cloudData.hubTotalExp || 0) + (cloudData.totalExpEarned || 0);
-        if (cloudTime > localTime && cloudTotal >= localTotal) {
+        // 防回滚：云端进度更高时不覆盖（时间戳受本机写入顺序影响，进度才是可靠防线）
+        if (cloudTotal > localTotal) {
           return;
         }
       } catch {}
@@ -859,6 +858,10 @@ function findScenarioById(id) {
 
 function resetGameForScenario(scenario, alias) {
   gameState.scenarioId = scenario.id;
+  if (gameState.pendingChoiceEvent) {
+    appendLogEntry('info', `切换副本，放弃未完成的抉择 (${gameState.pendingChoiceEvent.eventId})`);
+    gameState.pendingChoiceEvent = null;
+  }
   const p = gameState.scenarioProgress && gameState.scenarioProgress[scenario.id];
   if (p) {
     gameState.totalExpEarned = p.totalExpEarned || 0;
@@ -868,6 +871,7 @@ function resetGameForScenario(scenario, alias) {
     gameState.triggeredEvents = p.triggeredEvents ? [...p.triggeredEvents] : [];
     gameState.unlockedAchievements = p.unlockedAchievements ? [...p.unlockedAchievements] : [];
     gameState.equippedTitleIndex = p.equippedTitleIndex || 0;
+    gameState.currentBranch = p.currentBranch || '';
   } else {
     gameState.level = 1;
     gameState.exp = 0;
@@ -876,6 +880,7 @@ function resetGameForScenario(scenario, alias) {
     gameState.triggeredEvents = [];
     gameState.unlockedAchievements = [];
     gameState.equippedTitleIndex = 0;
+    gameState.currentBranch = '';
   }
   gameState.isInHub = false;
   gameState.scenarioAlias = alias || '';
@@ -906,6 +911,10 @@ function resetGameForScenario(scenario, alias) {
 
 function exitToHub() {
   clearLogSession();
+  if (gameState.pendingChoiceEvent) {
+    appendLogEntry('info', '返回大厅，放弃未完成的抉择');
+    gameState.pendingChoiceEvent = null;
+  }
   const unlocked = getUnlockedTitles(currentScenario, gameState.level).map(t => t.name);
   const sid = gameState.scenarioId;
   if (sid) {
@@ -924,37 +933,52 @@ function exitToHub() {
       triggeredEvents: [...gameState.triggeredEvents],
       unlockedAchievements: [...gameState.unlockedAchievements],
       equippedTitleIndex: gameState.equippedTitleIndex,
+      currentBranch: gameState.currentBranch || '',
     };
   }
 
   gameState.scenarioId = '';
   gameState.isInHub = true;
+  gameState.currentBranch = '';
+  gameState.pendingChoiceEvent = null;
+  currentScenario = null;
+  currentTitle = null;
   hubLevel = calcLevel(gameState.hubTotalExp);
 }
 
 function checkFlagRequire(flagRequire) {
   if (!flagRequire) return true;
   const flags = gameState.flags || {};
-  const parts = flagRequire.split('&');
+  // 与 applyFlagSet 的 ';' 分隔约定保持一致：'/' ; / '&' 都是 AND，'|' 是 OR
+  const parts = flagRequire.split(/[;&]/);
   for (const part of parts) {
     const orParts = part.split('|');
     let anyMatch = false;
     for (const op of orParts) {
       const trimmed = op.trim();
       if (!trimmed) continue;
-      const match = trimmed.match(/^([a-zA-Z_]\w*)\s*(>|>=|==|<=|<|=)\s*(.+)$/);
-      if (!match) return false;
+      // 运算符顺序：>= / <= 必须在 > / < 之前匹配
+      const match = trimmed.match(/^([a-zA-Z_]\w*)\s*(>=|<=|==|=|>|<)\s*(.+)$/);
+      if (!match) {
+        // 裸 flag 名：存在即满足
+        if (flags[trimmed]) anyMatch = true;
+        continue;
+      }
       const [, key, opStr, valStr] = match;
-      const val = isNaN(Number(valStr)) ? valStr : Number(valStr);
       const flagVal = flags[key];
       if (flagVal === undefined) continue;
+      const numA = flagVal === '' ? NaN : Number(flagVal);
+      const numB = valStr.trim() === '' ? NaN : Number(valStr);
+      const numeric = !isNaN(numA) && !isNaN(numB);
+      let ok = false;
       switch (opStr) {
-        case '=': case '==': if (flagVal == val) anyMatch = true; break;
-        case '>': if (flagVal > val) anyMatch = true; break;
-        case '>=': if (flagVal >= val) anyMatch = true; break;
-        case '<': if (flagVal < val) anyMatch = true; break;
-        case '<=': if (flagVal <= val) anyMatch = true; break;
+        case '>': ok = numeric ? numA > numB : String(flagVal) > String(valStr).trim(); break;
+        case '>=': ok = numeric ? numA >= numB : String(flagVal) >= String(valStr).trim(); break;
+        case '<': ok = numeric ? numA < numB : String(flagVal) < String(valStr).trim(); break;
+        case '<=': ok = numeric ? numA <= numB : String(flagVal) <= String(valStr).trim(); break;
+        case '==': case '=': ok = String(flagVal) === String(valStr).trim(); break;
       }
+      if (ok) anyMatch = true;
     }
     if (!anyMatch) return false;
   }
@@ -1135,7 +1159,7 @@ function startGameLoop() {
       custom_theme: gameState.customTheme || null,
       hub_level: calcLevel(gameState.hubTotalExp),
       current_branch: gameState.currentBranch || '',
-      completed_branches: gameState.completedBranches || [],
+      completed_branches: (gameState.branchProgress && gameState.branchProgress[gameState.scenarioId]) || [],
       flags: gameState.flags || {},
       mechanic: currentScenario ? (currentScenario.mechanic || 'standard') : 'standard',
       hub_title: gameState?.equippedCompletionTitle?.title || getHubTitle(hubLevel).name,
@@ -1143,6 +1167,9 @@ function startGameLoop() {
       daily_key_presses: gameState.dailyKeyPresses || 0,
       buff_multiplier: buffMultiplier,
       buff_remaining: buffExpireTime ? Math.max(0, buffExpireTime - Date.now()) : 0,
+      gameCompletions: gameState.gameCompletions || [],
+      rebirthCounts: gameState.rebirthCounts || {},
+      rebirth_count: (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0,
     };
     try { mainWindow.webContents.send('game-tick', payload); } catch {}
     forwardToPet('game-tick', payload);
@@ -1172,6 +1199,7 @@ function startGameLoop() {
       if (now - gameState._lastCatchUpTime >= 3000) {
         const next = gameState._catchUpQueue.shift();
         gameState._lastCatchUpTime = now;
+        gameState.triggeredEvents.push(next.id);
         if (next.choice1 && next.choice1Target) {
           gameState.pendingChoiceEvent = {
             eventId: next.id, scenarioId: gameState.scenarioId,
@@ -1272,13 +1300,14 @@ function startGameLoop() {
     // Ending check — LV500 triggers scenario ending
     if (gameState.level >= 500 && !gameState.triggeredEvents.includes('scenario_ending_' + gameState.scenarioId)) {
       gameState.triggeredEvents.push('scenario_ending_' + gameState.scenarioId);
-      // Find ending event by flag require
-      const storyEvents = currentScenario.events.filter(e => e.type === 'story' && checkFlagRequire(e.flagRequire));
-      const endingEvent = storyEvents[storyEvents.length - 1] || currentScenario.events.filter(e => e.type === 'story')[storyEvents.length - 1];
-      // Record completion for this branch
+      // Find ending event: within current branch, last flag-satisfying story event
       const cb = gameState.currentBranch || '';
-      if (!gameState.completedBranches) gameState.completedBranches = [];
-      if (!gameState.completedBranches.includes(cb)) gameState.completedBranches.push(cb);
+      const branchPool = currentScenario.events.filter(e => e.type === 'story' && (!e.branch || e.branch === cb));
+      const endingEvent = branchPool.filter(e => checkFlagRequire(e.flagRequire)).pop() || branchPool.pop();
+      // Record completion for this branch
+      if (!gameState.branchProgress) gameState.branchProgress = {};
+      if (!gameState.branchProgress[gameState.scenarioId]) gameState.branchProgress[gameState.scenarioId] = [];
+      if (!gameState.branchProgress[gameState.scenarioId].includes(cb)) gameState.branchProgress[gameState.scenarioId].push(cb);
       // Unlock branch completion title (from ending event's completionTitle)
       const endingTitle = endingEvent?.completionTitle || currentScenario.completion_title;
       if (endingTitle) {
@@ -1384,33 +1413,43 @@ function stopGameLoop() {
 
 // ── IPC Registration ──
 
+function serializeGame() {
+  return {
+    player_name: gameState.playerName,
+    scenario_id: gameState.scenarioId,
+    level: gameState.level,
+    exp: gameState.exp,
+    total_exp_earned: gameState.totalExpEarned,
+    total_runtime_ms: gameState.totalRuntimeMs,
+    equipped_title_index: gameState.equippedTitleIndex,
+    is_in_hub: gameState.isInHub,
+    hub_total_exp: gameState.hubTotalExp,
+    language: gameState.language,
+    ai_output_language: gameState.aiOutputLanguage || 'zh',
+    selected_font_theme: gameState.selectedFontTheme || 'green',
+    custom_theme: gameState.customTheme || null,
+    scenario_alias: gameState.scenarioAlias || '',
+    unlocked_title_sets: gameState.unlockedTitleSets || {},
+    scenario_progress: gameState.scenarioProgress || {},
+    triggered_events: gameState.triggeredEvents || [],
+    unlockedAchievements: gameState.unlockedAchievements || [],
+    has_seen_onboarding: gameState.hasSeenOnboarding || false,
+    pet_selected_index: gameState.petSelectedIndex || 0,
+    gameCompletions: gameState.gameCompletions || [],
+    rebirthCounts: gameState.rebirthCounts || {},
+    rebirth_count: (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0,
+    current_branch: gameState.currentBranch || '',
+    completed_branches: (gameState.branchProgress && gameState.branchProgress[gameState.scenarioId]) || [],
+    flags: gameState.flags || {},
+  };
+}
+
 function registerIpcHandlers() {
   ipcMain.handle('get-full-state', () => {
     if (!gameState) return null;
     const currentTitleData = currentTitle || (currentScenario ? { name: currentScenario.playerTitle, color: '#888', desc: '' } : null);
     return {
-      game: {
-        player_name: gameState.playerName,
-        scenario_id: gameState.scenarioId,
-        level: gameState.level,
-        exp: gameState.exp,
-        total_exp_earned: gameState.totalExpEarned,
-        total_runtime_ms: gameState.totalRuntimeMs,
-        equipped_title_index: gameState.equippedTitleIndex,
-        is_in_hub: gameState.isInHub,
-        hub_total_exp: gameState.hubTotalExp,
-        language: gameState.language,
-        ai_output_language: gameState.aiOutputLanguage || 'zh',
-        selected_font_theme: gameState.selectedFontTheme || 'green',
-        custom_theme: gameState.customTheme || null,
-        scenario_alias: gameState.scenarioAlias || '',
-        unlocked_title_sets: gameState.unlockedTitleSets || {},
-        scenario_progress: gameState.scenarioProgress || {},
-        triggered_events: gameState.triggeredEvents || [],
-        unlockedAchievements: gameState.unlockedAchievements || [],
-        has_seen_onboarding: gameState.hasSeenOnboarding || false,
-        pet_selected_index: gameState.petSelectedIndex || 0,
-      },
+      game: serializeGame(),
       hubLevel: hubLevel,
       scenario: currentScenario ? {
         id: currentScenario.id,
@@ -1458,12 +1497,13 @@ function registerIpcHandlers() {
         triggeredEvents: [...gameState.triggeredEvents],
         unlockedAchievements: [...gameState.unlockedAchievements],
         equippedTitleIndex: gameState.equippedTitleIndex,
+        currentBranch: gameState.currentBranch || '',
         choiceFlags: gameState.choiceFlags ? { ...gameState.choiceFlags[oldSid] } : undefined,
       };
     }
     // 点的是当前副本，不做任何事（仅当在副本内时触发）
     if (!gameState.isInHub && id === gameState.scenarioId) {
-      return { game: { ...gameState, is_in_hub: false }, scenario: currentScenario ? { id: currentScenario.id, name: currentScenario.name, nameCN: currentScenario.name_cn || currentScenario.nameCN, playerTitle: currentScenario.playerTitle || currentScenario.player_title, titles: currentScenario.titles } : null };
+      return { game: serializeGame(), scenario: currentScenario ? { id: currentScenario.id, name: currentScenario.name, nameCN: currentScenario.name_cn || currentScenario.nameCN, playerTitle: currentScenario.playerTitle || currentScenario.player_title, titles: currentScenario.titles } : null };
     }
     const scenario = findScenarioById(id);
     if (!scenario) throw new Error(`Scenario '${id}' not found`);
@@ -1492,39 +1532,11 @@ function registerIpcHandlers() {
         gameState.level = catchUpLevel;
       }
     }
-    // Re-send pending choice if exists for this scenario
-    if (gameState.pendingChoiceEvent && gameState.pendingChoiceEvent.scenarioId === scenario.id) {
-      const pe = gameState.pendingChoiceEvent;
-      const cp = { title: pe.title, text: pe.text, choices: pe.choices, _eventId: pe.eventId };
-      try { mainWindow.webContents.send('choice-event', cp); } catch {}
-      forwardToPet('choice-event', cp);
-    }
     hubIdleMs = 0;
     lastHubReminderMs = 0;
     writeSave(gameState);
     try { mainWindow.webContents.send('scenario-changed', {
-      game: {
-        player_name: gameState.playerName,
-        scenario_id: gameState.scenarioId,
-        level: gameState.level,
-        exp: gameState.exp,
-        total_exp_earned: gameState.totalExpEarned,
-        total_runtime_ms: gameState.totalRuntimeMs,
-        equipped_title_index: gameState.equippedTitleIndex,
-        is_in_hub: gameState.isInHub,
-        hub_total_exp: gameState.hubTotalExp,
-        language: gameState.language,
-        ai_output_language: gameState.aiOutputLanguage || 'zh',
-        selected_font_theme: gameState.selectedFontTheme || 'green',
-        custom_theme: gameState.customTheme || null,
-        scenario_alias: gameState.scenarioAlias || '',
-        unlocked_title_sets: gameState.unlockedTitleSets || {},
-        scenario_progress: gameState.scenarioProgress || {},
-        triggered_events: gameState.triggeredEvents || [],
-        unlockedAchievements: gameState.unlockedAchievements || [],
-        has_seen_onboarding: gameState.hasSeenOnboarding || false,
-        pet_selected_index: gameState.petSelectedIndex || 0,
-      },
+      game: serializeGame(),
       scenario: {
         id: scenario.id,
         name: scenario.name,
@@ -1535,28 +1547,7 @@ function registerIpcHandlers() {
       },
     }); } catch {}
     return {
-      game: {
-        player_name: gameState.playerName,
-        scenario_id: gameState.scenarioId,
-        level: gameState.level,
-        exp: gameState.exp,
-        total_exp_earned: gameState.totalExpEarned,
-        total_runtime_ms: gameState.totalRuntimeMs,
-        equipped_title_index: gameState.equippedTitleIndex,
-        is_in_hub: gameState.isInHub,
-        hub_total_exp: gameState.hubTotalExp,
-        language: gameState.language,
-        ai_output_language: gameState.aiOutputLanguage || 'zh',
-        selected_font_theme: gameState.selectedFontTheme || 'green',
-        custom_theme: gameState.customTheme || null,
-        scenario_alias: gameState.scenarioAlias || '',
-        unlocked_title_sets: gameState.unlockedTitleSets || {},
-        scenario_progress: gameState.scenarioProgress || {},
-        triggered_events: gameState.triggeredEvents || [],
-        unlockedAchievements: gameState.unlockedAchievements || [],
-        has_seen_onboarding: gameState.hasSeenOnboarding || false,
-        pet_selected_index: gameState.petSelectedIndex || 0,
-      },
+      game: serializeGame(),
       scenario: {
         id: scenario.id,
         name: scenario.name,
@@ -1832,8 +1823,8 @@ function registerIpcHandlers() {
     // 检查所有分支是否已走完
     const scenario = findScenarioById(sid);
     const branches = scenario?.branches || [];
-    const cb = gameState.completedBranches || [];
-    if (branches.length > 0 && cb.length >= branches.length) {
+    const bp = (gameState.branchProgress && gameState.branchProgress[sid]) || [];
+    if (branches.length > 0 && bp.length >= branches.length) {
       return { success: false, error: '所有分支已探索' };
     }
     // 增加重生次数（保留在原字段以兼容）
@@ -1854,6 +1845,7 @@ function registerIpcHandlers() {
     gameState.triggeredEvents = [];
     gameState.currentBranch = '';
     gameState.flags = {};
+    if (gameState.branchProgress) gameState.branchProgress[sid] = [];
     gameState.pendingChoiceEvent = null;
     gameState._catchUpQueue = null;
     gameState._catchUpPaused = false;
@@ -2165,7 +2157,7 @@ function registerIpcHandlers() {
     // Record the choice
     if (!gameState.choiceFlags) gameState.choiceFlags = {};
     if (!gameState.choiceFlags[pe.scenarioId]) gameState.choiceFlags[pe.scenarioId] = {};
-    gameState.choiceFlags[pe.scenarioId][pe.eventId] = choiceIndex === 0 ? 'choice1' : 'choice2';
+    gameState.choiceFlags[pe.scenarioId][pe.eventId] = ['choice1', 'choice2', 'choice3', 'choice4'][choiceIndex] || 'choice' + (choiceIndex + 1);
     const scName = (currentScenario?.nameCN || currentScenario?.name || pe.scenarioId);
     appendLogEntry('choice', '【' + scName + ' Lv.' + gameState.level + '】选择了「' + choice.text + '」');
     // Fire target event
@@ -2218,8 +2210,9 @@ function registerIpcHandlers() {
     writeSyncConfig({ path, deviceId: require('os').hostname(), lastSync: new Date().toISOString() });
     return { success: true };
   });
-  ipcMain.handle('get-sync-info', ({ path: p }) => {
+  ipcMain.handle('get-sync-info', (_, { path: p } = {}) => {
     try {
+      if (!p) return { hasCloudSave: false };
       const cloudSavePath = path.join(p, 'Idel-DreamMaker-Sync', 'save.json');
       if (!fs.existsSync(cloudSavePath)) return { hasCloudSave: false };
       const cloudData = JSON.parse(fs.readFileSync(cloudSavePath, 'utf-8'));
@@ -2248,11 +2241,11 @@ function registerIpcHandlers() {
     }
     return { success: false };
   });
-  ipcMain.handle('confirm-sync-directory', (_, { path, action }) => {
+  ipcMain.handle('confirm-sync-directory', (_, { path: syncDir, action }) => {
     try {
-      writeSyncConfig({ path, deviceId: require('os').hostname(), lastSync: new Date().toISOString() });
+      writeSyncConfig({ path: syncDir, deviceId: require('os').hostname(), lastSync: new Date().toISOString() });
       if (action === 'import') {
-        const cloudSavePath = path.join(path, 'Idel-DreamMaker-Sync', 'save.json');
+        const cloudSavePath = path.join(syncDir, 'Idel-DreamMaker-Sync', 'save.json');
         if (fs.existsSync(cloudSavePath)) {
           const imported = JSON.parse(fs.readFileSync(cloudSavePath, 'utf-8'));
           Object.assign(gameState, imported);
@@ -2373,7 +2366,7 @@ function registerIpcHandlers() {
         petSelectedIndex: 0, hasSeenOnboarding: false,
         lastLoginDay: '', hubEquippedTitles: {},
         dailyBonus: false, rebirthCounts: {}, rebirthExpBonus: 0,
-        currentBranch: '', completedBranches: [], flags: {},
+        currentBranch: '', branchProgress: {}, flags: {},
         gameCompletions: [], unlockedCompletionTitles: [], equippedCompletionTitle: null,
         archivedScenarios: [], promptDismissedAtScenarioCount: null,
         totalKeyPresses: 0, dailyKeyPresses: 0,
@@ -2589,7 +2582,7 @@ app.whenReady().then(() => {
       rebirthCounts: {},
       rebirthExpBonus: 0,
       currentBranch: '',
-      completedBranches: [],
+      branchProgress: {},
       flags: {},
       gameCompletions: [],
       unlockedCompletionTitles: [],
@@ -2608,14 +2601,15 @@ app.whenReady().then(() => {
 
   // ── Old save migration (v3.3.1 → v3.4.0) ──
   if (gameState.rebirthCounts && Object.keys(gameState.rebirthCounts).length > 0) {
-    const wastelandBranches = ['scavenger', 'merchant', 'soldier', 'ai'];
+    const wastelandBranches = ['survivor', 'merchant', 'fugitive', 'ai'];
     const oldRebirths = gameState.rebirthCounts['wasteland'] || 0;
     if (oldRebirths > 0) {
       // Map old rebirths to completed branches
-      if (!gameState.completedBranches) gameState.completedBranches = [];
+      if (!gameState.branchProgress) gameState.branchProgress = {};
+      if (!gameState.branchProgress['wasteland']) gameState.branchProgress['wasteland'] = [];
       for (let i = 0; i < Math.min(oldRebirths, wastelandBranches.length); i++) {
-        if (!gameState.completedBranches.includes(wastelandBranches[i])) {
-          gameState.completedBranches.push(wastelandBranches[i]);
+        if (!gameState.branchProgress['wasteland'].includes(wastelandBranches[i])) {
+          gameState.branchProgress['wasteland'].push(wastelandBranches[i]);
         }
       }
       // Award hub exp bonus for rebirths
@@ -2627,12 +2621,23 @@ app.whenReady().then(() => {
       gameState.isInHub = true;
       gameState.currentBranch = '';
       gameState.flags = gameState.flags || {};
-      console.log(`[migration] Mapped ${oldRebirths} rebirths → ${gameState.completedBranches.length} branches, awarded hub EXP bonus`);
+      console.log(`[migration] Mapped ${oldRebirths} rebirths → ${gameState.branchProgress['wasteland'].length} branches, awarded hub EXP bonus`);
     }
   }
   // Ensure new fields exist
   if (!gameState.currentBranch) gameState.currentBranch = '';
-  if (!gameState.completedBranches) gameState.completedBranches = [];
+  if (!gameState.branchProgress) gameState.branchProgress = {};
+  // Migrate legacy completedBranches array (v3.7.8-) into per-scenario structure
+  if (Array.isArray(gameState.completedBranches)) {
+    const legacyBranchMap = { scavenger: 'survivor', soldier: 'fugitive' };
+    const sid = gameState.scenarioId || 'wasteland';
+    if (!gameState.branchProgress[sid]) gameState.branchProgress[sid] = [];
+    for (const b of gameState.completedBranches) {
+      const mapped = legacyBranchMap[b] || b;
+      if (mapped && !gameState.branchProgress[sid].includes(mapped)) gameState.branchProgress[sid].push(mapped);
+    }
+    delete gameState.completedBranches;
+  }
   if (!gameState.flags) gameState.flags = {};
 
   // Set current scenario
