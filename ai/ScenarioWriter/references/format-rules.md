@@ -11,7 +11,7 @@ name: Wasteland         # 必填。英文名
 name_cn: 废土           # 必填。中文名
 description: 核战后的废土世界...  # 必填。世界观描述
 player_title: 拾荒者    # 必填。Lv.1 默认称号
-language: zh            # 必填。zh
+language: zh            # 可选（当前引擎未使用，统一写 zh）
 mechanic: standard      # 可选。挂机变体：standard/cultivation/cyber/tide/polar，默认 standard
 max_rebirth: 0          # 可选。最大重生次数 0-3，默认 0（单周目）
 branches: [survivor, merchant, fugitive, ai]  # 必填。分支列表（validate_quality.cjs 依赖它做分支等级覆盖检查）
@@ -32,6 +32,7 @@ completion_title: 废土行者  # 可选。通关解锁的大厅称号
 | Description | 是 | 字符串 | 称号描述 |
 
 要求：**30 个**，Level 严格升序。称号跨周目共用，不区分周目。
+> 数量为内容要求，无脚本强制（写少不会被拦截，只影响体验）——build 只校验升序与非空。
 
 ## Events 表规则（20 列标准）
 
@@ -50,9 +51,9 @@ completion_title: 废土行者  # 可选。通关解锁的大厅称号
 | ID | 是 | 字符串 | `{id}_e{四位编号}`，choice target 用 `e{编号}a` / `e{编号}b` / `e{编号}c` / `e{编号}d` |
 | Type | 是 | 枚举 | `story`（剧情节点，升级时触发）。**无 filler 类型（机制已废弃）** |
 | MinLevel | 否，默认 1 | 整数 | 对应等级编号 1-500 |
-| MinHours | 否，默认 0 | 整数 | 固定为 0 |
-| Weight | 否，默认 1 | 整数 | 固定为 1 |
-| Once | 否，默认 是 | 是/否 | 全部为 是 |
+| MinHours | 否，默认 0 | 整数 | **引擎不消费此列，固定写 0** |
+| Weight | 否 | 整数 | **固定写 1**（留空时 parser 取默认 5；引擎不消费，build 校验范围 1-10） |
+| Once | 否 | 是/否 | **必须显式写 是**！留空 = 可重复触发（事件每次升级反复弹出，还会挤掉后续事件） |
 | Branch | 否 | 字符串 | 分支归属（survivor/merchant/...）。空=共享事件（仅开局 Lv.1-5 使用） |
 | FlagSet | 否 | 字符串 | 触发时设旗标。多个用 `;` 分隔 |
 | FlagRequire | 否 | 字符串 | 触发条件。`;`/`&` 都是 AND，`|` 是 OR |
@@ -162,13 +163,15 @@ choice 事件 = 在 story 事件上加 Choice1/Choice1Target 等列，让玩家�
 
 | 列 | 必填 | 类型 | 说明 |
 |----|------|------|------|
-| HolidayID | 是 | 字符串 | 对应 `electron/holiday.cjs` 中的节日 ID |
+| HolidayID | 是 | 字符串 | 对应 `electron/holiday.cjs` 中的节日 ID（写错无校验，事件将永不触发且无报错） |
 | Type | 是 | 枚举 | `advance`（节前 3 天）或 `day`（节日当天） |
-| MinLevel | 否，默认 1 | 整数 | 最低触发等级 |
-| MinHours | 否，默认 0 | 整数 | 最低挂机小时数 |
-| Weight | 否，默认 1 | 整数 | 固定为 1 |
-| Once | 否，默认 是 | 是/否 | 固定为 是 |
+| MinLevel | 否，默认 1 | 整数 | **引擎忽略此列，统一写 1** |
+| MinHours | 否，默认 0 | 整数 | **引擎忽略此列，统一写 0** |
+| Weight | 否 | 整数 | **引擎忽略此列，统一写 1** |
+| Once | 否 | 是/否 | **引擎忽略此列，统一写 是**（去重靠节日 key，与 Once 列无关） |
 | Text | 是 | 字符串 | 30-80 字 |
+
+> 引擎按 holidayId+type 随机选一条节日事件，MinLevel/MinHours/Weight/Once 四列不消费——不要填写其他值（写了也不生效）。
 
 每个节日需要 2 条事件（1 条 advance + 1 条 day），共 26 个节日 52 条。
 节日事件跨周目共用（MinRebirth=0）。
@@ -197,6 +200,8 @@ choice 事件 = 在 story 事件上加 Choice1/Choice1Target 等列，让玩家�
 - events: **12** 个
 - titles: **13** 个
 
+> 数量为内容要求，无脚本强制（build 只校验条件类型合法与值上限）。
+
 ### 条件值与单位
 
 | ConditionType | ConditionValue | 说明 |
@@ -219,6 +224,7 @@ choice 事件 = 在 story 事件上加 Choice1/Choice1Target 等列，让玩家�
 - Events 缺少 Type 列
 - Events Type 值不是 story（filler 已废弃，写了报错或无效）
 - runtime 类型的 ConditionValue 不是毫秒值
-- choice target 不存在（validate_quality.cjs 复查）
+- choice target 悬空（build 阶段直接报错中断，非 WARN）
 - 分支等级缺口（validate_quality.cjs 检查：每分支 1-500 每级至少 1 事件）
 - 伏笔未回收（validate_quality.cjs 检查：foreshadow_* flag 必须被后续引用）
+- 表内空行是**静默截断**（不报错，空行后的数据全部丢失，事后表现为等级缺口/数量不足，难排查）
