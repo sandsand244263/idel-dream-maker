@@ -15,7 +15,7 @@ description: 核战后的废土世界...  # 副本描述（一句话）
 player_title: 拾荒者         # 玩家初始称号
 language: zh                # 固定 zh
 mechanic: standard          # 挂机机制：standard / cultivation / cyber / tide / polar
-branches: [scavenger, merchant, soldier, ai]  # 分支列表，每个分支名用英文
+branches: [survivor, merchant, fugitive, ai]  # 分支列表，每个分支名用英文
 unlock_requirement:         # 解锁条件
   hub_level: 0              # 需要大厅等级
   completions: 0            # 需要通关副本数
@@ -70,7 +70,7 @@ completion_title: 灰烬新生   # 通关后解锁的大厅称号（各结局可
 | Once | 否 | 是/否 | 全部为 是 |
 | Branch | 否 | 字符串 | 分支归属。空=共享事件，非空=只在该分支触发（如 `merchant`） |
 | FlagSet | 否 | 字符串 | 触发时设旗标，如 `helped_merchant=true` 或 `reputation+=5`。多个用 `;` 分隔 |
-| FlagRequire | 否 | 字符串 | 触发条件，如 `helped_merchant=true`。`&`=AND，`\|`=OR。支持 >、>=、<、<=、== |
+| FlagRequire | 否 | 字符串 | 触发条件，如 `helped_merchant=true`。`;`/`&`=AND，`\|`=OR；裸键名=存在即满足。支持 >、>=、<、<=、== |
 | CompletionTitle | 否 | 字符串 | 结局事件的专属通关称号，触发时自动解锁 |
 | Choice1~Choice4 | 否 | 字符串 | 选项按钮文字（10 字以内）。有值则本条为 choice 事件 |
 | Choice1Target~Choice4Target | 否 | 字符串 | 选该选项后触发的事件 ID，必须存在 |
@@ -110,9 +110,10 @@ choice 事件 = 在 story 事件上加 Choice1~Choice4 及对应 Target 列。�
 
 FlagSet（设旗标）和 FlagRequire（检查旗标）控制剧情分支和结局触发：
 
-- **FlagSet**：事件触发时设置，语法 `键名=值`（等于）、`键名+=数值`（累加）、`键名-=数值`（递减）
-- **FlagRequire**：事件触发前检查，语法 `键名=值`（等于）、`键名>5`（数值大于）、`键名>=5`、`键名<5`、`键名<=5`
-- 多个条件用 `&`（所有条件满足）或 `|`（任一条件满足）
+- **FlagSet**：事件触发时设置，语法 `键名=值`（等于）、`键名+=数值`（累加）、`键名-=数值`（递减）、裸键名（设为 true）
+- **FlagRequire**：事件触发前检查，语法 `键名=值`（等于）、`键名>=5`（数值大于），支持 >、>=、<、<=、==
+- 多个条件：`;` 或 `&`（所有条件满足）或 `|`（任一条件满足）；裸键名 = 该 flag 存在即满足
+- 值统一按字符串比较（`saved_x=false` 与设置的 `'false'` 匹配）
 
 示例：
 ```
@@ -124,18 +125,24 @@ FlagRequire: helped_merchant=true&reputation>20
 
 - Lv.500 自动触发结局检测
 - 引擎找当前分支内最后一个满足 FlagRequire 条件的 story 作结局
+- **兜底规则：每个分支最后一行建议放无条件结局（FlagRequire 留空）**，防止玩家 flag 组合落空时看到条件不成立的结局文本
 - 不同结局可解锁不同通关称号（通过 CompletionTitle 列）
 - 每通关一条分支，该分支标记为已完成
 
 ### 叙事节奏
 
-| 阶段 | 等级 | story 数 | 叙事风格 |
-|------|------|:-------:|---------|
-| 开端 | 1-50 | 50 | 初始世界、初遇挑战 |
-| 成长 | 51-150 | 100 | 结交盟友、确立目标 |
-| 鼎盛 | 151-300 | 150 | 应对大敌、建功立业 |
-| 沉淀 | 301-450 | 150 | 培养后辈、准备谢幕 |
-| 终章 | 451-500 | 50 | 完成最后之事、坦然离去 |
+**等级是容量，节奏由内容决定。** 不硬套固定分段，只守三条硬约束：
+1. 故事从 Lv.1 开始铺垫
+2. Lv.500 是结局——最后一段（约 30-50 级）留给"高潮→收尾→结局"
+3. choice 均匀分布
+
+模板参考（可自由改）：
+
+| 模板 | 分段 | 适合 |
+|------|------|------|
+| 五段式 | 开端1-50/成长51-150/鼎盛151-300/沉淀301-450/终章451-500 | 人生传记类 |
+| 三幕式 | 建立1-150/对抗151-350/收尾351-500（比例可调） | 冒险/战争类 |
+| 慢热式 | 长铺垫1-200/展开201-430/收尾431-500 | 悬疑/日常类 |
 
 ## Achievements 成就表
 
@@ -147,7 +154,6 @@ FlagRequire: helped_merchant=true&reputation>20
 | Icon | 否 | 显示图标，默认 ★ | ★ |
 | ConditionType | 是 | 条件类型：level / runtime / events / titles | level |
 | ConditionValue | 是 | 条件数值（runtime 单位为毫秒） | 5 |
-| FlagRequire | 否 | 触发条件，不填则全局可解锁 | branch=merchant |
 
 **建议：50 个。** 四种 ConditionType 分布参考：level 13 个、runtime 12 个、events 12 个、titles 13 个。
 
@@ -202,4 +208,4 @@ FlagRequire: helped_merchant=true&reputation>20
 
 ## 完整示例
 
-见 `docs/example-hello-world.md`。使用 ScenarioWriter skill（AI）生成请参考 `skills/ScenarioWriter/SKILL.md`。
+见 `docs/example-hello-world.md`。使用 ScenarioWriter skill（AI）生成请参考 `ai/ScenarioWriter/SKILL.md`。

@@ -76,18 +76,17 @@ completion_title: 通关称号 # 通关后获得的大厅称号（各结局可�
 - 分支内事件通过 Branch 列过滤（Branch="" 共享，非空只在该分支触发）
 
 **Flag 语法：**
-- FlagSet：`键名=值`（等于）、`键名+=数值`（累加）、`键名-=数值`（递减），多个用 `;`
-- FlagRequire：`键名=值`（等于）、`键名>5`（数值大于），`&`=AND，`\|`=OR
+- FlagSet：`键名=值`（等于）、`键名+=数值`（累加）、`键名-=数值`（递减）、裸键名（设为 true），多个用 `;`
+- FlagRequire：`键名=值`（等于）、`键名>=5`（数值比较，支持 >、>=、<、<=、==）；`;` 和 `&` 都是 AND，`|` 是 OR；裸键名 = 存在即满足
 
 ### Achievements 成就表
 
-| ID | Name | Description | Icon | ConditionType | ConditionValue | FlagRequire |
-|---|---|---|---|---|---|---|---|
-| {id}_a001 | 成就名 | 成就描述 | ★ | level | 5 | |
+| ID | Name | Description | Icon | ConditionType | ConditionValue |
+|---|---|---|---|---|---|
+| {id}_a001 | 成就名 | 成就描述 | ★ | level | 5 |
 
 - 建议 50 个
 - ConditionType：level(等级)/runtime(毫秒)/events(事件数)/titles(称号数)
-- FlagRequire 可选，不填则任意分支都能解锁
 
 ### HolidayEvents 节日事件表
 
