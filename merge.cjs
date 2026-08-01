@@ -225,7 +225,7 @@ const result = outputLines.join('\n');
 fs.writeFileSync(outputPath, result, 'utf-8');
 
 // 统计
-const eventCount = (result.match(/\| [a-zA-Z0-9_]+_e\d{4} \|/g) || []).length;
+const eventCount = (result.match(/\| [a-zA-Z0-9_]+_e\d{4}[a-z]* \|/g) || []).length;
 console.log('');
 console.log(`[DONE] 已写入 ${outputPath}`);
 console.log(`       事件总数: ${eventCount}`);
