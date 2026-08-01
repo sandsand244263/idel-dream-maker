@@ -14,7 +14,7 @@ player_title: 拾荒者    # 必填。Lv.1 默认称号
 language: zh            # 必填。zh
 mechanic: standard      # 可选。挂机变体：standard/cultivation/cyber/tide/polar，默认 standard
 max_rebirth: 0          # 可选。最大重生次数 0-3，默认 0（单周目）
-branches: [survivor, merchant, fugitive, ai]  # 分支列表（validate_quality.cjs 依赖它做分支等级覆盖检查）
+branches: [survivor, merchant, fugitive, ai]  # 必填。分支列表（validate_quality.cjs 依赖它做分支等级覆盖检查）
 unlock_requirement:      # 可选。解锁条件，默认全 0（默认解锁）
   hub_level: 0          # 大厅等级要求
   completions: 0        # 任意副本通关次数要求
@@ -153,7 +153,7 @@ choice 事件 = 在 story 事件上加 Choice1/Choice1Target 等列，让玩家�
 ### 质量规则（内容层面）
 
 1. **角色弧**：每个核心配角必须有"出场→变化→结局"三点，不允许出场一次后消失
-2. **伏笔-回收**：伏笔 flag 命名 `foreshadow_*`，必须同路径可回收。**脚本局限**：validate_quality.cjs 只查"伏笔 flag 被任意事件的 FlagRequire 引用"（不分分支、不分先后），同路径约束靠 AI 自检清单 + 精校轮通读
+2. **伏笔-回收**：伏笔 flag 命名 `foreshadow_*`，必须同路径可回收；**埋点（FlagSet foreshadow_*）必须放在必然触发的事件上，不得放在 choice target 或条件分支的旁路**（玩家可能选不到）。**脚本局限**：validate_quality.cjs 只查"伏笔 flag 被任意事件的 FlagRequire 引用"（不分分支、不分先后），同路径与埋点位置靠 AI 自检清单 + 精校轮通读约束
 3. **世界展开**：每 100 级至少引入 1 个新地点或新社会群体（防止原地打转）
 4. **承接**：每批开头必须承接上批段尾悬念
 5. **文本多样性**：连续事件避免同句式开头；Action 列记录动作关键词（人工审查用）

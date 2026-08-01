@@ -53,7 +53,7 @@ allowed-tools: Glob, Read, Write, Edit, Bash
 
 1. 问用户想写什么主题
 2. 理解世界观设定，推荐挂机机制
-3. 确定元数据（id / name / name_cn / description / player_title / mechanic / max_rebirth / completion_title）
+3. 确定元数据（id / name / name_cn / description / player_title / mechanic / max_rebirth / **branches（必填，分支列表，validate_quality 依赖它做分支检查）** / completion_title）
 4. 输出预览等用户确认
 
 ### Stage 1.5：节奏分段（自定义，不硬套模板）
@@ -98,6 +98,7 @@ allowed-tools: Glob, Read, Write, Edit, Bash
 **硬规则：**
 - 伏笔 flag 命名 `foreshadow_*`（validate_quality.cjs 据此查回收率）
 - **伏笔必须同路径可回收**（回收事件在玩家必然能触发的路径上；跨分支伏笔要么不做要么明示"可选回收"）
+- **伏笔埋点（FlagSet foreshadow_*）必须放在必然触发的事件上**，不得放在 choice target 或条件分支的旁路（玩家可能选不到，脚本无法验证可达性，靠自检清单约束）
 - 每个分支最后一条 Lv500 事件 **FlagRequire 必须留空**（无条件兜底），且放在该分支**最后一行**（引擎取分支内最后满足事件）
 
 ### Stage 1.7：状态文件初始化
@@ -114,7 +115,7 @@ allowed-tools: Glob, Read, Write, Edit, Bash
 
 > 原则：**一小段一小段来**。每批 20-50 条（一个完整剧情小节），生成完**全量展示**给你确认。宁可批多次、时间长，不要一次生成一大堆（会产生"卡住"错觉，且错漏难查）。
 
-**批次切分方式（重要）：** 参考废土结构——共享开头（Lv.1-5）先写，然后**分支逐一串行**（写完分支 A 全部等级，再写分支 B……），每批 = 单分支的一个等级段（20-50 条）。state.md 的进度记录必须带分支名（如"survivor 已到 Lv.x"），保证续写断点无歧义。
+**批次切分方式（重要）：** 参考废土结构——**共享开头批（Lv.1-5）先写，必须包含 Lv.5 分支抉择事件及其全部 target（各分支 Lv.5 起点，Branch 列标注分支名）**（否则中期验证会报 target 悬空）；然后**分支逐一串行**（写完分支 A 全部等级，再写分支 B……），每批 = 单分支的一个等级段（20-50 条）。state.md 的进度记录必须带分支名（如"survivor 已到 Lv.x"），保证续写断点无歧义。
 
 ### 粗稿轮（保结构）
 
@@ -141,15 +142,18 @@ allowed-tools: Glob, Read, Write, Edit, Bash
 ### 重型验证（每 5-6 批一次）
 
 ```
-node merge.cjs scenarios/{id}.md scenarios_wip/{id}/meta.md scenarios_wip/{id}/content.md scenarios_wip/{id}/batches/{id}_b*.md
+node merge.cjs scenarios/{id}.md scenarios_wip/{id}/meta.md scenarios_wip/{id}/content.md scenarios_wip/{id}/batches
 node build.js
 node validate_flags.cjs {id}
 node validate_quality.cjs {id}
 ```
 
+> 说明：batches 传**目录**（merge.cjs 自动按文件名排序展开目录内 .md；Windows/Node 不支持通配符，不要写 `*.md`）。meta.md / content.md 必须显式列出。merge 写入 scenarios/{id}.md 仅为验证手段——**副本完成前游戏会加载到半成品（缺分支/缺结局），完成前不要启动游戏游玩该副本**。
+
 **验证结果解读：**
-- `[ERROR]`：必须修复（格式/ID 重复/flag 断链/choice target 悬空），修复后重跑对应命令
+- `[ERROR]`：必须修复（格式/ID 重复/flag 断链），修复后重跑对应命令。**例外**：choice target 悬空若指向"尚未生成的分支起点"（如共享开头批的 Lv.5 分支抉择 target 指向还没写的分支）属中期正常，该分支生成后自动消失；指向已写分支内的事件则是真错误
 - `[WARN]` 分支等级缺口 / 伏笔未回收：**生成中期属正常**（还没写到的分支/伏笔），精校轮必须清零；如缺口出现在**已写到的分支**，说明漏写了某级，需补
+- `validate_flags` 输出 `❌` = 某 flag 设置后无事件引用：中期出现（引用在后续批次）属正常；**精校轮必须全部 ✅**；同一分支已写完仍 ❌ 说明是死 flag（设了没用），需删或补引用
 - 报错若来自其他副本（build 解析 scenarios/ 全部文件）：先确认错误信息中的事件 ID 是否属于本副本，不是则忽略
 
 ### 细稿轮（打磨文笔）
@@ -186,7 +190,7 @@ node validate_quality.cjs {id}
 
 | 验证 | 命令 | 时机 |
 |------|------|------|
-| 合并 | `node merge.cjs scenarios/{id}.md scenarios_wip/{id}/meta.md scenarios_wip/{id}/content.md scenarios_wip/{id}/batches/{id}_b*.md` | 每 ~100 级 / 粗稿轮完成 / 精校轮收尾 |
+| 合并 | `node merge.cjs scenarios/{id}.md scenarios_wip/{id}/meta.md scenarios_wip/{id}/content.md scenarios_wip/{id}/batches` | 每 ~100 级 / 粗稿轮完成 / 精校轮收尾 |
 | 构建 | `node build.js` | 合并后 |
 | flag 链 | `node validate_flags.cjs {id}` | 每 ~100 级 / 精校轮 |
 | 质量 | `node validate_quality.cjs {id}` | 每 ~100 级 / 精校轮（精校轮要求 0 ERROR 0 WARN） |
@@ -194,7 +198,8 @@ node validate_quality.cjs {id}
 ## 注意事项（避免翻车）
 
 - 文件第一行必须是 `---`（不能有 BOM）
-- Events 表内部**不能有空行**；每行以 `|` 开头和结尾，20 列
+- **所有表（Events/Titles/Achievements/HolidayEvents）内部都不能有空行**（空行会导致 parseTable 提前终止）
+- 每行 pipe table 必须以 `|` 开头和结尾，Events 20 列
 - choice target 事件 ID 必须在表中存在
 - 事件文本不少于 10 字（build 校验）
 - 所有文本用第二人称"你"写

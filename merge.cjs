@@ -23,12 +23,23 @@ const path = require('path');
 
 const args = process.argv.slice(2);
 if (args.length < 2) {
-  console.error('用法: node merge.cjs <输出文件> <输入文件...>');
+  console.error('用法: node merge.cjs <输出文件> <输入文件...> 或 <输出文件> <批次目录>');
   process.exit(1);
 }
 
 const outputPath = args[0];
-const inputPaths = args.slice(1);
+// 展开输入：参数为目录时自动收集目录内 *.md 按文件名排序
+// （Windows/Node 不展开通配符，传目录最稳妥）
+let inputPaths = [];
+for (const a of args.slice(1)) {
+  if (fs.existsSync(a) && fs.statSync(a).isDirectory()) {
+    const files = fs.readdirSync(a).filter(f => f.endsWith('.md')).sort();
+    inputPaths.push(...files.map(f => path.join(a, f)));
+    console.log(`[DIR] 展开目录 ${a} → ${files.length} 个 .md 文件（按文件名排序）`);
+  } else {
+    inputPaths.push(a);
+  }
+}
 
 // 确保 temp/ 目录存在
 const outputDir = path.dirname(outputPath);

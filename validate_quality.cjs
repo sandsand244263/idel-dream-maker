@@ -85,6 +85,10 @@ function checkScenario(s) {
   // 分支等级覆盖：每个分支（含共享）在 1-500 每级至少 1 个可触发事件
   // 共享事件（无分支）对所有分支可见
   const branches = (s.branches || []).concat(['']);
+  if (!s.branches || s.branches.length === 0) {
+    console.log('  [WARN] 未配置 branches 字段（frontmatter），分支等级覆盖检查被跳过——请确认 frontmatter 已写 branches');
+    hasWarn = true;
+  }
   const sharedByLevel = {};
   for (const e of events) {
     if (!e.branch) {
@@ -122,7 +126,8 @@ function checkScenario(s) {
     if (!e.flagSet) continue;
     for (const part of e.flagSet.split(';')) {
       const m = part.trim().match(/^([a-zA-Z_]\w*)/);
-      if (m && m[1].startsWith('foreshadow_')) {
+      // 忽略 foreshadow_x=false（取消伏笔的写法，不算埋点）
+      if (m && m[1].startsWith('foreshadow_') && !/=false\s*$/i.test(part.trim())) {
         foreshadowFlags.add(m[1]);
         setterByFlag[m[1]] = e.id;
       }
