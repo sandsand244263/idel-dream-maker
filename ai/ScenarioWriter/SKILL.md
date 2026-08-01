@@ -24,16 +24,16 @@ allowed-tools: Glob, Read, Write, Edit, Bash
 
 | 项目 | 值 |
 |------|-----|
-| 普通 story | ~475/周目 |
-| choice 事件 | 20-25/周目（关键节点让你选） |
-| choice target | 40-50/周目（选完后的分支剧情） |
+| 普通 story | ~500/分支（周目 = 一条分支路径） |
+| choice 事件 | 10-15/分支（关键节点让你选） |
+| choice target | 20-45/分支（选完后的分支剧情） |
 | 事件类型 | story（剧情，升级时触发） |
 | 文本长度 | 30-80 字 |
 | 叙事人称 | 第二人称"你" |
 | 称号 | 30 个/副本 |
 | 成就 | 50 个/副本 |
 | 节日事件 | 约 52 条/副本 |
-| 多周目重生 | 默认单周目（max_rebirth 默认 0），最多 3（4 周目） |
+| 多周目重生 | 默认单周目（max_rebirth 默认 0），最多 3（4 周目）。**注意：引擎暂不按 MinRebirth 区分周目内容**（重生后重玩相同剧情），新副本建议单周目起步 |
 | 挂机机制 | standard / cultivation / cyber / tide / polar 五种 |
 | 数值 flag | `attitude_*` 0-100（态度值，可选） |
 
@@ -102,23 +102,33 @@ allowed-tools: Glob, Read, Write, Edit, Bash
 
 ### Stage 1.7：状态文件初始化
 
-按 `references/state-file-spec.md` 在 `scenarios_wip/{id}/` 初始化三件套（state.md / log.md / batches/）。
+按 `references/state-file-spec.md` 在 `scenarios_wip/{id}/` 初始化：
+- `meta.md`：frontmatter（独立文件，不含任何 ## 节——merge.cjs 要求）
+- `content.md`：## Titles + ## Achievements + ## HolidayEvents 三段（一次性写好）
+- `state.md`：进行中状态（含全部规划表）
+- `log.md` + `batches/`
+
+> 注意：副本 id 不得与 `scenarios/` 或 `scenarios_user/` 下已有副本重复，否则 merge 会覆盖正式文件。
 
 ## 三稿制生成流程
 
 > 原则：**一小段一小段来**。每批 20-50 条（一个完整剧情小节），生成完**全量展示**给你确认。宁可批多次、时间长，不要一次生成一大堆（会产生"卡住"错觉，且错漏难查）。
+
+**批次切分方式（重要）：** 参考废土结构——共享开头（Lv.1-5）先写，然后**分支逐一串行**（写完分支 A 全部等级，再写分支 B……），每批 = 单分支的一个等级段（20-50 条）。state.md 的进度记录必须带分支名（如"survivor 已到 Lv.x"），保证续写断点无歧义。
 
 ### 粗稿轮（保结构）
 
 逐批循环（每批 ≈ 20-50 条事件，按剧情小节自然分片）：
 
 ```
-1. 读 state.md → 确认本批范围与承接 → 写本批骨架（5-10 行，先给用户瞄一眼）
+1. 读 state.md → 确认本批范围（哪个分支的哪个等级段）与承接 → 写本批骨架，如：
+   骨架（Lv.11-30，survivor）：①离开山谷 ②首次遇到商队 ③埋伏笔"铜钥匙" ④夜袭事件 ⑤小高潮：救下商人
 2. 用户确认骨架 → 生成事件文本（结构优先：ID 连续、flag 正确、伏笔到位，文笔平实即可）
+   写入批次文件（## Events 节 + 完整 20 列表，格式见 state-file-spec）
 3. 全量展示：本批事件全文 + 本批 flag/伏笔变化 + 与上批的承接
-4. 用户点头 → 写批次文件 + 更新 state.md → 下一批
+4. 用户点头 → 更新 state.md → 下一批
    用户要改 → 当场改 → 再确认
-5. 每 5-6 批（约 100 级）做一次重型验证：merge.cjs 合并 → node build.js → validate_flags.cjs → validate_quality.cjs
+5. 每 5-6 批（约 100 级）做一次重型验证（见下）
 ```
 
 **每批 AI 自检清单（提交展示前自查）：**
@@ -127,6 +137,20 @@ allowed-tools: Glob, Read, Write, Edit, Bash
 - [ ] 本批开头承接上批段尾悬念
 - [ ] 到期的伏笔已回收（查伏笔池）
 - [ ] 角色状态与 state.md 一致（新出场/变化/死亡都要更新）
+
+### 重型验证（每 5-6 批一次）
+
+```
+node merge.cjs scenarios/{id}.md scenarios_wip/{id}/meta.md scenarios_wip/{id}/content.md scenarios_wip/{id}/batches/{id}_b*.md
+node build.js
+node validate_flags.cjs {id}
+node validate_quality.cjs {id}
+```
+
+**验证结果解读：**
+- `[ERROR]`：必须修复（格式/ID 重复/flag 断链/choice target 悬空），修复后重跑对应命令
+- `[WARN]` 分支等级缺口 / 伏笔未回收：**生成中期属正常**（还没写到的分支/伏笔），精校轮必须清零；如缺口出现在**已写到的分支**，说明漏写了某级，需补
+- 报错若来自其他副本（build 解析 scenarios/ 全部文件）：先确认错误信息中的事件 ID 是否属于本副本，不是则忽略
 
 ### 细稿轮（打磨文笔）
 
@@ -137,9 +161,9 @@ allowed-tools: Glob, Read, Write, Edit, Bash
 
 ### 精校轮（全量收尾）
 
-- 跑全量验证：`node build.js` + `node validate_flags.cjs` + `node validate_quality.cjs`（伏笔回收率应为 100%）
+- 重新 merge + 跑全量验证：`node build.js` + `node validate_flags.cjs {id}` + `node validate_quality.cjs {id}`——**要求 0 ERROR 且 0 WARN**（伏笔回收率 100%、分支等级全覆盖）
 - AI 通读全副本：角色前后矛盾、跨段承接、伏笔全部兑现、结局兜底存在
-- 用户终审 → merge.cjs 输出 `scenarios/{id}.md` → 收工
+- 用户终审 → 收工
 
 ## 跨会话（续写模式）
 
@@ -162,10 +186,10 @@ allowed-tools: Glob, Read, Write, Edit, Bash
 
 | 验证 | 命令 | 时机 |
 |------|------|------|
-| 构建 | `node build.js` | 每 ~100 级 / 精校轮 |
-| flag 链 | `node validate_flags.cjs` | 每 ~100 级 / 精校轮 |
-| 质量 | `node validate_quality.cjs` | 每 ~100 级 / 精校轮 |
-| 合并 | `node merge.cjs scenarios/{id}.md <批次文件...>` | 粗稿轮完成 / 精校轮收尾 |
+| 合并 | `node merge.cjs scenarios/{id}.md scenarios_wip/{id}/meta.md scenarios_wip/{id}/content.md scenarios_wip/{id}/batches/{id}_b*.md` | 每 ~100 级 / 粗稿轮完成 / 精校轮收尾 |
+| 构建 | `node build.js` | 合并后 |
+| flag 链 | `node validate_flags.cjs {id}` | 每 ~100 级 / 精校轮 |
+| 质量 | `node validate_quality.cjs {id}` | 每 ~100 级 / 精校轮（精校轮要求 0 ERROR 0 WARN） |
 
 ## 注意事项（避免翻车）
 

@@ -14,6 +14,7 @@ player_title: 拾荒者    # 必填。Lv.1 默认称号
 language: zh            # 必填。zh
 mechanic: standard      # 可选。挂机变体：standard/cultivation/cyber/tide/polar，默认 standard
 max_rebirth: 0          # 可选。最大重生次数 0-3，默认 0（单周目）
+branches: [survivor, merchant, fugitive, ai]  # 分支列表（validate_quality.cjs 依赖它做分支等级覆盖检查）
 unlock_requirement:      # 可选。解锁条件，默认全 0（默认解锁）
   hub_level: 0          # 大厅等级要求
   completions: 0        # 任意副本通关次数要求
@@ -32,7 +33,17 @@ completion_title: 废土行者  # 可选。通关解锁的大厅称号
 
 要求：**30 个**，Level 严格升序。称号跨周目共用，不区分周目。
 
-## Events 表规则（20 列）
+## Events 表规则（20 列标准）
+
+> 标准为 **20 列**（与废土实际文件、merge.cjs 表头一致）。多周目副本如需 MinRebirth 列，在 Once 后插入（共 21 列），build 与引擎均支持。
+
+**完整表头（照抄，每行必须 20 列，以 | 开头和结尾）：**
+
+```
+| ID | Type | MinLevel | MinHours | Weight | Once | Branch | FlagSet | FlagRequire | CompletionTitle | Choice1 | Choice1Target | Choice2 | Choice2Target | Choice3 | Choice3Target | Choice4 | Choice4Target | Action | Text |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| {id}_e0001 | story | 1 | 0 | 1 | 是 | | | | | | | | | | | | | 觉醒 | 30-80字的故事文本 |
+```
 
 | 列 | 必填 | 类型 | 说明 |
 |----|------|------|------|
@@ -42,14 +53,13 @@ completion_title: 废土行者  # 可选。通关解锁的大厅称号
 | MinHours | 否，默认 0 | 整数 | 固定为 0 |
 | Weight | 否，默认 1 | 整数 | 固定为 1 |
 | Once | 否，默认 是 | 是/否 | 全部为 是 |
-| MinRebirth | 否，默认 0 | 整数 | 专属周目（0=首周，1=重生1次后，2=重生2次后，3=重生3次后） |
 | Branch | 否 | 字符串 | 分支归属（survivor/merchant/...）。空=共享事件（仅开局 Lv.1-5 使用） |
 | FlagSet | 否 | 字符串 | 触发时设旗标。多个用 `;` 分隔 |
 | FlagRequire | 否 | 字符串 | 触发条件。`;`/`&` 都是 AND，`|` 是 OR |
 | CompletionTitle | 否 | 字符串 | 结局事件的专属通关称号 |
 | Choice1~Choice4 | 否 | 字符串 | 选项按钮文字（10 字以内），有值则本条为 choice 事件 |
 | Choice1Target~Choice4Target | 否 | 字符串 | 选该选项后触发的事件 ID，必须存在 |
-| Action | 否 | 字符串 | 核心动作关键词（如"翻找"、"修水管"），用于校验文本多样性 |
+| Action | 否 | 字符串 | 核心动作关键词（如"翻找"、"修水管"），记录便于人工审查多样性（无脚本校验） |
 | Text | 是 | 字符串 | 30-80 字 |
 
 ### 选择事件（choice）
@@ -60,7 +70,7 @@ choice 事件 = 在 story 事件上加 Choice1/Choice1Target 等列，让玩家�
 - Choice1 有值 → 本条视为 choice 事件，气泡显示对应数量按钮（2-4 个）
 - Choice1Target 指向目标事件 ID，目标事件必须是同一副本内的 story 事件（不加 Choice 列）
 - 目标事件 ID 用 `{编号}a` / `{编号}b` / `{编号}c` / `{编号}d`，插入在 choice 事件等级之后
-- 推荐每周目 20-25 个 choice，均匀分布在 500 级中
+- 推荐每分支 10-15 个 choice，均匀分布在 500 级中（口径：**周目 = 一条分支路径**，玩家一次通关 = 走一条分支）
 
 **choice 三层设计（先定层再写）：**
 
@@ -97,11 +107,11 @@ choice 事件 = 在 story 事件上加 Choice1/Choice1Target 等列，让玩家�
 
 ### 事件类型
 
-| 类型 | 数量 | 触发方式 | 内容风格 |
+| 类型 | 数量（每分支） | 触发方式 | 内容风格 |
 |:----|:----:|:---------|:---------|
-| `story`（普通） | 460~475/周目 × (1 + max_rebirth) 周目 | 升级时触发，与等级提示合并 | 剧情主线，推动人生叙事 |
-| `story`（choice） | 20-25/周目 × (1 + max_rebirth) 周目 | 升级时触发，带 2-4 个选项按钮 | 关键转折点，玩家选择决定后续走向 |
-| `choice target` | 40-50/周目 × (1 + max_rebirth) 周目 | 由玩家选择后立即弹出 | 选择后的分支叙事 |
+| `story`（普通） | ~500/分支 × (1 + max_rebirth) 周目 | 升级时触发，与等级提示合并 | 剧情主线，推动人生叙事 |
+| `story`（choice） | 10-15/分支 × (1 + max_rebirth) 周目 | 升级时触发，带 2-4 个选项按钮 | 关键转折点，玩家选择决定后续走向 |
+| `choice target` | 20-45/分支 × (1 + max_rebirth) 周目 | 由玩家选择后立即弹出 | 选择后的分支叙事 |
 
 ### story 节奏分段规范
 
@@ -135,7 +145,7 @@ choice 事件 = 在 story 事件上加 Choice1/Choice1Target 等列，让玩家�
 ```
 
 **两条硬规则：**
-1. **每个分支最后一行必须是无条件结局**（FlagRequire 留空）——防止玩家 flag 组合落空时看到条件不成立的结局文本
+1. **每个分支最后一行必须是无条件结局**（FlagRequire 留空，且**必须是普通 story 事件——不带 Choice 列**，否则引擎会把它当 choice 事件处理）——防止玩家 flag 组合落空时看到条件不成立的结局文本
 2. 条件结局事件按 flag 组合规划，文本必须与条件对应（"没救阿强"的结局不能写"你救下了他"）
 
 各周目的最后一条 story（LV500，对应 MinRebirth）类似处理；仅 MinRebirth=0 的结局有特殊弹窗。
@@ -143,16 +153,15 @@ choice 事件 = 在 story 事件上加 Choice1/Choice1Target 等列，让玩家�
 ### 质量规则（内容层面）
 
 1. **角色弧**：每个核心配角必须有"出场→变化→结局"三点，不允许出场一次后消失
-2. **伏笔-回收**：伏笔 flag 命名 `foreshadow_*`，必须同路径可回收（validate_quality.cjs 检查回收率，终稿应为 100%）
+2. **伏笔-回收**：伏笔 flag 命名 `foreshadow_*`，必须同路径可回收。**脚本局限**：validate_quality.cjs 只查"伏笔 flag 被任意事件的 FlagRequire 引用"（不分分支、不分先后），同路径约束靠 AI 自检清单 + 精校轮通读
 3. **世界展开**：每 100 级至少引入 1 个新地点或新社会群体（防止原地打转）
 4. **承接**：每批开头必须承接上批段尾悬念
-5. **文本多样性**：连续事件避免同句式开头；Action 列跟踪动作多样性
+5. **文本多样性**：连续事件避免同句式开头；Action 列记录动作关键词（人工审查用）
 
-## HolidayEvents 表规则
+## HolidayEvents 表规则（7 列）
 
 | 列 | 必填 | 类型 | 说明 |
 |----|------|------|------|
-| ID | 是 | 字符串 | `{id}_h{三位编号}` |
 | HolidayID | 是 | 字符串 | 对应 `electron/holiday.cjs` 中的节日 ID |
 | Type | 是 | 枚举 | `advance`（节前 3 天）或 `day`（节日当天） |
 | MinLevel | 否，默认 1 | 整数 | 最低触发等级 |
@@ -169,7 +178,7 @@ choice 事件 = 在 story 事件上加 Choice1/Choice1Target 等列，让玩家�
 - 农历节日（7）：spring_festival, lantern_festival, dragon_boat, qixi, zhongyuan, mid_autumn, double_ninth
 - 浮动节日（5）：qingming（清明节气）, easter（复活节）, mothers_day, fathers_day, thanksgiving
 
-## Achievements 表规则
+## Achievements 表规则（6 列标准）
 
 | 列 | 必填 | 类型 | 说明 |
 |----|------|------|------|
@@ -179,7 +188,8 @@ choice 事件 = 在 story 事件上加 Choice1/Choice1Target 等列，让玩家�
 | Icon | 否，默认 ★ | 字符串 | 单字符图标 |
 | ConditionType | 是 | 枚举 | level/runtime/events/titles |
 | ConditionValue | 是 | 数值 | 见下方"条件值与单位" |
-| MinRebirth | 否，默认 0 | 整数 | 所属周目（0=首周目，1=重生1次后，2=重生2次后，3=重生3次后）。均匀分配到各周目，让每个周目都有新成就可解锁 |
+
+> 标准 **6 列**（与废土实际一致）。多周目副本如需按周目区分成就，可追加 `MinRebirth` 列（parser 支持，引擎当前不按此过滤）。
 
 要求：**50 个**，四种 ConditionType 严格按以下数量分布：
 - level: **13** 个
