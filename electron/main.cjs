@@ -8,6 +8,7 @@ const { createTray, setToolTip, getTray, updateMenu } = require('./tray.cjs');
 const { registerPetIpcHandlers, forwardToPet, initPet, broadcastTheme, setOnPetSelected } = require('./pet.cjs');
 const { getTodaysHolidayId, getUpcomingHolidayId, getHolidayName, getHolidayIcon, getHolidayEventFromScenario, getRandomHolidayEvent } = require('./holiday.cjs');
 const { parseScenarioMd } = require('../src/scenario-parser.cjs');
+const { calcLevel, calcExpForLevel } = require('../level-curve.cjs');
 const { uIOhook, UiohookKey } = require('uiohook-napi');
 const { autoUpdater } = require('electron-updater');
 
@@ -857,22 +858,7 @@ function resetDailyIfNewDay() {
 }
 
 // ── Game Logic ──
-
-function calcLevel(exp) {
-  if (exp <= 0) return 1;
-  if (exp <= 980100) return Math.floor(Math.sqrt(exp / 100)) + 1;
-  // LV100+ 等差数列：首项 4000，每级递增 10
-  const r = exp - 980100;
-  return 100 + Math.floor((-3995 + Math.sqrt(15960025 + 20 * r)) / 10);
-}
-
-function calcExpForLevel(level) {
-  if (level <= 1) return 0;
-  if (level <= 100) return 100 * (level - 1) * (level - 1);
-  // LV100+ 等差数列反推
-  const n = level - 100;
-  return 980100 + n * (2 * 4000 + (n - 1) * 10) / 2;
-}
+// 升级曲线公式统一由 level-curve.cjs 提供（calcLevel / calcExpForLevel）
 
 function getCurrentTitle(scenario, level) {
   if (!scenario || !scenario.titles) return null;

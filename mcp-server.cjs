@@ -13,8 +13,7 @@ const SCENARIOS_PATH = path.join(PROJECT_ROOT, 'public', 'scenarios_data.json');
 const RELOAD_FLAG_PATH = path.join(GAME_DIR, '.reload_flag');
 const LOG_DIR = path.join(GAME_DIR, 'logs');
 
-let Compiler = null;
-try { Compiler = require('inkjs/full').Compiler; } catch {}
+const { calcLevel, calcExpForLevel } = require('./level-curve.cjs');
 
 function sendJson(msg) {
   process.stdout.write(JSON.stringify(msg) + '\n');
@@ -46,23 +45,80 @@ function readScenarios() {
   return JSON.parse(fs.readFileSync(SCENARIOS_PATH, 'utf-8'));
 }
 
+// 写存档操作强制 dev 模式保护（防误操作正式存档）
+function requireDev() {
+  if (!IS_DEV) {
+    throw new Error('写操作仅限 dev 模式：MCP 需以 --dev 参数启动（opencode.jsonc 已配置）');
+  }
+}
+
+// 剧情条件判断（与 electron/main.cjs 的 checkFlagRequire 语义一致）
+// ';' / '&' 为 AND，'|' 为 OR；裸 flag 名 = 存在即满足；值统一 String 比较
+function checkFlagRequire(flagRequire, flags) {
+  if (!flagRequire) return true;
+  const parts = flagRequire.split(/[;&]/);
+  for (const part of parts) {
+    const orParts = part.split('|');
+    let anyMatch = false;
+    for (const op of orParts) {
+      const trimmed = op.trim();
+      if (!trimmed) continue;
+      const match = trimmed.match(/^([a-zA-Z_]\w*)\s*(>=|<=|==|=|>|<)\s*(.+)$/);
+      if (!match) {
+        if (flags[trimmed]) anyMatch = true;
+        continue;
+      }
+      const [, key, opStr, valStr] = match;
+      const flagVal = flags[key];
+      if (flagVal === undefined) continue;
+      const numA = flagVal === '' ? NaN : Number(flagVal);
+      const numB = valStr.trim() === '' ? NaN : Number(valStr);
+      const numeric = !isNaN(numA) && !isNaN(numB);
+      let ok = false;
+      switch (opStr) {
+        case '>': ok = numeric ? numA > numB : String(flagVal) > String(valStr).trim(); break;
+        case '>=': ok = numeric ? numA >= numB : String(flagVal) >= String(valStr).trim(); break;
+        case '<': ok = numeric ? numA < numB : String(flagVal) < String(valStr).trim(); break;
+        case '<=': ok = numeric ? numA <= numB : String(flagVal) <= String(valStr).trim(); break;
+        case '==': case '=': ok = String(flagVal) === String(valStr).trim(); break;
+      }
+      if (ok) anyMatch = true;
+    }
+    if (!anyMatch) return false;
+  }
+  return true;
+}
+
 const TOOLS = {
 
-  ink_compile: {
-    description: '编译 Ink 叙事代码，检查语法错误。返回编译结果或错误信息。',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        code: { type: 'string', description: 'Ink 叙事代码（不含 frontmatter 的纯 Ink 内容）' }
-      },
-      required: ['code']
-    },
-    call(args) {
-      if (!Compiler) throw new Error('inkjs 依赖不可用，请确认已在项目目录下执行 npm install');
-      const compiler = new Compiler(args.code);
-      const story = compiler.Compile();
-      const json = story.ToJson();
-      return { success: true, eventCount: (JSON.parse(json).root ? 1 : 0), compiledSize: json.length };
+  state_init: {
+    description: '创建初始 dev 存档（自动进入废土副本 Lv.1）。已存在时重置。',
+    inputSchema: { type: 'object', properties: {} },
+    call() {
+      requireDev();
+      const defaultSave = {
+        playerName: '测试玩家',
+        scenarioId: 'wasteland',
+        isInHub: false,
+        level: 1,
+        exp: 0,
+        totalExpEarned: 0,
+        totalRuntimeMs: 0,
+        currentBranch: '',
+        flags: {},
+        triggeredEvents: [],
+        unlockedAchievements: [],
+        hubTotalExp: 0,
+        rebirthCounts: {},
+        branchProgress: {},
+        scenarioProgress: {},
+        gameCompletions: [],
+        unlockedTitleSets: {},
+        equippedTitleIndex: 0,
+        _version: 2,
+      };
+      writeSave(defaultSave);
+      return { success: true, message: '已创建 dev 存档（废土 Lv.1，副本内）' };
     }
   },
 
@@ -116,7 +172,7 @@ const TOOLS = {
           totalRuntimeMs: save.totalRuntimeMs,
           currentBranch: save.currentBranch || '',
           flags: save.flags || {},
-          completedBranches: save.completedBranches || [],
+          completedBranches: (save.branchProgress && save.branchProgress[save.scenarioId]) || [],
           rebirthCount: (save.rebirthCounts && save.rebirthCounts[save.scenarioId]) || 0,
           hubLevel: save.hubLevel || 1,
           hubTotalExp: save.hubTotalExp || 0
@@ -133,16 +189,20 @@ const TOOLS = {
         level: { type: 'number', description: '设置等级（自动换算 EXP）' },
         exp: { type: 'number', description: '设置 EXP（覆盖）' },
         flags: { type: 'object', description: '合并旗标，如 {"fed_wangcai": true}' },
-        currentBranch: { type: 'string', description: '设置当前分支名称' }
+        currentBranch: { type: 'string', description: '设置当前分支名称' },
+        scenarioId: { type: 'string', description: '切换副本 ID' },
+        isInHub: { type: 'boolean', description: '设置是否在大厅' },
+        triggeredEvents: { type: 'array', description: '追加已触发事件 ID（去重）' }
       },
       required: []
     },
     call(args) {
+      requireDev();
       const save = readSave();
-      if (!save) return { success: false, error: '存档文件不存在' };
+      if (!save) return { success: false, error: '存档文件不存在，请先运行 state_init' };
       if (args.level !== undefined) {
         save.level = args.level;
-        save.exp = args.level <= 100 ? Math.pow(args.level - 1, 2) * 100 : 980100 + (args.level - 100) * (2 * 4000 + (args.level - 100 - 1) * 10) / 2;
+        save.exp = calcExpForLevel(args.level);
       }
       if (args.exp !== undefined) save.exp = args.exp;
       if (args.flags) {
@@ -150,18 +210,25 @@ const TOOLS = {
         Object.assign(save.flags, args.flags);
       }
       if (args.currentBranch !== undefined) save.currentBranch = args.currentBranch;
+      if (args.scenarioId !== undefined) save.scenarioId = args.scenarioId;
+      if (args.isInHub !== undefined) save.isInHub = args.isInHub;
+      if (args.triggeredEvents) {
+        if (!Array.isArray(save.triggeredEvents)) save.triggeredEvents = [];
+        save.triggeredEvents = [...new Set([...save.triggeredEvents, ...args.triggeredEvents])];
+      }
       writeSave(save);
-      return { success: true, level: save.level, exp: save.exp, flags: save.flags };
+      return { success: true, level: save.level, exp: save.exp, flags: save.flags, scenarioId: save.scenarioId, isInHub: save.isInHub };
     }
   },
 
   simulate_levelup: {
-    description: '模拟升一级，返回该级触发的事件文本。仅副本内可用。',
+    description: '模拟升一级，返回该级真正会触发的事件文本（按分支 + 剧情条件 flag 过滤）。仅副本内可用。',
     inputSchema: { type: 'object', properties: {} },
     call() {
+      requireDev();
       const save = readSave();
-      if (!save) return { success: false, error: '存档文件不存在' };
-      if (save.isInHub) return { success: false, error: '当前在大厅，无法升级。请先进入副本' };
+      if (!save) return { success: false, error: '存档文件不存在，请先运行 state_init' };
+      if (save.isInHub) return { success: false, error: '当前在大厅，无法升级。请先进入副本（state_set 设 isInHub=false）' };
 
       const scenarios = readScenarios();
       const scenario = scenarios.find(s => s.id === save.scenarioId);
@@ -169,33 +236,27 @@ const TOOLS = {
 
       const newLevel = (save.level || 0) + 1;
       save.level = newLevel;
-      save.exp = newLevel <= 100 ? Math.pow(newLevel - 1, 2) * 100 : 980100 + (newLevel - 100) * (2 * 4000 + (newLevel - 100 - 1) * 10) / 2;
+      save.exp = calcExpForLevel(newLevel);
+      save.totalExpEarned = Math.max(save.totalExpEarned || 0, save.exp);
+
+      // 按当前分支 + flag 条件 + 未触发过滤，选出该级真正会触发的事件
+      const cb = save.currentBranch || '';
+      const flags = save.flags || {};
+      const triggered = save.triggeredEvents || [];
+      const ev = scenario.events.find(e =>
+        e.minLevel === newLevel &&
+        (!e.branch || e.branch === cb) &&
+        checkFlagRequire(e.flagRequire, flags) &&
+        !(e.once && triggered.includes(e.id))
+      );
+      if (ev) {
+        if (!save.triggeredEvents) save.triggeredEvents = [];
+        save.triggeredEvents.push(ev.id);
+      }
       writeSave(save);
 
-      let text = '';
-      let hasChoices = false;
-
-      if (scenario.format === 'ink' && scenario.ink_compiled_json) {
-        try {
-          const { Story } = require('inkjs');
-          const story = new Story(scenario.ink_compiled_json);
-          story.variablesState['player_level'] = newLevel;
-          if (save.currentBranch) story.variablesState['player_branch'] = save.currentBranch;
-          story.ChoosePathString('main_loop');
-          let safety = 0;
-          while (story.canContinue && safety < 10000) { text += story.Continue(); safety++; }
-          text = text.trim();
-          if (story.currentChoices.length > 0) hasChoices = true;
-        } catch (e) {
-          text = '[Ink 叙事运行出错] ' + e.message;
-        }
-      } else {
-        const ev = scenario.events.find(e => e.minLevel === newLevel && (!e.branch || e.branch === save.currentBranch));
-        text = ev ? ev.text : '[当前等级无事件]';
-      }
-
-      const result = { success: true, level: newLevel, text: text || '[无事件文本]' };
-      if (hasChoices) result.note = '此事件包含选择分支，可通过 simulate_levelup 继续推进';
+      const result = { success: true, level: newLevel, text: ev ? ev.text : '[当前等级无事件]' };
+      if (ev && ev.choice1 && ev.choice1Target) result.note = '此事件包含选择分支';
       return result;
     }
   },

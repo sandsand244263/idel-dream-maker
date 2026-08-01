@@ -5,20 +5,8 @@ const os = require('os');
 // ── Load scenario data ──
 const scenarios = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'public', 'scenarios_data.json'), 'utf-8'));
 
-// ── Pure functions (duplicated from scenario.js + main.cjs) ──
-function calcLevel(exp) {
-  if (exp <= 0) return 1;
-  if (exp <= 980100) return Math.floor(Math.sqrt(exp / 100)) + 1;
-  const r = exp - 980100;
-  return 100 + Math.floor((-3995 + Math.sqrt(15960025 + 20 * r)) / 10);
-}
-
-function calcExpForLevel(level) {
-  if (level <= 1) return 0;
-  if (level <= 100) return 100 * (level - 1) * (level - 1);
-  const n = level - 100;
-  return 980100 + n * (2 * 4000 + (n - 1) * 10) / 2;
-}
+// ── 升级曲线公式（唯一权威：level-curve.cjs 共享模块，与主进程/mcp-server 一致） ──
+const { calcLevel, calcExpForLevel } = require('../level-curve.cjs');
 
 function getCurrentTitle(scenario, level) {
   if (!scenario || !scenario.titles) return null;
@@ -517,6 +505,23 @@ if (w2) {
   test('内容完整性', 'e0501 用;分隔(修复后可触发)', e0501 && mockCheckFlagRequire(e0501.flagRequire, { saved_ahqiang: 'false', fed_wangcai: 1 }), true);
   test('内容完整性', 'AI结局裸flag可匹配', aiEnding[0] && mockCheckFlagRequire(aiEnding[0].flagRequire, { shut_down_completely: true }), true);
 }
+
+// ── simulate_levelup 的 flag 过滤逻辑（mcp-server v3.7.9：按分支+条件+未触发筛选） ──
+function mockPickLevelEvent(events, level, branch, flags, triggered) {
+  const cb = branch || '';
+  return events.find(e =>
+    e.minLevel === level &&
+    (!e.branch || e.branch === cb) &&
+    mockCheckFlagRequire(e.flagRequire, flags) &&
+    !(e.once && (triggered || []).includes(e.id))
+  );
+}
+test('升级模拟', 'survivor Lv.222 无flag=无事件(条件不满足)', mockPickLevelEvent(w2.events, 222, 'survivor', {}, []), undefined);
+test('升级模拟', 'survivor Lv.222 invited_ahqiang=1 命中 e0222', mockPickLevelEvent(w2.events, 222, 'survivor', { invited_ahqiang: 1 }, [])?.id, 'wasteland_e0222');
+test('升级模拟', 'ai Lv.500 无flag=命中无条件承接事件 e2000', mockPickLevelEvent(w2.events, 500, 'ai', {}, [])?.id, 'wasteland_e2000');
+test('升级模拟', 'ai Lv.500 跳过e2000且无flag=无事件(结局全有条件)', mockPickLevelEvent(w2.events, 500, 'ai', {}, ['wasteland_e2000']), undefined);
+test('升级模拟', 'ai Lv.500 shut_down_completely 命中 e2000a', mockPickLevelEvent(w2.events, 500, 'ai', { shut_down_completely: true }, ['wasteland_e2000'])?.id, 'wasteland_e2000a');
+test('升级模拟', 'once事件已触发则跳过', mockPickLevelEvent(w2.events, 222, 'survivor', { invited_ahqiang: 1 }, ['wasteland_e0222']), undefined);
 
 // ── 生成报告 ──
 const passed = results.filter(r => r.pass).length;
