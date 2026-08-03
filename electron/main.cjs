@@ -784,7 +784,11 @@ function handleInputDown(keyId, keyChar, now) {
   if (gameState.level > ol) {
     const title = getCurrentTitle(currentScenario, gameState.level);
     const storyEvent = findUnusedEvent('story', gameState.level);
-    if (storyEvent) gameState.triggeredEvents.push(storyEvent.id);
+    if (storyEvent) {
+      gameState.triggeredEvents.push(storyEvent.id);
+      // 普通 story 事件触发时应用其 FlagSet（choice 事件由选项 target 应用）
+      if (!storyEvent.choice1) applyFlagSet(storyEvent.flagSet);
+    }
     if (title) {
       currentTitle = title;
       if (currentScenario) gameState.equippedTitleIndex = currentScenario.titles.indexOf(title);
@@ -914,6 +918,7 @@ function resetGameForScenario(scenario, alias) {
   const initEvent = findUnusedEvent('story', gameState.level);
   if (initEvent) {
     gameState.triggeredEvents.push(initEvent.id);
+    if (!initEvent.choice1) applyFlagSet(initEvent.flagSet);
     const title = getCurrentTitle(currentScenario, gameState.level);
     // Choice detection
     if (initEvent.choice1 && initEvent.choice1Target) {
@@ -991,16 +996,27 @@ function checkFlagRequire(flagRequire) {
       const [, key, opStr, valStr] = match;
       const flagVal = flags[key];
       if (flagVal === undefined) continue;
-      const numA = flagVal === '' ? NaN : Number(flagVal);
-      const numB = valStr.trim() === '' ? NaN : Number(valStr);
+      const valT = valStr.trim();
+      if (opStr === '=' || opStr === '==') {
+        // 归一化比较：布尔 true ↔ '1' ↔ 'true' 等价，布尔 false ↔ '0' ↔ 'false' 等价
+        const norm = v => (typeof v === 'boolean' ? (v ? 'true' : 'false') : String(v).trim());
+        const nv = norm(flagVal);
+        const nt = norm(valT);
+        anyMatch = nv === nt ||
+          (nv === 'true' && nt === '1') || (nv === '1' && nt === 'true') ||
+          (nv === 'false' && nt === '0') || (nv === '0' && nt === 'false');
+        continue;
+      }
+      const normVal = typeof flagVal === 'boolean' ? (flagVal ? 1 : 0) : flagVal;
+      const numA = normVal === '' ? NaN : Number(normVal);
+      const numB = valT === '' ? NaN : Number(valT);
       const numeric = !isNaN(numA) && !isNaN(numB);
       let ok = false;
       switch (opStr) {
-        case '>': ok = numeric ? numA > numB : String(flagVal) > String(valStr).trim(); break;
-        case '>=': ok = numeric ? numA >= numB : String(flagVal) >= String(valStr).trim(); break;
-        case '<': ok = numeric ? numA < numB : String(flagVal) < String(valStr).trim(); break;
-        case '<=': ok = numeric ? numA <= numB : String(flagVal) <= String(valStr).trim(); break;
-        case '==': case '=': ok = String(flagVal) === String(valStr).trim(); break;
+        case '>': ok = numeric ? numA > numB : String(normVal) > valT; break;
+        case '>=': ok = numeric ? numA >= numB : String(normVal) >= valT; break;
+        case '<': ok = numeric ? numA < numB : String(normVal) < valT; break;
+        case '<=': ok = numeric ? numA <= numB : String(normVal) <= valT; break;
       }
       if (ok) anyMatch = true;
     }
@@ -1045,12 +1061,21 @@ function buildChoices(storyEvent) {
 function findUnusedEvent(type, level) {
   if (!currentScenario || !currentScenario.events || gameState.isInHub) return null;
   const cb = gameState.currentBranch || '';
+  // choice target 不应被自动触发（只能由选择触发），避免未选分支文本后续弹出
+  const targetIds = new Set();
+  for (const e of currentScenario.events) {
+    if (e.choice1Target) targetIds.add(e.choice1Target);
+    if (e.choice2Target) targetIds.add(e.choice2Target);
+    if (e.choice3Target) targetIds.add(e.choice3Target);
+    if (e.choice4Target) targetIds.add(e.choice4Target);
+  }
   const pool = currentScenario.events.filter(e => {
     if (e.type && e.type !== type) return false;
     if (e.minLevel && e.minLevel > level) return false;
     if (e.once && gameState.triggeredEvents.includes(e.id)) return false;
     if (e.branch && e.branch !== '' && e.branch !== cb) return false;
     if (!checkFlagRequire(e.flagRequire)) return false;
+    if (targetIds.has(e.id)) return false;  // 排除 choice target
     return true;
   });
   if (pool.length === 0) return null;
@@ -1224,6 +1249,7 @@ function startGameLoop() {
         const next = gameState._catchUpQueue.shift();
         gameState._lastCatchUpTime = now;
         gameState.triggeredEvents.push(next.id);
+        if (!next.choice1) applyFlagSet(next.flagSet);
         if (next.choice1 && next.choice1Target) {
           gameState.pendingChoiceEvent = {
             eventId: next.id, scenarioId: gameState.scenarioId,
@@ -1306,7 +1332,10 @@ function startGameLoop() {
       }
       const title = getCurrentTitle(currentScenario, gameState.level);
       const storyEvent = findUnusedEvent('story', gameState.level);
-      if (storyEvent) gameState.triggeredEvents.push(storyEvent.id);
+      if (storyEvent) {
+        gameState.triggeredEvents.push(storyEvent.id);
+        if (!storyEvent.choice1) applyFlagSet(storyEvent.flagSet);
+      }
       if (title) {
         currentTitle = title;
         gameState.equippedTitleIndex = currentScenario.titles.indexOf(title);
@@ -1327,10 +1356,14 @@ function startGameLoop() {
     // Ending check — LV500 triggers scenario ending
     if (gameState.level >= 500 && !gameState.triggeredEvents.includes('scenario_ending_' + gameState.scenarioId)) {
       gameState.triggeredEvents.push('scenario_ending_' + gameState.scenarioId);
-      // Find ending event: within current branch, last flag-satisfying story event
+      // Find ending event: within current branch, last flag-satisfying story event.
+      // Prefer conditional endings (flagRequire set); fall back to unconditional
+      // fallback event only when no conditional ending matches.
       const cb = gameState.currentBranch || '';
       const branchPool = currentScenario.events.filter(e => e.type === 'story' && (!e.branch || e.branch === cb));
-      const endingEvent = branchPool.filter(e => checkFlagRequire(e.flagRequire)).pop() || branchPool.pop();
+      const satisfied = branchPool.filter(e => checkFlagRequire(e.flagRequire));
+      const conditional = satisfied.filter(e => e.flagRequire);
+      const endingEvent = (conditional.length > 0 ? conditional[conditional.length - 1] : satisfied[satisfied.length - 1]) || branchPool.pop();
       // Record completion for this branch
       if (!gameState.branchProgress) gameState.branchProgress = {};
       if (!gameState.branchProgress[gameState.scenarioId]) gameState.branchProgress[gameState.scenarioId] = [];
@@ -2708,9 +2741,18 @@ app.whenReady().then(() => {
   if (currentScenario && gameState && !gameState.isInHub && gameState.level > 1) {
     const cb = gameState.currentBranch || '';
     const oldLen = gameState.triggeredEvents.length;
+    // choice target 不迁移（只能由选择触发，否则后续选择会被跳过且 flag 不应用）
+    const allTargetIds = new Set();
+    for (const e of currentScenario.events) {
+      if (e.choice1Target) allTargetIds.add(e.choice1Target);
+      if (e.choice2Target) allTargetIds.add(e.choice2Target);
+      if (e.choice3Target) allTargetIds.add(e.choice3Target);
+      if (e.choice4Target) allTargetIds.add(e.choice4Target);
+    }
     // Add new events that belong to this branch
     const toAdd = currentScenario.events.filter(e =>
       e.once && !gameState.triggeredEvents.includes(e.id) &&
+      !allTargetIds.has(e.id) &&
       e.minLevel && e.minLevel < gameState.level &&
       (!e.branch || e.branch === '' || e.branch === cb)
     );
@@ -2901,6 +2943,7 @@ app.whenReady().then(() => {
     const initEvent = findUnusedEvent('story', gameState.level);
     if (initEvent) {
       gameState.triggeredEvents.push(initEvent.id);
+      if (!initEvent.choice1) applyFlagSet(initEvent.flagSet);
       const title = getCurrentTitle(currentScenario, gameState.level);
       if (initEvent.choice1 && initEvent.choice1Target) {
         const choices = buildChoices(initEvent);

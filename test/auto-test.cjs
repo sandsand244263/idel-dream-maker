@@ -394,7 +394,7 @@ test('同步防回滚', '进度相等不覆盖(内容相同)', mockShouldSkipSyn
 // ── 设备ID检测 ──
 test('设备识别', '相同设备名不触发警告', mockShouldSkipSync('2026-01-01', '2026-01-02', 100, 200), true);
 
-// ── flag 系统（checkFlagRequire v3.7.9 语义） ──
+// ── flag 系统（checkFlagRequire v3.7.11 语义：归一化比较） ──
 function mockCheckFlagRequire(flagRequire, flags) {
   if (!flagRequire) return true;
   const parts = flagRequire.split(/[;&]/);
@@ -412,16 +412,27 @@ function mockCheckFlagRequire(flagRequire, flags) {
       const [, key, opStr, valStr] = match;
       const flagVal = flags[key];
       if (flagVal === undefined) continue;
-      const numA = flagVal === '' ? NaN : Number(flagVal);
-      const numB = valStr.trim() === '' ? NaN : Number(valStr);
+      const valT = valStr.trim();
+      if (opStr === '=' || opStr === '==') {
+        // 归一化比较：布尔 true ↔ '1' ↔ 'true' 等价，布尔 false ↔ '0' ↔ 'false' 等价
+        const norm = v => (typeof v === 'boolean' ? (v ? 'true' : 'false') : String(v).trim());
+        const nv = norm(flagVal);
+        const nt = norm(valT);
+        anyMatch = nv === nt ||
+          (nv === 'true' && nt === '1') || (nv === '1' && nt === 'true') ||
+          (nv === 'false' && nt === '0') || (nv === '0' && nt === 'false');
+        continue;
+      }
+      const normVal = typeof flagVal === 'boolean' ? (flagVal ? 1 : 0) : flagVal;
+      const numA = normVal === '' ? NaN : Number(normVal);
+      const numB = valT === '' ? NaN : Number(valT);
       const numeric = !isNaN(numA) && !isNaN(numB);
       let ok = false;
       switch (opStr) {
-        case '>': ok = numeric ? numA > numB : String(flagVal) > String(valStr).trim(); break;
-        case '>=': ok = numeric ? numA >= numB : String(flagVal) >= String(valStr).trim(); break;
-        case '<': ok = numeric ? numA < numB : String(flagVal) < String(valStr).trim(); break;
-        case '<=': ok = numeric ? numA <= numB : String(flagVal) <= String(valStr).trim(); break;
-        case '==': case '=': ok = String(flagVal) === String(valStr).trim(); break;
+        case '>': ok = numeric ? numA > numB : String(normVal) > valT; break;
+        case '>=': ok = numeric ? numA >= numB : String(normVal) >= valT; break;
+        case '<': ok = numeric ? numA < numB : String(normVal) < valT; break;
+        case '<=': ok = numeric ? numA <= numB : String(normVal) <= valT; break;
       }
       if (ok) anyMatch = true;
     }
@@ -443,14 +454,23 @@ test('flag系统', '& 组合任一缺失=false', mockCheckFlagRequire('a=1&b=2',
 test('flag系统', '| 组合 OR', mockCheckFlagRequire('a=1|b=2', { b: 2 }), true);
 test('flag系统', '数字与字符串比较', mockCheckFlagRequire('fed_wangcai=1', { fed_wangcai: '1' }), true);
 test('flag系统', '未设置flag=false', mockCheckFlagRequire('fed_wangcai=1', {}), false);
+test('flag系统', '布尔true匹配=1(v3.7.11)', mockCheckFlagRequire('fed_wangcai=1', { fed_wangcai: true }), true);
+test('flag系统', '布尔true匹配=true(v3.7.11)', mockCheckFlagRequire('fed_wangcai=true', { fed_wangcai: true }), true);
+test('flag系统', '字符串true匹配=1(v3.7.11)', mockCheckFlagRequire('fed_wangcai=1', { fed_wangcai: 'true' }), true);
+test('flag系统', '数字1匹配=true(v3.7.11)', mockCheckFlagRequire('fed_wangcai=true', { fed_wangcai: 1 }), true);
+test('flag系统', '布尔true不匹配=false(v3.7.11)', mockCheckFlagRequire('saved_ahqiang=false', { saved_ahqiang: true }), false);
+test('flag系统', '布尔false匹配=false(v3.7.11)', mockCheckFlagRequire('saved_ahqiang=false', { saved_ahqiang: false }), true);
+test('flag系统', '字符串false匹配=0(v3.7.11)', mockCheckFlagRequire('saved_ahqiang=0', { saved_ahqiang: 'false' }), true);
 test('flag系统', '空条件=true', mockCheckFlagRequire('', {}), true);
 test('flag系统', 'undefined条件=true', mockCheckFlagRequire(undefined, {}), true);
 
-// ── ending 事件选择（v3.7.9：分支过滤 + 取分支内最后一个满足flag的） ──
+// ── ending 事件选择（v3.7.11：条件结局优先，无条件兜底仅兜底） ──
 function mockPickEnding(events, branch, flags) {
   const cb = branch || '';
   const branchPool = events.filter(e => e.type === 'story' && (!e.branch || e.branch === cb));
-  const ending = branchPool.filter(e => mockCheckFlagRequire(e.flagRequire, flags)).pop() || branchPool.pop();
+  const satisfied = branchPool.filter(e => mockCheckFlagRequire(e.flagRequire, flags));
+  const conditional = satisfied.filter(e => e.flagRequire);
+  const ending = (conditional.length > 0 ? conditional[conditional.length - 1] : satisfied[satisfied.length - 1]) || branchPool.pop();
   return ending ? ending.id : null;
 }
 const mockEvents = [
@@ -458,10 +478,12 @@ const mockEvents = [
   { id: 'e1', type: 'story', branch: 'survivor', flagRequire: '' },
   { id: 'e2', type: 'story', branch: 'survivor', flagRequire: 'saved_ahqiang=false' },
   { id: 'e3', type: 'story', branch: 'merchant', flagRequire: '' },
+  { id: 'e5', type: 'story', branch: 'merchant', flagRequire: 'opened_station=true' },
 ];
 test('ending选择', 'survivor分支取分支内flag满足的最后事件', mockPickEnding(mockEvents, 'survivor', { saved_ahqiang: 'false' }), 'e2');
-test('ending选择', 'survivor分支flag不满足时回退到分支内前一个flag满足事件', mockPickEnding(mockEvents, 'survivor', {}), 'e1');
+test('ending选择', 'survivor分支flag不满足时回退到无条件事件', mockPickEnding(mockEvents, 'survivor', {}), 'e1');
 test('ending选择', 'merchant分支不取survivor事件', mockPickEnding(mockEvents, 'merchant', {}), 'e3');
+test('ending选择', 'merchant条件结局满足时优先于无条件兜底(v3.7.11)', mockPickEnding(mockEvents, 'merchant', { opened_station: true }), 'e5');
 test('ending选择', '无分支事件归属无分支副本', mockPickEnding(mockEvents, '', {}), 'e4');
 
 // ── semver 版本比较（v3.7.9：3.10.0 > 3.9.5） ──
@@ -496,7 +518,7 @@ if (w2) {
   const flagRequireEvents = w2.events.filter(e => e.flagRequire);
   test('内容完整性', 'flagRequire 事件数 > 300', flagRequireEvents.length > 300, true);
   const semi = flagRequireEvents.filter(e => e.flagRequire.includes(';')).length;
-  test('内容完整性', ';分隔条件事件 54 个', semi, 54);
+  test('内容完整性', ';分隔条件事件 > 54（走线变体加 invited_ahqiang=false 后增加）', semi > 54, true);
   const bare = flagRequireEvents.filter(e => !/[=<>;|&]/.test(e.flagRequire)).length;
   test('内容完整性', '裸flag名事件 3 个(AI结局)', bare, 3);
   const aiEnding = w2.events.filter(e => e.id === 'wasteland_e2000a' || e.id === 'wasteland_e2000b' || e.id === 'wasteland_e2000c');

@@ -71,16 +71,27 @@ function checkFlagRequire(flagRequire, flags) {
       const [, key, opStr, valStr] = match;
       const flagVal = flags[key];
       if (flagVal === undefined) continue;
-      const numA = flagVal === '' ? NaN : Number(flagVal);
-      const numB = valStr.trim() === '' ? NaN : Number(valStr);
+      const valT = valStr.trim();
+      if (opStr === '=' || opStr === '==') {
+        // 归一化比较：布尔 true ↔ '1' ↔ 'true' 等价，布尔 false ↔ '0' ↔ 'false' 等价
+        const norm = v => (typeof v === 'boolean' ? (v ? 'true' : 'false') : String(v).trim());
+        const nv = norm(flagVal);
+        const nt = norm(valT);
+        anyMatch = nv === nt ||
+          (nv === 'true' && nt === '1') || (nv === '1' && nt === 'true') ||
+          (nv === 'false' && nt === '0') || (nv === '0' && nt === 'false');
+        continue;
+      }
+      const normVal = typeof flagVal === 'boolean' ? (flagVal ? 1 : 0) : flagVal;
+      const numA = normVal === '' ? NaN : Number(normVal);
+      const numB = valT === '' ? NaN : Number(valT);
       const numeric = !isNaN(numA) && !isNaN(numB);
       let ok = false;
       switch (opStr) {
-        case '>': ok = numeric ? numA > numB : String(flagVal) > String(valStr).trim(); break;
-        case '>=': ok = numeric ? numA >= numB : String(flagVal) >= String(valStr).trim(); break;
-        case '<': ok = numeric ? numA < numB : String(flagVal) < String(valStr).trim(); break;
-        case '<=': ok = numeric ? numA <= numB : String(flagVal) <= String(valStr).trim(); break;
-        case '==': case '=': ok = String(flagVal) === String(valStr).trim(); break;
+        case '>': ok = numeric ? numA > numB : String(normVal) > valT; break;
+        case '>=': ok = numeric ? numA >= numB : String(normVal) >= valT; break;
+        case '<': ok = numeric ? numA < numB : String(normVal) < valT; break;
+        case '<=': ok = numeric ? numA <= numB : String(normVal) <= valT; break;
       }
       if (ok) anyMatch = true;
     }

@@ -2884,6 +2884,7 @@
         "once": true,
         "text": "你尊重他的选择没有开口挽留。第二天早上阿强收拾好行囊站在门口。\"保重。\"他说。你点点头看着他走出大门消失在晨雾中。旺财冲他叫了两声。",
         "branch": "survivor",
+        "flagSet": "invited_ahqiang=false",
         "flagRequire": "fed_wangcai=1"
       },
       {
@@ -2908,7 +2909,7 @@
         "once": true,
         "text": "阿强走后，山谷安静得能听见自己的呼吸。旺财每天在门口坐一阵，像是等他回来。你照旧浇水、砍柴、巡山。日子还是要过，只是夜里火堆边少了个说话的人。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0222",
@@ -2932,7 +2933,7 @@
         "once": true,
         "text": "阿强走了之后山谷安静了许多。你坐在篝火边盯着跳动的火苗，忽然意识到——从今往后，这里真的只有你和旺财了。",
         "branch": "survivor",
-        "flagRequire": "invited_ahqiang=1; fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0223",
@@ -2991,7 +2992,7 @@
         "once": true,
         "text": "你在屋前种了一棵从后山挖来的小树苗。\"不知道能不能活。\"你对旺财说。旺财歪了歪头，然后认真地看着你挖坑、埋土、浇水。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0227",
@@ -3025,7 +3026,8 @@
         "weight": 1,
         "once": true,
         "text": "小树苗活下来了。你蹲在旁边看着那两片嫩叶，伸出手指轻轻碰了碰。它是你在这里种下的第一个活着的东西——你要看着它长大。",
-        "branch": "survivor"
+        "branch": "survivor",
+        "flagRequire": "invited_ahqiang=false"
       },
       {
         "id": "wasteland_e0229",
@@ -3061,7 +3063,7 @@
         "once": true,
         "text": "旺财对那个木骨头爱不释手走到哪儿叼到哪儿。你看着它那股子得意劲儿忍不住笑了——这小东西这辈子还没收过礼物。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0231",
@@ -3118,7 +3120,8 @@
         "weight": 1,
         "once": true,
         "text": "你照着印象中老人说过的方法用细藤编了一张渔网。手艺很糙，网眼大大小小歪歪扭扭，但下到溪里第二天也捞起了两条鱼。",
-        "branch": "survivor"
+        "branch": "survivor",
+        "flagRequire": "invited_ahqiang=false"
       },
       {
         "id": "wasteland_e0235",
@@ -3142,7 +3145,7 @@
         "once": true,
         "text": "你烤了两条鱼，和旺财分着吃。没有人和你说话，但溪水声和旺财吧唧嘴的声音让这个傍晚也不算太冷清。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0236",
@@ -3166,7 +3169,7 @@
         "once": true,
         "text": "你开始用炭笔在木板上记录山谷里的每一天——天气、收成、旺财的状态。你想了想，在末尾加了一句\"今天也想不起他的脸了\"。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0237",
@@ -3190,7 +3193,7 @@
         "once": true,
         "text": "你一个人去巡山，回来时旺财在门口等你，尾巴摇得像风车。你把新摘的果子分它一半，坐在门槛上啃着。日子单调，但你知道自己在好好活着——这比什么都重要。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0238",
@@ -3214,7 +3217,7 @@
         "once": true,
         "text": "你花了两天时间给自己打了一张新床。原来的草垫子睡得太久了，腰背开始抗议。新床虽然歪了点但躺上去舒服多了。旺财跳上来试了试，赖着不走。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0239",
@@ -3237,7 +3240,8 @@
         "weight": 1,
         "once": true,
         "text": "你用剩下的兽皮给自己缝了一副手套。针脚歪歪扭扭，食指部分还缝反了，但戴上去那一刻掌心传来的暖意让你愣了一下——这是你自己做的。",
-        "branch": "survivor"
+        "branch": "survivor",
+        "flagRequire": "invited_ahqiang=false"
       },
       {
         "id": "wasteland_e0240",
@@ -3272,7 +3276,7 @@
         "once": true,
         "text": "你坐在门槛上哼起一段模糊的调子——那是阿强走之前哼过的那首歌。你只记得一句\"翻过那座山，前面就是家\"，翻来覆去地哼。",
         "branch": "survivor",
-        "flagRequire": "invited_ahqiang=1"
+        "flagRequire": "invited_ahqiang=false"
       },
       {
         "id": "wasteland_e0242",
@@ -3296,7 +3300,7 @@
         "once": true,
         "text": "你试着教旺财哼那首歌——当然它不会。但你哼的时候它把头歪过来靠在你肩膀上，安安静静地听着。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0243",
@@ -3343,7 +3347,7 @@
         "once": true,
         "text": "你一个人坐在屋顶上看星星。旺财趴在旁边，下巴搁在瓦片上，眼睛半闭着。你对着夜空说了一句\"今晚星星真多\"，没有人回答。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0246",
@@ -3366,7 +3370,8 @@
         "weight": 1,
         "once": true,
         "text": "你看着满天繁星，心里忽然冒出一个问题——从核战那天起，你有好好看过星星吗？在避难所里你根本看不到。现在你看到了，却没人可以说了。",
-        "branch": "survivor"
+        "branch": "survivor",
+        "flagRequire": "invited_ahqiang=false"
       },
       {
         "id": "wasteland_e0247",
@@ -3389,7 +3394,8 @@
         "weight": 1,
         "once": true,
         "text": "你想象着核战前有人背着猎枪躺在草地上看星星的样子——那是你从来没有见过、也无法想象的世界。你只知道废土的星星，但也够美了。",
-        "branch": "survivor"
+        "branch": "survivor",
+        "flagRequire": "invited_ahqiang=false"
       },
       {
         "id": "wasteland_e0248",
@@ -3413,7 +3419,7 @@
         "once": true,
         "text": "你在屋顶上坐了很久不想下去。夜风有点凉，你裹紧了外套。旺财已经睡熟了，肚皮随着呼吸轻轻起伏。这个山谷就只有你们俩了。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0249",
@@ -3483,7 +3489,7 @@
         "once": true,
         "text": "你在后山坡发现了一片野莓丛，紫色浆果挂满枝头。你一个人摘了满满一篮子，旺财凑过来舔你手指上沾的果汁，舌头粗糙而温热。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0254",
@@ -3519,7 +3525,7 @@
         "once": true,
         "text": "你用存粮烤了两个面饼，一个给旺财尝了尝。它咬了一口就吐出来——太硬了。你苦笑了一下，自己慢慢啃完了。要是阿强在，他肯定会说\"硬了点但比啃树皮强\"。",
         "branch": "survivor",
-        "flagRequire": "invited_ahqiang=1; fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0256",
@@ -3555,7 +3561,7 @@
         "once": true,
         "text": "你学着阿强的手法编了一把躺椅。手艺差得远，坐上去吱呀乱响，但你懒得再改了。傍晚你躺上去看天，旺财叼着木骨头跳到你肚子上——至少这狗不嫌你手艺差。",
         "branch": "survivor",
-        "flagRequire": "invited_ahqiang=1; fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0258",
@@ -3579,7 +3585,7 @@
         "once": true,
         "text": "山谷的夜空铺满星星。你一个人辨认星座——北斗七星、猎户座，你只能认出这两个。你试图像阿强那样给星星编废土名字，但想了半天也没想出来。",
         "branch": "survivor",
-        "flagRequire": "invited_ahqiang=1"
+        "flagRequire": "invited_ahqiang=false"
       },
       {
         "id": "wasteland_e0259",
@@ -3614,7 +3620,8 @@
         "weight": 1,
         "once": true,
         "text": "你蹲在溪边盯着水流看了很久，想不出鱼坝该怎么垒。阿强在的时候你从没操心过这些事。你站起来拍了拍膝盖上的土——明天先搬石头再说。",
-        "branch": "survivor"
+        "branch": "survivor",
+        "flagRequire": "invited_ahqiang=false"
       },
       {
         "id": "wasteland_e0261",
@@ -3638,7 +3645,7 @@
         "once": true,
         "text": "你卷起裤腿站在冰凉的溪水里，一块一块搬石头垒鱼坝。旺财在岸边来回跑，激动地叫唤着给你喊号子。没有人搭把手，你的手被石头磨破了皮，但鱼坝的雏形总算出来了。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0261b",
@@ -3673,7 +3680,8 @@
         "weight": 1,
         "once": true,
         "text": "鱼坝建好的第一天就拦住了两条鱼。你伸手从水里捞出来，举到阳光下——银色的鳞片还在发光。没有人看到这一刻，但你对着手里的鱼笑了笑。",
-        "branch": "survivor"
+        "branch": "survivor",
+        "flagRequire": "invited_ahqiang=false"
       },
       {
         "id": "wasteland_e0263",
@@ -3697,7 +3705,7 @@
         "once": true,
         "text": "你试着用松枝熏鱼，方法全靠自己琢磨。鱼挂在棚子里滴着油，香味飘出很远。旺财蹲在门口不肯走，鼻头一抽一抽的。你也不赶它——有它在旁边守着，这鱼好像就成功了一半。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0264",
@@ -3720,7 +3728,8 @@
         "weight": 1,
         "once": true,
         "text": "你在菜地边又搭了一个工具棚。一个人搬木料、削木桩、钉钉子，干到天黑才把架子立起来。你直起腰捶了捶后背，借着月光看了看——歪是歪了点，但不会倒。",
-        "branch": "survivor"
+        "branch": "survivor",
+        "flagRequire": "invited_ahqiang=false"
       },
       {
         "id": "wasteland_e0265",
@@ -3802,7 +3811,8 @@
         "weight": 1,
         "once": true,
         "text": "你在后山打到一只野山羊。拖回山谷的路上你在它倒下的地方坐了一会儿，喘匀了气才开始动手剥皮。你把羊皮鞣好铺在床上躺上去试了试——比草垫子暖和多了。",
-        "branch": "survivor"
+        "branch": "survivor",
+        "flagRequire": "invited_ahqiang=false"
       },
       {
         "id": "wasteland_e0271",
@@ -3837,7 +3847,8 @@
         "weight": 1,
         "once": true,
         "text": "你一个人忙了三天。干柴堆成小山，食物棚塞得满满当当。你搓了搓冻僵的手坐在地上歇了口气——以前阿强在的时候，他负责说\"够了够了\"，你负责继续塞。现在没人说够了，你反而不知道什么时候才算够。",
-        "branch": "survivor"
+        "branch": "survivor",
+        "flagRequire": "invited_ahqiang=false"
       },
       {
         "id": "wasteland_e0273",
@@ -3885,7 +3896,7 @@
         "once": true,
         "text": "你用匕首在木板上刻了一个小狗的轮廓——照着旺财的样子。手艺糙但心意到了。你把它挂在床头，旺财抬头看了看画像歪了歪脑袋，然后舔了舔你的手指。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0276",
@@ -3949,7 +3960,6 @@
         "choice3": "不去",
         "choice3Target": "wasteland_e0280c",
         "branch": "survivor",
-        "flagSet": "went_to_tower",
         "flagRequire": "invited_ahqiang=1; fed_wangcai=1"
       },
       {
@@ -3966,7 +3976,6 @@
         "choice2": "不去",
         "choice2Target": "wasteland_e0280c",
         "branch": "survivor",
-        "flagSet": "went_to_tower",
         "flagRequire": "fed_wangcai=1"
       },
       {
@@ -3979,6 +3988,7 @@
         "once": true,
         "text": "你、旺财和阿强三人踏雪出发。旺财在前面开路，阿强背着猎枪走中间，你在最后压阵。三个人的脚印在雪地上延伸向远方。",
         "branch": "survivor",
+        "flagSet": "went_to_tower",
         "flagRequire": "invited_ahqiang=1; fed_wangcai=1"
       },
       {
@@ -3991,6 +4001,7 @@
         "once": true,
         "text": "你独自背上背包走出山谷。阿强留在山谷照看家园，旺财在谷口看着你走远，发出一声长长的呜咽。你回头朝它笑了笑让它回去。",
         "branch": "survivor",
+        "flagSet": "went_to_tower",
         "flagRequire": "invited_ahqiang=1; fed_wangcai=1"
       },
       {
@@ -4003,6 +4014,7 @@
         "once": true,
         "text": "你背上背包，最后检查了一遍木屋的门窗。旺财站在谷口等你，尾巴摇了摇像是在说\"走吧\"。你锁好门，带着旺财踏上了前往铁塔的路。",
         "branch": "survivor",
+        "flagSet": "went_to_tower",
         "flagRequire": "fed_wangcai=1"
       },
       {
@@ -4051,7 +4063,7 @@
         "once": true,
         "text": "你在炉子上煮了一锅野菜肉汤，蒸汽在窗户上凝成水珠。你给旺财也盛了一碗凉的，它脑袋扎进碗里喝得吧嗒响。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0283",
@@ -4075,7 +4087,7 @@
         "once": true,
         "text": "深夜你推开门——满天的极光在头顶舞动，绿色和紫色的光带如水波般流转。旺财跑出屋仰头看着天空，汪汪叫了两声。你蹲下来抱住它一起看。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0284",
@@ -4133,7 +4145,7 @@
         "once": true,
         "text": "你一个人翻地播种，旺财在田埂上走来走去监督进度。你直起腰擦了擦汗心想今年多种点能存到明年——这是你一个人的计划了。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0288",
@@ -4169,7 +4181,7 @@
         "once": true,
         "text": "冬天摧残过的木屋需要修缮。你一个人爬上屋顶换掉破损的木板，旺财在下面叼着钉子盒跑来跑去。没人帮你递料你就多爬了几趟。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0290",
@@ -4229,7 +4241,7 @@
         "once": true,
         "text": "你坐在门口用石头磨刀，刀刃在阳光下闪着寒光。旺财趴在你脚边，尾巴有一搭没一搭地拍着地面。你忽然想——要是有人在旁边说句话就好了。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0294",
@@ -4253,7 +4265,7 @@
         "once": true,
         "text": "日子像溪水一样不紧不慢地流着。你每天巡逻、种地、打猎、做饭。旺财寸步不离地跟着你。没有人在另一头忙别的事——只有你们两个。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0295",
@@ -4276,7 +4288,8 @@
         "weight": 1,
         "once": true,
         "text": "你用现有的材料做了一把新弓，比之前那把拉起来顺手多了。你拉了拉弦试了试手感，心想这弓要是有人能夸一句就好了。",
-        "branch": "survivor"
+        "branch": "survivor",
+        "flagRequire": "invited_ahqiang=false"
       },
       {
         "id": "wasteland_e0296",
@@ -4300,7 +4313,7 @@
         "once": true,
         "text": "你在篝火边想起了阿强讲的那些故事——干翻五条变异狼、年轻时穿过盐碱地。你试着把这些故事讲给旺财听，它歪着头好像在听。",
         "branch": "survivor",
-        "flagRequire": "invited_ahqiang=1; fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0297",
@@ -4324,7 +4337,7 @@
         "once": true,
         "text": "你坐在篝火边想起以前每次揭穿阿强故事漏洞时他假装生气的样子，忍不住笑了一下。旺财抬头看你，尾巴摇了摇。",
         "branch": "survivor",
-        "flagRequire": "invited_ahqiang=1; fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0298",
@@ -4348,7 +4361,7 @@
         "once": true,
         "text": "你从溪边打水回来，看到自家门口旺财趴在阳光下。阿强的小屋还在那里，但门已经关了很久了。你停住脚步站在谷中——这里仍然是家。",
         "branch": "survivor",
-        "flagRequire": "invited_ahqiang=1; fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0299",
@@ -4372,7 +4385,7 @@
         "once": true,
         "text": "夏夜的山谷蛙鸣虫叫热闹非凡。你和旺财在屋外乘凉，旺财趴在旁边吐着舌头。你自言自语说这日子也算不错了——虽然没有人和你搭话。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0300",
@@ -4420,7 +4433,7 @@
         "once": true,
         "text": "旺财对着谷口的方向竖起耳朵发出低沉的呜咽。你拿起望远镜——远处的山坡上有几个人影在移动。没有阿强在旁边出主意，你只能自己判断该怎么做。",
         "branch": "survivor",
-        "flagRequire": "invited_ahqiang=1; fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0302b",
@@ -4480,7 +4493,7 @@
         "once": true,
         "text": "你一个人在谷口增设了陷阱——深坑、绊索、尖刺排。旺财跟在你身边似乎也明白气氛不对。活干得慢但总比不干强。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0306",
@@ -4552,7 +4565,7 @@
         "once": true,
         "text": "你坐在桌边一颗一颗地压子弹，旺财趴在门边耳朵转动着听外面的动静。只有你和它了。你摸了摸它的头轻声说别怕。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0311",
@@ -4622,7 +4635,7 @@
         "once": true,
         "text": "那些人在山谷外围停留了两天。你和旺财躲在屋里不敢生火，夜里冷得发抖也不敢发出声响。你第一次强烈地感到一个人的局限。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0316",
@@ -4812,6 +4825,12 @@
         "weight": 1,
         "once": true,
         "text": "黎明前的黑暗笼罩着山谷。掠夺者的营地隐隐透出火光。阿强压低声音问你怎么干。你有三条路。",
+        "choice1": "放下武器谈判",
+        "choice1Target": "wasteland_e0330a",
+        "choice2": "开火打回去",
+        "choice2Target": "wasteland_e0330b",
+        "choice3": "撤退保家",
+        "choice3Target": "wasteland_e0330c",
         "branch": "survivor",
         "flagRequire": "invited_ahqiang=1"
       },
@@ -4824,7 +4843,8 @@
         "weight": 1,
         "once": true,
         "text": "山谷恢复了平静。你在谷口加固了防御工事，花了好几天时间。活都是一个人干的——慢，但每一锤每一钉都让你觉得这个家更安全。",
-        "branch": "survivor"
+        "branch": "survivor",
+        "flagRequire": "invited_ahqiang=false"
       },
       {
         "id": "wasteland_e0330a",
@@ -4992,7 +5012,7 @@
         "once": true,
         "text": "黄昏你和旺财坐在门口看着夕阳。你忽然意识到——你已经一个人撑过了好几个月。没有阿强帮忙，你也活下来了。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1; invited_ahqiang=1"
+        "flagRequire": "fed_wangcai=1; invited_ahqiang=false"
       },
       {
         "id": "wasteland_e0340b",
@@ -5135,7 +5155,7 @@
         "once": true,
         "text": "沙尘暴来的那晚你一个人抱着旺财缩在屋角。风声尖利得像鬼哭，屋顶咯吱作响。你咬着牙对自己说——你可以的。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0351",
@@ -5265,7 +5285,7 @@
         "once": true,
         "text": "风暴过后屋顶漏了一个大洞。你一个人爬上爬下修补，旺财在下面帮你递木条。活干完的时候你累得瘫在椅子上但屋顶不漏了。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0361",
@@ -5397,7 +5417,7 @@
         "once": true,
         "text": "日子又恢复了节奏。你一个人巡逻、种地、打猎、做饭。旺财依然寸步不离。偶尔你会对着空气说句话——然后自己笑自己。",
         "branch": "survivor",
-        "flagRequire": "fed_wangcai=1"
+        "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
         "id": "wasteland_e0370b",
@@ -5526,6 +5546,12 @@
         "weight": 1,
         "once": true,
         "text": "阿强的呼吸越来越微弱。你知道已经到了必须做决定的时刻——是冲进沙尘中寻找那丝救命的药草还是保护仅剩的物资还是带着旺财躲进山洞保全自己。你的每一个选择都将改变一切。",
+        "choice1": "冲进沙尘找药",
+        "choice1Target": "wasteland_e0380a",
+        "choice2": "抢救物资",
+        "choice2Target": "wasteland_e0380b",
+        "choice3": "躲进山洞",
+        "choice3Target": "wasteland_e0380c",
         "branch": "survivor",
         "flagRequire": "invited_ahqiang=1; fed_wangcai=1"
       },
@@ -5539,7 +5565,7 @@
         "once": true,
         "text": "你站在山谷中央，回想起阿强走之前的那个晚上。他问你想留他吗——你说尊重他的选择。现在你依然不后悔那个决定。每个人都有自己的路。",
         "branch": "survivor",
-        "flagRequire": "invited_ahqiang=1"
+        "flagRequire": "invited_ahqiang=false"
       },
       {
         "id": "wasteland_e0380a",
@@ -5564,7 +5590,7 @@
         "once": true,
         "text": "你跪在阿强身边看了他最后一眼然后转身去抢救物资。你的手在颤抖但你告诉自己——活着的人还要活下去。旺财没有跟你走它守在阿强身边。",
         "branch": "survivor",
-        "flagSet": "saved_supplies",
+        "flagSet": "saved_supplies; saved_ahqiang=false",
         "flagRequire": "fed_wangcai=1"
       },
       {
@@ -6073,7 +6099,6 @@
         "choice2": "留在山谷",
         "choice2Target": "wasteland_e0420b",
         "branch": "survivor",
-        "flagSet": "carried_wangcai",
         "flagRequire": "fed_wangcai=1"
       },
       {
@@ -6086,6 +6111,7 @@
         "once": true,
         "text": "你把旺财轻轻裹进一件旧衣服里背着它走出了山谷。每走几步你就回头看一眼。山谷在晨光中慢慢缩小最后消失在地平线后面。",
         "branch": "survivor",
+        "flagSet": "carried_wangcai",
         "flagRequire": "fed_wangcai=1"
       },
       {
@@ -6814,8 +6840,7 @@
         "choice1Target": "wasteland_e0480a",
         "choice2": "留在荒野",
         "choice2Target": "wasteland_e0480b",
-        "branch": "survivor",
-        "flagSet": "went_to_tower"
+        "branch": "survivor"
       },
       {
         "id": "wasteland_e0480a",
@@ -6826,7 +6851,8 @@
         "weight": 1,
         "once": true,
         "text": "你调整了方向朝铁塔走去。步子不快不慢像赴一个迟到了很久的约。风从塔的方向吹来带来的只有废土的味道。但那不重要了——你在走向自己的答案。",
-        "branch": "survivor"
+        "branch": "survivor",
+        "flagSet": "went_to_tower"
       },
       {
         "id": "wasteland_e0480b",
@@ -7796,8 +7822,7 @@
         "choice1Target": "wasteland_e0560a",
         "choice2": "给他干粮让他走",
         "choice2Target": "wasteland_e0560b",
-        "branch": "merchant",
-        "flagSet": "hired_helper=true"
+        "branch": "merchant"
       },
       {
         "id": "wasteland_e0560a",
@@ -7808,7 +7833,8 @@
         "weight": 1,
         "once": true,
         "text": "你让那个叫阿强的年轻人留下帮忙。他力气大手脚麻利，干完活还不肯走",
-        "branch": "merchant"
+        "branch": "merchant",
+        "flagSet": "hired_helper=true"
       },
       {
         "id": "wasteland_e0560b",
@@ -7819,7 +7845,8 @@
         "weight": 1,
         "once": true,
         "text": "你给想找活的年轻人留了些干粮，告诉他以后有缘再说。他默默收下了",
-        "branch": "merchant"
+        "branch": "merchant",
+        "flagSet": "hired_helper=false"
       },
       {
         "id": "wasteland_e0561",
@@ -8153,8 +8180,7 @@
         "choice1Target": "wasteland_e0590a",
         "choice2": "给物资让他自己走",
         "choice2Target": "wasteland_e0590b",
-        "branch": "merchant",
-        "flagSet": "saved_fugitive=true"
+        "branch": "merchant"
       },
       {
         "id": "wasteland_e0590a",
@@ -8165,7 +8191,8 @@
         "weight": 1,
         "once": true,
         "text": "你把逃亡者带回渣客镇包扎伤口。他缓过来后说有人追杀他，求你们不要报信",
-        "branch": "merchant"
+        "branch": "merchant",
+        "flagSet": "saved_fugitive=true"
       },
       {
         "id": "wasteland_e0590b",
@@ -8620,8 +8647,7 @@
         "choice1Target": "wasteland_e0630a",
         "choice2": "给货保平安",
         "choice2Target": "wasteland_e0630b",
-        "branch": "merchant",
-        "flagSet": "armed_resistance=true"
+        "branch": "merchant"
       },
       {
         "id": "wasteland_e0630a",
@@ -8632,7 +8658,8 @@
         "weight": 1,
         "once": true,
         "text": "你抄起扳手和阿珍一起反击。土匪没想到你们会动手，被打跑了三个",
-        "branch": "merchant"
+        "branch": "merchant",
+        "flagSet": "armed_resistance=true"
       },
       {
         "id": "wasteland_e0630b",
@@ -9087,8 +9114,7 @@
         "choice1Target": "wasteland_e0670a",
         "choice2": "别管继续赶路",
         "choice2Target": "wasteland_e0670b",
-        "branch": "merchant",
-        "flagSet": "fed_wangcai=true"
+        "branch": "merchant"
       },
       {
         "id": "wasteland_e0670a",
@@ -9099,7 +9125,8 @@
         "weight": 1,
         "once": true,
         "text": "你扔给它一块干肉。它叼到远处狼吞虎咽吃下去，吃完后远远跟了你们一程",
-        "branch": "merchant"
+        "branch": "merchant",
+        "flagSet": "fed_wangcai=true"
       },
       {
         "id": "wasteland_e0670b",
@@ -9664,8 +9691,7 @@
         "choice1Target": "wasteland_e0720a",
         "choice2": "只设仓库不留人",
         "choice2Target": "wasteland_e0720b",
-        "branch": "merchant",
-        "flagSet": "opened_station=true"
+        "branch": "merchant"
       },
       {
         "id": "wasteland_e0720a",
@@ -9676,7 +9702,8 @@
         "weight": 1,
         "once": true,
         "text": "你和刘叔在十字路口合伙建了一座驿站，供往来的商队歇脚补货",
-        "branch": "merchant"
+        "branch": "merchant",
+        "flagSet": "opened_station=true"
       },
       {
         "id": "wasteland_e0720b",
@@ -9687,7 +9714,8 @@
         "weight": 1,
         "once": true,
         "text": "你在十字路口建了一座带锁的仓库，委托路过的商队头目代管钥匙",
-        "branch": "merchant"
+        "branch": "merchant",
+        "flagSet": "opened_station=false"
       },
       {
         "id": "wasteland_e0721",
@@ -17424,7 +17452,7 @@
         "once": true,
         "text": "你做出了选择，继续向前走去。废土上的每一步都是未知，但你已经习惯了。",
         "branch": "fugitive",
-        "flagSet": "fugitive_letlive"
+        "flagSet": "fugitive_letlive; killed_boss=false"
       },
       {
         "id": "wasteland_e1381",
@@ -24628,6 +24656,17 @@
         "completionTitle": "不离不弃"
       },
       {
+        "id": "wasteland_e2007a",
+        "type": "story",
+        "minLevel": 500,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "风沙掠过山谷，把你走过的路一层层盖住。你回头看了一眼这个你曾以为会住一辈子的地方，然后转身继续走。废土没有终点，但你知道——你已经是自己的家。",
+        "branch": "survivor"
+      },
+      {
         "id": "wasteland_e2008",
         "type": "story",
         "minLevel": 500,
@@ -24650,6 +24689,7 @@
         "once": true,
         "text": "你没有雇用那个年轻人。你和阿珍两个人撑起了整条商路虽然累但每一步都踏实。蓝色碎布旗在风中飘扬的时候你知道这是你们两个人一砖一瓦建起来的东西——不需要别人。",
         "branch": "merchant",
+        "flagRequire": "hired_helper=false",
         "completionTitle": "独行商"
       },
       {
@@ -24701,6 +24741,7 @@
         "once": true,
         "text": "你没有建驿站只设了一个带锁的仓库。路过的商队自己存取货物留下字条。你的名字没有刻在任何招牌上但每一个使用过仓库的人都知道——这条路中间有一个可以信赖的地方。无名本身就是最好的名声。",
         "branch": "merchant",
+        "flagRequire": "opened_station=false",
         "completionTitle": "无名仓库"
       },
       {
@@ -24936,6 +24977,17 @@
         "branch": "fugitive",
         "flagRequire": "left_marker=true",
         "completionTitle": "留痕者"
+      },
+      {
+        "id": "wasteland_e2031a",
+        "type": "story",
+        "minLevel": 500,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "白塔的废墟在身后渐渐远去。你没有回头，也没有停下。编号烧掉了，名字也换过几个——但你还活着，走着，像是要把整片废土走成一条回家的路。",
+        "branch": "fugitive"
       },
       {
         "id": "wasteland_e2032",

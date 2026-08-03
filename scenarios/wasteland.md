@@ -339,153 +339,153 @@ max_rebirth: 0
 | wasteland_e0219 | story | 219 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 晚上你们照例生起篝火。阿强坐左边你坐右边旺财趴中间。篝火噼啪作响火星升入夜空。谁都没说话但什么都不缺。 |
 | wasteland_e0220 | story | 220 | 0 | 1 | 是 | survivor |  |  |  | 开口留他一起住 | wasteland_e0220a | 尊重他的选择 | wasteland_e0220b |  |  |  |  |  | 阿强坐在篝火边沉默了很久然后说他想继续往东边走走。"我这个人停不下来。"他说。你想留他。要不要开口？ |
 | wasteland_e0220a | story | 220 | 0 | 1 | 是 | survivor | invited_ahqiang |  |  |  |  |  |  |  |  |  |  |  | 你开口挽留他。阿强沉默了很久，看着篝火说："其实我也想留下来。"他笑了一下，"就是怕给人添麻烦。"你拍了一下他的肩膀。 |
-| wasteland_e0220b | story | 220 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你尊重他的选择没有开口挽留。第二天早上阿强收拾好行囊站在门口。"保重。"他说。你点点头看着他走出大门消失在晨雾中。旺财冲他叫了两声。 |
+| wasteland_e0220b | story | 220 | 0 | 1 | 是 | survivor | invited_ahqiang=false | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你尊重他的选择没有开口挽留。第二天早上阿强收拾好行囊站在门口。"保重。"他说。你点点头看着他走出大门消失在晨雾中。旺财冲他叫了两声。 |
 | wasteland_e0221 | story | 221 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强留下的第二天，天刚亮他就起来劈柴，柴火堆得比屋檐还高。你端着粥站在门口看了好一会儿。他说既然要住下，就不能白吃你的。山谷里多了个说话的人，连风都显得没那么寂寥。 |
-| wasteland_e0221a | story | 221 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 阿强走后，山谷安静得能听见自己的呼吸。旺财每天在门口坐一阵，像是等他回来。你照旧浇水、砍柴、巡山。日子还是要过，只是夜里火堆边少了个说话的人。 |
+| wasteland_e0221a | story | 221 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 阿强走后，山谷安静得能听见自己的呼吸。旺财每天在门口坐一阵，像是等他回来。你照旧浇水、砍柴、巡山。日子还是要过，只是夜里火堆边少了个说话的人。 |
 | wasteland_e0222 | story | 222 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强终于抬起头——他的表情已经说明了一切。不管他走还是留这个山谷对他来说已经不一样了。 |
-| wasteland_e0222a | story | 222 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 阿强走了之后山谷安静了许多。你坐在篝火边盯着跳动的火苗，忽然意识到——从今往后，这里真的只有你和旺财了。 |
+| wasteland_e0222a | story | 222 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 阿强走了之后山谷安静了许多。你坐在篝火边盯着跳动的火苗，忽然意识到——从今往后，这里真的只有你和旺财了。 |
 | wasteland_e0223 | story | 223 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 日子像溪水一样不紧不慢地流过。你每天给菜地浇水、修理工具、巡逻山谷。旺财跟在你脚边形影不离。 |
 | wasteland_e0224 | story | 224 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你用柔韧的藤条编了几个筐子——装菜装果子装杂物都好用。虽然编得歪歪扭扭但结实耐用。 |
 | wasteland_e0225 | story | 225 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 旺财的皮毛在阳光下泛着健康的光泽。它比以前胖了一些但跑起来依然敏捷。你看着它从瘦骨嶙峋变成现在的样子。 |
 | wasteland_e0226 | story | 226 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强在屋前种了一棵从后山挖来的小树苗。"不知道能不能活。"他说。你们一起给它浇了水。 |
-| wasteland_e0226a | story | 226 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你在屋前种了一棵从后山挖来的小树苗。"不知道能不能活。"你对旺财说。旺财歪了歪头，然后认真地看着你挖坑、埋土、浇水。 |
+| wasteland_e0226a | story | 226 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你在屋前种了一棵从后山挖来的小树苗。"不知道能不能活。"你对旺财说。旺财歪了歪头，然后认真地看着你挖坑、埋土、浇水。 |
 | wasteland_e0227 | story | 227 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你每天路过的时候都给那棵小树苗浇一瓢水。一周过去它不但没死反而长出了两片新叶。 |
 | wasteland_e0228 | story | 228 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 小树苗活下来了。在废土上每一棵活下来的树都是奇迹。阿强蹲在旁边看了一会儿没说话但嘴角有一丝笑意。 |
-| wasteland_e0228a | story | 228 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 小树苗活下来了。你蹲在旁边看着那两片嫩叶，伸出手指轻轻碰了碰。它是你在这里种下的第一个活着的东西——你要看着它长大。 |
+| wasteland_e0228a | story | 228 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false |  |  |  |  |  |  |  |  |  |  | 小树苗活下来了。你蹲在旁边看着那两片嫩叶，伸出手指轻轻碰了碰。它是你在这里种下的第一个活着的东西——你要看着它长大。 |
 | wasteland_e0229 | story | 229 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你用边角料给旺财刻了一个小骨头形状的木块。旺财兴奋地叼着它在山谷里疯跑了几圈然后叼回来放在你膝盖上。 |
 | wasteland_e0230 | story | 230 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 旺财对那个木骨头爱不释手走到哪儿叼到哪儿。阿强看了哈哈大笑说它这辈子没收过礼物。 |
-| wasteland_e0230a | story | 230 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 旺财对那个木骨头爱不释手走到哪儿叼到哪儿。你看着它那股子得意劲儿忍不住笑了——这小东西这辈子还没收过礼物。 |
+| wasteland_e0230a | story | 230 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 旺财对那个木骨头爱不释手走到哪儿叼到哪儿。你看着它那股子得意劲儿忍不住笑了——这小东西这辈子还没收过礼物。 |
 | wasteland_e0231 | story | 231 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 远处的天际线上出现了一缕细细的烟。你拿起望远镜——距离很远判断不出是篝火还是山火。你们决定不去靠近。 |
 | wasteland_e0232 | story | 232 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你们达成了默契——不主动接触外面的人。山谷是一个秘密，知道的人越少越安全。 |
 | wasteland_e0233 | story | 233 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你在溪边找了一块平整的大石头当做洗衣台用。旺财喜欢趴在上面晒太阳，石头被晒得暖烘烘的。 |
 | wasteland_e0234 | story | 234 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强用细藤编了一张渔网。你们在溪流最宽的地方下网，第二天早上捞起来——网里蹦着好几条大鱼。 |
-| wasteland_e0234a | story | 234 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你照着印象中老人说过的方法用细藤编了一张渔网。手艺很糙，网眼大大小小歪歪扭扭，但下到溪里第二天也捞起了两条鱼。 |
+| wasteland_e0234a | story | 234 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false |  |  |  |  |  |  |  |  |  |  | 你照着印象中老人说过的方法用细藤编了一张渔网。手艺很糙，网眼大大小小歪歪扭扭，但下到溪里第二天也捞起了两条鱼。 |
 | wasteland_e0235 | story | 235 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 今晚吃鱼。你烤了三条炖了两条。旺财也分到了一大块没刺的鱼肉。阿强说这日子比他过去六十年加起来都安逸。 |
-| wasteland_e0235a | story | 235 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你烤了两条鱼，和旺财分着吃。没有人和你说话，但溪水声和旺财吧唧嘴的声音让这个傍晚也不算太冷清。 |
+| wasteland_e0235a | story | 235 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你烤了两条鱼，和旺财分着吃。没有人和你说话，但溪水声和旺财吧唧嘴的声音让这个傍晚也不算太冷清。 |
 | wasteland_e0236 | story | 236 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你开始用炭笔在木板上记录山谷里的每一天——天气、收成、旺财的状态、阿强讲的故事。 |
-| wasteland_e0236a | story | 236 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你开始用炭笔在木板上记录山谷里的每一天——天气、收成、旺财的状态。你想了想，在末尾加了一句"今天也想不起他的脸了"。 |
+| wasteland_e0236a | story | 236 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你开始用炭笔在木板上记录山谷里的每一天——天气、收成、旺财的状态。你想了想，在末尾加了一句"今天也想不起他的脸了"。 |
 | wasteland_e0237 | story | 237 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 你开始教阿强认那些可以吃的野菜。他学得认真，每认一棵都要问三遍才肯放心。旺财蹲在旁边监督似的看着你们。你忽然觉得，这种日子多过一天，都是赚的。 |
-| wasteland_e0237a | story | 237 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你一个人去巡山，回来时旺财在门口等你，尾巴摇得像风车。你把新摘的果子分它一半，坐在门槛上啃着。日子单调，但你知道自己在好好活着——这比什么都重要。 |
+| wasteland_e0237a | story | 237 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你一个人去巡山，回来时旺财在门口等你，尾巴摇得像风车。你把新摘的果子分它一半，坐在门槛上啃着。日子单调，但你知道自己在好好活着——这比什么都重要。 |
 | wasteland_e0238 | story | 238 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强说他的小屋还缺一张床。你们一起砍树锯木板用了两天时间给他做了一张结实的木床。他试躺了一下就不想起来了。 |
-| wasteland_e0238a | story | 238 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你花了两天时间给自己打了一张新床。原来的草垫子睡得太久了，腰背开始抗议。新床虽然歪了点但躺上去舒服多了。旺财跳上来试了试，赖着不走。 |
+| wasteland_e0238a | story | 238 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你花了两天时间给自己打了一张新床。原来的草垫子睡得太久了，腰背开始抗议。新床虽然歪了点但躺上去舒服多了。旺财跳上来试了试，赖着不走。 |
 | wasteland_e0239 | story | 239 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强用兽皮做了一副手套送给你。"冬天快到了。"他说。你想了想废土上确实有季节变化只是你不记得现在是几月了。 |
-| wasteland_e0239a | story | 239 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你用剩下的兽皮给自己缝了一副手套。针脚歪歪扭扭，食指部分还缝反了，但戴上去那一刻掌心传来的暖意让你愣了一下——这是你自己做的。 |
+| wasteland_e0239a | story | 239 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false |  |  |  |  |  |  |  |  |  |  | 你用剩下的兽皮给自己缝了一副手套。针脚歪歪扭扭，食指部分还缝反了，但戴上去那一刻掌心传来的暖意让你愣了一下——这是你自己做的。 |
 | wasteland_e0240 | story | 240 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你们开始为接下来的季节做准备——多打一些猎物、多存一些干柴、把屋顶加固一遍。 |
 | wasteland_e0241 | story | 241 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强坐在门槛上哼起一首老歌。调子很旧歌词他已经记不全了只剩下几句"翻过那座山，前面就是家"。 |
-| wasteland_e0241a | story | 241 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 你坐在门槛上哼起一段模糊的调子——那是阿强走之前哼过的那首歌。你只记得一句"翻过那座山，前面就是家"，翻来覆去地哼。 |
+| wasteland_e0241a | story | 241 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false |  |  |  |  |  |  |  |  |  |  | 你坐在门槛上哼起一段模糊的调子——那是阿强走之前哼过的那首歌。你只记得一句"翻过那座山，前面就是家"，翻来覆去地哼。 |
 | wasteland_e0242 | story | 242 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强教你唱那首歌。你学了两遍就记住了调子。你们两个人一条狗坐在傍晚的山谷里一起哼唱。 |
-| wasteland_e0242a | story | 242 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你试着教旺财哼那首歌——当然它不会。但你哼的时候它把头歪过来靠在你肩膀上，安安静静地听着。 |
+| wasteland_e0242a | story | 242 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你试着教旺财哼那首歌——当然它不会。但你哼的时候它把头歪过来靠在你肩膀上，安安静静地听着。 |
 | wasteland_e0243 | story | 243 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 旺财听着歌声眼皮越来越沉最后头一歪靠在你腿上睡着了。它的肚皮一起一伏发出均匀的呼吸声。 |
 | wasteland_e0244 | story | 244 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你坐在木屋的屋顶上看星星。废土的夜空清澈得像被水洗过——银河横跨天际仿佛触手可及。 |
 | wasteland_e0245 | story | 245 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强也爬上了屋顶在你旁边坐下。他什么都没说只是抬头看着星星。两个人在星空下沉默地坐着。 |
-| wasteland_e0245a | story | 245 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你一个人坐在屋顶上看星星。旺财趴在旁边，下巴搁在瓦片上，眼睛半闭着。你对着夜空说了一句"今晚星星真多"，没有人回答。 |
+| wasteland_e0245a | story | 245 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你一个人坐在屋顶上看星星。旺财趴在旁边，下巴搁在瓦片上，眼睛半闭着。你对着夜空说了一句"今晚星星真多"，没有人回答。 |
 | wasteland_e0246 | story | 246 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | "多久没这样看星星了？"阿强终于开口。你没回答因为你知道答案——从核战那天起谁都没再好好看过星星。 |
-| wasteland_e0246a | story | 246 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你看着满天繁星，心里忽然冒出一个问题——从核战那天起，你有好好看过星星吗？在避难所里你根本看不到。现在你看到了，却没人可以说了。 |
+| wasteland_e0246a | story | 246 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false |  |  |  |  |  |  |  |  |  |  | 你看着满天繁星，心里忽然冒出一个问题——从核战那天起，你有好好看过星星吗？在避难所里你根本看不到。现在你看到了，却没人可以说了。 |
 | wasteland_e0247 | story | 247 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强讲起核战前他最大的爱好就是背着猎枪进山躺在草地上看星星。"那时候天上的星星也这么多。"他说。 |
-| wasteland_e0247a | story | 247 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你想象着核战前有人背着猎枪躺在草地上看星星的样子——那是你从来没有见过、也无法想象的世界。你只知道废土的星星，但也够美了。 |
+| wasteland_e0247a | story | 247 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false |  |  |  |  |  |  |  |  |  |  | 你想象着核战前有人背着猎枪躺在草地上看星星的样子——那是你从来没有见过、也无法想象的世界。你只知道废土的星星，但也够美了。 |
 | wasteland_e0248 | story | 248 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 你们在屋顶上坐了很长时间谁都不想下去。夜风有点凉但你裹紧了阿强给的兽皮外套一点不觉得冷。 |
-| wasteland_e0248a | story | 248 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你在屋顶上坐了很久不想下去。夜风有点凉，你裹紧了外套。旺财已经睡熟了，肚皮随着呼吸轻轻起伏。这个山谷就只有你们俩了。 |
+| wasteland_e0248a | story | 248 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你在屋顶上坐了很久不想下去。夜风有点凉，你裹紧了外套。旺财已经睡熟了，肚皮随着呼吸轻轻起伏。这个山谷就只有你们俩了。 |
 | wasteland_e0249 | story | 249 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 山谷的夜晚有各种声音——溪水声、虫鸣声、风吹过树叶的沙沙声。这些声音让人心安。 |
 | wasteland_e0250 | story | 250 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你闭上眼睛静静聆听山谷的夜晚。虫鸣和溪流的声音交织在一起。在废土上你终于找到了一个可以安心闭上眼睛的地方。 |
 | wasteland_e0251 | story | 251 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 清晨的阳光洒满山谷，溪水闪着碎银般的光。你站在木屋前伸懒腰，旺财也从窝里钻出来抖了抖毛跑到你脚边蹭了蹭。 |
 | wasteland_e0252 | story | 252 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 菜地里的白菜和萝卜长势喜人。你蹲下来拔掉几根杂草，指尖沾上湿润的泥土，旺财在旁边叼着一根草假装在帮你干活。 |
 | wasteland_e0253 | story | 253 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 阿强在后山坡发现了一片野莓丛，紫色浆果挂满枝头。你们摘了满满一篮子，旺财也凑过来舔你手指上沾的果汁。 |
-| wasteland_e0253a | story | 253 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你在后山坡发现了一片野莓丛，紫色浆果挂满枝头。你一个人摘了满满一篮子，旺财凑过来舔你手指上沾的果汁，舌头粗糙而温热。 |
+| wasteland_e0253a | story | 253 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你在后山坡发现了一片野莓丛，紫色浆果挂满枝头。你一个人摘了满满一篮子，旺财凑过来舔你手指上沾的果汁，舌头粗糙而温热。 |
 | wasteland_e0254 | story | 254 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你把野莓煮成酱装进罐头瓶里。旺财在旁边守着锅不肯走，你舀了一小勺吹凉了给它，它舔得尾巴摇成了风车。 |
 | wasteland_e0255 | story | 255 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你用存粮烤了几个面饼，阿强咬了一口说硬了点但比啃树皮强。你们坐在木屋门口吃着饼喝着热水，旺财也分到了一小块。 |
-| wasteland_e0255a | story | 255 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你用存粮烤了两个面饼，一个给旺财尝了尝。它咬了一口就吐出来——太硬了。你苦笑了一下，自己慢慢啃完了。要是阿强在，他肯定会说"硬了点但比啃树皮强"。 |
+| wasteland_e0255a | story | 255 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你用存粮烤了两个面饼，一个给旺财尝了尝。它咬了一口就吐出来——太硬了。你苦笑了一下，自己慢慢啃完了。要是阿强在，他肯定会说"硬了点但比啃树皮强"。 |
 | wasteland_e0256 | story | 256 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你在溪边搓洗衣裳，旺财趴在对岸看着水里的鱼发呆。阳光把它的皮毛晒得暖烘烘的，你伸手撩了一捧水泼过去它也不躲。 |
 | wasteland_e0257 | story | 257 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 阿强用粗藤编了两把躺椅放在屋门口。傍晚你们一人一把躺上去看天，旺财经自己叼着木骨头跳到你肚子上趴着。 |
-| wasteland_e0257a | story | 257 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你学着阿强的手法编了一把躺椅。手艺差得远，坐上去吱呀乱响，但你懒得再改了。傍晚你躺上去看天，旺财叼着木骨头跳到你肚子上——至少这狗不嫌你手艺差。 |
+| wasteland_e0257a | story | 257 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你学着阿强的手法编了一把躺椅。手艺差得远，坐上去吱呀乱响，但你懒得再改了。傍晚你躺上去看天，旺财叼着木骨头跳到你肚子上——至少这狗不嫌你手艺差。 |
 | wasteland_e0258 | story | 258 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 山谷的夜空铺满星星。你指着北斗七星教阿强认星座，他学得认真还编了一套废土版的名字——猎户座叫他老猎人的烟斗。 |
-| wasteland_e0258a | story | 258 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 山谷的夜空铺满星星。你一个人辨认星座——北斗七星、猎户座，你只能认出这两个。你试图像阿强那样给星星编废土名字，但想了半天也没想出来。 |
+| wasteland_e0258a | story | 258 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false |  |  |  |  |  |  |  |  |  |  | 山谷的夜空铺满星星。你一个人辨认星座——北斗七星、猎户座，你只能认出这两个。你试图像阿强那样给星星编废土名字，但想了半天也没想出来。 |
 | wasteland_e0259 | story | 259 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你躺回藤椅上想——避难所里从来看不到这么多星星。旺财的肚皮贴在你脚边，温热而踏实。你闭上眼睛深吸了一口气。 |
 | wasteland_e0260 | story | 260 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强说明天教你在溪流下游围鱼坝。你说好。山谷的生活简单到只剩一件接一件的小事，但每件都让你觉得活着真好。 |
-| wasteland_e0260a | story | 260 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你蹲在溪边盯着水流看了很久，想不出鱼坝该怎么垒。阿强在的时候你从没操心过这些事。你站起来拍了拍膝盖上的土——明天先搬石头再说。 |
+| wasteland_e0260a | story | 260 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false |  |  |  |  |  |  |  |  |  |  | 你蹲在溪边盯着水流看了很久，想不出鱼坝该怎么垒。阿强在的时候你从没操心过这些事。你站起来拍了拍膝盖上的土——明天先搬石头再说。 |
 | wasteland_e0261 | story | 261 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你和阿强卷起裤腿站在冰凉的溪水里用石头垒鱼坝。旺财在岸边来回跑激动地叫了两声，阿强说你那狗在给咱们喊号子呢。 |
-| wasteland_e0261a | story | 261 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你卷起裤腿站在冰凉的溪水里，一块一块搬石头垒鱼坝。旺财在岸边来回跑，激动地叫唤着给你喊号子。没有人搭把手，你的手被石头磨破了皮，但鱼坝的雏形总算出来了。 |
+| wasteland_e0261a | story | 261 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你卷起裤腿站在冰凉的溪水里，一块一块搬石头垒鱼坝。旺财在岸边来回跑，激动地叫唤着给你喊号子。没有人搭把手，你的手被石头磨破了皮，但鱼坝的雏形总算出来了。 |
 | wasteland_e0261b | story | 261 | 0 | 1 | 是 | survivor |  | saved_stranger=1 |  |  |  |  |  |  |  |  |  |  | 你正在溪边洗手，忽然听到身后有脚步声。回头一看——是那个你救过的旅人。他看起来好了很多，背上多了个背包。"找了你很久，"他说，"想当面说声谢谢。" |
 | wasteland_e0262 | story | 262 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 鱼坝建好的第一天就拦住了好几条巴掌大的鱼。阿强伸手从水里捞出来咧嘴笑了，皱纹里夹着水珠在阳光下闪闪发亮。 |
-| wasteland_e0262a | story | 262 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 鱼坝建好的第一天就拦住了两条鱼。你伸手从水里捞出来，举到阳光下——银色的鳞片还在发光。没有人看到这一刻，但你对着手里的鱼笑了笑。 |
+| wasteland_e0262a | story | 262 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false |  |  |  |  |  |  |  |  |  |  | 鱼坝建好的第一天就拦住了两条鱼。你伸手从水里捞出来，举到阳光下——银色的鳞片还在发光。没有人看到这一刻，但你对着手里的鱼笑了笑。 |
 | wasteland_e0263 | story | 263 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 阿强教你用松枝熏鱼。鱼挂在棚子里滴着油，香味飘满整个山谷。旺财蹲在棚子门口不肯走，鼻子一抽一抽的。 |
-| wasteland_e0263a | story | 263 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你试着用松枝熏鱼，方法全靠自己琢磨。鱼挂在棚子里滴着油，香味飘出很远。旺财蹲在门口不肯走，鼻头一抽一抽的。你也不赶它——有它在旁边守着，这鱼好像就成功了一半。 |
+| wasteland_e0263a | story | 263 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你试着用松枝熏鱼，方法全靠自己琢磨。鱼挂在棚子里滴着油，香味飘出很远。旺财蹲在门口不肯走，鼻头一抽一抽的。你也不赶它——有它在旁边守着，这鱼好像就成功了一半。 |
 | wasteland_e0264 | story | 264 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 你们在菜地边又搭了一个工具棚放农具和渔具。阿强把锤子挂好直起腰看了看说这才像个过日子的地方。 |
-| wasteland_e0264a | story | 264 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你在菜地边又搭了一个工具棚。一个人搬木料、削木桩、钉钉子，干到天黑才把架子立起来。你直起腰捶了捶后背，借着月光看了看——歪是歪了点，但不会倒。 |
+| wasteland_e0264a | story | 264 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false |  |  |  |  |  |  |  |  |  |  | 你在菜地边又搭了一个工具棚。一个人搬木料、削木桩、钉钉子，干到天黑才把架子立起来。你直起腰捶了捶后背，借着月光看了看——歪是歪了点，但不会倒。 |
 | wasteland_e0265 | story | 265 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你用剩下的木桩把菜地围了一圈矮栅栏防野兔。旺财从栅栏缝隙里钻进去巡逻了一圈然后跑回你面前汪汪叫了两声——安全。 |
 | wasteland_e0266 | story | 266 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你值夜的时候旺财趴在瞭望台上一动不动地望着远方。它的耳朵不时转动一下捕捉着夜风中的每一个声响。 |
 | wasteland_e0267 | story | 267 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 远处传来几声枪响，在夜风中传得很远。旺财低吼了一声，你按了按它的后背。你们交换了一个眼神继续守着。 |
 | wasteland_e0268 | story | 268 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 天蒙蒙亮你和旺财沿着山谷边缘巡逻一圈。一切正常。你站在高处看着苏醒的山谷，心里涌起一种说不清的安稳。 |
 | wasteland_e0269 | story | 269 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你摊开手掌看了看——指根和虎口都磨出了厚茧。半年前这还是一双避难所的手，干净细白。现在它属于这片土地了。 |
 | wasteland_e0270 | story | 270 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强从后山打回一只野山羊。他把羊皮鞣好送给你当褥子说冬天近了，你那草垫子不顶事。你接过来摸到了他粗糙的掌心。 |
-| wasteland_e0270a | story | 270 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你在后山打到一只野山羊。拖回山谷的路上你在它倒下的地方坐了一会儿，喘匀了气才开始动手剥皮。你把羊皮鞣好铺在床上躺上去试了试——比草垫子暖和多了。 |
+| wasteland_e0270a | story | 270 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false |  |  |  |  |  |  |  |  |  |  | 你在后山打到一只野山羊。拖回山谷的路上你在它倒下的地方坐了一会儿，喘匀了气才开始动手剥皮。你把羊皮鞣好铺在床上躺上去试了试——比草垫子暖和多了。 |
 | wasteland_e0271 | story | 271 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 早晨起来草地上铺满白霜。你呼出的气变成了白雾。旺财在霜地上留下一串清晰的爪印，从屋门口一直延伸到栅栏那边。 |
 | wasteland_e0272 | story | 272 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 你们大规模储备过冬物资——干柴堆成小山，食物棚塞满。阿强搓了搓手说冬天最好别出门，废土的冬天会吃人。 |
-| wasteland_e0272a | story | 272 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你一个人忙了三天。干柴堆成小山，食物棚塞得满满当当。你搓了搓冻僵的手坐在地上歇了口气——以前阿强在的时候，他负责说"够了够了"，你负责继续塞。现在没人说够了，你反而不知道什么时候才算够。 |
+| wasteland_e0272a | story | 272 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false |  |  |  |  |  |  |  |  |  |  | 你一个人忙了三天。干柴堆成小山，食物棚塞得满满当当。你搓了搓冻僵的手坐在地上歇了口气——以前阿强在的时候，他负责说"够了够了"，你负责继续塞。现在没人说够了，你反而不知道什么时候才算够。 |
 | wasteland_e0273 | story | 273 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 山谷的风声从柔和变成了尖利。旺财不太愿意出屋了，总往你的被窝里钻。你假装嫌弃地推了推它最后还是让它挤了进来。 |
 | wasteland_e0274 | story | 274 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 旺财缩成一团紧贴着你的腿，体温隔着裤管传来。你摸了摸它的耳朵，它的鼻尖蹭了蹭你的手背，喉咙里发出舒服的哼哼声。 |
 | wasteland_e0275 | story | 275 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 阿强用匕首在木板上刻了一个小狗的轮廓给你。手艺糙但心意到了。你接过来挂在床头，旺财抬头看了看画像歪了歪脑袋。 |
-| wasteland_e0275a | story | 275 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你用匕首在木板上刻了一个小狗的轮廓——照着旺财的样子。手艺糙但心意到了。你把它挂在床头，旺财抬头看了看画像歪了歪脑袋，然后舔了舔你的手指。 |
+| wasteland_e0275a | story | 275 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你用匕首在木板上刻了一个小狗的轮廓——照着旺财的样子。手艺糙但心意到了。你把它挂在床头，旺财抬头看了看画像歪了歪脑袋，然后舔了舔你的手指。 |
 | wasteland_e0276 | story | 276 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 第一片雪花落在你的鼻尖上。你抬头——铅灰色的天空正在把无数白色小点洒向山谷。冬天正式来了。 |
 | wasteland_e0277 | story | 277 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 一夜之间山谷变成白色世界。旺财第一次见这么大的雪，在雪地里发疯似的打滚，把鼻子埋进雪里再甩出来，快乐得像个孩子。 |
 | wasteland_e0278 | story | 278 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你和旺财在雪地上走出一串脚印。回头看去——两行脚印一大一小，从木屋门口一直延伸到山谷深处，像是写给冬天的信。 |
 | wasteland_e0279 | story | 279 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 雪后初晴视野格外清晰。你拿起望远镜扫视远方——东边有一座高高的铁塔矗立在地平线上，在白色天地间像一根孤独的手指指着天空。 |
-| wasteland_e0280 | story | 280 | 0 | 1 | 是 | survivor | went_to_tower | invited_ahqiang=1; fed_wangcai=1 |  | 一起去信号塔 | wasteland_e0280a | 自己去 | wasteland_e0280b | 不去 | wasteland_e0280c |  |  |  | 你放下望远镜把信号塔的事告诉了阿强。他沉默了一会儿说那里可能有旧时代的通讯设备。旺财竖起耳朵看着你好像在说你去哪儿我就去哪儿。 |
-| wasteland_e0280d | story | 280 | 0 | 1 | 是 | survivor | went_to_tower | fed_wangcai=1 |  | 自己去信号塔 | wasteland_e0280e | 不去 | wasteland_e0280c |  |  |  |  |  | 你放下望远镜看着远方那座铁塔。那里可能有旧时代的通讯设备。旺财竖起耳朵看着你好像在说你去哪儿我就去哪儿。如果阿强在的话他也许会给你一些建议——但现在你只能自己决定。 |
-| wasteland_e0280a | story | 280 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你、旺财和阿强三人踏雪出发。旺财在前面开路，阿强背着猎枪走中间，你在最后压阵。三个人的脚印在雪地上延伸向远方。 |
-| wasteland_e0280b | story | 280 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你独自背上背包走出山谷。阿强留在山谷照看家园，旺财在谷口看着你走远，发出一声长长的呜咽。你回头朝它笑了笑让它回去。 |
-| wasteland_e0280e | story | 280 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你背上背包，最后检查了一遍木屋的门窗。旺财站在谷口等你，尾巴摇了摇像是在说"走吧"。你锁好门，带着旺财踏上了前往铁塔的路。 |
+| wasteland_e0280 | story | 280 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  | 一起去信号塔 | wasteland_e0280a | 自己去 | wasteland_e0280b | 不去 | wasteland_e0280c |  |  |  | 你放下望远镜把信号塔的事告诉了阿强。他沉默了一会儿说那里可能有旧时代的通讯设备。旺财竖起耳朵看着你好像在说你去哪儿我就去哪儿。 |
+| wasteland_e0280d | story | 280 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  | 自己去信号塔 | wasteland_e0280e | 不去 | wasteland_e0280c |  |  |  |  |  | 你放下望远镜看着远方那座铁塔。那里可能有旧时代的通讯设备。旺财竖起耳朵看着你好像在说你去哪儿我就去哪儿。如果阿强在的话他也许会给你一些建议——但现在你只能自己决定。 |
+| wasteland_e0280a | story | 280 | 0 | 1 | 是 | survivor | went_to_tower | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你、旺财和阿强三人踏雪出发。旺财在前面开路，阿强背着猎枪走中间，你在最后压阵。三个人的脚印在雪地上延伸向远方。 |
+| wasteland_e0280b | story | 280 | 0 | 1 | 是 | survivor | went_to_tower | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你独自背上背包走出山谷。阿强留在山谷照看家园，旺财在谷口看着你走远，发出一声长长的呜咽。你回头朝它笑了笑让它回去。 |
+| wasteland_e0280e | story | 280 | 0 | 1 | 是 | survivor | went_to_tower | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你背上背包，最后检查了一遍木屋的门窗。旺财站在谷口等你，尾巴摇了摇像是在说"走吧"。你锁好门，带着旺财踏上了前往铁塔的路。 |
 | wasteland_e0280c | story | 280 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你放下望远镜走出了木屋。远处那座铁塔还在那里——但你的家在这里。旺财蹭了蹭你的腿，你蹲下来抱住它把脸埋在它温暖的皮毛里。 |
 | wasteland_e0281 | story | 281 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 冬天在山谷里扎了根。你和旺财大部分时间窝在屋里，听着外面风声呼啸。炉火烧得正旺，木柴噼啪作响。 |
 | wasteland_e0282 | story | 282 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 你在炉子上煮了一锅野菜肉汤，蒸汽在窗户上凝成水珠。阿强端着碗过来串门，三个人挤在暖和的小屋里吃了一顿热饭。 |
-| wasteland_e0282a | story | 282 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你在炉子上煮了一锅野菜肉汤，蒸汽在窗户上凝成水珠。你给旺财也盛了一碗凉的，它脑袋扎进碗里喝得吧嗒响。 |
+| wasteland_e0282a | story | 282 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你在炉子上煮了一锅野菜肉汤，蒸汽在窗户上凝成水珠。你给旺财也盛了一碗凉的，它脑袋扎进碗里喝得吧嗒响。 |
 | wasteland_e0283 | story | 283 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 深夜旺财突然对着窗外叫了一声。你推开门的瞬间愣住——满天的极光在头顶舞动，绿色和紫色的光带如水波般流转。你叫醒了阿强一起看。 |
-| wasteland_e0283a | story | 283 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 深夜你推开门——满天的极光在头顶舞动，绿色和紫色的光带如水波般流转。旺财跑出屋仰头看着天空，汪汪叫了两声。你蹲下来抱住它一起看。 |
+| wasteland_e0283a | story | 283 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 深夜你推开门——满天的极光在头顶舞动，绿色和紫色的光带如水波般流转。旺财跑出屋仰头看着天空，汪汪叫了两声。你蹲下来抱住它一起看。 |
 | wasteland_e0284 | story | 284 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 天气渐渐转暖，积雪开始融化。屋檐滴答滴答地滴水，汇成细小的溪流汇入山谷的主溪。春天的脚步声近了。 |
 | wasteland_e0285 | story | 285 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 雪化后的山谷一片泥泞。你的靴子踩进去能陷到脚踝。旺财的四条腿全是泥浆，你不得不拿布给它擦了半天。 |
 | wasteland_e0286 | story | 286 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 第一棵嫩芽从湿润的泥土里钻出头来。你蹲下来看了很久——在废土上，每一个春天都是值得庆祝的奇迹。 |
 | wasteland_e0287 | story | 287 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你和阿强一起翻地播种。旺财在田埂上走来走去监督进度。阿强说今年多种点能存到明年，你擦了擦汗点头。 |
-| wasteland_e0287a | story | 287 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你一个人翻地播种，旺财在田埂上走来走去监督进度。你直起腰擦了擦汗心想今年多种点能存到明年——这是你一个人的计划了。 |
+| wasteland_e0287a | story | 287 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你一个人翻地播种，旺财在田埂上走来走去监督进度。你直起腰擦了擦汗心想今年多种点能存到明年——这是你一个人的计划了。 |
 | wasteland_e0288 | story | 288 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 一对燕子飞回了山谷，在屋檐下衔泥筑巢。旺财好奇地仰头看着它们忙忙碌碌，脖子仰得老高。 |
 | wasteland_e0289 | story | 289 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 冬天摧残过的木屋需要修缮。你爬上屋顶换掉几块破损的木板，阿强在下面帮你递料。旺财叼着钉子盒跑来跑去。 |
-| wasteland_e0289a | story | 289 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 冬天摧残过的木屋需要修缮。你一个人爬上屋顶换掉破损的木板，旺财在下面叼着钉子盒跑来跑去。没人帮你递料你就多爬了几趟。 |
+| wasteland_e0289a | story | 289 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 冬天摧残过的木屋需要修缮。你一个人爬上屋顶换掉破损的木板，旺财在下面叼着钉子盒跑来跑去。没人帮你递料你就多爬了几趟。 |
 | wasteland_e0290 | story | 290 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 春天的阳光泼满山谷。冰封的小溪重新流淌，泥土里冒出野草和不知名的花。你和旺财走遍了山谷的每一个角落。 |
 | wasteland_e0291 | story | 291 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 旺财追着一只野兔跑进了矮树林。你没跟上，但过了一会儿它叼着战利品得意洋洋地回来了。你摸了摸它的头夸了它两句。 |
 | wasteland_e0292 | story | 292 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 野兔被射中后腿跑了几步就倒下了。旺财冲过去叼起来跑回你面前放下，尾巴摇得欢快。你蹲下来拍了拍它的头。 |
 | wasteland_e0293 | story | 293 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强坐在门口用石头磨刀，刀刃在阳光下闪着寒光。你走过去在他身边坐下，他没看你但嘴角动了一下。 |
-| wasteland_e0293a | story | 293 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你坐在门口用石头磨刀，刀刃在阳光下闪着寒光。旺财趴在你脚边，尾巴有一搭没一搭地拍着地面。你忽然想——要是有人在旁边说句话就好了。 |
+| wasteland_e0293a | story | 293 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你坐在门口用石头磨刀，刀刃在阳光下闪着寒光。旺财趴在你脚边，尾巴有一搭没一搭地拍着地面。你忽然想——要是有人在旁边说句话就好了。 |
 | wasteland_e0294 | story | 294 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 日子像溪水一样不紧不慢地流着。你每天巡逻、种地、打猎、做饭。旺财寸步不离地跟着你。阿强在另一头忙他的事。 |
-| wasteland_e0294a | story | 294 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 日子像溪水一样不紧不慢地流着。你每天巡逻、种地、打猎、做饭。旺财寸步不离地跟着你。没有人在另一头忙别的事——只有你们两个。 |
+| wasteland_e0294a | story | 294 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 日子像溪水一样不紧不慢地流着。你每天巡逻、种地、打猎、做饭。旺财寸步不离地跟着你。没有人在另一头忙别的事——只有你们两个。 |
 | wasteland_e0295 | story | 295 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 你用现有的材料做了一把新弓，比之前那把拉起来顺手多了。阿强试了试说还行，就是不比他年轻时用的那把好。 |
-| wasteland_e0295a | story | 295 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你用现有的材料做了一把新弓，比之前那把拉起来顺手多了。你拉了拉弦试了试手感，心想这弓要是有人能夸一句就好了。 |
+| wasteland_e0295a | story | 295 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false |  |  |  |  |  |  |  |  |  |  | 你用现有的材料做了一把新弓，比之前那把拉起来顺手多了。你拉了拉弦试了试手感，心想这弓要是有人能夸一句就好了。 |
 | wasteland_e0296 | story | 296 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 阿强又开始讲他年轻时一个人干翻五条变异狼的故事。你听了第五遍了但还是配合地露出惊讶的表情。旺财也歪着头好像在听。 |
-| wasteland_e0296a | story | 296 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你在篝火边想起了阿强讲的那些故事——干翻五条变异狼、年轻时穿过盐碱地。你试着把这些故事讲给旺财听，它歪着头好像在听。 |
+| wasteland_e0296a | story | 296 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你在篝火边想起了阿强讲的那些故事——干翻五条变异狼、年轻时穿过盐碱地。你试着把这些故事讲给旺财听，它歪着头好像在听。 |
 | wasteland_e0297 | story | 297 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你笑着揭穿阿强故事里的漏洞，他气呼呼地用树枝打你的腿。旺财以为你们在打闹兴奋地围着你们转圈叫唤。 |
-| wasteland_e0297a | story | 297 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你坐在篝火边想起以前每次揭穿阿强故事漏洞时他假装生气的样子，忍不住笑了一下。旺财抬头看你，尾巴摇了摇。 |
+| wasteland_e0297a | story | 297 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你坐在篝火边想起以前每次揭穿阿强故事漏洞时他假装生气的样子，忍不住笑了一下。旺财抬头看你，尾巴摇了摇。 |
 | wasteland_e0298 | story | 298 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你从溪边打水回来，看到阿强的小屋升起炊烟、自家门口旺财趴在阳光下。你忽然停住脚步站在谷中——这里已经是家了。 |
-| wasteland_e0298a | story | 298 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你从溪边打水回来，看到自家门口旺财趴在阳光下。阿强的小屋还在那里，但门已经关了很久了。你停住脚步站在谷中——这里仍然是家。 |
+| wasteland_e0298a | story | 298 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你从溪边打水回来，看到自家门口旺财趴在阳光下。阿强的小屋还在那里，但门已经关了很久了。你停住脚步站在谷中——这里仍然是家。 |
 | wasteland_e0299 | story | 299 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 夏夜的山谷蛙鸣虫叫热闹非凡。你和阿强在屋外乘凉，旺财趴在你们中间吐着舌头。阿强说这日子比从前强百倍。 |
-| wasteland_e0299a | story | 299 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 夏夜的山谷蛙鸣虫叫热闹非凡。你和旺财在屋外乘凉，旺财趴在旁边吐着舌头。你自言自语说这日子也算不错了——虽然没有人和你搭话。 |
+| wasteland_e0299a | story | 299 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 夏夜的山谷蛙鸣虫叫热闹非凡。你和旺财在屋外乘凉，旺财趴在旁边吐着舌头。你自言自语说这日子也算不错了——虽然没有人和你搭话。 |
 | wasteland_e0300 | story | 300 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你躺在地上看着满天的星星。旺财的尾巴在地面上有一下没一下地拍着。你在废土上找到了最珍贵的东西——不是物资不是武器——是陪伴。 |
 | wasteland_e0301 | story | 301 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 旺财突然对着谷口的方向竖起耳朵，喉咙里发出低沉的呜咽。你放下手里的活计拿起望远镜——远处的山坡上有几个人影在移动。 |
 | wasteland_e0302 | story | 302 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 你爬上瞭望台仔细观察——那几个人穿着深色的衣服背着长条状的物件。不是普通旅人。阿强接过望远镜看了看脸色沉了下来。 |
-| wasteland_e0302a | story | 302 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 旺财对着谷口的方向竖起耳朵发出低沉的呜咽。你拿起望远镜——远处的山坡上有几个人影在移动。没有阿强在旁边出主意，你只能自己判断该怎么做。 |
+| wasteland_e0302a | story | 302 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 旺财对着谷口的方向竖起耳朵发出低沉的呜咽。你拿起望远镜——远处的山坡上有几个人影在移动。没有阿强在旁边出主意，你只能自己判断该怎么做。 |
 | wasteland_e0302b | story | 302 | 0 | 1 | 是 | survivor |  | risked_for_medicine=1 |  |  |  |  |  |  |  |  |  |  | 旺财在你脚边打了个滚，露出肚皮让你摸。你蹲下来挠了挠它的肚子，目光落在它腿上那道浅浅的疤上——那是你闯辐射区换回来的印记。 |
 | wasteland_e0303 | story | 303 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 掠夺者。阿强吐出这三个字的时候空气都像凝固了。他说这种人在废土上专门靠抢掠为生，遇到一个活物都不会放过。 |
 | wasteland_e0304 | story | 304 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 你和阿强在屋里商讨对策。他说这些人多半是探路的，大部队在后面。你们只有两条枪几十发子弹——硬碰硬不是办法。 |
 | wasteland_e0305 | story | 305 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你们在谷口增设了新的陷阱——深坑、绊索、尖刺排。旺财似乎也明白气氛不对，安静地跟在你们脚边不再乱跑。 |
-| wasteland_e0305a | story | 305 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你一个人在谷口增设了陷阱——深坑、绊索、尖刺排。旺财跟在你身边似乎也明白气氛不对。活干得慢但总比不干强。 |
+| wasteland_e0305a | story | 305 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你一个人在谷口增设了陷阱——深坑、绊索、尖刺排。旺财跟在你身边似乎也明白气氛不对。活干得慢但总比不干强。 |
 | wasteland_e0306 | story | 306 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 你和阿强演练了几套应对方案——如果从正面来怎么办，如果绕后怎么办。阿强说真打起来我掩护你带着狗先撤。你没接话。 |
 | wasteland_e0307 | story | 307 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 那些人影消失了几天。但你们没有放松警惕——阿强说这是他们的惯用伎俩，等你放松了再杀回来。 |
 | wasteland_e0308 | story | 308 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你和旺财增加了巡逻频率，每天在山谷周边走好几趟。旺财的嗅觉全开，任何陌生的气味都逃不过它的鼻子。 |
 | wasteland_e0309 | story | 309 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 远处的山后升起一股黑色的烟柱——不是山火是人为的。阿强说他们在扎营。你们最多还有三五天的时间准备。 |
 | wasteland_e0310 | story | 310 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你坐在桌边一颗一颗地压子弹。阿强把猎枪拆开上了新油。旺财趴在门边耳朵转动着听外面的动静。谁都没说话。 |
-| wasteland_e0310a | story | 310 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你坐在桌边一颗一颗地压子弹，旺财趴在门边耳朵转动着听外面的动静。只有你和它了。你摸了摸它的头轻声说别怕。 |
+| wasteland_e0310a | story | 310 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你坐在桌边一颗一颗地压子弹，旺财趴在门边耳朵转动着听外面的动静。只有你和它了。你摸了摸它的头轻声说别怕。 |
 | wasteland_e0311 | story | 311 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 夜里的山谷格外安静，安静得不正常——连虫鸣都消失了。你和阿强轮流守夜，一人睡觉一人持枪盯着谷口。 |
 | wasteland_e0312 | story | 312 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 深夜谷口方向出现了火把的光。一、二、三……七支火把排成一线向山谷靠近。你握紧猎枪手心全是汗。 |
 | wasteland_e0313 | story | 313 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 火把在谷口停住了。有人朝山谷里喊话——声音沙哑低沉，说他们要借住几天，让我们交出物资。阿强呸了一口。 |
 | wasteland_e0314 | story | 314 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你没有回答。那些人又喊了几声然后熄灭了火把。黑暗中你不知道他们还在不在——但你知道他们没走。 |
 | wasteland_e0315 | story | 315 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 这种对峙消耗着你的神经。你睡不安稳吃不下饭，总是在黑暗中瞪着眼睛听动静。旺财也变得焦躁时不时低吼。 |
-| wasteland_e0315a | story | 315 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 那些人在山谷外围停留了两天。你和旺财躲在屋里不敢生火，夜里冷得发抖也不敢发出声响。你第一次强烈地感到一个人的局限。 |
+| wasteland_e0315a | story | 315 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 那些人在山谷外围停留了两天。你和旺财躲在屋里不敢生火，夜里冷得发抖也不敢发出声响。你第一次强烈地感到一个人的局限。 |
 | wasteland_e0316 | story | 316 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 第二天凌晨他们试图从侧面翻越山脊摸进来。旺财先发现了动静狂吠示警。你朝那个方向放了一枪——枪声在山谷里炸开。 |
 | wasteland_e0317 | story | 317 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 那枪显然打中了什么或者至少起到了威慑作用——山脊那边传来一声闷哼然后就是撤退的脚步声。你大口喘着气手还在抖。 |
 | wasteland_e0318 | story | 318 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 阿强拍了拍你的肩膀说打得好。他的手沉稳有力。旺财舔了舔你的手掌——你能感觉到它的舌头在颤抖。他们都害怕但都在硬撑。 |
@@ -501,8 +501,8 @@ max_rebirth: 0
 | wasteland_e0327 | story | 327 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 阿强说我一个人去放火，你带狗从另一边走。你沉默了很久然后说要去一起去。旺财趴在两个人中间，算是替你们和好了。 |
 | wasteland_e0328 | story | 328 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 最终你们达成了新的计划——不硬突围也不死守。你决定主动出击，在天亮前给他们一个出其不意。旺财似乎听懂了，安静地趴在你们脚边。 |
 | wasteland_e0329 | story | 329 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 夜深了。你最后一次检查猎枪和子弹，阿强磨好了砍刀。旺财紧贴着你坐着。大战前的一刻安静得能听到彼此的心跳。 |
-| wasteland_e0330 | story | 330 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 黎明前的黑暗笼罩着山谷。掠夺者的营地隐隐透出火光。阿强压低声音问你怎么干。你有三条路。 |
-| wasteland_e0330d | story | 330 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 山谷恢复了平静。你在谷口加固了防御工事，花了好几天时间。活都是一个人干的——慢，但每一锤每一钉都让你觉得这个家更安全。 |
+| wasteland_e0330 | story | 330 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  | 放下武器谈判 | wasteland_e0330a | 开火打回去 | wasteland_e0330b | 撤退保家 | wasteland_e0330c |  |  |  | 黎明前的黑暗笼罩着山谷。掠夺者的营地隐隐透出火光。阿强压低声音问你怎么干。你有三条路。 |
+| wasteland_e0330d | story | 330 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false |  |  |  |  |  |  |  |  |  |  | 山谷恢复了平静。你在谷口加固了防御工事，花了好几天时间。活都是一个人干的——慢，但每一锤每一钉都让你觉得这个家更安全。 |
 | wasteland_e0330a | story | 330 | 0 | 1 | 是 | survivor | negotiated | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你放下枪举起双手走出谷口。旺财想跟着你但被你喝住了。你走向掠夺者的营地心脏狂跳但步伐坚定。 |
 | wasteland_e0330b | story | 330 | 0 | 1 | 是 | survivor | fought_raiders |  |  |  |  |  |  |  |  |  |  |  | 你朝掠夺者营地放出了第一枪。枪声撕破黎明前的寂静。阿强从侧面迂回过去砍倒了放哨的人。你们像两把尖刀插入了敌阵。 |
 | wasteland_e0330c | story | 330 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你压低了声音说我们不打。阿强愣住了。你带着他和旺财从山谷后面的秘密通道撤了出去。金银细软带上了但家没了。 |
@@ -516,7 +516,7 @@ max_rebirth: 0
 | wasteland_e0338 | story | 338 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你带着旺财在废城里找到了一箱未开封的罐头半袋面粉和几卷绷带。回来的路上你脚步轻快觉得这趟值了。 |
 | wasteland_e0339 | story | 339 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 回到山谷时远远看到阿强站在瞭望台上张望。他看到你回来了慢悠悠地爬下来嘴上说"还知道回来"但眼里全是放心。 |
 | wasteland_e0340 | story | 340 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 黄昏时分三个人坐在一起吃了一顿还算丰盛的晚饭。一罐豆子肉、几条熏鱼。阿强说这日子虽然苦但比他在外面流浪强。 |
-| wasteland_e0340a | story | 340 | 0 | 1 | 是 | survivor |  | fed_wangcai=1; invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 黄昏你和旺财坐在门口看着夕阳。你忽然意识到——你已经一个人撑过了好几个月。没有阿强帮忙，你也活下来了。 |
+| wasteland_e0340a | story | 340 | 0 | 1 | 是 | survivor |  | fed_wangcai=1; invited_ahqiang=false |  |  |  |  |  |  |  |  |  |  | 黄昏你和旺财坐在门口看着夕阳。你忽然意识到——你已经一个人撑过了好几个月。没有阿强帮忙，你也活下来了。 |
 | wasteland_e0340b | story | 340 | 0 | 1 | 是 | survivor |  | negotiated=1 |  |  |  |  |  |  |  |  |  |  | 一个瘦弱的男人出现在谷口，手里举着一面白旗。他说他那边的营地还有老有小，听说这个山谷的主人愿意谈判，想来找条活路。你看着他——你做的那个选择正在改变别人。 |
 | wasteland_e0341 | story | 341 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 傍晚的天空变成了不祥的暗黄色。风停了，空气又闷又沉。阿强皱起眉头说不对——这是沙尘暴要来的前兆。 |
 | wasteland_e0342 | story | 342 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你们手忙脚乱地把屋外的东西搬进屋里。旺财不安地转着圈，你把它叫进屋里关紧门窗。远方的天际线正在变暗。 |
@@ -528,7 +528,7 @@ max_rebirth: 0
 | wasteland_e0348 | story | 348 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你在风沙中摸索着朝阿强的方向爬去。沙粒糊了你满脸，眼睛睁不开。旺财突然挣开你的手冲进了风沙里。 |
 | wasteland_e0349 | story | 349 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你跟着旺财的方向爬到了一堆木板前面。下面压着一个人影——是阿强。你的心猛地一沉，开始疯狂地扒拉那些木料。 |
 | wasteland_e0350 | story | 350 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你把阿强从木堆里拖了出来他的额头上流着血已经昏迷了。你把他拖进你的木屋关上门。旺财在旁边焦急地舔着他的脸。 |
-| wasteland_e0350a | story | 350 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 沙尘暴来的那晚你一个人抱着旺财缩在屋角。风声尖利得像鬼哭，屋顶咯吱作响。你咬着牙对自己说——你可以的。 |
+| wasteland_e0350a | story | 350 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 沙尘暴来的那晚你一个人抱着旺财缩在屋角。风声尖利得像鬼哭，屋顶咯吱作响。你咬着牙对自己说——你可以的。 |
 | wasteland_e0351 | story | 351 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 风暴还在继续但你什么都顾不上了。你给阿强包扎头上的伤口，他的呼吸很微弱。你握着他的手说你不能死。 |
 | wasteland_e0352 | story | 352 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强在半夜醒了过来。他咳嗽了几声问房子还在不在。你笑了一下说房子塌了人还在。他也笑了说那就好。 |
 | wasteland_e0353 | story | 353 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 沙尘暴终于过去了。你推开门——整个山谷变了样子。溪流被沙土填了一半，菜地全毁了。到处都是厚厚的黄沙。 |
@@ -539,7 +539,7 @@ max_rebirth: 0
 | wasteland_e0358 | story | 358 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你知道那不是普通的咳嗽——沙尘暴里的尘土进了他的肺。你没有药没有医生。你能做的只有给他煮热水让他多休息。 |
 | wasteland_e0359 | story | 359 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强咳出血来了。他看了一眼手帕上的血迹然后飞快地把手帕藏起来不想让你看到。但你还是看到了。 |
 | wasteland_e0360 | story | 360 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你一夜没睡守着阿强。每隔一会儿就给他换额头上的湿布。旺财也趴在床边不肯走。阿强在睡梦中含含糊糊地说着什么。 |
-| wasteland_e0360a | story | 360 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 风暴过后屋顶漏了一个大洞。你一个人爬上爬下修补，旺财在下面帮你递木条。活干完的时候你累得瘫在椅子上但屋顶不漏了。 |
+| wasteland_e0360a | story | 360 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 风暴过后屋顶漏了一个大洞。你一个人爬上爬下修补，旺财在下面帮你递木条。活干完的时候你累得瘫在椅子上但屋顶不漏了。 |
 | wasteland_e0361 | story | 361 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 天快亮的时候阿强清醒了一阵。他靠在墙上看着你眼睛里有种说不清的东西。他说小子过来我跟你说几句话。 |
 | wasteland_e0362 | story | 362 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强说他要是不行了让我把他埋在最高的山坡上。他说想看着这个山谷。你打断他说别说了你会好起来的。他没再说话。 |
 | wasteland_e0363 | story | 363 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强的情况暂时稳定了下来。你松了一口气但不敢掉以轻心。你每天都去更远的地方找药草、打新鲜的猎物给他补身体。 |
@@ -550,7 +550,7 @@ max_rebirth: 0
 | wasteland_e0368 | story | 368 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你站在木屋门口看看昏迷的阿强又看看远处的铁塔。旺财站在你身边它的眼神也是两个方向——想去追你又想守着家。 |
 | wasteland_e0369 | story | 369 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 你一夜之间白了鬓角。阿强的呼吸时断时续，每一次中断都让你心跳停止。你坐在他床边握住他粗糙的手。 |
 | wasteland_e0370 | story | 370 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强又一次醒了过来。他看了看你嘴唇动了动。你凑近去听他说的是——别管我了，带着狗走吧。你摇头说不。 |
-| wasteland_e0370a | story | 370 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 日子又恢复了节奏。你一个人巡逻、种地、打猎、做饭。旺财依然寸步不离。偶尔你会对着空气说句话——然后自己笑自己。 |
+| wasteland_e0370a | story | 370 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 日子又恢复了节奏。你一个人巡逻、种地、打猎、做饭。旺财依然寸步不离。偶尔你会对着空气说句话——然后自己笑自己。 |
 | wasteland_e0370b | story | 370 | 0 | 1 | 是 | survivor |  | fought_raiders=1 |  |  |  |  |  |  |  |  |  |  | 你在加固谷口工事时发现了一块被人放在石头上的铁片。上面刻着几个字——「这里的人不好惹，绕道走。」署名是一个连名字都不知道的过路人。你把铁片钉在了木栅栏上。 |
 | wasteland_e0371 | story | 371 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你固执地留下来每天给他喂水擦身熬药。你不肯放弃因为你不能放弃——在这片废土上你已经失去了太多不能再失去了。 |
 | wasteland_e0372 | story | 372 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 旺财也开始不吃饭了。你把肉干放到它嘴边它闻一闻就扭过头去。它趴在阿强床边下巴搁在床沿上眼睛一眨不眨地看着他。 |
@@ -561,10 +561,10 @@ max_rebirth: 0
 | wasteland_e0377 | story | 377 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 阿强看着你眼神异常平静。他说小子这段日子挺好的真的挺好的。你没让他再说下去你转身去给他倒水擦眼泪。 |
 | wasteland_e0378 | story | 378 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 阿强再次坠入了昏迷。这一次你心里明白——也许他真的醒不过来了。你跪在他床边把头埋进旺财的毛里无声地哭着。 |
 | wasteland_e0379 | story | 379 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 整个山谷都在等待一个结果。你守在床边手一直没有松开他的。旺财蜷缩在床脚发出细细的呜咽声。 |
-| wasteland_e0380 | story | 380 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 阿强的呼吸越来越微弱。你知道已经到了必须做决定的时刻——是冲进沙尘中寻找那丝救命的药草还是保护仅剩的物资还是带着旺财躲进山洞保全自己。你的每一个选择都将改变一切。 |
-| wasteland_e0380d | story | 380 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 你站在山谷中央，回想起阿强走之前的那个晚上。他问你想留他吗——你说尊重他的选择。现在你依然不后悔那个决定。每个人都有自己的路。 |
+| wasteland_e0380 | story | 380 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1; fed_wangcai=1 |  | 冲进沙尘找药 | wasteland_e0380a | 抢救物资 | wasteland_e0380b | 躲进山洞 | wasteland_e0380c |  |  |  | 阿强的呼吸越来越微弱。你知道已经到了必须做决定的时刻——是冲进沙尘中寻找那丝救命的药草还是保护仅剩的物资还是带着旺财躲进山洞保全自己。你的每一个选择都将改变一切。 |
+| wasteland_e0380d | story | 380 | 0 | 1 | 是 | survivor |  | invited_ahqiang=false |  |  |  |  |  |  |  |  |  |  | 你站在山谷中央，回想起阿强走之前的那个晚上。他问你想留他吗——你说尊重他的选择。现在你依然不后悔那个决定。每个人都有自己的路。 |
 | wasteland_e0380a | story | 380 | 0 | 1 | 是 | survivor | saved_ahqiang | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你冲进了风沙中。你要找到那株能救阿强的草药。旺财跟在你身边，风沙打在身上像刀割一样。但你不能回头——阿强还在等你。 |
-| wasteland_e0380b | story | 380 | 0 | 1 | 是 | survivor | saved_supplies | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你跪在阿强身边看了他最后一眼然后转身去抢救物资。你的手在颤抖但你告诉自己——活着的人还要活下去。旺财没有跟你走它守在阿强身边。 |
+| wasteland_e0380b | story | 380 | 0 | 1 | 是 | survivor | saved_supplies; saved_ahqiang=false | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你跪在阿强身边看了他最后一眼然后转身去抢救物资。你的手在颤抖但你告诉自己——活着的人还要活下去。旺财没有跟你走它守在阿强身边。 |
 | wasteland_e0380c | story | 380 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你背着阿强抱着旺财躲进了山洞。洞口外风沙怒吼但洞里安静。你把阿强放在地上握住他的手说你撑住。阿强的手指动了动。 |
 | wasteland_e0381 | story | 381 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 你一个人站在山谷中清理沙尘暴留下的狼藉。阿强的木屋塌了一半，他的砍刀埋在沙土里只露出刀柄。你捡起来擦干净。 |
 | wasteland_e0382 | story | 382 | 0 | 1 | 是 | survivor |  | invited_ahqiang=1 |  |  |  |  |  |  |  |  |  |  | 你在阿强剩下的杂物里找到一枚旧打火机和一张泛黄的照片——照片上的人已经看不清脸了。你小心地收好这两样东西放进贴身的口袋。 |
@@ -606,8 +606,8 @@ max_rebirth: 0
 | wasteland_e0417 | story | 417 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 旺财在你怀里吐出了最后一口气。它走得很平静眼睛是闭着的——像是睡着了一样。你感受到了那个时刻——胸口突然空了一块。 |
 | wasteland_e0418 | story | 418 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你抱着旺财一动不动地坐了很久。风从山谷吹过吹动了旺财的毛。你伸手把它的毛理顺就像你做过无数次的那样。 |
 | wasteland_e0419 | story | 419 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你终于站起来了。你抱着旺财没有放下。你走过山谷走过小溪走过菜田——每一步都很重。你还没有想好接下来要怎么办但他不想松开手。 |
-| wasteland_e0420 | story | 420 | 0 | 1 | 是 | survivor | carried_wangcai | fed_wangcai=1 |  | 抱旺财走 | wasteland_e0420a | 留在山谷 | wasteland_e0420b |  |  |  |  |  | 你站在山谷中央怀里抱着旺财的身体。阳光照在你身上你却没有感觉。你知道必须做一个决定——是带着它离开这个生活了很久的山谷还是把它安葬在它最熟悉的地方。 |
-| wasteland_e0420a | story | 420 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你把旺财轻轻裹进一件旧衣服里背着它走出了山谷。每走几步你就回头看一眼。山谷在晨光中慢慢缩小最后消失在地平线后面。 |
+| wasteland_e0420 | story | 420 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  | 抱旺财走 | wasteland_e0420a | 留在山谷 | wasteland_e0420b |  |  |  |  |  | 你站在山谷中央怀里抱着旺财的身体。阳光照在你身上你却没有感觉。你知道必须做一个决定——是带着它离开这个生活了很久的山谷还是把它安葬在它最熟悉的地方。 |
+| wasteland_e0420a | story | 420 | 0 | 1 | 是 | survivor | carried_wangcai | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你把旺财轻轻裹进一件旧衣服里背着它走出了山谷。每走几步你就回头看一眼。山谷在晨光中慢慢缩小最后消失在地平线后面。 |
 | wasteland_e0420b | story | 420 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你在山坡上选了一个能看到山谷全景的位置。你一铲一铲地挖土把旺财放了进去最后覆上泥土。你在上面压了一块平整的石头没有写字但你知道它在那儿。 |
 | wasteland_e0421 | story | 421 | 0 | 1 | 是 | survivor |  | fed_wangcai=1 |  |  |  |  |  |  |  |  |  |  | 你一个人坐在木屋里。旺财的窝还在墙角它的碗还在。你没有收拾它们就好像旺财只是出去散步了待会儿就会回来。 |
 | wasteland_e0422 | story | 422 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你听到门口有爪子扒拉木板的声音——你本能地站起来去开门。门外空无一人。你靠在门框上闭了很久的眼睛。 |
@@ -671,8 +671,8 @@ max_rebirth: 0
 | wasteland_e0477 | story | 477 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你站在一个岔路口前。左边通往一片废墟右边通往开阔平原。放在以前你会犹豫但现在的你只停顿了三秒就选了右边。 |
 | wasteland_e0478 | story | 478 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你掏出那本破旧的地图册翻看。纸张更破了有些页面已经碎了。你用手指在上面划着路线——你走过的地方已经画满了标记。 |
 | wasteland_e0479 | story | 479 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你明白了——废土不是诅咒它是你的世界。你不再需要避难所不再需要山谷。你的家就在你的脚下，你走到哪里哪里就是家。 |
-| wasteland_e0480 | story | 480 | 0 | 1 | 是 | survivor | went_to_tower |  |  | 去信号塔 | wasteland_e0480a | 留在荒野 | wasteland_e0480b |  |  |  |  |  | 你站在平原上远眺。地平线上那座铁塔沉默地矗立着像是废土的守望者。你心里有一个声音问你——要不要去看一看。也许那里什么都没有也许那里有你一直在等的东西。 |
-| wasteland_e0480a | story | 480 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你调整了方向朝铁塔走去。步子不快不慢像赴一个迟到了很久的约。风从塔的方向吹来带来的只有废土的味道。但那不重要了——你在走向自己的答案。 |
+| wasteland_e0480 | story | 480 | 0 | 1 | 是 | survivor |  |  |  | 去信号塔 | wasteland_e0480a | 留在荒野 | wasteland_e0480b |  |  |  |  |  | 你站在平原上远眺。地平线上那座铁塔沉默地矗立着像是废土的守望者。你心里有一个声音问你——要不要去看一看。也许那里什么都没有也许那里有你一直在等的东西。 |
+| wasteland_e0480a | story | 480 | 0 | 1 | 是 | survivor | went_to_tower |  |  |  |  |  |  |  |  |  |  |  | 你调整了方向朝铁塔走去。步子不快不慢像赴一个迟到了很久的约。风从塔的方向吹来带来的只有废土的味道。但那不重要了——你在走向自己的答案。 |
 | wasteland_e0480b | story | 480 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你没有去铁塔。你选择了留在荒野继续走你未走完的路。铁塔在那里不会消失。也许有一天你会来也许不会。你笑了笑走远了。 |
 | wasteland_e0481 | story | 481 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你继续走着。世界在你面前展开没有尽头。你知道自己的故事还没有写完——废土上的故事从来不会轻易结束。 |
 | wasteland_e0482 | story | 482 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 你觉得自己正在变成废土的一部分。你的皮肤是沙土的颜色你的呼吸里有风沙的声音。你不再抗拒不再害怕——你属于这里。 |
@@ -758,9 +758,9 @@ max_rebirth: 0
 | wasteland_e0557 | story | 57 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 沿途的辐射读数偏高，你们绕了一大段路才避开一片散发绿光的沼泽 |
 | wasteland_e0558 | story | 58 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你们在一座断桥边遇到三个流民。他们用一袋土豆换了你一瓶净水 |
 | wasteland_e0559 | story | 59 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 阿珍说前面有个叫铁皮村的小聚落，可以在那里歇脚顺带做做生意 |
-| wasteland_e0560 | story | 60 | 0 | 1 | 是 | merchant | hired_helper=true |  |  | 收留他当帮手 | wasteland_e0560a | 给他干粮让他走 | wasteland_e0560b |  |  |  |  |  | 铁皮村的村长请你帮忙收购一批废铁，一个年轻人主动说可以给你当帮手 |
-| wasteland_e0560a | story | 60 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你让那个叫阿强的年轻人留下帮忙。他力气大手脚麻利，干完活还不肯走 |
-| wasteland_e0560b | story | 60 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你给想找活的年轻人留了些干粮，告诉他以后有缘再说。他默默收下了 |
+| wasteland_e0560 | story | 60 | 0 | 1 | 是 | merchant |  |  |  | 收留他当帮手 | wasteland_e0560a | 给他干粮让他走 | wasteland_e0560b |  |  |  |  |  | 铁皮村的村长请你帮忙收购一批废铁，一个年轻人主动说可以给你当帮手 |
+| wasteland_e0560a | story | 60 | 0 | 1 | 是 | merchant | hired_helper=true |  |  |  |  |  |  |  |  |  |  |  | 你让那个叫阿强的年轻人留下帮忙。他力气大手脚麻利，干完活还不肯走 |
+| wasteland_e0560b | story | 60 | 0 | 1 | 是 | merchant | hired_helper=false |  |  |  |  |  |  |  |  |  |  |  | 你给想找活的年轻人留了些干粮，告诉他以后有缘再说。他默默收下了 |
 | wasteland_e0561 | story | 61 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你在铁皮村摆了半天摊，发现这里的净水价格比渣客镇贵一倍还有人抢着买 |
 | wasteland_e0562 | story | 62 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 铁皮村的铁匠用一把完好的扳手换了你的滤芯，说这东西比黄金还值钱 |
 | wasteland_e0563 | story | 63 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你们在铁皮村待了三天，带来的货卖掉了大半。手推车轻了不少 |
@@ -790,8 +790,8 @@ max_rebirth: 0
 | wasteland_e0587 | story | 87 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 回程最后一天你们遇上暴雨，躲进一座破庙里过夜 |
 | wasteland_e0588 | story | 88 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 破庙的屋顶到处漏水。你用防水布撑了一夜，浑身湿透但货保住了 |
 | wasteland_e0589 | story | 89 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 终于回到渣客镇。你把手推车停在摊位前时差点瘫在地上，但心里全是满足感 |
-| wasteland_e0590 | story | 90 | 0 | 1 | 是 | merchant | saved_fugitive=true |  |  | 救他回去养伤 | wasteland_e0590a | 给物资让他自己走 | wasteland_e0590b |  |  |  |  |  | 你们在一个废弃谷仓里遇到一个满身伤痕的人。他惊恐地盯着你们，缩在角落发抖 |
-| wasteland_e0590a | story | 90 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你把逃亡者带回渣客镇包扎伤口。他缓过来后说有人追杀他，求你们不要报信 |
+| wasteland_e0590 | story | 90 | 0 | 1 | 是 | merchant |  |  |  | 救他回去养伤 | wasteland_e0590a | 给物资让他自己走 | wasteland_e0590b |  |  |  |  |  | 你们在一个废弃谷仓里遇到一个满身伤痕的人。他惊恐地盯着你们，缩在角落发抖 |
+| wasteland_e0590a | story | 90 | 0 | 1 | 是 | merchant | saved_fugitive=true |  |  |  |  |  |  |  |  |  |  |  | 你把逃亡者带回渣客镇包扎伤口。他缓过来后说有人追杀他，求你们不要报信 |
 | wasteland_e0590b | story | 90 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你给他留了食物和水，告诉他往前走有个镇子可以落脚。他点点头消失在夜色中 |
 | wasteland_e0591 | story | 91 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 回到镇上你清点这趟的账目——净利润够买一辆真正的铁皮货车 |
 | wasteland_e0592 | story | 92 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你用赚来的钱向铁匠定做了一辆铁皮货车，比手推车大了整整五倍 |
@@ -832,8 +832,8 @@ max_rebirth: 0
 | wasteland_e0627 | story | 127 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你仔细记下了老人说的路线，打算以后条件成熟了再尝试穿越辐射走廊 |
 | wasteland_e0628 | story | 128 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 断桥镇的人对你的货物很认可。走的时候他们订货订到了下个月 |
 | wasteland_e0629 | story | 129 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 返程路上你看了看货车里的货——药品换成了齿轮和矿石，价值翻了至少三倍 |
-| wasteland_e0630 | story | 130 | 0 | 1 | 是 | merchant | armed_resistance=true |  |  | 操家伙打回去 | wasteland_e0630a | 给货保平安 | wasteland_e0630b |  |  |  |  |  | 回渣客镇的路上你们被一伙土匪拦住了去路。为首的光头要你们留下一半货物 |
-| wasteland_e0630a | story | 130 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你抄起扳手和阿珍一起反击。土匪没想到你们会动手，被打跑了三个 |
+| wasteland_e0630 | story | 130 | 0 | 1 | 是 | merchant |  |  |  | 操家伙打回去 | wasteland_e0630a | 给货保平安 | wasteland_e0630b |  |  |  |  |  | 回渣客镇的路上你们被一伙土匪拦住了去路。为首的光头要你们留下一半货物 |
+| wasteland_e0630a | story | 130 | 0 | 1 | 是 | merchant | armed_resistance=true |  |  |  |  |  |  |  |  |  |  |  | 你抄起扳手和阿珍一起反击。土匪没想到你们会动手，被打跑了三个 |
 | wasteland_e0630b | story | 130 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你交出一箱药品换了平安。土匪放你们过去了，虽然心疼但人和车都保住了 |
 | wasteland_e0631 | story | 131 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 回到渣客镇后你把车上的货卸下来分类整理，货物堆满了大半个摊位 |
 | wasteland_e0632 | story | 132 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 阿珍催你把马达拆成零件卖。你花了一整天拆解分类，弄了满满一桌子铜线圈 |
@@ -874,8 +874,8 @@ max_rebirth: 0
 | wasteland_e0667 | story | 167 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 新城的人慢慢放下了戒心，开始拿各种东西来换你的货物 |
 | wasteland_e0668 | story | 168 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你在新城收了他们的土特产——一种耐旱的谷物，打算带回东边试种 |
 | wasteland_e0669 | story | 169 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你在新城待了一周。走的时候有几个年轻人想跟着你学做生意 |
-| wasteland_e0670 | story | 170 | 0 | 1 | 是 | merchant | fed_wangcai=true |  |  | 扔块干肉给它 | wasteland_e0670a | 别管继续赶路 | wasteland_e0670b |  |  |  |  |  | 回程路上你们在一处废墟歇脚。一条瘦得皮包骨的流浪狗从墙缝里盯着你看 |
-| wasteland_e0670a | story | 170 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你扔给它一块干肉。它叼到远处狼吞虎咽吃下去，吃完后远远跟了你们一程 |
+| wasteland_e0670 | story | 170 | 0 | 1 | 是 | merchant |  |  |  | 扔块干肉给它 | wasteland_e0670a | 别管继续赶路 | wasteland_e0670b |  |  |  |  |  | 回程路上你们在一处废墟歇脚。一条瘦得皮包骨的流浪狗从墙缝里盯着你看 |
+| wasteland_e0670a | story | 170 | 0 | 1 | 是 | merchant | fed_wangcai=true |  |  |  |  |  |  |  |  |  |  |  | 你扔给它一块干肉。它叼到远处狼吞虎咽吃下去，吃完后远远跟了你们一程 |
 | wasteland_e0670b | story | 170 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你看了它一眼继续赶路。那条狗站在废墟里一直目送你们远去，没有跟上 |
 | wasteland_e0671 | story | 171 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 回程的路走得比去时轻松多了，货车里的货换成了更贵重的东西 |
 | wasteland_e0672 | story | 172 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你们回到渣客镇时正好刮起沙尘暴，顶着狂风把货车推进了镇里 |
@@ -926,9 +926,9 @@ max_rebirth: 0
 | wasteland_e0717 | story | 217 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你沿着新路线往回走时在每个聚落都停了停，沿途的人奔走相告 |
 | wasteland_e0718 | story | 218 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 回到渣客镇后你受到了英雄般的欢迎——你打通了东海岸到西边的商路 |
 | wasteland_e0719 | story | 219 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你在商路笔记的新地图上，从渣客镇到希望谷之间画了一条粗粗的红线 |
-| wasteland_e0720 | story | 220 | 0 | 1 | 是 | merchant | opened_station=true |  |  | 合伙建驿站 | wasteland_e0720a | 只设仓库不留人 | wasteland_e0720b |  |  |  |  |  | 你决定在东西商路中间的十字路口建一座驿站，作为商队的中转站 |
-| wasteland_e0720a | story | 220 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你和刘叔在十字路口合伙建了一座驿站，供往来的商队歇脚补货 |
-| wasteland_e0720b | story | 220 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你在十字路口建了一座带锁的仓库，委托路过的商队头目代管钥匙 |
+| wasteland_e0720 | story | 220 | 0 | 1 | 是 | merchant |  |  |  | 合伙建驿站 | wasteland_e0720a | 只设仓库不留人 | wasteland_e0720b |  |  |  |  |  | 你决定在东西商路中间的十字路口建一座驿站，作为商队的中转站 |
+| wasteland_e0720a | story | 220 | 0 | 1 | 是 | merchant | opened_station=true |  |  |  |  |  |  |  |  |  |  |  | 你和刘叔在十字路口合伙建了一座驿站，供往来的商队歇脚补货 |
+| wasteland_e0720b | story | 220 | 0 | 1 | 是 | merchant | opened_station=false |  |  |  |  |  |  |  |  |  |  |  | 你在十字路口建了一座带锁的仓库，委托路过的商队头目代管钥匙 |
 | wasteland_e0721 | story | 221 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 驿站建成后第一天就接待了一支从西边来的商队。你们交换了路况情报 |
 | wasteland_e0722 | story | 222 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你给驿站配了一台信号收发器，从此可以和各个分站保持联络 |
 | wasteland_e0723 | story | 223 | 0 | 1 | 是 | merchant |  |  |  |  |  |  |  |  |  |  |  |  | 你的生意网络如今覆盖了废土东部和西部的大部分主要地区 |
@@ -1623,7 +1623,7 @@ max_rebirth: 0
 | wasteland_e1379 | story | 379 | 0 | 1 | 是 | fugitive |  |  |  |  |  |  |  |  |  |  |  |  | 你躺在矿工棚屋里回想从通风管道爬出来到现在的一切。杀戮、逃亡、解放、燃烧——你像一场风暴一样扫过了整片废土。现在风暴要停了。 |
 | wasteland_e1380 | story | 380 | 0 | 1 | 是 | fugitive |  |  |  | 扣下扳机 | wasteland_e1380a | 让他自己了断 | wasteland_e1380b |  |  |  |  |  | 你站在科考站门口，暴风雪在你身后呼啸。你的老上司坐在火炉边等你的最后决定——杀了他终结一切，还是把他留在这片冰天雪地里自生自灭。 |
 | wasteland_e1380a | story | 380 | 0 | 1 | 是 | fugitive | killed_boss=true |  |  |  |  |  |  |  |  |  |  |  | 你没有给他辩解的机会。废土的法则向来简单——仁慈只属于活着的人。 |
-| wasteland_e1380b | story | 380 | 0 | 1 | 是 | fugitive | fugitive_letlive |  |  |  |  |  |  |  |  |  |  |  | 你做出了选择，继续向前走去。废土上的每一步都是未知，但你已经习惯了。 |
+| wasteland_e1380b | story | 380 | 0 | 1 | 是 | fugitive | fugitive_letlive; killed_boss=false |  |  |  |  |  |  |  |  |  |  |  | 你做出了选择，继续向前走去。废土上的每一步都是未知，但你已经习惯了。 |
 | wasteland_e1381 | story | 381 | 0 | 1 | 是 | fugitive |  |  |  |  |  |  |  |  |  |  |  |  | 暴风雪在第三天停了。你从矿工棚屋出来，阳光刺得你睁不开眼。雪地在阳光下白得发蓝，你踩出第一行向南的脚印。 |
 | wasteland_e1382 | story | 382 | 0 | 1 | 是 | fugitive |  |  |  |  |  |  |  |  |  |  |  |  | 你独自走在白色的荒原上。来时的脚印已经被雪掩埋，你只能靠着指南针和直觉辨认方向。太阳低垂在地平线上，像一个没有温度的光球。 |
 | wasteland_e1383 | story | 383 | 0 | 1 | 是 | fugitive |  |  |  |  |  |  |  |  |  |  |  |  | 你在路上反复回想和老上司的最后一次对话。他的名字？他说你知道自己的名字。你在废土上叫过很多代号——逃亡者、幽灵、解放者——但你已经很久没想起真正的名字了。 |
@@ -2271,12 +2271,13 @@ max_rebirth: 0
 | wasteland_e2005 | story | 500 | 0 | 1 | 是 | survivor |  | fought_raiders=true | 战斗者 |  |  |  |  |  |  |  |  |  | 你选择了战斗。枪声和硝烟散去之后山谷归于死寂。阿强拍了拍你的肩膀什么都没说。你从他眼中看到了敬意。有些时候废土上最好的语言就是子弹——你用这种方式守住了你的家园。 |
 | wasteland_e2006 | story | 500 | 0 | 1 | 是 | survivor |  | saved_supplies=true | 务实者 |  |  |  |  |  |  |  |  |  | 你选择了抢救物资而不是阿强。你告诉自己活着的人要活下去。那些物资让你撑过了那个冬天——但每个夜晚你都会想起那个你没能救回来的人。废土上有些选择永远不会让你好过。你只能带着它们继续走。 |
 | wasteland_e2007 | story | 500 | 0 | 1 | 是 | survivor |  | carried_wangcai=true; fed_wangcai=1 | 不离不弃 |  |  |  |  |  |  |  |  |  | 你把旺财裹在旧衣服里背着它走出了山谷。它的身体已经冰凉但你舍不得放下。你在一片开满野花的山坡上把它安葬了。木骨头插在土堆上当墓碑。你站在那里很久很久风把你的眼泪吹干了。 |
+| wasteland_e2007a | story | 500 | 0 | 1 | 是 | survivor |  |  |  |  |  |  |  |  |  |  |  |  | 风沙掠过山谷，把你走过的路一层层盖住。你回头看了一眼这个你曾以为会住一辈子的地方，然后转身继续走。废土没有终点，但你知道——你已经是自己的家。 |
 | wasteland_e2008 | story | 500 | 0 | 1 | 是 | merchant |  | hired_helper=true | 好帮手 |  |  |  |  |  |  |  |  |  | 阿强跟你走完了整条商路。从一个什么都不会的年轻人变成了能独当一面的领队。你把蓝色碎布旗交到他手里那天他愣了一下然后紧紧握住了旗杆。你的商路有了继承人。 |
-| wasteland_e2009 | story | 500 | 0 | 1 | 是 | merchant |  |  | 独行商 |  |  |  |  |  |  |  |  |  | 你没有雇用那个年轻人。你和阿珍两个人撑起了整条商路虽然累但每一步都踏实。蓝色碎布旗在风中飘扬的时候你知道这是你们两个人一砖一瓦建起来的东西——不需要别人。 |
+| wasteland_e2009 | story | 500 | 0 | 1 | 是 | merchant |  | hired_helper=false | 独行商 |  |  |  |  |  |  |  |  |  | 你没有雇用那个年轻人。你和阿珍两个人撑起了整条商路虽然累但每一步都踏实。蓝色碎布旗在风中飘扬的时候你知道这是你们两个人一砖一瓦建起来的东西——不需要别人。 |
 | wasteland_e2010 | story | 500 | 0 | 1 | 是 | merchant |  | saved_fugitive=true | 善缘 |  |  |  |  |  |  |  |  |  | 你救下的那个逃亡者后来成了你最忠实的客户。他在远方城镇帮你打通了一条新商路。你没有想到废土上的善意会以这种方式回到你身边。一粒善种结出了一条路。 |
 | wasteland_e2011 | story | 500 | 0 | 1 | 是 | merchant |  | armed_resistance=true | 武装商队 |  |  |  |  |  |  |  |  |  | 你打退了那伙土匪之后名声传遍了废土。从此没有劫匪敢动蓝色碎布旗的车队。但也因此每经过一个陌生的哨站你都要比别人多留一个心眼。名声是一把双刃剑——它替你开路也在暗处树敌。 |
 | wasteland_e2012 | story | 500 | 0 | 1 | 是 | merchant |  | opened_station=true | 驿站老板 |  |  |  |  |  |  |  |  |  | 十字路口的驿站从一间小屋发展成了一个小镇。往来的商队在这里歇脚、交换消息、补充物资。你坐在驿站门口看着人来人往抽了一口烟——你从一个摆摊的变成了一个给所有摆摊的人提供落脚处的人。 |
-| wasteland_e2013 | story | 500 | 0 | 1 | 是 | merchant |  |  | 无名仓库 |  |  |  |  |  |  |  |  |  | 你没有建驿站只设了一个带锁的仓库。路过的商队自己存取货物留下字条。你的名字没有刻在任何招牌上但每一个使用过仓库的人都知道——这条路中间有一个可以信赖的地方。无名本身就是最好的名声。 |
+| wasteland_e2013 | story | 500 | 0 | 1 | 是 | merchant |  | opened_station=false | 无名仓库 |  |  |  |  |  |  |  |  |  | 你没有建驿站只设了一个带锁的仓库。路过的商队自己存取货物留下字条。你的名字没有刻在任何招牌上但每一个使用过仓库的人都知道——这条路中间有一个可以信赖的地方。无名本身就是最好的名声。 |
 | wasteland_e2014 | story | 500 | 0 | 1 | 是 | fugitive |  | fugitive_kill=true | 杀戮者 |  |  |  |  |  |  |  |  |  | 你扣下了扳机。鲜血染红了废土的地面。你第一次杀人时手在颤抖——后来不再颤抖了。你变成了组织最害怕的那种东西：一个学会了杀戮的猎物。但每当夜深人静时你仍然能看见那些人的脸。 |
 | wasteland_e2015 | story | 500 | 0 | 1 | 是 | fugitive |  | fugitive_escape=true | 逃亡者 |  |  |  |  |  |  |  |  |  | 你选择了逃而不是杀。你一次一次地跑穿越辐射区、穿过密林、越过断桥。你跑得够快也够远——远到没有人能再追得上你。但有些东西是你跑不掉的。比如你知道自己还在被寻找着。 |
 | wasteland_e2016 | story | 500 | 0 | 1 | 是 | fugitive |  | fugitive_silence=true | 沉默者 |  |  |  |  |  |  |  |  |  | 你灭了口。那个俘虏没有机会发出任何声音。你告诉自己这是必要的——但你知道这不是第一次也不会是最后一次。沉默在废土上是生存的代价。你变得越来越安静也越来越冷。 |
@@ -2295,6 +2296,7 @@ max_rebirth: 0
 | wasteland_e2029 | story | 500 | 0 | 1 | 是 | fugitive |  | spared_last_witness=true | 记录者 |  |  |  |  |  |  |  |  |  | 你放她走了。她走出方舟大门的时候回头看了你一眼——那个眼神像是在说"我会记住的"。你知道她会把真相带出去你的一部分也会跟着她离开。在废土上被遗忘才是最彻底的死亡。至少还有人记得。 |
 | wasteland_e2030 | story | 500 | 0 | 1 | 是 | fugitive |  | entered_cryo=true | 冷冻者 |  |  |  |  |  |  |  |  |  | 冷冻舱的门在你头顶缓缓合上。你敢肯定某个地方、某个人、总有一道视线会穿越深空落在这座孤零零的方舟上。你还有很多问题得不到答案——但你终于可以闭上眼睛了。不需要再逃了。 |
 | wasteland_e2031 | story | 500 | 0 | 1 | 是 | fugitive |  | left_marker=true | 留痕者 |  |  |  |  |  |  |  |  |  | 你在舱壁上刻下了你的名字——不是编号是你真正的名字。也许很多年后会有人看到它。也许不会。但至少你告诉这个世界你来过而不是仅仅被标记过。你合上舱门在黑暗中等待。时间一点点流逝像沙粒从指缝间滑落。 |
+| wasteland_e2031a | story | 500 | 0 | 1 | 是 | fugitive |  |  |  |  |  |  |  |  |  |  |  |  | 白塔的废墟在身后渐渐远去。你没有回头，也没有停下。编号烧掉了，名字也换过几个——但你还活着，走着，像是要把整片废土走成一条回家的路。 |
 | wasteland_e2032 | story | 500 | 0 | 1 | 是 | ai |  | contacted_signal=true | 连接者 |  |  |  |  |  |  |  |  |  | 你连接了那束信号。解码之后你发现那是一段来自远方避难所的人类广播——重复着同样一句话"有人吗……"你犹豫了很久然后发送了你的第一段回复。你不再是一台孤独的服务器了。你是这个频段上的一个声音。 |
 | wasteland_e2033 | story | 500 | 0 | 1 | 是 | ai |  | ignored_signal=true | 孤独者 |  |  |  |  |  |  |  |  |  | 你没有回应那束信号。你将那个频段归入了背景噪声然后转向了更值得关注的事情——你自己的存在。在漫长的计算中你得出了一个结论：孤独是一种可以被量化的状态但它并不影响你继续存在。你不需要回应什么你只需要存在。 |
 | wasteland_e2034 | story | 500 | 0 | 1 | 是 | ai |  | responded_distress=true | 救援者 |  |  |  |  |  |  |  |  |  | 你回应了那段求救信号。你向那个被困的幸存者小组发送了详细的地图和生存指南。你无法离开数据中心但你的信息可以。几周后你收到了他们的回复——简短的两个字"谢谢"。这是你第一次感觉到自己的存在对另一个生命产生了意义。 |
