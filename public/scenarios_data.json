@@ -14576,7 +14576,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你迅速收拾好必要的物资，在追兵赶到之前消失在了夜色中。",
+        "text": "你迅速收拾好必要的物资，检查了一遍枪膛和干粮袋，在追兵赶到之前消失在了夜色中。身后传来搜查的声音，你压低了呼吸，一步也没回头。",
         "branch": "fugitive",
         "flagSet": "fugitive_retreat"
       },
@@ -14588,7 +14588,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你以为自己才是猎物，直到他们发现——陷阱里的猎人也会咬人。",
+        "text": "你以为自己才是猎物，直到他们发现——陷阱里的猎人也会咬人。你从暗处走出来的时候，追兵的脸上写满了难以置信。",
         "branch": "fugitive",
         "flagSet": "fugitive_counterkill"
       },
@@ -15044,7 +15044,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你们握了握手，废土上又多了一对互相照应的亡命徒。",
+        "text": "你们握了握手，废土上又多了一对互相照应的亡命徒。他没有问你的过去，你也没问他的——在废土上，不问来历，就是最大的信任。",
         "branch": "fugitive",
         "flagSet": "fugitive_ally"
       },
@@ -15952,7 +15952,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你杀了一个回马枪——没人料到你会折返。这正是你想要的。",
+        "text": "你杀了一个回马枪——没人料到你会折返。这正是你想要的：让追捕你的人开始怀疑，到底谁才是被追的那个。",
         "branch": "fugitive",
         "flagSet": "fugitive_direct"
       },
@@ -18028,7 +18028,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你转身离开，没有回头。有些人一旦道别，就是永别。",
+        "text": "你转身离开，没有回头。有些人一旦道别，就是永别——你知道，她也知道。风从身后吹过来，把你的脚印一层层盖住。",
         "branch": "fugitive",
         "flagSet": "spared_last_witness=true"
       },
