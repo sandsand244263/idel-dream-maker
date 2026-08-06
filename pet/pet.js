@@ -352,7 +352,7 @@ function updateInfoBar(){
   if(!spritesheet&&pets.length===0){drawNoPetHint();return;}
   if(!spritesheet)return;
   const title=gameInfo.title&&gameInfo.title!=='—'?gameInfo.title:'';
-  const dl=gameInfo.isInHub?(gameInfo.hubLevel||1):(gameInfo.level||1);
+  const dl=gameInfo.level||1;   // v4 单轨：唯一等级（大厅/世界同一 petTotalExp）
   infoText.textContent=title?`${gameInfo.scenario} | LV.${dl} | ${title}`:`${gameInfo.scenario} | LV.${dl}`;
   updateExpBar();
 }
@@ -424,8 +424,7 @@ window.pet.on('toggle-feature', d => {
   applyPetSettings();
 });
 window.pet.on('game-tick',d=>{
-  gameInfo.level=d.level||1;gameInfo.exp=d.total_exp_earned||0;
-  gameInfo.hubLevel=d.hub_level||1;
+  gameInfo.level=d.level||1;gameInfo.exp=d.exp||0;   // v4：exp = petTotalExp（单轨化后唯一经验池）
   gameInfo.isInHub=d.is_in_hub!==false;
   if(d.currentTitle)gameInfo.title=d.currentTitle;
   gameInfo.scenario=d.is_in_hub?'家':(d.scenario_name||'世界');

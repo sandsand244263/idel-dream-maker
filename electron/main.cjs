@@ -3299,7 +3299,7 @@ async function runScreenshotMode(scenes) {
     await sleep(1500);
     const shots = [];
     console.log('[shot] scene1 pet window');
-    // 场景 1：宠物窗口（模拟悬停显示完整 UI，6 帧动图源）
+    // 场景 1：宠物窗口（模拟悬停显示完整 UI，静帧）
     if (scenes >= 1) {
       const pw = getPetWindow();
       if (pw) {
@@ -3307,7 +3307,8 @@ async function runScreenshotMode(scenes) {
         await sleep(800);
         try { pw.webContents.sendInputEvent({ type: 'mouseMove', x: 96, y: 160 }); } catch (e) { console.log('[shot] hover fail:', e.message); }
         await sleep(600);
-        for (let i = 0; i < 6; i++) { const img = await cap(pw); if (img) shots.push(img); await sleep(450); }
+        const img = await cap(pw);
+        if (img) shots.push(img);
       }
     }
     console.log('[shot] scene2 world select');

@@ -37,12 +37,12 @@ child.on('exit', (code) => {
   console.log('[shot] frames captured:', frames.length);
   let idx = 0;
   try {
-    // 场景 1：前 6 帧 → pet-window.gif
-    if (scenes >= 1 && frames.length >= 6) {
-      const gif = path.join(OUT_DIR, 'pet-window.gif');
-      execSync(`"${ffmpeg}" -y -framerate 3 -i "${path.join(SHOT_DIR, 'shot_%02d.png')}" -vf "fps=3,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" "${gif}"`, { stdio: 'inherit' });
-      console.log('[shot] gif OK:', gif, (fs.statSync(gif).size / 1024).toFixed(0) + 'KB');
-      idx = 6;
+    // 场景 1：第 1 帧 → pet-window.jpg（静帧）
+    if (scenes >= 1 && frames.length >= 1) {
+      const jpg = path.join(OUT_DIR, 'pet-window.jpg');
+      execSync(`"${ffmpeg}" -y -i "${path.join(SHOT_DIR, 'shot_01.png')}" -vf "scale=320:-1:flags=lanczos" -q:v 4 "${jpg}"`, { stdio: 'inherit' });
+      console.log('[shot] jpg OK:', jpg, (fs.statSync(jpg).size / 1024).toFixed(0) + 'KB');
+      idx = 1;
     }
     // 场景 2：下一帧 → hub.jpg
     if (scenes >= 2 && frames.length > idx) {
