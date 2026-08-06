@@ -2902,6 +2902,7 @@ app.whenReady().then(() => {
 
   // Load save or create default
   gameState = readSave();
+  if (gameState) normalizeGameState(gameState);   // 修复：读档后补 normalize（否则 petFoods 等 undefined，攒道具触发判断恒 false）
   if (!gameState) {
     const defaultScenario = allScenarios[0];
     gameState = {
