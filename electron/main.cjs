@@ -46,16 +46,14 @@ const HUB_TITLES = [
 ];
 
 const HUB_ACHIEVEMENTS = [
-  { id: 'hub_lv50', name: '初出茅庐', desc: '大厅等级达到 50', condition: { type: 'hub_level', value: 50 } },
-  { id: 'hub_lv100', name: '百级之路', desc: '大厅等级达到 100', condition: { type: 'hub_level', value: 100 } },
-  { id: 'hub_lv200', name: '两百之巅', desc: '大厅等级达到 200', condition: { type: 'hub_level', value: 200 } },
-  { id: 'hub_lv300', name: '三百之峰', desc: '大厅等级达到 300', condition: { type: 'hub_level', value: 300 } },
-  { id: 'hub_complete3', name: '集邮者', desc: '通关 3 个不同副本', condition: { type: 'completions', value: 3 } },
-  { id: 'hub_half', name: '半数圆满', desc: '通关当前一半副本', condition: { type: 'completions_half', value: 0 } },
-  { id: 'hub_all', name: '大圆满', desc: '通关所有副本', condition: { type: 'completions_all', value: 0 } },
-  { id: 'hub_rebirth1', name: '重生者', desc: '任意副本重生 1 次', condition: { type: 'rebirths', value: 1 } },
-  { id: 'hub_rebirth3', name: '轮回者', desc: '任意副本重生 3 次', condition: { type: 'rebirths', value: 3 } },
-  { id: 'hub_complete5', name: '万界旅人', desc: '通关 5 个不同副本', condition: { type: 'completions', value: 5 } },
+  { id: 'hub_lv50', name: '初出茅庐', desc: '宠物等级达到 50', condition: { type: 'pet_level', value: 50 } },
+  { id: 'hub_lv100', name: '百级之路', desc: '宠物等级达到 100', condition: { type: 'pet_level', value: 100 } },
+  { id: 'hub_lv200', name: '两百之巅', desc: '宠物等级达到 200', condition: { type: 'pet_level', value: 200 } },
+  { id: 'hub_lv300', name: '三百之峰', desc: '宠物等级达到 300', condition: { type: 'pet_level', value: 300 } },
+  { id: 'hub_complete3', name: '集邮者', desc: '通关 3 个不同世界', condition: { type: 'completions', value: 3 } },
+  { id: 'hub_half', name: '半数圆满', desc: '通关当前一半世界', condition: { type: 'completions_half', value: 0 } },
+  { id: 'hub_all', name: '大圆满', desc: '通关所有世界', condition: { type: 'completions_all', value: 0 } },
+  { id: 'hub_complete5', name: '万界旅人', desc: '通关 5 个不同世界', condition: { type: 'completions', value: 5 } },
 ];
 
 function getHubTitle(level) {
@@ -71,16 +69,15 @@ function checkHubAchievements() {
   const unlocked = [];
   const completionCount = (gameState.gameCompletions || []).filter((c, i, arr) => arr.findIndex(x => x.scenarioId === c.scenarioId) === i).length;
   const totalScenarios = allScenarios.length;
-  const maxRebirth = Math.max(0, ...Object.values(gameState.rebirthCounts || {}));
+  const petLevel = calcLevel(gameState.petTotalExp);
   for (const a of HUB_ACHIEVEMENTS) {
     if (gameState.unlockedAchievements.includes(a.id)) continue;
     let met = false;
     switch (a.condition.type) {
-      case 'hub_level': met = hubLevel >= a.condition.value; break;
+      case 'pet_level': met = petLevel >= a.condition.value; break;
       case 'completions': met = completionCount >= a.condition.value; break;
       case 'completions_half': met = totalScenarios > 0 && completionCount >= Math.ceil(totalScenarios / 2); break;
       case 'completions_all': met = totalScenarios > 0 && completionCount >= totalScenarios; break;
-      case 'rebirths': met = maxRebirth >= a.condition.value; break;
     }
     if (met) {
       gameState.unlockedAchievements.push(a.id);
@@ -202,6 +199,8 @@ function normalizeGameState(gs) {
   if (typeof gs.totalExpEarned !== 'number') gs.totalExpEarned = 0;
   if (typeof gs.totalRuntimeMs !== 'number') gs.totalRuntimeMs = 0;
   if (typeof gs.hubTotalExp !== 'number') gs.hubTotalExp = 0;
+  // v4 等级单轨化：petTotalExp = 两池合并（迁移），此后唯一经验池
+  if (typeof gs.petTotalExp !== 'number') gs.petTotalExp = (gs.hubTotalExp || 0) + (gs.totalExpEarned || 0);
   gs.pendingChoiceEvent = null;
   gs._catchUpQueue = null;  gs._lastCatchUpTime = 0;
   gs._lastCyberBlock = undefined;
@@ -463,8 +462,8 @@ function checkSyncOnStartup() {
     const localTime = gameState?.lastWriteTimestamp || '';
     const syncTime = syncData.lastWriteTimestamp || '';
     if (!syncTime || syncTime <= localTime) return;
-    const localTotal = (gameState?.hubTotalExp || 0) + (gameState?.totalExpEarned || 0);
-    const cloudTotal = (syncData.hubTotalExp || 0) + (syncData.totalExpEarned || 0);
+    const localTotal = gameState?.petTotalExp || 0;
+    const cloudTotal = syncData.petTotalExp || 0;
     if (cloudTotal < localTotal) return;
     // 设备信息
     const currentDevice = require('os').hostname();
@@ -496,7 +495,7 @@ function checkSyncOnStartup() {
         }
       }
       // Recalculate
-      hubLevel = calcLevel(gameState.hubTotalExp);
+      gameState.level = calcLevel(gameState.petTotalExp);
       if (gameState.scenarioId && !gameState.isInHub) {
         currentScenario = findScenarioById(gameState.scenarioId);
         if (currentScenario) currentTitle = getCurrentTitle(currentScenario, gameState.level);
@@ -549,8 +548,8 @@ function syncToCloud(cfg, silent) {
     if (fs.existsSync(cloudSavePath)) {
       try {
         const cloudData = JSON.parse(fs.readFileSync(cloudSavePath, 'utf-8'));
-        const localTotal = (gameState?.hubTotalExp || 0) + (gameState?.totalExpEarned || 0);
-        const cloudTotal = (cloudData.hubTotalExp || 0) + (cloudData.totalExpEarned || 0);
+        const localTotal = gameState?.petTotalExp || 0;
+        const cloudTotal = cloudData.petTotalExp || 0;
         // 防回滚：云端进度更高时不覆盖（时间戳受本机写入顺序影响，进度才是可靠防线）
         if (cloudTotal > localTotal) {
           return;
@@ -600,6 +599,7 @@ function checkSaveFields(gs) {
       level: { present: typeof gs.level === 'number', value: gs.level },
       exp: { present: typeof gs.exp === 'number', value: gs.exp },
       totalExpEarned: { present: typeof gs.totalExpEarned === 'number', value: gs.totalExpEarned },
+      petTotalExp: { present: typeof gs.petTotalExp === 'number', value: gs.petTotalExp },
       hubTotalExp: { present: typeof gs.hubTotalExp === 'number', value: gs.hubTotalExp },
       totalRuntimeMs: { present: typeof gs.totalRuntimeMs === 'number', value: gs.totalRuntimeMs },
       isInHub: { present: gs.isInHub !== undefined, value: gs.isInHub },
@@ -661,7 +661,6 @@ let allScenarios = [];
 let gameState = null;
 let currentScenario = null;
 let currentTitle = null;
-let hubLevel = 1;
 let gameLoopInterval = null;
 let tooltipInterval = null;
 
@@ -775,12 +774,12 @@ function handleInputDown(keyId, keyChar, now) {
   }
 
   const mult = getComboMultiplier(grade);
-  const keyExp = 1.0 * mult * (1 + (gameState.rebirthExpBonus || 0));
-  gameState.exp = (gameState.exp || 0) + keyExp;
-  gameState.totalExpEarned = (gameState.totalExpEarned || 0) + keyExp;
+  const keyExp = 1.0 * mult;
+  gameState.petTotalExp = (gameState.petTotalExp || 0) + keyExp;
+  gameState.exp = gameState.petTotalExp;
 
   const ol = gameState.level;
-  gameState.level = calcLevel(gameState.totalExpEarned);
+  gameState.level = calcLevel(gameState.petTotalExp);
   if (gameState.level > ol) {
     const title = getCurrentTitle(currentScenario, gameState.level);
     const storyEvent = findUnusedEvent('story', gameState.level);
@@ -891,19 +890,16 @@ function resetGameForScenario(scenario, alias) {
   const p = gameState.scenarioProgress && gameState.scenarioProgress[scenario.id];
   // 大厅成就与通关成就是全局永久的，切换副本时保留，防止重复解锁弹窗
   const hubPersist = (gameState.unlockedAchievements || []).filter(id => id.startsWith('hub_') || id.startsWith('completion_'));
+  // v4 等级单轨化：宠物等级全局，副本不再存/恢复经验
+  gameState.level = calcLevel(gameState.petTotalExp);
+  gameState.exp = gameState.petTotalExp;
   if (p) {
-    gameState.totalExpEarned = p.totalExpEarned || 0;
-    gameState.level = calcLevel(gameState.totalExpEarned);
-    gameState.exp = gameState.totalExpEarned;
     gameState.totalRuntimeMs = p.totalRuntimeMs || 0;
     gameState.triggeredEvents = p.triggeredEvents ? [...p.triggeredEvents] : [];
     gameState.unlockedAchievements = [...new Set([...hubPersist, ...(p.unlockedAchievements || [])])];
     gameState.equippedTitleIndex = p.equippedTitleIndex || 0;
     gameState.currentBranch = p.currentBranch || '';
   } else {
-    gameState.level = 1;
-    gameState.exp = 0;
-    gameState.totalExpEarned = 0;
     gameState.totalRuntimeMs = 0;
     gameState.triggeredEvents = [];
     gameState.unlockedAchievements = hubPersist;
@@ -950,14 +946,8 @@ function exitToHub() {
     if (!gameState.unlockedTitleSets) gameState.unlockedTitleSets = {};
     gameState.unlockedTitleSets[sid] = unlocked;
 
-    // Save progress: only add delta exp to hub to avoid double counting
-    const prevProgress = gameState.scenarioProgress && gameState.scenarioProgress[sid];
-    const prevExp = prevProgress ? prevProgress.totalExpEarned : 0;
-    const delta = gameState.totalExpEarned - prevExp;
-    gameState.hubTotalExp += Math.max(0, Math.floor(delta * 0.5));
-
+    // v4：经验全局（petTotalExp），出副本不再折算入大厅
     gameState.scenarioProgress[sid] = {
-      totalExpEarned: gameState.totalExpEarned,
       totalRuntimeMs: gameState.totalRuntimeMs,
       triggeredEvents: [...gameState.triggeredEvents],
       unlockedAchievements: [...gameState.unlockedAchievements],
@@ -972,7 +962,6 @@ function exitToHub() {
   gameState.pendingChoiceEvent = null;
   currentScenario = null;
   currentTitle = null;
-  hubLevel = calcLevel(gameState.hubTotalExp);
 }
 
 function checkFlagRequire(flagRequire) {
@@ -1194,11 +1183,10 @@ function startGameLoop() {
       scenario_id: gameState.scenarioId,
       level: gameState.level,
       exp: gameState.exp,
-      total_exp_earned: gameState.totalExpEarned,
+      pet_total_exp: gameState.petTotalExp,
       total_runtime_ms: gameState.totalRuntimeMs,
       equipped_title_index: gameState.equippedTitleIndex,
       is_in_hub: gameState.isInHub,
-      hub_total_exp: gameState.hubTotalExp,
       unlockedAchievements: gameState.unlockedAchievements,
       triggered_events: gameState.triggeredEvents,
       language: gameState.language,
@@ -1206,23 +1194,21 @@ function startGameLoop() {
       scenario_name: currentScenario ? (currentScenario.name_cn || currentScenario.nameCN || currentScenario.name) : null,
       theme: gameState.selectedFontTheme || 'green',
       custom_theme: gameState.customTheme || null,
-      hub_level: calcLevel(gameState.hubTotalExp),
+      pet_level: calcLevel(gameState.petTotalExp),
       current_branch: gameState.currentBranch || '',
       completed_branches: (gameState.branchProgress && gameState.branchProgress[gameState.scenarioId]) || [],
       flags: gameState.flags || {},
       mechanic: currentScenario ? (currentScenario.mechanic || 'standard') : 'standard',
-      hub_title: gameState?.equippedCompletionTitle?.title || getHubTitle(hubLevel).name,
+      hub_title: gameState?.equippedCompletionTitle?.title || getHubTitle(calcLevel(gameState.petTotalExp)).name,
       total_key_presses: gameState.totalKeyPresses || 0,
       daily_key_presses: gameState.dailyKeyPresses || 0,
       buff_multiplier: buffMultiplier,
       buff_remaining: buffExpireTime ? Math.max(0, buffExpireTime - Date.now()) : 0,
       gameCompletions: gameState.gameCompletions || [],
-      rebirthCounts: gameState.rebirthCounts || {},
-      rebirth_count: (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0,
     };
     try { mainWindow.webContents.send('game-tick', payload); } catch {}
     forwardToPet('game-tick', payload);
-    forwardToPet('pet-state', { hubLevel: calcLevel(gameState.hubTotalExp), isInHub: gameState.isInHub, level: gameState.level });
+    forwardToPet('pet-state', { petLevel: calcLevel(gameState.petTotalExp), isInHub: gameState.isInHub, level: gameState.level });
 
     if (gameState.isInHub) {
       if (!allScenariosFullyCompleted()) {
@@ -1306,9 +1292,9 @@ function startGameLoop() {
       const month = new Date().getMonth();
       if (month >= 11 || month <= 2) expMultiplier = 0.5;  // 12-2 月冬季
     }
-    const expGain = (delta / 1000) * expMultiplier * buffMultiplier * (1 + (gameState.rebirthExpBonus || 0));
-    gameState.exp += expGain;
-    gameState.totalExpEarned += expGain;
+    const expGain = (delta / 1000) * expMultiplier * buffMultiplier;
+    gameState.petTotalExp = (gameState.petTotalExp || 0) + expGain;
+    gameState.exp = gameState.petTotalExp;
 
     // Buff expiry check
     if (buffExpireTime && Date.now() >= buffExpireTime) {
@@ -1319,7 +1305,7 @@ function startGameLoop() {
 
     // Level up check — merge with story event
     const oldLevel = gameState.level;
-    gameState.level = calcLevel(gameState.totalExpEarned);
+    gameState.level = calcLevel(gameState.petTotalExp);
     if (gameState.level > oldLevel) {
       // If there's a pending choice, skip story event — choice must be resolved first
       if (gameState.pendingChoiceEvent) {
@@ -1401,7 +1387,7 @@ function startGameLoop() {
       if (!gameState.gameCompletions) gameState.gameCompletions = [];
       const existingIdx = gameState.gameCompletions.findIndex(c => c.scenarioId === gameState.scenarioId);
       if (existingIdx === -1) {
-        gameState.gameCompletions.push({ scenarioId: gameState.scenarioId, date: getLocalDateStr(), rebirthCount: (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0, branch: cb });
+        gameState.gameCompletions.push({ scenarioId: gameState.scenarioId, date: getLocalDateStr(), branch: cb });
       }
       // 检查大厅成就
       checkHubAchievements();
@@ -1479,11 +1465,10 @@ function serializeGame() {
     scenario_id: gameState.scenarioId,
     level: gameState.level,
     exp: gameState.exp,
-    total_exp_earned: gameState.totalExpEarned,
+    pet_total_exp: gameState.petTotalExp,
     total_runtime_ms: gameState.totalRuntimeMs,
     equipped_title_index: gameState.equippedTitleIndex,
     is_in_hub: gameState.isInHub,
-    hub_total_exp: gameState.hubTotalExp,
     language: gameState.language,
     ai_output_language: gameState.aiOutputLanguage || 'zh',
     selected_font_theme: gameState.selectedFontTheme || 'green',
@@ -1496,8 +1481,6 @@ function serializeGame() {
     has_seen_onboarding: gameState.hasSeenOnboarding || false,
     pet_selected_index: gameState.petSelectedIndex || 0,
     gameCompletions: gameState.gameCompletions || [],
-    rebirthCounts: gameState.rebirthCounts || {},
-    rebirth_count: (gameState.rebirthCounts && gameState.rebirthCounts[gameState.scenarioId]) || 0,
     current_branch: gameState.currentBranch || '',
     completed_branches: (gameState.branchProgress && gameState.branchProgress[gameState.scenarioId]) || [],
     flags: gameState.flags || {},
@@ -1510,7 +1493,7 @@ function registerIpcHandlers() {
     const currentTitleData = currentTitle || (currentScenario ? { name: currentScenario.playerTitle, color: '#888', desc: '' } : null);
     return {
       game: serializeGame(),
-      hubLevel: hubLevel,
+      petLevel: calcLevel(gameState.petTotalExp),
       scenario: currentScenario ? {
         id: currentScenario.id,
         name: currentScenario.name,
@@ -1548,11 +1531,8 @@ function registerIpcHandlers() {
       try { forwardToPet('dismiss-choice', {}); } catch {}
       const oldSid = gameState.scenarioId;
       if (!gameState.scenarioProgress) gameState.scenarioProgress = {};
-      const prevExp = gameState.scenarioProgress[oldSid]?.totalExpEarned || 0;
-      const delta = gameState.totalExpEarned - prevExp;
-      gameState.hubTotalExp += Math.max(0, Math.floor(delta * 0.5));
+      // v4：经验全局，切副本不再折算
       gameState.scenarioProgress[oldSid] = {
-        totalExpEarned: gameState.totalExpEarned,
         totalRuntimeMs: gameState.totalRuntimeMs,
         triggeredEvents: [...gameState.triggeredEvents],
         unlockedAchievements: [...gameState.unlockedAchievements],
@@ -1585,9 +1565,9 @@ function registerIpcHandlers() {
       if (queue.length > 0) {
         gameState._catchUpQueue = queue;        // 确保等级至少达到门槛（只补差额，不覆盖超出部分）
         const expForLevel = calcExpForLevel(catchUpLevel);
-        if (gameState.totalExpEarned < expForLevel) {
-          gameState.totalExpEarned = expForLevel;
-          gameState.exp = expForLevel;
+        if (gameState.petTotalExp < expForLevel) {
+          gameState.petTotalExp = expForLevel;
+          gameState.exp = gameState.petTotalExp;
         }
         gameState.level = catchUpLevel;
       }
@@ -1623,7 +1603,7 @@ function registerIpcHandlers() {
     try { forwardToPet('dismiss-choice', {}); } catch {}
     exitToHub();
     writeSave(gameState);
-    return { hubTotalExp: gameState.hubTotalExp, hubLevel: hubLevel };
+    return { petTotalExp: gameState.petTotalExp, petLevel: calcLevel(gameState.petTotalExp) };
   });
 
   ipcMain.handle('get-hub-titles', () => {
@@ -1886,50 +1866,9 @@ function registerIpcHandlers() {
     return result;
   });
 
-  // ── Rebirth (choose another branch) ──
-  ipcMain.handle('rebirth-scenario', (_, { scenarioId }) => {
-    const sid = scenarioId || gameState.scenarioId;
-    if (!sid) return { success: false, error: '无副本ID' };
-    // 检查所有分支是否已走完
-    const scenario = findScenarioById(sid);
-    const branches = scenario?.branches || [];
-    const bp = (gameState.branchProgress && gameState.branchProgress[sid]) || [];
-    if (branches.length > 0 && bp.length >= branches.length) {
-      return { success: false, error: '所有分支已探索' };
-    }
-    // 增加重生次数（保留在原字段以兼容）
-    if (!gameState.rebirthCounts) gameState.rebirthCounts = {};
-    gameState.rebirthCounts[sid] = (gameState.rebirthCounts[sid] || 0) + 1;
-    // 计算总重生次数（所有副本）
-    const totalRebirths = Object.values(gameState.rebirthCounts).reduce((a, b) => a + b, 0);
-    // 经验加成：每次 +25%，封顶 +100%
-    gameState.rebirthExpBonus = Math.min(1.0, totalRebirths * 0.25);
-    // 清空该副本进度
-    if (gameState.scenarioProgress) delete gameState.scenarioProgress[sid];
-    // 保留通关记录（不删）
-    // 重置副本内状态
-    gameState.level = 1;
-    gameState.exp = 0;
-    gameState.totalExpEarned = 0;
-    gameState.totalRuntimeMs = 0;
-    gameState.triggeredEvents = [];
-    gameState.currentBranch = '';
-    gameState.flags = {};
-    if (gameState.branchProgress) gameState.branchProgress[sid] = [];
-    gameState.pendingChoiceEvent = null;
-    gameState._catchUpQueue = null;    // 返回大厅
-    gameState.scenarioId = '';
-    gameState.isInHub = true;
-    currentScenario = null;
-    currentTitle = null;
-    hubLevel = calcLevel(gameState.hubTotalExp);
-    writeSave(gameState);
-    return { success: true, hubLevel, rebirthExpBonus: gameState.rebirthExpBonus };
-  });
-
   // ── Hub titles ──
   ipcMain.handle('get-hub-title', () => {
-    return getHubTitle(hubLevel);
+    return getHubTitle(calcLevel(gameState.petTotalExp));
   });
 
   // ── Hub achievements list ──
@@ -1972,8 +1911,8 @@ function registerIpcHandlers() {
     const archived = gameState.archivedScenarios || [];
     const activeTotal = allScenarios.filter(s => !archived.includes(s.id)).length;
     return {
-      hubLevel,
-      hubTitle: { name: gameState?.equippedCompletionTitle?.title || getHubTitle(hubLevel).name },
+      petLevel: calcLevel(gameState.petTotalExp),
+      hubTitle: { name: gameState?.equippedCompletionTitle?.title || getHubTitle(calcLevel(gameState.petTotalExp)).name },
       completionCount: completions.length,
       totalScenarios: activeTotal,
       completions: completions,
@@ -1986,14 +1925,14 @@ function registerIpcHandlers() {
     const archived = gameState.archivedScenarios || [];
     return allScenarios.map(s => {
       const req = s.unlock_requirement || {};
-      const hubOk = !req.hub_level || hubLevel >= req.hub_level;
+      const hubOk = !req.hub_level || calcLevel(gameState.petTotalExp) >= req.hub_level;
       const compOk = !req.completions || completionCount >= req.completions;
       const unlocked = hubOk && compOk;
       return {
         id: s.id,
         unlocked,
         requirement: req,
-        hubLevel: hubLevel,
+        petLevel: calcLevel(gameState.petTotalExp),
         completionCount,
         archived: archived.includes(s.id),
         canArchive: canArchiveScenario(s.id),
@@ -2072,9 +2011,7 @@ function registerIpcHandlers() {
 
       // 3. Build diagnostic report
       const isInHub = gameState.isInHub;
-      const hubExp = gameState.hubTotalExp || 0;
-      const scenarioExp = gameState.totalExpEarned || 0;
-      const totalExp = hubExp + scenarioExp;
+      const totalExp = gameState.petTotalExp || 0;
       const gameLevel = gameState.level || 1;
       const syncCfg = readSyncConfig();
 
@@ -2085,14 +2022,14 @@ function registerIpcHandlers() {
         if (fs.existsSync(cloudSavePath)) {
           try {
             const cloudData = JSON.parse(fs.readFileSync(cloudSavePath, 'utf-8'));
-            const cloudTotal = (cloudData.hubTotalExp || 0) + (cloudData.totalExpEarned || 0);
-            const cloudLevel = calcLevel(cloudData.hubTotalExp || 0);
+            const cloudTotal = cloudData.petTotalExp || 0;
+            const cloudLevel = calcLevel(cloudData.petTotalExp || 0);
             syncInfo = [
               `同步目录: ${syncCfg.path}`,
               `上次同步: ${syncCfg.lastSync || '未知'}`,
               `设备ID: ${syncCfg.deviceId || '未知'}`,
               `云端玩家: ${cloudData.playerName || '未知'}`,
-              `云端大厅等级: ${cloudLevel}`,
+              `云端宠物等级: ${cloudLevel}`,
               `云端总经验: ${cloudTotal}`,
               `本地总经验: ${totalExp}`,
               `经验差: ${totalExp - cloudTotal}`,
@@ -2140,11 +2077,8 @@ function registerIpcHandlers() {
         `--- 2. 存档状态 ---`,
         `最后写入: ${gameState.lastWriteTimestamp || '无'}`,
         `玩家名称: ${gameState.playerName || '无'}`,
-        `大厅等级: ${hubLevel}`,
-        `大厅经验: ${hubExp}`,
-        `副本内等级: ${gameLevel}`,
-        `副本内经验: ${gameState.exp || 0}`,
-        `总经验(大厅+副本): ${totalExp}`,
+        `宠物等级: ${gameLevel}`,
+        `宠物总经验: ${totalExp}`,
         `运行总时长: ${Math.floor((gameState.totalRuntimeMs || 0) / 1000 / 60)} 分钟`,
         `已通关数: ${uniqueCompletions.length}`,
         `成就解锁: ${(gameState.unlockedAchievements || []).length}`,
@@ -2293,17 +2227,15 @@ function registerIpcHandlers() {
       const cloudData = JSON.parse(fs.readFileSync(cloudSavePath, 'utf-8'));
       const cloud = {
         playerName: cloudData.playerName || '?',
-        hubTotalExp: cloudData.hubTotalExp || 0,
-        totalExpEarned: cloudData.totalExpEarned || 0,
+        petTotalExp: cloudData.petTotalExp || 0,
         lastWriteTimestamp: cloudData.lastWriteTimestamp || '',
-        hubLevel: calcLevel(cloudData.hubTotalExp || 0),
+        petLevel: calcLevel(cloudData.petTotalExp || 0),
       };
       const local = {
         playerName: gameState?.playerName || '?',
-        hubTotalExp: gameState?.hubTotalExp || 0,
-        totalExpEarned: gameState?.totalExpEarned || 0,
+        petTotalExp: gameState?.petTotalExp || 0,
         lastWriteTimestamp: gameState?.lastWriteTimestamp || '',
-        hubLevel: calcLevel(gameState?.hubTotalExp || 0),
+        petLevel: calcLevel(gameState?.petTotalExp || 0),
       };
       return { hasCloudSave: true, cloud, local };
     } catch { return { hasCloudSave: false }; }
@@ -2328,7 +2260,7 @@ function registerIpcHandlers() {
           gameState.lastWriteTimestamp = new Date().toISOString();
           normalizeGameState(gameState);
           // Rebuild scenario state
-          hubLevel = calcLevel(gameState.hubTotalExp);
+          gameState.level = calcLevel(gameState.petTotalExp);
           if (gameState.scenarioId && !gameState.isInHub) {
             currentScenario = findScenarioById(gameState.scenarioId);
             if (currentScenario) currentTitle = getCurrentTitle(currentScenario, gameState.level);
@@ -2354,14 +2286,14 @@ function registerIpcHandlers() {
           const cloudData = JSON.parse(fs.readFileSync(cloudPath, 'utf-8'));
           const localTime = gameState?.lastWriteTimestamp || '';
           const cloudTime = cloudData.lastWriteTimestamp || '';
-          const localTotal = (gameState?.hubTotalExp || 0) + (gameState?.totalExpEarned || 0);
-          const cloudTotal = (cloudData.hubTotalExp || 0) + (cloudData.totalExpEarned || 0);
+          const localTotal = gameState?.petTotalExp || 0;
+          const cloudTotal = cloudData.petTotalExp || 0;
           if (cloudTime > localTime && cloudTotal >= localTotal) {
             Object.assign(gameState, cloudData);
             gameState._version = SAVE_VERSION;
             gameState.lastWriteTimestamp = new Date().toISOString();
             normalizeGameState(gameState);
-            hubLevel = calcLevel(gameState.hubTotalExp);
+            gameState.level = calcLevel(gameState.petTotalExp);
             if (gameState.scenarioId && !gameState.isInHub) {
               currentScenario = findScenarioById(gameState.scenarioId);
               if (currentScenario) currentTitle = getCurrentTitle(currentScenario, gameState.level);
@@ -2377,7 +2309,7 @@ function registerIpcHandlers() {
       // Notify pet window of new state
       try {
         const petState = {
-          hubLevel: calcLevel(gameState.hubTotalExp),
+          petLevel: calcLevel(gameState.petTotalExp),
           isInHub: gameState.isInHub,
           level: gameState.level,
         };
@@ -2426,14 +2358,14 @@ function registerIpcHandlers() {
       gameState = {
         playerName: 'Worker',
         scenarioId: defaultScenario ? defaultScenario.id : '',
-        level: 1, exp: 0, totalExpEarned: 0, totalRuntimeMs: 0,
-        equippedTitleIndex: 0, isInHub: true, hubTotalExp: 0,
+        level: 1, exp: 0, petTotalExp: 0, totalRuntimeMs: 0,
+        equippedTitleIndex: 0, isInHub: true,
         language: 'zh', aiOutputLanguage: 'zh', selectedFontTheme: 'green',
         scenarioAlias: '', unlockedTitleSets: {}, scenarioProgress: {},
         triggeredEvents: [], unlockedAchievements: [],
         petSelectedIndex: 0, hasSeenOnboarding: false,
         lastLoginDay: '', hubEquippedTitles: {},
-        dailyBonus: false, rebirthCounts: {}, rebirthExpBonus: 0,
+        dailyBonus: false,
         currentBranch: '', branchProgress: {}, flags: {},
         gameCompletions: [], unlockedCompletionTitles: [], equippedCompletionTitle: null,
         archivedScenarios: [], promptDismissedAtScenarioCount: null,
@@ -2441,7 +2373,6 @@ function registerIpcHandlers() {
         keyPressDate: getLocalDateStr(), comboMilestones: [], highestStreak: 0,
         choiceFlags: {}, pendingChoiceEvent: null, lastWriteTimestamp: new Date().toISOString(),
       };
-      hubLevel = 1;
       currentScenario = null;
       currentTitle = null;
       return { success: true };
@@ -2644,7 +2575,7 @@ app.whenReady().then(() => {
       scenarioId: defaultScenario ? defaultScenario.id : '',
       level: 1,
       exp: 0,
-      totalExpEarned: 0,
+      petTotalExp: 0,
       totalRuntimeMs: 0,
       equippedTitleIndex: 0,
       isInHub: true,
@@ -2662,8 +2593,6 @@ app.whenReady().then(() => {
       lastLoginDay: '',
       hubEquippedTitles: {},
       dailyBonus: false,
-      rebirthCounts: {},
-      rebirthExpBonus: 0,
       currentBranch: '',
       branchProgress: {},
       flags: {},
@@ -2722,6 +2651,26 @@ app.whenReady().then(() => {
     delete gameState.completedBranches;
   }
   if (!gameState.flags) gameState.flags = {};
+
+  // ── v4 大清理（一次性）：数值保留，故事数据全清（设计文档 §14）──
+  if (!gameState._v4CleanupDone) {
+    gameState.triggeredEvents = [];
+    gameState.branchProgress = {};
+    gameState.flags = {};
+    gameState.choiceFlags = {};
+    gameState.scenarioProgress = {};
+    gameState.gameCompletions = [];
+    gameState.currentBranch = '';
+    gameState.pendingChoiceEvent = null;
+    gameState._catchUpQueue = null;
+    gameState._v4CleanupDone = true;
+    // 旧日志清理
+    try {
+      const logDir = getLogDir();
+      if (fs.existsSync(logDir)) fs.rmSync(logDir, { recursive: true, force: true });
+    } catch (e) { console.error('[migration] v4 日志清理失败:', e.message); }
+    console.log('[migration] v4 大清理完成：故事数据与旧日志已清空，等级/成就/统计保留');
+  }
 
   // Set current scenario
   if (gameState.scenarioId && !gameState.isInHub) {
@@ -2814,13 +2763,10 @@ app.whenReady().then(() => {
     }
   }
 
-  hubLevel = calcLevel(gameState.hubTotalExp);
-
   // Hub totalExp 0.5x conversion for v3.7.5
   if (gameState.hubTotalExp > 0 && !gameState._hubExpMigrated) {
     gameState.hubTotalExp = Math.floor(gameState.hubTotalExp * 0.5);
     gameState._hubExpMigrated = true;
-    hubLevel = calcLevel(gameState.hubTotalExp);
   }
 
   // Migrate old .json logs to .log format (one-time)
@@ -3038,7 +2984,7 @@ app.whenReady().then(() => {
     const sec = s % 60;
     const rtStr = `${h}h${m}m${sec}s`;
     const title = currentTitle ? currentTitle.name : '?';
-    const lv = gameState.isInHub ? `大厅 Lv.${hubLevel}` : `Lv.${gameState.level}`;
+    const lv = `宠物 Lv.${calcLevel(gameState.petTotalExp)}`;
     const sc = currentScenario ? (currentScenario.name_cn || currentScenario.nameCN || currentScenario.name) : (gameState.isInHub ? '大厅' : '?');
     setToolTip(`${gameState.playerName} | ${sc}\n${lv} | ${title} | ${rtStr}`);
   }, 5000);
