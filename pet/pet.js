@@ -6,7 +6,6 @@ const dotSymbol = document.getElementById('dot-symbol');
 const infoText = document.getElementById('info-text');
 const expFill = document.getElementById('exp-fill');
 const expWrap = document.getElementById('exp-wrap');
-const expPct = document.getElementById('exp-pct');
 const expDetail = document.getElementById('exp-detail');
 const keyDetail = document.getElementById('key-detail');
 const buffBadge = document.getElementById('buff-badge');
