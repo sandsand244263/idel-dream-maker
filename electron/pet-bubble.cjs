@@ -50,7 +50,7 @@ function initBubble(app, petWin) {
 
   bubbleWindow.webContents.once('did-finish-load', () => {
     bubbleWindow.setBounds({ x: HIDE_POS.x, y: HIDE_POS.y, width: 260, height: 100 });
-    bubbleWindow.show();
+    bubbleWindow.showInactive();   // 初始化不抢焦点
     bubbleWindow.setOpacity(0);
   });
 
@@ -88,11 +88,11 @@ function doShowBubble(data) {
       if (ny + actualH > screen.height) ny = Math.max(0, petBounds.y - actualH - 5);
       bubbleWindow.setBounds({ x: nx, y: ny, width: bw, height: actualH });
       bubbleWindow.setOpacity(1);
-      bubbleWindow.show();
+      bubbleWindow.showInactive();   // 不抢焦点（打字时弹出不打断输入）
     }).catch(() => {
       bubbleWindow.setBounds({ x: petBounds.x + Math.floor((petBounds.width - bw) / 2), y: petBounds.y + petBounds.height + 5, width: bw, height: 100 + extraH });
       bubbleWindow.setOpacity(1);
-      bubbleWindow.show();
+      bubbleWindow.showInactive();   // 不抢焦点（打字时弹出不打断输入）
     });
   });
 }

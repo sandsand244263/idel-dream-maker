@@ -96,7 +96,7 @@ body { font-family:var(--font); color:var(--fg); }
 #container:hover .stat-row.low .stat-value { color:#FF9800; }
 
 /* ── 道具计数 ── */
-#item-counts { display:flex;gap:12px;justify-content:flex-end;padding:0 12px;flex-shrink:0;font-size:11px;line-height:1;opacity:0.3;transition:opacity 0.25s var(--ease-out); }
+#item-counts { display:flex;gap:12px;justify-content:center;padding:0 12px;flex-shrink:0;font-size:11px;line-height:1;opacity:0.3;transition:opacity 0.2s var(--ease-out); }
 #container:hover #item-counts { opacity:1; }
 #container.compact #item-counts { opacity:0; }
 #container.compact:hover #item-counts { opacity:1; }
