@@ -278,6 +278,8 @@ function normalizeGameState(gs) {
   if (typeof gs.petHiddenRead !== 'number') gs.petHiddenRead = 0;
   // v4 宠物性别：male / female / null=中性（只用通用池）
   if (gs.petGender !== 'male' && gs.petGender !== 'female') gs.petGender = null;
+  // v4 宠物称谓：null=默认"主人"，设置后替换台词中的"主人"占位
+  if (typeof gs.petCallName !== 'string' || gs.petCallName.length > 8) gs.petCallName = '';
   // 离线衰减结算：按真实时间差衰减（几天不开回来发现饿了；见底无惩罚）
   const petIdleMs = Date.now() - gs.petStateUpdatedAt;
   if (petIdleMs > 5000) applyPetDecay(gs, petIdleMs);
@@ -1031,7 +1033,9 @@ function pickPetLine(layer) {
     idx = (idx + 1) % pool.length;   // 同层不连续重复
   }
   _lastPetLine = { layer, index: idx };
-  return pool[idx];
+  // 称谓替换：台词中"主人"占位 → 玩家称谓（未设置保持"主人"）
+  const callName = gameState?.petCallName || '主人';
+  return callName !== '主人' ? pool[idx].replace(/主人/g, callName) : pool[idx];
 }
 
 function showPetLine(layer) {
@@ -2402,6 +2406,15 @@ function registerIpcHandlers() {
     gameState.petGender = gender === 'neutral' ? null : gender;
     writeSave(gameState);
     return { success: true, petGender: gameState.petGender };
+  });
+
+  // v4 宠物称谓（默认"主人"，自定义后替换台词占位；限 8 字）
+  ipcMain.handle('set-pet-callname', (_, { name }) => {
+    if (!gameState) return { success: false, error: '无存档' };
+    const clean = String(name || '').trim().slice(0, 8);
+    gameState.petCallName = clean;
+    writeSave(gameState);
+    return { success: true, petCallName: clean };
   });
 
   ipcMain.handle('get-key-stats', () => {

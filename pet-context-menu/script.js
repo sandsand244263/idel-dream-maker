@@ -1,4 +1,4 @@
-const LANG = { selectPet:'选择宠物', view:'视图', compact:'简洁模式', chime:'整点报时', shake:'打击震动', calculator:'计算器', screenshot:'截图', guide:'操作说明', hide:'隐藏宠物界面', feed:'喂食', wash:'洗澡', genderMale:'男孩', genderFemale:'女孩', genderNeutral:'不设定性别' };
+const LANG = { selectPet:'选择宠物', view:'视图', compact:'简洁模式', chime:'整点报时', shake:'打击震动', calculator:'计算器', screenshot:'截图', guide:'操作说明', hide:'隐藏宠物界面', feed:'喂食', wash:'洗澡', genderMale:'男孩', genderFemale:'女孩', genderNeutral:'不设定性别', callName:'设置称谓' };
 function t(key) { return LANG[key] || key; }
 
 function setToggle(key, val) { localStorage.setItem('pet_' + key, val); }
@@ -90,6 +90,15 @@ document.getElementById('ctx-wash').addEventListener('click', () => {
     window.ctxMenu.invoke('set-pet-gender', { gender: g }).catch(() => {});
     window.ctxMenu.invoke('close-menu').catch(() => {});
   });
+});
+
+// v4 宠物称谓（默认"主人"，输入后替换台词占位；空输入=恢复默认）
+document.getElementById('ctx-callname').addEventListener('click', () => {
+  const name = window.prompt('宠物怎么称呼你？（默认：主人，最多 8 字，留空恢复默认）', '主人');
+  if (name !== null) {
+    window.ctxMenu.invoke('set-pet-callname', { name: name === '主人' ? '' : name }).catch(() => {});
+  }
+  window.ctxMenu.invoke('close-menu').catch(() => {});
 });
 
 ['compact','chime','shake'].forEach(k => {
