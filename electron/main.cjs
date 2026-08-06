@@ -1337,6 +1337,20 @@ const MILESTONES = [
 ];
 // v4：里程碑事件系统取消（MILESTONES/checkMilestones 保留定义但不再调用，陪伴时长走成就阶梯）
 
+// 在家停留提醒（家语境，v4）
+const HUB_REMINDERS = [
+  '家里的挂钟滴答作响，空气中有一丝茶香。',
+  '窗外似乎有什么东西一闪而过。',
+  '墙上的地图又多了几道你不记得画过的痕迹。',
+  '壁炉里的火苗轻轻跳动着。',
+  '角落里那把旧椅子看起来比上次更旧了。',
+  '在家待着也是陪伴，不过故事还在世界里等着你。',
+  '已经在家待了好一会儿，不选个世界看看吗？',
+  '世界才是故事发生的地方——选一个出发吧。',
+  '在家不会触发故事，故事都在世界里。',
+  '家是休息的地方，故事要去世界里看。',
+];
+
 function checkAchievements() {
   if (!currentScenario || !currentScenario.achievements || gameState.isInHub) {
     return [];
@@ -1386,19 +1400,6 @@ function startGameLoop() {
   if (gameLoopInterval) return;
   hubIdleMs = 0;
   lastHubReminderMs = 0;
-
-  const HUB_REMINDERS = [
-    '家里的挂钟滴答作响，空气中有一丝茶香。',
-    '窗外似乎有什么东西一闪而过。',
-    '墙上的地图又多了几道你不记得画过的痕迹。',
-    '壁炉里的火苗轻轻跳动着。',
-    '角落里那把旧椅子看起来比上次更旧了。',
-    '在家待着也是陪伴，不过故事还在世界里等着你。',
-    '已经在家待了好一会儿，不选个世界看看吗？',
-    '世界才是故事发生的地方——选一个出发吧。',
-    '在家不会触发故事，故事都在世界里。',
-    '家是休息的地方，故事要去世界里看。',
-  ];
 
   gameLoopInterval = setInterval(() => {
     if (!gameState) return;
