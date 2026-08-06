@@ -20,7 +20,7 @@ contextBridge.exposeInMainWorld('electron', {
       'archive-scenario', 'unarchive-scenario', 'get-archived-scenarios',
       'get-all-complete-prompt', 'dismiss-all-complete-prompt',
       'export-logs-to-desktop', 'open-log-folder', 'open-github-repo', 'open-path',
-      'get-key-stats', 'choice-selected',
+      'get-key-stats', 'choice-selected', 'story-read',
       'get-sync-path', 'set-sync-path', 'select-sync-directory', 'sync-now', 'delete-save',
       'get-sync-info', 'confirm-sync-directory', 'clear-sync', 'catch-up-advance', 'get-current-theme',
       'check-for-update', 'open-update-url', 'get-proxy-download', 'trigger-update',

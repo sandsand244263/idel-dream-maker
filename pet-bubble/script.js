@@ -1,5 +1,6 @@
 let currentChoices = null;
 let currentEventId = null;
+let storyEventId = null;   // v4：待读故事气泡的事件 ID（点击=读完推进）
 
 function showBubble(data) {
   if (!data) return;
@@ -9,12 +10,17 @@ function showBubble(data) {
   if (data.title) titleEl.textContent = data.title;
   textEl.textContent = data.text || '';
   document.body.dataset.type = data.type || 'event';
+  // v4：待读故事气泡（story-ready）——常驻，点击=story-read 推进
+  if (data.type === 'story') {
+    storyEventId = data.eventId || null;
+  } else {
+    storyEventId = null;
+  }
 
   // Choice bubble
   if (data.choices && data.choices.length > 0) {
     currentChoices = data.choices;
     currentEventId = data.eventId || data._eventId;
-    console.log('[bubble] currentEventId:', currentEventId, 'from _eventId:', data._eventId, 'eventId:', data.eventId);
     choicesEl.innerHTML = '';
     data.choices.forEach((c, i) => {
       const btn = document.createElement('button');
@@ -22,13 +28,11 @@ function showBubble(data) {
       btn.textContent = c.text;
       btn.dataset.index = i;
       btn.addEventListener('click', () => {
-        console.log('[choice] click eventId:', currentEventId, 'index:', i);
         window.petBubble.invoke('choice-selected', { eventId: currentEventId, choiceIndex: i }).then(r => console.log('[choice] result:', r)).catch(() => {});
         choicesEl.classList.add('hidden');
         currentChoices = null;
         currentEventId = null;
         window.petBubble.invoke('close-bubble').catch(() => {});
-        window.petBubble.invoke('catch-up-advance').catch(() => {});
       });
       choicesEl.appendChild(btn);
     });
@@ -48,10 +52,15 @@ document.getElementById('bubble').addEventListener('click', (e) => {
   if (document.body.dataset.type === 'chime') return;
   if (currentChoices) return;
   const bubble = document.getElementById('bubble');
+  // v4：待读故事气泡点击 = 读完推进（story-read），读完主进程会立即检查下一段
+  if (storyEventId) {
+    const id = storyEventId;
+    storyEventId = null;
+    window.petBubble.invoke('story-read', { eventId: id }).catch(() => {});
+  }
   bubble.classList.add('closing');
   bubble.addEventListener('animationend', () => {
     window.petBubble.invoke('close-bubble').catch(() => {});
-    window.petBubble.invoke('catch-up-advance').catch(() => {});
   }, { once: true });
 });
 

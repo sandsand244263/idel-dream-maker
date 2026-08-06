@@ -423,6 +423,11 @@ window.pet.on('pet-state',d=>{
   updateInfoBar();
 });
 window.pet.on('event-triggered',d=>{transitionTo('run');nq.enqueue({text:d.text,title:d.title||'事件',type:'event'},1);});
+// v4：待读故事气泡——常驻显示（不走队列），点击=story-read 推进（pet-bubble 处理点击）
+window.pet.on('story-ready',d=>{
+  transitionTo('review');
+  window.pet.invoke('show-bubble',{title:d.title||'故事',text:d.text||'',color:'#00BFFF',type:'story',eventId:d.eventId}).catch(()=>{});
+});
 window.pet.on('level-up',d=>{
   gameInfo.title=d.title||gameInfo.title;
   transitionTo(Math.random()<0.5?'jump':'extra3');

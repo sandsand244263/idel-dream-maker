@@ -7,6 +7,7 @@ const COL_NORM = {
   'desc': 'desc', 'description': 'desc', '描述': 'desc',
   'id': 'id',
   'minlevel': 'minlevel', '最低等级': 'minlevel', 'min_level': 'minlevel', 'minLevel': 'minlevel',
+  'minseconds': 'minSeconds', '解锁秒数': 'minSeconds', 'min_seconds': 'minSeconds', 'minSeconds': 'minSeconds',
   'minhours': 'minhours', '最低挂机小时数': 'minhours', 'min_hours': 'minhours', 'minHours': 'minhours',
   'weight': 'weight', '权重': 'weight',
   'once': 'once', '只触发一次': 'once',
@@ -140,6 +141,7 @@ function parseEvents(bodyLines) {
   if (textIdx === -1) throw new Error("Events table missing 'Text' column");
 
   const minlevelIdx = headers.indexOf('minlevel');
+  const minSecondsIdx = headers.indexOf('minseconds');
   const minhoursIdx = headers.indexOf('minhours');
   const weightIdx = headers.indexOf('weight');
   const onceIdx = headers.indexOf('once');
@@ -168,7 +170,8 @@ function parseEvents(bodyLines) {
     const ev = {
       id,
       type: typeIdx !== -1 ? row[typeIdx].trim().toLowerCase() : 'story',
-      minLevel: minlevelIdx !== -1 ? parseInt(row[minlevelIdx], 10) || 1 : 1,
+      // v4：MinSeconds 优先；MinLevel 兜底换算（旧数据过渡：1 级 ≈ 600 秒），发布前由新格式副本替换
+      minSeconds: minSecondsIdx !== -1 ? parseInt(row[minSecondsIdx], 10) || 0 : (minlevelIdx !== -1 ? (parseInt(row[minlevelIdx], 10) || 1) * 600 : 0),
       minHours: minhoursIdx !== -1 ? parseInt(row[minhoursIdx], 10) || 0 : 0,
       minRebirth: minRebirthIdx !== -1 ? parseInt(row[minRebirthIdx], 10) || 0 : 0,
       weight: weightIdx !== -1 ? parseInt(row[weightIdx], 10) || 5 : 5,

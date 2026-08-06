@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld('pet', {
       'open-pets-folder', 'open-external-link',
       'show-pet-selector', 'show-bubble', 'show-choice-bubble', 'close-bubble',
       'show-context-menu', 'get-current-theme',
+      'story-read',
     ];
     if (validChannels.includes(channel)) {
       return ipcRenderer.invoke(channel, ...args);
@@ -21,6 +22,7 @@ contextBridge.exposeInMainWorld('pet', {
       'event-triggered', 'level-up', 'achievement-unlocked', 'main-shown',
       'toggle-feature', 'theme-changed', 'pet-state', 'hourly-chime', 'bubble-closed', 'pet-guide',
       'key-combo', 'choice-event', 'dismiss-choice', 'buff-triggered',
+      'story-ready', 'scenario-ending',
     ];
     if (validChannels.includes(channel)) {
       const listener = (_, data) => callback(data);

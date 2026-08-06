@@ -664,6 +664,15 @@ let currentTitle = null;
 let gameLoopInterval = null;
 let tooltipInterval = null;
 
+// ── v4 配置常量（设计文档 §15.3，全部数值集中可调）──
+const V4_CONFIG = {
+  unlockIntervalSec: 1200,       // 解锁间隔：20 分钟/段（内容层 minSeconds 创作规范）
+  typingStoryBonusSec: 2,        // 打字加速：1 击 = +2 秒有效时长（仅副本内）
+  feedKeyRate: 100,              // 打字 100 击 = 1 食物（阶段 3）
+  soapKeyRate: 200,              // 打字 200 击 = 1 肥皂（阶段 3）
+  itemCap: 50,                   // 道具上限（阶段 3）
+};
+
 // ── Key Counter ──
 const KEY_STREAK_WINDOW = 3000;
 let keyStream = [];
@@ -751,6 +760,12 @@ function handleInputDown(keyId, keyChar, now) {
   gameState.totalKeyPresses = (gameState.totalKeyPresses || 0) + 1;
   gameState.dailyKeyPresses = (gameState.dailyKeyPresses || 0) + 1;
 
+  // v4：打字加速故事解锁（仅副本内；打字=陪伴，+2 秒有效时长/击）
+  if (!gameState.isInHub && gameState.scenarioId) {
+    if (!gameState.scenarioProgress[gameState.scenarioId]) gameState.scenarioProgress[gameState.scenarioId] = {};
+    gameState.scenarioProgress[gameState.scenarioId].storySeconds = (gameState.scenarioProgress[gameState.scenarioId].storySeconds || 0) + V4_CONFIG.typingStoryBonusSec;
+  }
+
   lastKeyChar = keyChar;
   keyStream.push(now);
   keyStream = keyStream.filter(t => now - t <= KEY_STREAK_WINDOW);
@@ -782,27 +797,12 @@ function handleInputDown(keyId, keyChar, now) {
   gameState.level = calcLevel(gameState.petTotalExp);
   if (gameState.level > ol) {
     const title = getCurrentTitle(currentScenario, gameState.level);
-    const storyEvent = findUnusedEvent('story', gameState.level);
-    if (storyEvent) {
-      gameState.triggeredEvents.push(storyEvent.id);
-      // 普通 story 事件触发时应用其 FlagSet（choice 事件由选项 target 应用）
-      if (!storyEvent.choice1) applyFlagSet(storyEvent.flagSet);
-    }
+    // v4：升级不再触发故事（故事由时间解锁驱动），仅更新称号
     if (title) {
       currentTitle = title;
       if (currentScenario) gameState.equippedTitleIndex = currentScenario.titles.indexOf(title);
     }
-    if (storyEvent && storyEvent.choice1 && storyEvent.choice1Target) {
-      const choices = buildChoices(storyEvent);
-      gameState.pendingChoiceEvent = {
-        eventId: storyEvent.id, scenarioId: gameState.scenarioId,
-        title: '抉择', text: storyEvent.text, choices,
-      };
-      const choicePayload = { title: '抉择', text: storyEvent.text, choices, _eventId: storyEvent.id };
-      try { mainWindow.webContents.send('choice-event', choicePayload); } catch {}
-      forwardToPet('choice-event', choicePayload);
-    }
-    const luPayload = { level: gameState.level, title: title ? title.name : null, titleColor: title ? title.color : null, titleDesc: title ? title.desc : null, eventText: storyEvent && !storyEvent.choice1 ? storyEvent.text : null };
+    const luPayload = { level: gameState.level, title: title ? title.name : null, titleColor: title ? title.color : null, titleDesc: title ? title.desc : null, eventText: null };
     try { mainWindow.webContents.send('level-up', luPayload); } catch {}
     forwardToPet('level-up', luPayload);
   }
@@ -910,27 +910,9 @@ function resetGameForScenario(scenario, alias) {
   gameState.scenarioAlias = alias || '';
   currentScenario = scenario;
 
-  // Trigger story event for current level (catches level 1 on first entry)
-  const initEvent = findUnusedEvent('story', gameState.level);
-  if (initEvent) {
-    gameState.triggeredEvents.push(initEvent.id);
-    if (!initEvent.choice1) applyFlagSet(initEvent.flagSet);
-    const title = getCurrentTitle(currentScenario, gameState.level);
-    // Choice detection
-    if (initEvent.choice1 && initEvent.choice1Target) {
-      const choices = buildChoices(initEvent);
-      gameState.pendingChoiceEvent = {
-        eventId: initEvent.id, scenarioId: gameState.scenarioId,
-        title: '抉择', text: initEvent.text, choices,
-      };
-      const cp = { title: '抉择', text: initEvent.text, choices, _eventId: initEvent.id };
-      try { mainWindow.webContents.send('choice-event', cp); } catch {}
-      forwardToPet('choice-event', cp);
-    }
-    const luPayload = { level: gameState.level, title: title?.name || '', titleColor: title?.color || '#888', titleDesc: title?.desc || '', eventText: initEvent.choice1 ? null : initEvent.text };
-    try { mainWindow.webContents.send('level-up', luPayload); } catch {}
-    forwardToPet('level-up', luPayload);
-  }
+  // v4：进入世界时检查时间解锁（storySeconds 够则挂出待读/弹抉择）
+  gameState._pendingStoryEvent = null;
+  checkStoryUnlock();
   setLogSession(scenario.id);
 }
 
@@ -1047,9 +1029,9 @@ function buildChoices(storyEvent) {
   return choices;
 }
 
-function findUnusedEvent(type, level) {
+function nextStoryEvent(type, cb) {
   if (!currentScenario || !currentScenario.events || gameState.isInHub) return null;
-  const cb = gameState.currentBranch || '';
+  if (cb === undefined) cb = gameState.currentBranch || '';
   // choice target 不应被自动触发（只能由选择触发），避免未选分支文本后续弹出
   const targetIds = new Set();
   for (const e of currentScenario.events) {
@@ -1058,9 +1040,14 @@ function findUnusedEvent(type, level) {
     if (e.choice3Target) targetIds.add(e.choice3Target);
     if (e.choice4Target) targetIds.add(e.choice4Target);
   }
+  const sid = gameState.scenarioId;
+  const prog = (gameState.scenarioProgress && gameState.scenarioProgress[sid]) || {};
+  const storySeconds = prog.storySeconds || 0;
+  // 重访浏览模式：已通关世界走新分支时不卡时间（连续浏览）
+  const browse = !!prog.continuousBrowse;
   const pool = currentScenario.events.filter(e => {
     if (e.type && e.type !== type) return false;
-    if (e.minLevel && e.minLevel > level) return false;
+    if (!browse && e.minSeconds && e.minSeconds > storySeconds) return false;
     if (e.once && gameState.triggeredEvents.includes(e.id)) return false;
     if (e.branch && e.branch !== '' && e.branch !== cb) return false;
     if (!checkFlagRequire(e.flagRequire)) return false;
@@ -1068,22 +1055,88 @@ function findUnusedEvent(type, level) {
     return true;
   });
   if (pool.length === 0) return null;
+  // 顺序推进：取 minSeconds 最小的（时间门槛最低的下一段）
+  pool.sort((a, b) => (a.minSeconds || 0) - (b.minSeconds || 0));
   return pool[0];
 }
 
-function checkHolidayEvent() {
-  if (!currentScenario || !currentScenario.events || gameState.isInHub) return null;
-  const todayHoliday = getTodaysHolidayId();
-  const upcomingHoliday = !todayHoliday ? getUpcomingHolidayId() : null;
-  const holidayInfo = todayHoliday || upcomingHoliday;
-  if (!holidayInfo) return null;
-  const holidayKey = 'holiday_' + holidayInfo.id + '_' + holidayInfo.type;
-  if (gameState.triggeredEvents.includes(holidayKey)) return null;
-  const he = getHolidayEventFromScenario(currentScenario, holidayInfo.id, holidayInfo.type);
-  if (!he) return null;
-  gameState.triggeredEvents.push(holidayKey);
-  return { id: holidayKey, title: he.holidayName, color: '#FFD700', text: he.text, isHoliday: true };
+// ── v4 时间解锁核心：检查顺序链下一段（普通段挂待读气泡，抉择段直接弹抉择）──
+function checkStoryUnlock() {
+  if (!currentScenario || gameState.isInHub) return;
+  if (gameState.pendingChoiceEvent) return;    // 抉择阻塞：不推进
+  if (gameState._pendingStoryEvent) return;    // 已有待读气泡：不重复推送
+  const sid = gameState.scenarioId;
+  // 隐藏链：全分支通关后激活
+  const bp = (gameState.branchProgress && gameState.branchProgress[sid]) || [];
+  const branches = currentScenario.branches || [];
+  const hiddenActive = branches.length > 0 && branches.every(b => bp.includes(b));
+  let ev = nextStoryEvent('story');
+  if (!ev && hiddenActive) ev = nextStoryEvent('story', 'hidden');
+  if (!ev) return;
+  if (ev.choice1 && ev.choice1Target) {
+    // 抉择段：解锁即弹抉择（正文+选项，不选不推进）
+    gameState.triggeredEvents.push(ev.id);
+    gameState.pendingChoiceEvent = { eventId: ev.id, scenarioId: sid, title: '抉择', text: ev.text, choices: buildChoices(ev) };
+    const cp = { title: '抉择', text: ev.text, choices: buildChoices(ev), _eventId: ev.id };
+    try { mainWindow.webContents.send('choice-event', cp); } catch {}
+    forwardToPet('choice-event', cp);
+  } else {
+    // 普通故事段：挂待读气泡（常驻不自动读，点击 story-read 推进）
+    gameState._pendingStoryEvent = { id: ev.id, title: ev.completionTitle ? '结局' : '故事', text: ev.text };
+    const sp = { eventId: ev.id, title: ev.completionTitle ? '结局' : '故事', text: ev.text, isEnding: !!ev.completionTitle };
+    try { mainWindow.webContents.send('story-ready', sp); } catch {}
+    forwardToPet('story-ready', sp);
+  }
 }
+
+// ── v4 分支通关：结局事件（带 CompletionTitle）读完 → 通关记录 + 旅程完成弹窗 ──
+function handleBranchEnding(ev) {
+  const sid = gameState.scenarioId;
+  const cb = ev.branch || gameState.currentBranch || '';
+  if (cb) {
+    if (!gameState.branchProgress) gameState.branchProgress = {};
+    if (!gameState.branchProgress[sid]) gameState.branchProgress[sid] = [];
+    if (!gameState.branchProgress[sid].includes(cb)) gameState.branchProgress[sid].push(cb);
+  }
+  // 解锁通关称号（结局事件 completionTitle）
+  const endingTitle = ev.completionTitle || currentScenario?.completion_title || '';
+  if (endingTitle) {
+    if (!gameState.unlockedCompletionTitles) gameState.unlockedCompletionTitles = [];
+    if (!gameState.unlockedCompletionTitles.find(c => c.scenarioId === sid && c.title === endingTitle)) {
+      gameState.unlockedCompletionTitles.push({
+        scenarioId: sid,
+        scenarioName: currentScenario?.name_cn || currentScenario?.nameCN || currentScenario?.name || sid,
+        title: endingTitle,
+        branch: cb,
+      });
+    }
+  }
+  if (!gameState.gameCompletions) gameState.gameCompletions = [];
+  if (!gameState.gameCompletions.some(c => c.scenarioId === sid)) {
+    gameState.gameCompletions.push({ scenarioId: sid, date: getLocalDateStr(), branch: cb });
+  }
+  // 首次通关永久成就
+  const completionAchId = 'completion_' + sid;
+  if (!gameState.unlockedAchievements.includes(completionAchId)) {
+    gameState.unlockedAchievements.push(completionAchId);
+    const achPayload = { id: completionAchId, name: '圆满', desc: (currentScenario?.name_cn || currentScenario?.nameCN || sid) + '·圆满', icon: '★' };
+    try { mainWindow.webContents.send('achievement-unlocked', achPayload); } catch {}
+    forwardToPet('achievement-unlocked', achPayload);
+  }
+  const endingPayload = {
+    scenarioId: sid,
+    scenarioName: currentScenario?.name_cn || currentScenario?.nameCN || currentScenario?.name || sid,
+    text: ev.text,
+    endingTitle,
+    branch: cb,
+  };
+  try { mainWindow.webContents.send('scenario-ending', endingPayload); } catch {}
+  forwardToPet('scenario-ending', endingPayload);
+  checkHubAchievements();
+}
+
+// v4：节日事件/里程碑系统已取消（节日走宠物语台词池，陪伴时长走成就阶梯）
+// checkHolidayEvent / checkMilestones 已删除
 
 const MILESTONES = [
   { ms: 3600000,      id: 'ms_1h',   text: '你已经挂机1小时了。' },
@@ -1095,17 +1148,7 @@ const MILESTONES = [
   { ms: 8640000000,   id: 'ms_100d', text: '一百天了，百日如百载。' },
   { ms: 31536000000,  id: 'ms_365d', text: '一年了，感谢你的陪伴。' },
 ];
-
-function checkMilestones() {
-  if (!currentScenario || gameState.isInHub) return null;
-  for (const m of MILESTONES) {
-    if (gameState.totalRuntimeMs >= m.ms && !gameState.triggeredEvents.includes(m.id)) {
-      gameState.triggeredEvents.push(m.id);
-      return { id: m.id, title: '里程碑', color: '#FFD700', text: m.text };
-    }
-  }
-  return null;
-}
+// v4：里程碑事件系统取消（MILESTONES/checkMilestones 保留定义但不再调用，陪伴时长走成就阶梯）
 
 function checkAchievements() {
   if (!currentScenario || !currentScenario.achievements || gameState.isInHub) {
@@ -1224,35 +1267,17 @@ function startGameLoop() {
       return;
     }
 
+    // v4 时间解锁：副本内累计有效时长（挂机 1s=1s；打字加速在 handleInputDown）
+    const sid = gameState.scenarioId;
+    if (!gameState.scenarioProgress[sid]) gameState.scenarioProgress[sid] = {};
+    gameState.scenarioProgress[sid].storySeconds = (gameState.scenarioProgress[sid].storySeconds || 0) + delta / 1000;
+
     // Pending choice blocks all progress
     if (gameState.pendingChoiceEvent) return;
 
-    // Catch-up mode: space out events, don't block EXP
-    if (gameState._catchUpQueue && gameState._catchUpQueue.length > 0) {
-      const now = Date.now();
-      if (!gameState._lastCatchUpTime) gameState._lastCatchUpTime = 0;
-      if (now - gameState._lastCatchUpTime >= 3000) {
-        const next = gameState._catchUpQueue.shift();
-        gameState._lastCatchUpTime = now;
-        gameState.triggeredEvents.push(next.id);
-        if (!next.choice1) applyFlagSet(next.flagSet);
-        if (next.choice1 && next.choice1Target) {
-          gameState.pendingChoiceEvent = {
-            eventId: next.id, scenarioId: gameState.scenarioId,
-            title: '抉择', text: next.text, choices: buildChoices(next),
-          };
-          const cp = { title: '抉择', text: next.text, choices: buildChoices(next), _eventId: next.id };
-          try { mainWindow.webContents.send('choice-event', cp); } catch {}
-          forwardToPet('choice-event', cp);
-          return;
-        } else {
-          const evPayload = { id: next.id, title: '事件', color: '#00BFFF', text: next.text };
-          try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
-          forwardToPet('event-triggered', evPayload);
-        }
-      }
-      // Continue to EXP calculation (don't block)
-    }
+    // v4 时间解锁检查：顺序链下一段（取代旧 catch-up/升级触发）
+    checkStoryUnlock();
+    if (gameState.pendingChoiceEvent) return;   // 解锁出抉择时本 tick 不再继续 EXP（保持旧行为）
 
     gameState.totalRuntimeMs += delta;
     let expMultiplier = 1;
@@ -1303,113 +1328,22 @@ function startGameLoop() {
       buffCooldownUntil = Date.now() + 30000;
     }
 
-    // Level up check — merge with story event
+    // Level up check — v4：升级不再触发故事（故事由时间解锁驱动）
     const oldLevel = gameState.level;
     gameState.level = calcLevel(gameState.petTotalExp);
     if (gameState.level > oldLevel) {
-      // If there's a pending choice, skip story event — choice must be resolved first
-      if (gameState.pendingChoiceEvent) {
-        const title = getCurrentTitle(currentScenario, gameState.level);
-        if (title) { currentTitle = title; gameState.equippedTitleIndex = currentScenario.titles.indexOf(title); }
-        const luPayload = { level: gameState.level, title: title ? title.name : null, titleColor: title ? title.color : null, titleDesc: title ? title.desc : null, eventText: null };
-        try { mainWindow.webContents.send('level-up', luPayload); } catch {}
-        forwardToPet('level-up', luPayload);
-        return;
-      }
       const title = getCurrentTitle(currentScenario, gameState.level);
-      const storyEvent = findUnusedEvent('story', gameState.level);
-      if (storyEvent) {
-        gameState.triggeredEvents.push(storyEvent.id);
-        if (!storyEvent.choice1) applyFlagSet(storyEvent.flagSet);
-      }
       if (title) {
         currentTitle = title;
         gameState.equippedTitleIndex = currentScenario.titles.indexOf(title);
       }
-      // Check if this is a choice event
-      if (storyEvent && storyEvent.choice1 && storyEvent.choice1Target) {
-        const choices = buildChoices(storyEvent);
-        gameState.pendingChoiceEvent = { eventId: storyEvent.id, scenarioId: gameState.scenarioId, title: '抉择', text: storyEvent.text, choices };
-        const choicePayload = { title: '抉择', text: storyEvent.text, choices, _eventId: storyEvent.id };
-        try { mainWindow.webContents.send('choice-event', choicePayload); } catch {}
-        forwardToPet('choice-event', choicePayload);
-      }
-      const luPayload = { level: gameState.level, title: title ? title.name : null, titleColor: title ? title.color : null, titleDesc: title ? title.desc : null, eventText: storyEvent && !storyEvent.choice1 ? storyEvent.text : null };
+      const luPayload = { level: gameState.level, title: title ? title.name : null, titleColor: title ? title.color : null, titleDesc: title ? title.desc : null, eventText: null };
       try { mainWindow.webContents.send('level-up', luPayload); } catch {}
       forwardToPet('level-up', luPayload);
     }
 
-    // Ending check — LV500 triggers scenario ending
-    if (gameState.level >= 500 && !gameState.triggeredEvents.includes('scenario_ending_' + gameState.scenarioId)) {
-      gameState.triggeredEvents.push('scenario_ending_' + gameState.scenarioId);
-      // Find ending event: within current branch, last flag-satisfying story event.
-      // Prefer conditional endings (flagRequire set); fall back to unconditional
-      // fallback event only when no conditional ending matches.
-      const cb = gameState.currentBranch || '';
-      const branchPool = currentScenario.events.filter(e => e.type === 'story' && (!e.branch || e.branch === cb));
-      const satisfied = branchPool.filter(e => checkFlagRequire(e.flagRequire));
-      const conditional = satisfied.filter(e => e.flagRequire);
-      const endingEvent = (conditional.length > 0 ? conditional[conditional.length - 1] : satisfied[satisfied.length - 1]) || branchPool.pop();
-      // Record completion for this branch
-      if (!gameState.branchProgress) gameState.branchProgress = {};
-      if (!gameState.branchProgress[gameState.scenarioId]) gameState.branchProgress[gameState.scenarioId] = [];
-      if (!gameState.branchProgress[gameState.scenarioId].includes(cb)) gameState.branchProgress[gameState.scenarioId].push(cb);
-      // Unlock branch completion title (from ending event's completionTitle)
-      const endingTitle = endingEvent?.completionTitle || currentScenario.completion_title;
-      if (endingTitle) {
-        if (!gameState.unlockedCompletionTitles) gameState.unlockedCompletionTitles = [];
-        if (!gameState.unlockedCompletionTitles.find(c => c.scenarioId === gameState.scenarioId && c.title === endingTitle)) {
-          gameState.unlockedCompletionTitles.push({
-            scenarioId: gameState.scenarioId,
-            scenarioName: currentScenario.name_cn || currentScenario.nameCN || currentScenario.name,
-            title: endingTitle,
-            branch: cb,
-          });
-        }
-      }
-      const endingPayload = {
-        scenarioId: gameState.scenarioId,
-        scenarioName: currentScenario.name_cn || currentScenario.nameCN || currentScenario.name,
-        text: endingEvent ? endingEvent.text : '你的旅程已达终点。',
-        endingTitle: endingTitle || '',
-        branch: cb,
-      };
-      try { mainWindow.webContents.send('scenario-ending', endingPayload); } catch {}
-      // 首次通关解锁永久成就
-      const completionAchId = 'completion_' + gameState.scenarioId;
-      if (!gameState.unlockedAchievements.includes(completionAchId)) {
-        gameState.unlockedAchievements.push(completionAchId);
-        const achPayload = { id: completionAchId, name: '圆满', desc: (currentScenario.name_cn || currentScenario.nameCN) + '·圆满', icon: '★' };
-        try { mainWindow.webContents.send('achievement-unlocked', achPayload); } catch {}
-        forwardToPet('achievement-unlocked', achPayload);
-      }
-      // 记录通关
-      if (!gameState.gameCompletions) gameState.gameCompletions = [];
-      const existingIdx = gameState.gameCompletions.findIndex(c => c.scenarioId === gameState.scenarioId);
-      if (existingIdx === -1) {
-        gameState.gameCompletions.push({ scenarioId: gameState.scenarioId, date: getLocalDateStr(), branch: cb });
-      }
-      // 检查大厅成就
-      checkHubAchievements();
-    }
-
-    // Milestone check
-    const milestone = checkMilestones();
-    if (milestone) {
-      const evPayload = { id: milestone.id, title: milestone.title, color: milestone.color, text: milestone.text };
-      try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
-      forwardToPet('event-triggered', evPayload);
-    }
-
-    // Holiday event check (roughly every ~60s)
-    if (Math.random() < delta / 60000) {
-      const holidayEvent = checkHolidayEvent();
-      if (holidayEvent) {
-        const evPayload = { id: holidayEvent.id, title: holidayEvent.title, color: holidayEvent.color, text: holidayEvent.text };
-        try { mainWindow.webContents.send('event-triggered', evPayload); } catch {}
-        forwardToPet('event-triggered', evPayload);
-      }
-    }
+    // v4：通关由分支结局事件驱动（handleBranchEnding，story-read 时触发），
+    // 里程碑/节日事件系统已取消（陪伴时长走成就阶梯，节日走宠物语台词池）
 
     // Daily login ritual (once per day)
     if (!gameState.isInHub && currentScenario) {
@@ -1549,29 +1483,6 @@ function registerIpcHandlers() {
     if (!scenario) throw new Error(`Scenario '${id}' not found`);
     const aliasStr = alias || '';
     resetGameForScenario(scenario, aliasStr);
-    // Catch-up: queue story events up to current level for old saves
-    const catchUpLevel = gameState.level;
-    if (catchUpLevel > 1 && scenario.events) {
-      // Collect all IDs that are choice targets, so we don't pre-show them
-      const allTargetIds = new Set();
-      scenario.events.forEach(e => {
-        if (e.choice1Target) allTargetIds.add(e.choice1Target);
-        if (e.choice2Target) allTargetIds.add(e.choice2Target);
-        if (e.choice3Target) allTargetIds.add(e.choice3Target);
-        if (e.choice4Target) allTargetIds.add(e.choice4Target);
-      });
-      let queue = scenario.events.filter(e => e.type === 'story' && e.minLevel <= catchUpLevel && !allTargetIds.has(e.id) && !gameState.triggeredEvents.includes(e.id) && (!e.branch || e.branch === '') && checkFlagRequire(e.flagRequire));
-      queue.sort((a, b) => a.minLevel - b.minLevel);
-      if (queue.length > 0) {
-        gameState._catchUpQueue = queue;        // 确保等级至少达到门槛（只补差额，不覆盖超出部分）
-        const expForLevel = calcExpForLevel(catchUpLevel);
-        if (gameState.petTotalExp < expForLevel) {
-          gameState.petTotalExp = expForLevel;
-          gameState.exp = gameState.petTotalExp;
-        }
-        gameState.level = catchUpLevel;
-      }
-    }
     hubIdleMs = 0;
     lastHubReminderMs = 0;
     writeSave(gameState);
@@ -2192,8 +2103,24 @@ function registerIpcHandlers() {
   });
 
   // Catch-up advance（保留：pet-bubble 仍调用此通道）
-  ipcMain.handle('catch-up-advance', () => {
-    return true;
+  // v4：读完待读故事段（点击气泡）→ 标记已读 + 推进下一段（进度攒够则连读）
+  ipcMain.handle('story-read', (_, { eventId }) => {
+    if (!gameState._pendingStoryEvent || gameState._pendingStoryEvent.id !== eventId) {
+      return { success: false, error: '无待读事件' };
+    }
+    const ev = currentScenario && currentScenario.events.find(e => e.id === eventId);
+    if (ev) {
+      gameState.triggeredEvents.push(ev.id);
+      if (!ev.choice1) applyFlagSet(ev.flagSet);
+      // 结局事件（带 CompletionTitle）：分支通关
+      if (ev.completionTitle) handleBranchEnding(ev);
+      const scName = currentScenario?.name_cn || currentScenario?.nameCN || gameState.scenarioId;
+      appendLogEntry('event', '【' + scName + '】' + (ev.text || '').slice(0, 40));
+    }
+    gameState._pendingStoryEvent = null;
+    checkStoryUnlock();   // 立即检查下一段（攒够的进度直接连出）
+    writeSave(gameState);
+    return { success: true };
   });
 
   ipcMain.handle('get-key-stats', () => {
@@ -2885,26 +2812,10 @@ app.whenReady().then(() => {
   }
 
   // Trigger initial story for restored scenarios (first entry only)
+  // v4：进入世界时检查时间解锁（storySeconds 够则挂出待读/弹抉择）
   if (!gameState.isInHub && currentScenario && !gameState.scenarioProgress?.[gameState.scenarioId]) {
-    const initEvent = findUnusedEvent('story', gameState.level);
-    if (initEvent) {
-      gameState.triggeredEvents.push(initEvent.id);
-      if (!initEvent.choice1) applyFlagSet(initEvent.flagSet);
-      const title = getCurrentTitle(currentScenario, gameState.level);
-      if (initEvent.choice1 && initEvent.choice1Target) {
-        const choices = buildChoices(initEvent);
-        gameState.pendingChoiceEvent = {
-          eventId: initEvent.id, scenarioId: gameState.scenarioId,
-          title: '抉择', text: initEvent.text, choices,
-        };
-        const cp = { title: '抉择', text: initEvent.text, choices, _eventId: initEvent.id };
-        try { mainWindow.webContents.send('choice-event', cp); } catch {}
-        forwardToPet('choice-event', cp);
-      }
-      const luPayload = { level: gameState.level, title: title?.name || '', titleColor: title?.color || '#888', titleDesc: title?.desc || '', eventText: initEvent.choice1 ? null : initEvent.text };
-      try { mainWindow.webContents.send('level-up', luPayload); } catch {}
-      forwardToPet('level-up', luPayload);
-    }
+    gameState._pendingStoryEvent = null;
+    checkStoryUnlock();
   }
 
   startGameLoop();
