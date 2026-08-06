@@ -9,6 +9,7 @@ const { registerPetIpcHandlers, forwardToPet, initPet, broadcastTheme, setOnPetS
 const { getTodaysHolidayId, getUpcomingHolidayId, getHolidayName, getHolidayIcon, getHolidayEventFromScenario, getRandomHolidayEvent } = require('./holiday.cjs');
 const { parseScenarioMd } = require('../src/scenario-parser.cjs');
 const { calcLevel, calcExpForLevel } = require('../level-curve.cjs');
+const PET_LINES = require('./pet-lines.cjs');
 const { uIOhook, UiohookKey } = require('uiohook-napi');
 const { autoUpdater } = require('electron-updater');
 
@@ -275,6 +276,8 @@ function normalizeGameState(gs) {
   if (!gs.tierAchievements || typeof gs.tierAchievements !== 'object') gs.tierAchievements = { level: 0, time: 0, typing: 0, stories: 0, worlds: 0, hidden: 0 };
   if (typeof gs.petStoriesRead !== 'number') gs.petStoriesRead = 0;
   if (typeof gs.petHiddenRead !== 'number') gs.petHiddenRead = 0;
+  // v4 宠物性别：male / female / null=中性（只用通用池）
+  if (gs.petGender !== 'male' && gs.petGender !== 'female') gs.petGender = null;
   // 离线衰减结算：按真实时间差衰减（几天不开回来发现饿了；见底无惩罚）
   const petIdleMs = Date.now() - gs.petStateUpdatedAt;
   if (petIdleMs > 5000) applyPetDecay(gs, petIdleMs);
@@ -889,11 +892,12 @@ function handleInputDown(keyId, keyChar, now) {
   gameState.level = calcLevel(gameState.petTotalExp);
   if (gameState.level > ol) {
     const title = getCurrentTitle(currentScenario, gameState.level);
-    // v4：升级不再触发故事（故事由时间解锁驱动），仅更新称号
+    // v4：升级不再触发故事（故事由时间解锁驱动），仅更新称号 + 挂起升级台词
     if (title) {
       currentTitle = title;
       if (currentScenario) gameState.equippedTitleIndex = currentScenario.titles.indexOf(title);
     }
+    queuePetLineLayer('levelup');
     const luPayload = { level: gameState.level, title: title ? title.name : null, titleColor: title ? title.color : null, titleDesc: title ? title.desc : null, eventText: null };
     try { mainWindow.webContents.send('level-up', luPayload); } catch {}
     forwardToPet('level-up', luPayload);
@@ -1010,6 +1014,38 @@ function isPetDroopy() {
   return gameState.petFullness < 30 || gameState.petMood < 30 || gameState.petCleanliness < 30;
 }
 
+// ── v4 宠物语引擎（设计文档 §7）：抽取/触发 ──
+let _lastPetLine = { layer: '', index: -1 };
+
+function pickPetLine(layer) {
+  const group = PET_LINES.lines[layer];
+  if (!group) return '';
+  const gender = gameState?.petGender;
+  const genderPool = gender === 'male' ? (group.male || []) : gender === 'female' ? (group.female || []) : [];
+  // 70/30 抽取：中性只用通用池；有性别池时 30% 概率用性别池
+  const useGender = gender && genderPool.length > 0 && Math.random() < 0.3;
+  const pool = useGender ? genderPool : (group.common || []);
+  if (!pool || pool.length === 0) return '';
+  let idx = Math.floor(Math.random() * pool.length);
+  if (pool.length > 1 && _lastPetLine.layer === layer && _lastPetLine.index === idx) {
+    idx = (idx + 1) % pool.length;   // 同层不连续重复
+  }
+  _lastPetLine = { layer, index: idx };
+  return pool[idx];
+}
+
+function showPetLine(layer) {
+  const text = pickPetLine(layer);
+  if (!text) return;
+  forwardToPet('pet-line', { text });
+}
+
+// 特定时刻台词挂起：升级/成就/进世界时设置，下次点击宠物优先说（绝不主动弹出）
+function queuePetLineLayer(layer) {
+  if (!gameState) return;
+  gameState._pendingPetLine = layer;
+}
+
 function resetGameForScenario(scenario, alias) {
   gameState.scenarioId = scenario.id;
   if (gameState.pendingChoiceEvent) {
@@ -1041,6 +1077,7 @@ function resetGameForScenario(scenario, alias) {
 
   // v4：进入世界时检查时间解锁（storySeconds 够则挂出待读/弹抉择）
   gameState._pendingStoryEvent = null;
+  queuePetLineLayer('special');   // 进世界台词（下次点击说）
   checkStoryUnlock();
   setLogSession(scenario.id);
 }
@@ -1373,6 +1410,7 @@ function startGameLoop() {
       pet_foods: gameState.petFoods || 0,
       pet_soaps: gameState.petSoaps || 0,
       pet_droopy: isPetDroopy(),
+      pet_gender: gameState.petGender,
       current_branch: gameState.currentBranch || '',
       completed_branches: (gameState.branchProgress && gameState.branchProgress[gameState.scenarioId]) || [],
       flags: gameState.flags || {},
@@ -1476,6 +1514,7 @@ function startGameLoop() {
         currentTitle = title;
         gameState.equippedTitleIndex = currentScenario.titles.indexOf(title);
       }
+      queuePetLineLayer('levelup');
       const luPayload = { level: gameState.level, title: title ? title.name : null, titleColor: title ? title.color : null, titleDesc: title ? title.desc : null, eventText: null };
       try { mainWindow.webContents.send('level-up', luPayload); } catch {}
       forwardToPet('level-up', luPayload);
@@ -1520,6 +1559,7 @@ function startGameLoop() {
     const milUnlocks = checkMilestoneAchievements();
     const allNew = [...tierUnlocks, ...milUnlocks];
     if (allNew.length > 0) {
+      queuePetLineLayer('achievement');   // 成就祝贺台词（下次点击说）
       const merged = {
         id: allNew.map(a => a.id).join(','),
         name: allNew.length > 1 ? `成就 +${allNew.length}` : allNew[0].name,
@@ -2318,6 +2358,7 @@ function registerIpcHandlers() {
     gameState.petFoods -= 1;
     gameState.petFullness = clamp100(gameState.petFullness + 10);
     gameState.petMood = clamp100((gameState.petMood || 80) + 1);   // 吃食反馈（台词池阶段 5 接入）
+    showPetLine('feed');   // 食物反馈台词
     writeSave(gameState);
     return { success: true, fullness: gameState.petFullness, mood: gameState.petMood, foods: gameState.petFoods };
   });
@@ -2329,6 +2370,7 @@ function registerIpcHandlers() {
     gameState.petSoaps -= 1;
     gameState.petCleanliness = clamp100(gameState.petCleanliness + 10);
     gameState.petMood = clamp100((gameState.petMood || 80) + 1);   // 洗澡反馈（台词池阶段 5 接入）
+    showPetLine('wash');   // 洗澡反馈台词
     writeSave(gameState);
     return { success: true, cleanliness: gameState.petCleanliness, mood: gameState.petMood, soaps: gameState.petSoaps };
   });
@@ -2336,8 +2378,30 @@ function registerIpcHandlers() {
   ipcMain.handle('pet-pet', () => {
     if (!gameState) return { success: false, error: '无存档' };
     gameState.petMood = clamp100((gameState.petMood || 80) + 4);
+    // 宠物语：挂起层（升级/成就/进世界）优先 → 低落 → 节日 → 全绿满足 → 日常闲聊
+    const pending = gameState._pendingPetLine;
+    if (pending) {
+      gameState._pendingPetLine = null;
+      showPetLine(pending);
+    } else if (isPetDroopy()) {
+      showPetLine('low');
+    } else {
+      const todayHoliday = getTodaysHolidayId();
+      if (todayHoliday) showPetLine('holiday');
+      else if ((gameState.petFullness || 0) >= 60 && (gameState.petMood || 0) >= 60 && (gameState.petCleanliness || 0) >= 60) showPetLine('satisfied');
+      else showPetLine('casual');
+    }
     writeSave(gameState);
     return { success: true, mood: gameState.petMood };
+  });
+
+  // v4 宠物性别（onboarding 三选项 + 右键菜单随时改，即时生效）
+  ipcMain.handle('set-pet-gender', (_, { gender }) => {
+    if (!gameState) return { success: false, error: '无存档' };
+    if (!['male', 'female', 'neutral'].includes(gender)) return { success: false, error: '无效性别' };
+    gameState.petGender = gender === 'neutral' ? null : gender;
+    writeSave(gameState);
+    return { success: true, petGender: gameState.petGender };
   });
 
   ipcMain.handle('get-key-stats', () => {

@@ -1,4 +1,4 @@
-const LANG = { selectPet:'选择宠物', view:'视图', compact:'简洁模式', chime:'整点报时', shake:'打击震动', calculator:'计算器', screenshot:'截图', guide:'操作说明', hide:'隐藏宠物界面', feed:'喂食', wash:'洗澡' };
+const LANG = { selectPet:'选择宠物', view:'视图', compact:'简洁模式', chime:'整点报时', shake:'打击震动', calculator:'计算器', screenshot:'截图', guide:'操作说明', hide:'隐藏宠物界面', feed:'喂食', wash:'洗澡', genderMale:'男孩', genderFemale:'女孩', genderNeutral:'不设定性别' };
 function t(key) { return LANG[key] || key; }
 
 function setToggle(key, val) { localStorage.setItem('pet_' + key, val); }
@@ -82,6 +82,14 @@ document.getElementById('ctx-wash').addEventListener('click', () => {
     if (r && !r.success && r.error) alert(r.error);
   }).catch(() => {});
   window.ctxMenu.invoke('close-menu').catch(() => {});
+});
+
+// v4 宠物性别（男/女/不设定，即时生效）
+[['ctx-gender-male','male'],['ctx-gender-female','female'],['ctx-gender-neutral','neutral']].forEach(([id, g]) => {
+  document.getElementById(id).addEventListener('click', () => {
+    window.ctxMenu.invoke('set-pet-gender', { gender: g }).catch(() => {});
+    window.ctxMenu.invoke('close-menu').catch(() => {});
+  });
 });
 
 ['compact','chime','shake'].forEach(k => {
