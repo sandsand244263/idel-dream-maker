@@ -1070,7 +1070,7 @@ function pickHolidayLine() {
 function resetGameForScenario(scenario, alias) {
   gameState.scenarioId = scenario.id;
   if (gameState.pendingChoiceEvent) {
-    appendLogEntry('info', `切换副本，放弃未完成的抉择 (${gameState.pendingChoiceEvent.eventId})`);
+    appendLogEntry('info', `切换世界，放弃未完成的抉择 (${gameState.pendingChoiceEvent.eventId})`);
     gameState.pendingChoiceEvent = null;
   }
   const p = gameState.scenarioProgress && gameState.scenarioProgress[scenario.id];
@@ -1106,7 +1106,7 @@ function resetGameForScenario(scenario, alias) {
 function exitToHub() {
   clearLogSession();
   if (gameState.pendingChoiceEvent) {
-    appendLogEntry('info', '返回大厅，放弃未完成的抉择');
+    appendLogEntry('info', '返回家，放弃未完成的抉择');
     gameState.pendingChoiceEvent = null;
   }
   const unlocked = getUnlockedTitles(currentScenario, gameState.level).map(t => t.name);
@@ -1388,16 +1388,16 @@ function startGameLoop() {
   lastHubReminderMs = 0;
 
   const HUB_REMINDERS = [
-    '大厅的挂钟滴答作响，空气中有一丝茶香。',
+    '家里的挂钟滴答作响，空气中有一丝茶香。',
     '窗外似乎有什么东西一闪而过。',
     '墙上的地图又多了几道你不记得画过的痕迹。',
     '壁炉里的火苗轻轻跳动着。',
     '角落里那把旧椅子看起来比上次更旧了。',
-    '在大厅挂机不涨经验，进副本才有。',
-    '已经在大厅待了好一会儿，不选个副本开始吗？',
-    '副本才是挂机的地方——选一个进去吧。',
-    '在大厅不会有事件触发，副本里才有故事。',
-    '大厅只能管理和浏览，经验在副本里。',
+    '在家待着也是陪伴，不过故事还在世界里等着你。',
+    '已经在家待了好一会儿，不选个世界看看吗？',
+    '世界才是故事发生的地方——选一个出发吧。',
+    '在家不会触发故事，故事都在世界里。',
+    '家是休息的地方，故事要去世界里看。',
   ];
 
   gameLoopInterval = setInterval(() => {
