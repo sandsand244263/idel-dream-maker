@@ -71,16 +71,12 @@ document.getElementById('ctx-select-pet').addEventListener('click', () => {
 
 // v4 饲养：喂食 / 洗澡
 document.getElementById('ctx-feed').addEventListener('click', () => {
-  window.ctxMenu.invoke('feed-pet').then(r => {
-    if (r && !r.success && r.error) alert(r.error);
-  }).catch(() => {});
+  window.ctxMenu.invoke('feed-pet').catch(() => {});
   window.ctxMenu.invoke('close-menu').catch(() => {});
 });
 
 document.getElementById('ctx-wash').addEventListener('click', () => {
-  window.ctxMenu.invoke('wash-pet').then(r => {
-    if (r && !r.success && r.error) alert(r.error);
-  }).catch(() => {});
+  window.ctxMenu.invoke('wash-pet').catch(() => {});
   window.ctxMenu.invoke('close-menu').catch(() => {});
 });
 

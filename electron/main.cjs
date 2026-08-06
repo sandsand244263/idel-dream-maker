@@ -868,8 +868,9 @@ function handleInputDown(keyId, keyChar, now) {
 
   try { forwardToPet('key-combo', { streak, grade, keyChar, total: gameState.totalKeyPresses, daily: gameState.dailyKeyPresses }); } catch {}
 
-  if (gameState.isInHub || gameState.pendingChoiceEvent) {
-    if (gameState.pendingChoiceEvent) buffGradeTime = 0;
+  // v4（V2 决策）：仅抉择阻塞时停；在家也涨 EXP/攒道具/三维恢复（EXP/三维/道具全局运行）
+  if (gameState.pendingChoiceEvent) {
+    buffGradeTime = 0;
     return;
   }
 
@@ -1050,6 +1051,11 @@ function showPetLine(layer) {
 function queuePetLineLayer(layer) {
   if (!gameState) return;
   gameState._pendingPetLine = layer;
+}
+
+// 系统提示短气泡（宠物窗口，6s 自动消失；喂食/洗澡失败等轻量反馈）
+function sendPetToast(text) {
+  try { forwardToPet('pet-toast', { text }); } catch {}
 }
 
 // 节日台词：按节日 id 专属池抽取（冷门节日无池 → 返回空，走普通台词）
@@ -2411,9 +2417,15 @@ function registerIpcHandlers() {
 
   // ── v4 饲养交互：喂食（耗 1 食物，饱食 +10，吃食心情 +1）/ 洗澡（耗 1 肥皂，清洁 +10）/ 抚摸（心情 +4）──
   ipcMain.handle('feed-pet', () => {
-    if (!gameState) return { success: false, error: '无存档' };
-    if ((gameState.petFoods || 0) <= 0) return { success: false, error: '食物不足（打字 100 击 = 1 食物）' };
-    if (gameState.petFullness >= 100) return { success: false, error: '已经吃饱了' };
+    if (!gameState) return { success: false };
+    if ((gameState.petFoods || 0) <= 0) {
+      sendPetToast(`食物不足（打字 ${V4_CONFIG.feedKeyRate} 击 = 1 个）`);
+      return { success: false, error: '食物不足' };
+    }
+    if (gameState.petFullness >= 100) {
+      sendPetToast('已经吃饱了，别撑坏啦');
+      return { success: false, error: '已吃饱' };
+    }
     gameState.petFoods -= 1;
     gameState.petFullness = clamp100(gameState.petFullness + 10);
     gameState.petMood = clamp100((gameState.petMood || 80) + 1);   // 吃食反馈（台词池阶段 5 接入）
@@ -2423,9 +2435,15 @@ function registerIpcHandlers() {
   });
 
   ipcMain.handle('wash-pet', () => {
-    if (!gameState) return { success: false, error: '无存档' };
-    if ((gameState.petSoaps || 0) <= 0) return { success: false, error: '肥皂不足（打字 200 击 = 1 肥皂）' };
-    if (gameState.petCleanliness >= 100) return { success: false, error: '已经干干净净了' };
+    if (!gameState) return { success: false };
+    if ((gameState.petSoaps || 0) <= 0) {
+      sendPetToast(`肥皂不足（打字 ${V4_CONFIG.soapKeyRate} 击 = 1 个）`);
+      return { success: false, error: '肥皂不足' };
+    }
+    if (gameState.petCleanliness >= 100) {
+      sendPetToast('已经很干净啦');
+      return { success: false, error: '已干净' };
+    }
     gameState.petSoaps -= 1;
     gameState.petCleanliness = clamp100(gameState.petCleanliness + 10);
     gameState.petMood = clamp100((gameState.petMood || 80) + 1);   // 洗澡反馈（台词池阶段 5 接入）

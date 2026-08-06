@@ -471,6 +471,8 @@ window.pet.on('pet-state',d=>{
 window.pet.on('event-triggered',d=>{transitionTo('run');nq.enqueue({text:d.text,title:d.title||'事件',type:'event'},1);});
 // v4：宠物语短气泡（点击触发，6s 自动消失，独立于待读气泡）
 window.pet.on('pet-line',d=>{if(d&&d.text)showChimeBubble(d.text,'宠物');});
+// v4：系统提示短气泡（喂食/洗澡失败等轻量反馈）
+window.pet.on('pet-toast',d=>{if(d&&d.text)showChimeBubble(d.text,'提示');});
 // v4：待读故事气泡——常驻显示（不走队列），点击=story-read 推进（pet-bubble 处理点击）
 window.pet.on('story-ready',d=>{
   transitionTo('review');
