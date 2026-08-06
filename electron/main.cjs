@@ -3329,6 +3329,10 @@ async function runScreenshotMode(scenes) {
         await sleep(800);
         try { pw.webContents.sendInputEvent({ type: 'mouseMove', x: 96, y: 160 }); } catch (e) { console.log('[shot] hover fail:', e.message); }
         await sleep(600);
+        try {
+          const diag = await pw.webContents.executeJavaScript(`JSON.stringify({ expFillW: document.getElementById('exp-fill').style.width, expFillOW: document.getElementById('exp-fill').offsetWidth, expTrackOW: document.getElementById('exp-fill').parentElement.offsetWidth, expDetail: document.getElementById('exp-detail').textContent, expWrapDisp: getComputedStyle(document.getElementById('exp-wrap')).display, expRowDisp: getComputedStyle(document.getElementById('exp-row')).display, expRowOW: document.getElementById('exp-row').offsetWidth })`);
+          console.log('[shot] exp diag:', diag);
+        } catch (e) { console.log('[shot] exp diag failed:', e.message); }
         const img = await cap(pw);
         if (img) shots.push(img);
       }

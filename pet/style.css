@@ -82,10 +82,12 @@ body { font-family:var(--font); color:var(--fg); }
 #container.compact:hover #pet-stats { opacity:1; }
 .stat-row { display:flex;align-items:center;gap:4px; }
 .stat-label { font-size:10px;color:color-mix(in srgb,var(--fg) 50%,transparent);width:28px;flex-shrink:0; }
-.stat-track { flex:1;height:4px;background:color-mix(in srgb,var(--fg) 6%,transparent);border-radius:2px;overflow:hidden; }
-.stat-fill { height:100%;width:0%;border-radius:2px;background:color-mix(in srgb,var(--fg) 70%,transparent);transition:width 0.5s var(--ease-out); }
+.stat-track { flex:1;height:4px;background:color-mix(in srgb,var(--fg) 12%,transparent);border-radius:2px;overflow:hidden; }
+.stat-fill { height:100%;width:0%;border-radius:2px;background:color-mix(in srgb,var(--fg) 85%,transparent);transition:width 0.5s var(--ease-out); }
 .stat-row.low .stat-fill { background:#FF9800; }
 .stat-value { font-size:10px;color:color-mix(in srgb,var(--fg) 60%,transparent);width:24px;text-align:right;flex-shrink:0; }
+#exp-row .stat-value { width:auto;min-width:64px; }   /* EXP 数值长（7.5k/8.1k 63%），放宽 */
+#exp-row .stat-track { min-width:36px; }               /* 防数值过长把轨道挤成 0 */
 .stat-row.low .stat-value { color:#FF9800; }
 #container:hover .stat-label, #container:hover .stat-value { color:var(--fg); }
 #container:hover .stat-row.low .stat-value { color:#FF9800; }
