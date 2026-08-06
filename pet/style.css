@@ -111,7 +111,7 @@ body { font-family:var(--font); color:var(--fg); }
 /* ── EXP 条：与三维条同构（stat-row），extra 行放今日按键/buff ── */
 #exp-wrap { display:flex;flex-direction:column;gap:3px;width:100%;padding:0 12px;flex-shrink:0;opacity:0.3;transition:opacity 0.25s var(--ease-out); }
 #container:hover #exp-wrap { opacity:1; }
-#exp-extra { display:flex;justify-content:flex-end;gap:8px;align-items:center;line-height:1;min-height:10px; }
+#exp-extra { display:flex;justify-content:center;gap:10px;align-items:center;line-height:1;min-height:10px; }
 
 /* Shake on keypress */
 @keyframes petShake {
