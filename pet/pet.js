@@ -397,8 +397,24 @@ document.addEventListener('mouseup',()=>{if(dragging){dragging=false;window.pet.
 
 // ── Interactions ──
 const CLICK_ANIMS=['wave','review','extra1','extra2'];
-canvas.addEventListener('click',()=>{if(!dragMoved){transitionTo(CLICK_ANIMS[Math.floor(Math.random()*CLICK_ANIMS.length)]);window.pet.invoke('pet-pet').catch(()=>{});}});
-canvas.addEventListener('dblclick',e=>{e.preventDefault();if(!dragMoved){transitionTo('jump');window.pet.invoke('toggle-main-window').catch(()=>{});}});
+// 单击=抚摸（延迟 250ms 判定，避免双击时先触发两次抚摸）；双击=打开主窗口
+let clickTimer = null;
+canvas.addEventListener('click',()=>{
+  if(dragMoved)return;
+  if(clickTimer){clearTimeout(clickTimer);clickTimer=null;return;}   // 双击第二击：取消挂起的抚摸
+  clickTimer=setTimeout(()=>{
+    clickTimer=null;
+    transitionTo(CLICK_ANIMS[Math.floor(Math.random()*CLICK_ANIMS.length)]);
+    window.pet.invoke('pet-pet').catch(()=>{});
+  },250);
+});
+canvas.addEventListener('dblclick',e=>{
+  e.preventDefault();
+  if(dragMoved)return;
+  if(clickTimer){clearTimeout(clickTimer);clickTimer=null;}          // 取消挂起的抚摸
+  transitionTo('jump');
+  window.pet.invoke('toggle-main-window').catch(()=>{});
+});
 canvas.addEventListener('contextmenu',e=>{e.preventDefault();window.pet.invoke('show-context-menu').catch(()=>{});});
 
 // ── Dot click toggle ──
