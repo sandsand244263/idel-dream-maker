@@ -13,13 +13,18 @@
 <body>
   <div id="container">
     <div class="ctx-item" id="ctx-select-pet"><span data-i18n="selectPet">选择宠物</span> <span class="ctx-arrow">&#9654;</span></div>
+    <div class="ctx-sep"></div>
     <div class="ctx-item" id="ctx-feed"><span data-i18n="feed">喂食</span></div>
     <div class="ctx-item" id="ctx-wash"><span data-i18n="wash">洗澡</span></div>
     <div class="ctx-sep"></div>
-    <div class="ctx-item" id="ctx-gender-male"><span data-i18n="genderMale">男孩</span></div>
-    <div class="ctx-item" id="ctx-gender-female"><span data-i18n="genderFemale">女孩</span></div>
-    <div class="ctx-item" id="ctx-gender-neutral"><span data-i18n="genderNeutral">不设定性别</span></div>
+    <div class="ctx-item ctx-gender" id="ctx-gender-male"><span class="gender-check"></span><span data-i18n="genderMale">男孩</span></div>
+    <div class="ctx-item ctx-gender" id="ctx-gender-female"><span class="gender-check"></span><span data-i18n="genderFemale">女孩</span></div>
+    <div class="ctx-item ctx-gender" id="ctx-gender-neutral"><span class="gender-check"></span><span data-i18n="genderNeutral">不设定性别</span></div>
     <div class="ctx-item" id="ctx-callname"><span data-i18n="callName">设置称谓</span></div>
+    <div id="ctx-callname-input" class="hidden">
+      <input id="callname-field" maxlength="8" placeholder="主人（留空=默认）" />
+      <div id="callname-btns"><button id="callname-ok">确定</button><button id="callname-cancel">取消</button></div>
+    </div>
     <div class="ctx-sep"></div>
     <div class="ctx-item fold-header" id="ctx-fold-view">
       <span class="fold-arrow">&#9654;</span> <span data-i18n="view">视图</span>
@@ -29,9 +34,6 @@
       <div class="ctx-item ctx-toggle ctx-sub" id="ctx-toggle-chime">&#10003; <span data-i18n="chime">整点报时</span></div>
       <div class="ctx-item ctx-toggle ctx-sub" id="ctx-toggle-shake">&#10003; <span data-i18n="shake">打击震动</span></div>
     </div>
-    <div class="ctx-sep"></div>
-    <div class="ctx-item ctx-tool" id="ctx-calc"><span data-i18n="calculator">计算器</span></div>
-    <div class="ctx-item ctx-tool" id="ctx-screenshot"><span data-i18n="screenshot">截图</span></div>
     <div class="ctx-sep"></div>
     <div class="ctx-item" id="ctx-guide"><span data-i18n="guide">操作说明</span></div>
     <div class="ctx-sep"></div>

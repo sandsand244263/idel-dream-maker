@@ -43,33 +43,16 @@ function updateUI() {
   });
 }
 
-function initTools() {
-  window.ctxMenu.invoke('get-available-tools').then(tools => {
-    const calcEl = document.getElementById('ctx-calc');
-    const ssEl = document.getElementById('ctx-screenshot');
-    if (calcEl) calcEl.style.display = (tools || []).includes('calculator') ? '' : 'none';
-    if (ssEl) ssEl.style.display = (tools || []).includes('screenshot') ? '' : 'none';
-  }).catch(() => {});
-}
+function initTools() { /* v4：计算器/截图入口已移除 */ }
 
 document.getElementById('ctx-fold-view').addEventListener('click', () => { toggleView(); });
-
-document.getElementById('ctx-calc').addEventListener('click', () => {
-  window.ctxMenu.invoke('launch-system-tool', { tool: 'calculator' }).catch(() => {});
-  window.ctxMenu.invoke('close-menu').catch(() => {});
-});
-
-document.getElementById('ctx-screenshot').addEventListener('click', () => {
-  window.ctxMenu.invoke('launch-system-tool', { tool: 'screenshot' }).catch(() => {});
-  window.ctxMenu.invoke('close-menu').catch(() => {});
-});
 
 document.getElementById('ctx-select-pet').addEventListener('click', () => {
   window.ctxMenu.invoke('show-pet-selector').catch(() => {});
   window.ctxMenu.invoke('close-menu').catch(() => {});
 });
 
-// v4 饲养：喂食 / 洗澡
+// v4 饲养：喂食 / 洗澡（失败提示走宠物窗口短气泡）
 document.getElementById('ctx-feed').addEventListener('click', () => {
   window.ctxMenu.invoke('feed-pet').catch(() => {});
   window.ctxMenu.invoke('close-menu').catch(() => {});
@@ -80,21 +63,55 @@ document.getElementById('ctx-wash').addEventListener('click', () => {
   window.ctxMenu.invoke('close-menu').catch(() => {});
 });
 
-// v4 宠物性别（男/女/不设定，即时生效）
+// ── v4 宠物性别（选中态 + 即时反馈）──
+let petGender = null;
+function applyGenderUI() {
+  document.querySelectorAll('.ctx-gender').forEach(el => {
+    const g = el.id.replace('ctx-gender-', '');
+    const active = (g === 'neutral' ? null : g) === petGender;
+    el.classList.toggle('ctx-on', active);
+    const check = el.querySelector('.gender-check');
+    if (check) check.textContent = active ? '✓ ' : '';
+  });
+}
+window.ctxMenu.invoke('get-full-state').then(full => {
+  petGender = full?.game?.pet_gender ?? null;
+  applyGenderUI();
+}).catch(() => {});
 [['ctx-gender-male','male'],['ctx-gender-female','female'],['ctx-gender-neutral','neutral']].forEach(([id, g]) => {
   document.getElementById(id).addEventListener('click', () => {
-    window.ctxMenu.invoke('set-pet-gender', { gender: g }).catch(() => {});
-    window.ctxMenu.invoke('close-menu').catch(() => {});
+    const val = g === 'neutral' ? null : g;
+    window.ctxMenu.invoke('set-pet-gender', { gender: g }).then(() => {
+      petGender = val;
+      applyGenderUI();
+      window.ctxMenu.invoke('close-menu').catch(() => {});
+    }).catch(() => {});
   });
 });
 
-// v4 宠物称谓（默认"主人"，输入后替换台词占位；空输入=恢复默认）
+// ── v4 宠物称谓（菜单内输入框；留空=恢复默认）──
+function showCallnameInput() {
+  document.querySelectorAll('#container > .ctx-item, #container > .ctx-sep').forEach(el => el.classList.add('hidden'));
+  document.getElementById('ctx-callname-input').classList.remove('hidden');
+  document.getElementById('callname-field').focus();
+}
 document.getElementById('ctx-callname').addEventListener('click', () => {
-  const name = window.prompt('宠物怎么称呼你？（默认：主人，最多 8 字，留空恢复默认）', '主人');
-  if (name !== null) {
-    window.ctxMenu.invoke('set-pet-callname', { name: name === '主人' ? '' : name }).catch(() => {});
-  }
+  window.ctxMenu.invoke('get-full-state').then(full => {
+    const cur = full?.game?.pet_call_name || '';
+    document.getElementById('callname-field').value = cur;
+  }).catch(() => {});
+  showCallnameInput();
+});
+document.getElementById('callname-ok').addEventListener('click', () => {
+  const name = document.getElementById('callname-field').value.trim();
+  window.ctxMenu.invoke('set-pet-callname', { name }).catch(() => {});
   window.ctxMenu.invoke('close-menu').catch(() => {});
+});
+document.getElementById('callname-cancel').addEventListener('click', () => {
+  window.ctxMenu.invoke('close-menu').catch(() => {});
+});
+document.getElementById('callname-field').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('callname-ok').click();
 });
 
 ['compact','chime','shake'].forEach(k => {

@@ -91,10 +91,12 @@ body { font-family:var(--font); color:var(--fg); }
 #container:hover .stat-row.low .stat-value { color:#FF9800; }
 
 /* ── v4 道具计数（§14.2）── */
-#item-counts { display:flex;gap:8px;justify-content:flex-end;padding:0 12px;flex-shrink:0;font-size:10px;line-height:1;opacity:0.3;transition:opacity 0.2s var(--ease-out); }
+#item-counts { display:flex;gap:12px;justify-content:flex-end;padding:0 12px;flex-shrink:0;font-size:11px;line-height:1;opacity:0.3;transition:opacity 0.2s var(--ease-out); }
 #container:hover #item-counts { opacity:1; }
 #container.compact #item-counts { opacity:0; }
 #container.compact:hover #item-counts { opacity:1; }
+#food-count::before { content:'🍪 '; }
+#soap-count::before { content:'🧼 '; }
 #food-count, #soap-count { color:color-mix(in srgb,var(--fg) 60%,transparent);white-space:nowrap; }
 #food-count.empty, #soap-count.empty { color:color-mix(in srgb,var(--fg) 35%,transparent); }
 #food-count.full, #soap-count.full { color:var(--fg);font-weight:bold; }

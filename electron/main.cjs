@@ -1044,6 +1044,7 @@ function pickPetLine(layer) {
 function showPetLine(layer) {
   const text = pickPetLine(layer);
   if (!text) return;
+  gameState._lastPetLineAt = Date.now();   // 台词冷却时间戳（30s 内不重复弹）
   forwardToPet('pet-line', { text });
 }
 
@@ -2460,6 +2461,8 @@ function registerIpcHandlers() {
     if (pending) {
       gameState._pendingPetLine = null;
       showPetLine(pending);
+    } else if (Date.now() - (gameState._lastPetLineAt || 0) < 30000) {
+      // 台词冷却 30 秒：点太频繁只做抚摸动画，不重复弹台词
     } else if ((gameState.petFullness || 0) < 30) {
       showPetLine('hungry');
     } else if ((gameState.petCleanliness || 0) < 30) {
