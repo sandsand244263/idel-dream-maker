@@ -937,9 +937,9 @@ function initInputListener() {
       keyDown[e.keycode] = false;
     });
     uIOhook.on('mousedown', (e) => {
-      if (e.button < 1 || e.button > 3) return;
+      if (e.button < 0 || e.button > 3) return;
       const keyId = 'mouse_' + e.button;
-      const keyChar = e.button === 1 ? '🖱L' : e.button === 2 ? '🖱R' : '🖱M';
+      const keyChar = e.button === 0 ? '🖱L' : e.button === 1 ? '🖱M' : e.button === 2 ? '🖱R' : '🖱X';
       handleInputDown(keyId, keyChar, Date.now());
     });
     uIOhook.on('mouseup', (e) => {
