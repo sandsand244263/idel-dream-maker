@@ -1,4 +1,4 @@
-const LANG = { selectPet:'选择宠物', view:'视图', compact:'简洁模式', chime:'整点报时', shake:'打击震动', calculator:'计算器', screenshot:'截图', guide:'操作说明', hide:'隐藏宠物界面' };
+const LANG = { selectPet:'选择宠物', view:'视图', compact:'简洁模式', chime:'整点报时', shake:'打击震动', calculator:'计算器', screenshot:'截图', guide:'操作说明', hide:'隐藏宠物界面', feed:'喂食', wash:'洗澡' };
 function t(key) { return LANG[key] || key; }
 
 function setToggle(key, val) { localStorage.setItem('pet_' + key, val); }
@@ -66,6 +66,21 @@ document.getElementById('ctx-screenshot').addEventListener('click', () => {
 
 document.getElementById('ctx-select-pet').addEventListener('click', () => {
   window.ctxMenu.invoke('show-pet-selector').catch(() => {});
+  window.ctxMenu.invoke('close-menu').catch(() => {});
+});
+
+// v4 饲养：喂食 / 洗澡
+document.getElementById('ctx-feed').addEventListener('click', () => {
+  window.ctxMenu.invoke('feed-pet').then(r => {
+    if (r && !r.success && r.error) alert(r.error);
+  }).catch(() => {});
+  window.ctxMenu.invoke('close-menu').catch(() => {});
+});
+
+document.getElementById('ctx-wash').addEventListener('click', () => {
+  window.ctxMenu.invoke('wash-pet').then(r => {
+    if (r && !r.success && r.error) alert(r.error);
+  }).catch(() => {});
   window.ctxMenu.invoke('close-menu').catch(() => {});
 });
 

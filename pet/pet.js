@@ -368,7 +368,7 @@ document.addEventListener('mouseup',()=>{if(dragging){dragging=false;window.pet.
 
 // ── Interactions ──
 const CLICK_ANIMS=['wave','review','extra1','extra2'];
-canvas.addEventListener('click',()=>{if(!dragMoved)transitionTo(CLICK_ANIMS[Math.floor(Math.random()*CLICK_ANIMS.length)]);});
+canvas.addEventListener('click',()=>{if(!dragMoved){transitionTo(CLICK_ANIMS[Math.floor(Math.random()*CLICK_ANIMS.length)]);window.pet.invoke('pet-pet').catch(()=>{});}});
 canvas.addEventListener('dblclick',e=>{e.preventDefault();if(!dragMoved){transitionTo('jump');window.pet.invoke('toggle-main-window').catch(()=>{});}});
 canvas.addEventListener('contextmenu',e=>{e.preventDefault();window.pet.invoke('show-context-menu').catch(()=>{});});
 

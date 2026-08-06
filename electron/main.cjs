@@ -201,6 +201,19 @@ function normalizeGameState(gs) {
   if (typeof gs.hubTotalExp !== 'number') gs.hubTotalExp = 0;
   // v4 等级单轨化：petTotalExp = 两池合并（迁移），此后唯一经验池
   if (typeof gs.petTotalExp !== 'number') gs.petTotalExp = (gs.hubTotalExp || 0) + (gs.totalExpEarned || 0);
+  // v4 饲养三维（上限 100，默认 80）+ 双道具（食物/肥皂，上限 50）
+  if (typeof gs.petFullness !== 'number') gs.petFullness = 80;
+  if (typeof gs.petMood !== 'number') gs.petMood = 80;
+  if (typeof gs.petCleanliness !== 'number') gs.petCleanliness = 80;
+  if (typeof gs.petFoods !== 'number') gs.petFoods = 0;
+  if (typeof gs.petSoaps !== 'number') gs.petSoaps = 0;
+  if (typeof gs.petFoodAccum !== 'number') gs.petFoodAccum = 0;
+  if (typeof gs.petSoapAccum !== 'number') gs.petSoapAccum = 0;
+  if (typeof gs.petStateUpdatedAt !== 'number') gs.petStateUpdatedAt = Date.now();
+  // 离线衰减结算：按真实时间差衰减（几天不开回来发现饿了；见底无惩罚）
+  const petIdleMs = Date.now() - gs.petStateUpdatedAt;
+  if (petIdleMs > 5000) applyPetDecay(gs, petIdleMs);
+  gs.petStateUpdatedAt = Date.now();
   gs.pendingChoiceEvent = null;
   gs._catchUpQueue = null;  gs._lastCatchUpTime = 0;
   gs._lastCyberBlock = undefined;
@@ -789,9 +802,23 @@ function handleInputDown(keyId, keyChar, now) {
   }
 
   const mult = getComboMultiplier(grade);
-  const keyExp = 1.0 * mult;
+  const keyExp = 1.0 * mult * (1 + getPetExpBonus());
   gameState.petTotalExp = (gameState.petTotalExp || 0) + keyExp;
   gameState.exp = gameState.petTotalExp;
+
+  // v4 饲养：打字恢复（饱食 +0.004/击、清洁 +0.003/击）+ 攒道具（100 击=1 食物、200 击=1 肥皂，上限 50）
+  gameState.petFullness = clamp100((gameState.petFullness || 80) + 0.004);
+  gameState.petCleanliness = clamp100((gameState.petCleanliness || 80) + 0.003);
+  gameState.petFoodAccum = (gameState.petFoodAccum || 0) + 1;
+  if (gameState.petFoodAccum >= V4_CONFIG.feedKeyRate) {
+    gameState.petFoodAccum -= V4_CONFIG.feedKeyRate;
+    if (gameState.petFoods < V4_CONFIG.itemCap) gameState.petFoods = (gameState.petFoods || 0) + 1;
+  }
+  gameState.petSoapAccum = (gameState.petSoapAccum || 0) + 1;
+  if (gameState.petSoapAccum >= V4_CONFIG.soapKeyRate) {
+    gameState.petSoapAccum -= V4_CONFIG.soapKeyRate;
+    if (gameState.petSoaps < V4_CONFIG.itemCap) gameState.petSoaps = (gameState.petSoaps || 0) + 1;
+  }
 
   const ol = gameState.level;
   gameState.level = calcLevel(gameState.petTotalExp);
@@ -879,6 +906,43 @@ function getUnlockedTitles(scenario, level) {
 
 function findScenarioById(id) {
   return allScenarios.find(s => s.id === id) || null;
+}
+
+// ── v4 饲养引擎：三维衰减/恢复 + 三档加成 ──
+// 数值表（设计文档 §6.1）：饱食 -4/h（喂食 +10 耗 1 食物、打字 +0.004/击）
+// 心情 -2.5/h（抚摸 +4、饱食≥60 不掉反涨 +2/h）；清洁 -1.5/h（洗澡 +10 耗 1 肥皂、打字 +0.003/击）
+function applyPetDecay(state, ms) {
+  const hours = ms / 3600000;
+  if (!state || typeof state.petFullness !== 'number') return;
+  // 饱食
+  state.petFullness = clamp100(state.petFullness - 4 * hours);
+  // 心情：饱食≥60 不掉反涨 +2/h
+  const moodDelta = state.petFullness >= 60 ? (2 * hours) : (-2.5 * hours);
+  state.petMood = clamp100(state.petMood + moodDelta);
+  // 清洁
+  state.petCleanliness = clamp100(state.petCleanliness - 1.5 * hours);
+}
+
+function clamp100(v) {
+  return Math.max(0, Math.min(100, v));
+}
+
+// 三档加成：三维全绿≥60 → +30%；两维 → +10%；其余 0%
+function getPetExpBonus() {
+  if (!gameState) return 0;
+  const f = gameState.petFullness >= 60;
+  const m = gameState.petMood >= 60;
+  const c = gameState.petCleanliness >= 60;
+  const green = (f ? 1 : 0) + (m ? 1 : 0) + (c ? 1 : 0);
+  if (green >= 3) return 0.3;
+  if (green >= 2) return 0.1;
+  return 0;
+}
+
+// 任一维度 <30 → 萎靡（动画/宠物语阶段 5 接入，这里提供状态判断）
+function isPetDroopy() {
+  if (!gameState) return false;
+  return gameState.petFullness < 30 || gameState.petMood < 30 || gameState.petCleanliness < 30;
 }
 
 function resetGameForScenario(scenario, alias) {
@@ -1238,6 +1302,12 @@ function startGameLoop() {
       theme: gameState.selectedFontTheme || 'green',
       custom_theme: gameState.customTheme || null,
       pet_level: calcLevel(gameState.petTotalExp),
+      pet_fullness: gameState.petFullness || 80,
+      pet_mood: gameState.petMood || 80,
+      pet_cleanliness: gameState.petCleanliness || 80,
+      pet_foods: gameState.petFoods || 0,
+      pet_soaps: gameState.petSoaps || 0,
+      pet_droopy: isPetDroopy(),
       current_branch: gameState.currentBranch || '',
       completed_branches: (gameState.branchProgress && gameState.branchProgress[gameState.scenarioId]) || [],
       flags: gameState.flags || {},
@@ -1251,7 +1321,7 @@ function startGameLoop() {
     };
     try { mainWindow.webContents.send('game-tick', payload); } catch {}
     forwardToPet('game-tick', payload);
-    forwardToPet('pet-state', { petLevel: calcLevel(gameState.petTotalExp), isInHub: gameState.isInHub, level: gameState.level });
+    forwardToPet('pet-state', { petLevel: calcLevel(gameState.petTotalExp), isInHub: gameState.isInHub, level: gameState.level, petFullness: gameState.petFullness || 80, petMood: gameState.petMood || 80, petCleanliness: gameState.petCleanliness || 80, petFoods: gameState.petFoods || 0, petSoaps: gameState.petSoaps || 0, petDroopy: isPetDroopy() });
 
     if (gameState.isInHub) {
       if (!allScenariosFullyCompleted()) {
@@ -1266,6 +1336,10 @@ function startGameLoop() {
       }
       return;
     }
+
+    // v4 饲养：每 tick 三维衰减（真实时间结算）
+    applyPetDecay(gameState, delta);
+    gameState.petStateUpdatedAt = Date.now();
 
     // v4 时间解锁：副本内累计有效时长（挂机 1s=1s；打字加速在 handleInputDown）
     const sid = gameState.scenarioId;
@@ -1317,7 +1391,7 @@ function startGameLoop() {
       const month = new Date().getMonth();
       if (month >= 11 || month <= 2) expMultiplier = 0.5;  // 12-2 月冬季
     }
-    const expGain = (delta / 1000) * expMultiplier * buffMultiplier;
+    const expGain = (delta / 1000) * expMultiplier * buffMultiplier * (1 + getPetExpBonus());
     gameState.petTotalExp = (gameState.petTotalExp || 0) + expGain;
     gameState.exp = gameState.petTotalExp;
 
@@ -2121,6 +2195,36 @@ function registerIpcHandlers() {
     checkStoryUnlock();   // 立即检查下一段（攒够的进度直接连出）
     writeSave(gameState);
     return { success: true };
+  });
+
+  // ── v4 饲养交互：喂食（耗 1 食物，饱食 +10，吃食心情 +1）/ 洗澡（耗 1 肥皂，清洁 +10）/ 抚摸（心情 +4）──
+  ipcMain.handle('feed-pet', () => {
+    if (!gameState) return { success: false, error: '无存档' };
+    if ((gameState.petFoods || 0) <= 0) return { success: false, error: '食物不足（打字 100 击 = 1 食物）' };
+    if (gameState.petFullness >= 100) return { success: false, error: '已经吃饱了' };
+    gameState.petFoods -= 1;
+    gameState.petFullness = clamp100(gameState.petFullness + 10);
+    gameState.petMood = clamp100((gameState.petMood || 80) + 1);   // 吃食反馈（台词池阶段 5 接入）
+    writeSave(gameState);
+    return { success: true, fullness: gameState.petFullness, mood: gameState.petMood, foods: gameState.petFoods };
+  });
+
+  ipcMain.handle('wash-pet', () => {
+    if (!gameState) return { success: false, error: '无存档' };
+    if ((gameState.petSoaps || 0) <= 0) return { success: false, error: '肥皂不足（打字 200 击 = 1 肥皂）' };
+    if (gameState.petCleanliness >= 100) return { success: false, error: '已经干干净净了' };
+    gameState.petSoaps -= 1;
+    gameState.petCleanliness = clamp100(gameState.petCleanliness + 10);
+    gameState.petMood = clamp100((gameState.petMood || 80) + 1);   // 洗澡反馈（台词池阶段 5 接入）
+    writeSave(gameState);
+    return { success: true, cleanliness: gameState.petCleanliness, mood: gameState.petMood, soaps: gameState.petSoaps };
+  });
+
+  ipcMain.handle('pet-pet', () => {
+    if (!gameState) return { success: false, error: '无存档' };
+    gameState.petMood = clamp100((gameState.petMood || 80) + 4);
+    writeSave(gameState);
+    return { success: true, mood: gameState.petMood };
   });
 
   ipcMain.handle('get-key-stats', () => {

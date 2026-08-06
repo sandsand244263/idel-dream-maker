@@ -9,7 +9,7 @@ contextBridge.exposeInMainWorld('pet', {
       'open-pets-folder', 'open-external-link',
       'show-pet-selector', 'show-bubble', 'show-choice-bubble', 'close-bubble',
       'show-context-menu', 'get-current-theme',
-      'story-read',
+      'story-read', 'pet-pet',
     ];
     if (validChannels.includes(channel)) {
       return ipcRenderer.invoke(channel, ...args);
