@@ -1050,6 +1050,21 @@ function queuePetLineLayer(layer) {
   gameState._pendingPetLine = layer;
 }
 
+// 节日台词：按节日 id 专属池抽取（冷门节日无池 → 返回空，走普通台词）
+function pickHolidayLine() {
+  const hid = getTodaysHolidayId();
+  if (!hid) return '';
+  const pool = PET_LINES.lines.holiday[hid];
+  if (!pool || pool.length === 0) return '';
+  let idx = Math.floor(Math.random() * pool.length);
+  if (pool.length > 1 && _lastPetLine.layer === 'holiday_' + hid && _lastPetLine.index === idx) {
+    idx = (idx + 1) % pool.length;
+  }
+  _lastPetLine = { layer: 'holiday_' + hid, index: idx };
+  const callName = gameState?.petCallName || '主人';
+  return callName !== '主人' ? pool[idx].replace(/主人/g, callName) : pool[idx];
+}
+
 function resetGameForScenario(scenario, alias) {
   gameState.scenarioId = scenario.id;
   if (gameState.pendingChoiceEvent) {
@@ -2382,18 +2397,26 @@ function registerIpcHandlers() {
   ipcMain.handle('pet-pet', () => {
     if (!gameState) return { success: false, error: '无存档' };
     gameState.petMood = clamp100((gameState.petMood || 80) + 4);
-    // 宠物语：挂起层（升级/成就/进世界）优先 → 低落 → 节日 → 全绿满足 → 日常闲聊
+    // 宠物语优先级：挂起层（升级/成就/进世界）→ 低维（饿>脏>心情）→ 节日 → 全绿满足 → 日常闲聊
     const pending = gameState._pendingPetLine;
     if (pending) {
       gameState._pendingPetLine = null;
       showPetLine(pending);
-    } else if (isPetDroopy()) {
-      showPetLine('low');
+    } else if ((gameState.petFullness || 0) < 30) {
+      showPetLine('hungry');
+    } else if ((gameState.petCleanliness || 0) < 30) {
+      showPetLine('dirty');
+    } else if ((gameState.petMood || 0) < 30) {
+      showPetLine('sad');
     } else {
-      const todayHoliday = getTodaysHolidayId();
-      if (todayHoliday) showPetLine('holiday');
-      else if ((gameState.petFullness || 0) >= 60 && (gameState.petMood || 0) >= 60 && (gameState.petCleanliness || 0) >= 60) showPetLine('satisfied');
-      else showPetLine('casual');
+      const hl = pickHolidayLine();
+      if (hl) {
+        forwardToPet('pet-line', { text: hl });
+      } else if ((gameState.petFullness || 0) >= 60 && (gameState.petMood || 0) >= 60 && (gameState.petCleanliness || 0) >= 60) {
+        showPetLine('satisfied');
+      } else {
+        showPetLine('casual');
+      }
     }
     writeSave(gameState);
     return { success: true, mood: gameState.petMood };
