@@ -18,6 +18,10 @@ Thumbs.db
 # Accidental artifacts
 idel-dream-maker@*
 tauri
+
+# Internal design docs (not for public repo)
+docs/v4-design.md
+.hermes/
 .env.local
 
 # Build output (electron-builder)
