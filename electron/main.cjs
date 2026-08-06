@@ -5,7 +5,7 @@ const https = require('https');
 
 const { createMainWindow, getMainWindow } = require('./windows.cjs');
 const { createTray, setToolTip, getTray, updateMenu } = require('./tray.cjs');
-const { registerPetIpcHandlers, forwardToPet, initPet, broadcastTheme, setOnPetSelected } = require('./pet.cjs');
+const { registerPetIpcHandlers, forwardToPet, initPet, broadcastTheme, setOnPetSelected, showPetWindow } = require('./pet.cjs');
 const { getTodaysHolidayId, getUpcomingHolidayId, getHolidayName, getHolidayIcon, getHolidayEventFromScenario, getRandomHolidayEvent } = require('./holiday.cjs');
 const { parseScenarioMd } = require('../src/scenario-parser.cjs');
 const { calcLevel, calcExpForLevel } = require('../level-curve.cjs');
@@ -280,6 +280,8 @@ function normalizeGameState(gs) {
   if (gs.petGender !== 'male' && gs.petGender !== 'female') gs.petGender = null;
   // v4 宠物称谓：null=默认"主人"，设置后替换台词中的"主人"占位
   if (typeof gs.petCallName !== 'string' || gs.petCallName.length > 8) gs.petCallName = '';
+  // v4 更新说明弹窗标记
+  if (typeof gs.lastSeenChangelogVersion !== 'string') gs.lastSeenChangelogVersion = '';
   // 离线衰减结算：按真实时间差衰减（几天不开回来发现饿了；见底无惩罚）
   const petIdleMs = Date.now() - gs.petStateUpdatedAt;
   if (petIdleMs > 5000) applyPetDecay(gs, petIdleMs);
@@ -1631,6 +1633,19 @@ function serializeGame() {
     current_branch: gameState.currentBranch || '',
     completed_branches: (gameState.branchProgress && gameState.branchProgress[gameState.scenarioId]) || [],
     flags: gameState.flags || {},
+    // v4 宠物侧数据（主窗口档案中心/状态条用）
+    pet_level: calcLevel(gameState.petTotalExp),
+    pet_fullness: gameState.petFullness || 80,
+    pet_mood: gameState.petMood || 80,
+    pet_cleanliness: gameState.petCleanliness || 80,
+    pet_foods: gameState.petFoods || 0,
+    pet_soaps: gameState.petSoaps || 0,
+    pet_gender: gameState.petGender,
+    pet_call_name: gameState.petCallName || '',
+    pet_stories_read: gameState.petStoriesRead || 0,
+    pet_hidden_read: gameState.petHiddenRead || 0,
+    tier_achievements: gameState.tierAchievements || {},
+    last_seen_changelog_version: gameState.lastSeenChangelogVersion || '',
   };
 }
 
@@ -1694,6 +1709,9 @@ function registerIpcHandlers() {
     }
     const scenario = findScenarioById(id);
     if (!scenario) throw new Error(`Scenario '${id}' not found`);
+    // v4 重访检测：已通关世界 → 前端弹起点选择（从头重温/从抉择处继续）
+    const bp = (gameState.branchProgress && gameState.branchProgress[id]) || [];
+    const worldRevisited = bp.length > 0;
     const aliasStr = alias || '';
     resetGameForScenario(scenario, aliasStr);
     hubIdleMs = 0;
@@ -1712,6 +1730,7 @@ function registerIpcHandlers() {
     }); } catch {}
     return {
       game: serializeGame(),
+      worldRevisited,
       scenario: {
         id: scenario.id,
         name: scenario.name,
@@ -1721,6 +1740,26 @@ function registerIpcHandlers() {
         titles: scenario.titles,
       },
     };
+  });
+
+  // v4 重访起点：restart=从头重温（清该世界故事进度）/ continue=从当前进度继续（连续浏览）
+  ipcMain.handle('revisit-start', (_, { mode }) => {
+    if (!gameState || gameState.isInHub || !gameState.scenarioId) return { success: false, error: '未在世界中' };
+    const sid = gameState.scenarioId;
+    if (!gameState.scenarioProgress[sid]) gameState.scenarioProgress[sid] = {};
+    if (mode === 'restart') {
+      gameState.triggeredEvents = [];
+      gameState.currentBranch = '';
+      gameState.flags = {};
+      if (gameState.branchProgress) gameState.branchProgress[sid] = [];
+      gameState.pendingChoiceEvent = null;
+      gameState._pendingStoryEvent = null;
+    }
+    gameState.scenarioProgress[sid].continuousBrowse = true;   // 重访=连续浏览（不卡时间）
+    writeSave(gameState);
+    gameState._pendingStoryEvent = null;
+    checkStoryUnlock();
+    return { success: true, game: serializeGame() };
   });
 
   ipcMain.handle('exit-to-hub', () => {
@@ -2440,6 +2479,30 @@ function registerIpcHandlers() {
     return { success: true, petCallName: clean };
   });
 
+  // ── v4 更新说明弹窗（首启一次）──
+  const CHANGELOG_V4 = {
+    version: 'v4.0',
+    title: '宠物陪伴时代',
+    points: [
+      '宠物成为主界面：启动只显示宠物窗口，大厅变成「家」',
+      '故事按挂机时长解锁：挂机 20 分钟解锁一段，打字还能加速',
+      '饲养宠物：吃饱/心情/清洁三维状态，喂食和洗澡需要打字攒道具',
+      '成就改为阶梯制：等级/时长/打字/阅读/通关，档位无限延伸',
+      '宠物有性别和称谓：可以设定它叫你什么',
+      '旧副本剧情与日志已清理（数值保留），废土世界正在重做中',
+    ],
+  };
+  ipcMain.handle('get-changelog-info', () => {
+    if (!gameState) return { show: false, changelog: CHANGELOG_V4 };
+    return { show: gameState.lastSeenChangelogVersion !== CHANGELOG_V4.version, changelog: CHANGELOG_V4 };
+  });
+  ipcMain.handle('mark-changelog-seen', () => {
+    if (!gameState) return { success: false };
+    gameState.lastSeenChangelogVersion = CHANGELOG_V4.version;
+    writeSave(gameState);
+    return { success: true };
+  });
+
   ipcMain.handle('get-key-stats', () => {
     if (!gameState) return { total: 0, daily: 0, milestones: [] };
     const grade = getGrade(keyStream.length);
@@ -2796,11 +2859,9 @@ app.whenReady().then(() => {
     try { appendLogEntry('error', msg.slice(0, 500)); } catch {}
   });
   app.on('second-instance', () => {
-    if (mainWindow) {
-      if (mainWindow.isMinimized()) mainWindow.restore();
-      mainWindow.show();
-      mainWindow.focus();
-    }
+    // v4 主辅反转：重复启动 → 显示宠物窗口（主界面）
+    try { showPetWindow(); } catch {}
+    if (mainWindow && mainWindow.isMinimized()) mainWindow.restore();
   });
 
   allScenarios = loadScenarios();
@@ -3217,11 +3278,9 @@ app.whenReady().then(() => {
     setToolTip(`${gameState.playerName} | ${sc}\n${lv} | ${title} | ${rtStr}`);
   }, 5000);
 
-  // Show main window after all setup is complete
-  mainWindow._ignoreBlur = true;
-  mainWindow.show();
-  mainWindow.focus();
-  setTimeout(() => { if (mainWindow) mainWindow._ignoreBlur = false; }, 500);
+  // v4 主辅反转：启动只显示宠物窗口（主窗口=控制面板，双击宠物/托盘/右键打开）
+  try { showPetWindow(); } catch (e) { console.error('show pet window failed:', e); }
+  if (mainWindow) mainWindow.hide();
 });
 
 powerMonitor.on('shutdown', () => {
