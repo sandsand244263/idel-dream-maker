@@ -87,6 +87,67 @@ function checkHubAchievements() {
   return unlocked;
 }
 
+// ── v4 阶梯成就（tier 动态档位，设计文档 §8.2）──
+// 档位公式：add = floor(值/step)（无限延伸）；typing 为 mul = 每档 ×10（1万/10万/100万…）
+const TIER_DEFS = [
+  { key: 'level',   name: '百级之路', desc: '宠物等级', mode: 'add', step: 100,  metric: () => calcLevel(gameState.petTotalExp) },
+  { key: 'time',    name: '百日陪伴', desc: '陪伴时长', mode: 'add', step: 100,  metric: () => Math.floor((gameState.totalRuntimeMs || 0) / 3600000) },
+  { key: 'typing',  name: '键盘大师', desc: '累计打字', mode: 'mul', base: 10000, metric: () => gameState.totalKeyPresses || 0 },
+  { key: 'stories', name: '故事成册', desc: '阅读段数', mode: 'add', step: 500,  metric: () => gameState.petStoriesRead || 0 },
+  { key: 'worlds',  name: '万界旅人', desc: '通关世界', mode: 'add', step: 3,    metric: () => (gameState.gameCompletions || []).filter((c, i, arr) => arr.findIndex(x => x.scenarioId === c.scenarioId) === i).length },
+  { key: 'hidden',  name: '探秘者',   desc: '隐藏内容', mode: 'add', step: 3,    metric: () => gameState.petHiddenRead || 0 },
+];
+
+// 档位序号：前 10 档罗马数字（字母组合），超过切阿拉伯数字
+function tierOrdinal(n) {
+  const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+  return n <= 10 ? roman[n - 1] : String(n);
+}
+
+function tierCountFor(def) {
+  const cur = def.metric();
+  if (def.mode === 'mul') return cur < def.base ? 0 : Math.floor(Math.log10(cur / def.base)) + 1;
+  return Math.floor(cur / def.step);
+}
+
+// 检查阶梯档位：返回新解锁档位数组（多档合并由调用方通知）
+function checkTierAchievements() {
+  if (!gameState) return [];
+  if (!gameState.tierAchievements) gameState.tierAchievements = { level: 0, time: 0, typing: 0, stories: 0, worlds: 0, hidden: 0 };
+  const newly = [];
+  for (const def of TIER_DEFS) {
+    const tiers = tierCountFor(def);
+    const unlocked = gameState.tierAchievements[def.key] || 0;
+    if (tiers > unlocked) {
+      for (let i = unlocked + 1; i <= tiers; i++) {
+        newly.push({ id: `tier_${def.key}_${i}`, name: `${def.name} ${tierOrdinal(i)}`, desc: `${def.desc} · 第 ${i} 档`, icon: '★' });
+      }
+      gameState.tierAchievements[def.key] = tiers;
+    }
+  }
+  return newly;
+}
+
+// ── v4 里程碑成就（少量固定，设计文档 §8.3）──
+function checkMilestoneAchievements() {
+  if (!gameState) return [];
+  const newly = [];
+  const defs = [
+    { id: 'm_first_green',     name: '状态全满', desc: '首次三维全绿', met: () => (gameState.petFullness || 0) >= 60 && (gameState.petMood || 0) >= 60 && (gameState.petCleanliness || 0) >= 60 },
+    { id: 'm_first_choice',    name: '选择时刻', desc: '做出首次抉择', met: () => Object.keys(gameState.choiceFlags || {}).length > 0 },
+    { id: 'm_first_completion', name: '初次通关', desc: '首次通关一个世界', met: () => (gameState.gameCompletions || []).length > 0 },
+    { id: 'm_first_title',     name: '初戴桂冠', desc: '获得首个称号', met: () => Object.keys(gameState.unlockedTitleSets || {}).length > 0 || (gameState.unlockedCompletionTitles || []).length > 0 },
+    { id: 'm_first_hidden',    name: '初探秘辛', desc: '首次发现隐藏内容', met: () => (gameState.petHiddenRead || 0) > 0 },
+  ];
+  for (const d of defs) {
+    if (!gameState.unlockedAchievements.includes(d.id) && d.met()) {
+      gameState.unlockedAchievements.push(d.id);
+      newly.push({ id: d.id, name: d.name, desc: d.desc, icon: '★' });
+    }
+  }
+  return newly;
+}
+
 function canArchiveScenario(scenarioId) {
   if (!gameState) return false;
   const scenario = findScenarioById(scenarioId);
@@ -210,6 +271,10 @@ function normalizeGameState(gs) {
   if (typeof gs.petFoodAccum !== 'number') gs.petFoodAccum = 0;
   if (typeof gs.petSoapAccum !== 'number') gs.petSoapAccum = 0;
   if (typeof gs.petStateUpdatedAt !== 'number') gs.petStateUpdatedAt = Date.now();
+  // v4 成就阶梯：已解锁档数 + 全局阅读统计
+  if (!gs.tierAchievements || typeof gs.tierAchievements !== 'object') gs.tierAchievements = { level: 0, time: 0, typing: 0, stories: 0, worlds: 0, hidden: 0 };
+  if (typeof gs.petStoriesRead !== 'number') gs.petStoriesRead = 0;
+  if (typeof gs.petHiddenRead !== 'number') gs.petHiddenRead = 0;
   // 离线衰减结算：按真实时间差衰减（几天不开回来发现饿了；见底无惩罚）
   const petIdleMs = Date.now() - gs.petStateUpdatedAt;
   if (petIdleMs > 5000) applyPetDecay(gs, petIdleMs);
@@ -1450,6 +1515,21 @@ function startGameLoop() {
       forwardToPet('achievement-unlocked', achPayload);
     }
 
+    // v4 成就阶梯 + 里程碑（多档合并为单条通知，不轰炸）
+    const tierUnlocks = checkTierAchievements();
+    const milUnlocks = checkMilestoneAchievements();
+    const allNew = [...tierUnlocks, ...milUnlocks];
+    if (allNew.length > 0) {
+      const merged = {
+        id: allNew.map(a => a.id).join(','),
+        name: allNew.length > 1 ? `成就 +${allNew.length}` : allNew[0].name,
+        desc: allNew.map(a => a.name).join(' / '),
+        icon: '★',
+      };
+      try { mainWindow.webContents.send('achievement-unlocked', merged); } catch {}
+      forwardToPet('achievement-unlocked', merged);
+    }
+
     // Auto-save every 30s
     if (gameState.totalRuntimeMs % 30000 < delta) {
       writeSave(gameState, true);
@@ -1869,6 +1949,36 @@ function registerIpcHandlers() {
     }));
   });
 
+  // v4 阶梯成就面板数据（当前档/下一档进度；阶段 8 档案中心使用）
+  ipcMain.handle('get-tier-achievements', () => {
+    const unlocked = gameState?.unlockedAchievements || [];
+    const tiers = TIER_DEFS.map(def => {
+      const cur = def.metric();
+      const unlockedTiers = (gameState?.tierAchievements || {})[def.key] || 0;
+      let nextValue;
+      if (def.mode === 'mul') nextValue = def.base * Math.pow(10, unlockedTiers);
+      else nextValue = (unlockedTiers + 1) * def.step;
+      return {
+        key: def.key,
+        name: def.name,
+        desc: def.desc,
+        unlockedTiers,
+        current: cur,
+        nextValue,
+        nextName: `${def.name} ${tierOrdinal(unlockedTiers + 1)}`,
+        currentName: unlockedTiers > 0 ? `${def.name} ${tierOrdinal(unlockedTiers)}` : '未解锁',
+      };
+    });
+    const milestones = [
+      { id: 'm_first_green', name: '状态全满', desc: '首次三维全绿' },
+      { id: 'm_first_choice', name: '选择时刻', desc: '做出首次抉择' },
+      { id: 'm_first_completion', name: '初次通关', desc: '首次通关一个世界' },
+      { id: 'm_first_title', name: '初戴桂冠', desc: '获得首个称号' },
+      { id: 'm_first_hidden', name: '初探秘辛', desc: '首次发现隐藏内容' },
+    ].map(m => ({ ...m, unlocked: unlocked.includes(m.id) }));
+    return { tiers, milestones };
+  });
+
   // ── Completion titles ──
   ipcMain.handle('get-hub-completion-titles', () => {
     return {
@@ -2186,6 +2296,9 @@ function registerIpcHandlers() {
     if (ev) {
       gameState.triggeredEvents.push(ev.id);
       if (!ev.choice1) applyFlagSet(ev.flagSet);
+      // v4 阅读统计（成就阶梯）：隐藏链段单独计
+      gameState.petStoriesRead = (gameState.petStoriesRead || 0) + 1;
+      if (ev.branch === 'hidden') gameState.petHiddenRead = (gameState.petHiddenRead || 0) + 1;
       // 结局事件（带 CompletionTitle）：分支通关
       if (ev.completionTitle) handleBranchEnding(ev);
       const scName = currentScenario?.name_cn || currentScenario?.nameCN || gameState.scenarioId;
