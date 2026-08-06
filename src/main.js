@@ -263,7 +263,6 @@ async function init() {
 }
 
 // ── v4 旅程完成面板（§4.8 四态）──
-let _endingUnlocksCache = null;   // 本次会话最近的解锁状态快照（判定新解锁世界）
 async function showJourneyComplete(ev) {
   // 刷新状态（gameCompletions 已更新，重新拉取）
   try {
@@ -303,10 +302,10 @@ async function showJourneyComplete(ev) {
     endingStatusEl.textContent = t('endingStatusAll');
     btn(t('endingBackSelect'), () => { closeWithAnimation(endingOverlay); exitToHome(); }, true);
   }
-  // 新解锁世界判定：通关后 completionCount 达标的世界（排除当前世界）
+  // 新解锁世界判定：通关后 completionCount 刚好达标的世界（排除当前世界）
   try {
     const unlocks = await window.electron.invoke('get-scenario-unlocks');
-    const newWorld = unlocks.find(u => u.unlocked && !u.archived && u.id !== ev.scenarioId && u.requirement && u.requirement.completions > 0 && (u.completionCount && u.completionCount >= u.requirement.completions));
+    const newWorld = unlocks.find(u => u.unlocked && !u.archived && u.id !== ev.scenarioId && u.requirement && u.requirement.completions > 0 && u.completionCount === u.requirement.completions);
     if (newWorld) {
       const sc = scenarioList.find(s => s.id === newWorld.id);
       endingStatusEl.classList.add('new-world');
@@ -683,12 +682,11 @@ function updateExpBar() {
 function updatePermaStatus() {
   if (!gameState) { if (permaText) permaText.textContent = ''; return; }
   const ach = gameState.unlockedAchievements?.length || 0;
-  const rebirthCount = (gameState.rebirth_count || 0);
   if (gameState.is_in_hub) {
-    if (permaText) permaText.textContent = `Hub Lv.${hubLevel} | ${currentTitle?.name || '?'}`;
+    if (permaText) permaText.textContent = `宠物 Lv.${hubLevel} | ${currentTitle?.name || '?'}`;
   } else {
     const rt = formatRuntime(gameState.total_runtime_ms || 0);
-    const dl = `Lv.${gameState.level}${rebirthCount > 0 ? `(R${rebirthCount})` : ''}`;
+    const dl = `Lv.${gameState.level}`;
     const title = currentTitle?.name || '?';
     if (permaText) permaText.textContent = `${dl} | ${title} | ${rt} | 成就:${ach}`;
   }
@@ -1304,7 +1302,7 @@ function renderScenarioPanel() {
         const sStatsDiv = document.createElement('div'); sStatsDiv.className = 'scenario-stats';
         sStatsDiv.textContent = `${s.eventCount} ${t('scenarioEvent')}${s.achievementCount ? ' · ' + s.achievementCount + ' ' + t('scenarioAchievement') : ''}`;
         card.appendChild(sStatsDiv);
-        card.addEventListener('click', async () => { try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('system', tf('systemEntered', currentScenario.nameCN)); scenarioPanel.classList.add('hidden'); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); } });
+        card.addEventListener('click', async () => { const r = await selectWorld(s.id); if (r) scenarioPanel.classList.add('hidden'); });
         scenarioListEl.appendChild(card);
       });
     }).catch(() => {
@@ -1319,7 +1317,7 @@ function renderScenarioPanel() {
         const sStatsDiv = document.createElement('div'); sStatsDiv.className = 'scenario-stats';
         sStatsDiv.textContent = `${s.eventCount} ${t('scenarioEvent')}${s.achievementCount ? ' · ' + s.achievementCount + ' ' + t('scenarioAchievement') : ''}`;
         card.appendChild(sStatsDiv);
-        card.addEventListener('click', async () => { try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('system', tf('systemEntered', currentScenario.nameCN)); scenarioPanel.classList.add('hidden'); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); } });
+        card.addEventListener('click', async () => { const r = await selectWorld(s.id); if (r) scenarioPanel.classList.add('hidden'); });
         scenarioListEl.appendChild(card);
       });
   });
@@ -1460,7 +1458,7 @@ async function renderAchievementPanel() {
     const hubAchs = await window.electron.invoke('get-hub-achievements');
     hubAchs.forEach(a => {
       const it = document.createElement('div'); it.className = `title-item${a.unlocked ? '' : ' locked'}`;
-      const condStr = a.condition.type === 'hub_level' ? `大厅 Lv.${a.condition.value}` : a.condition.type === 'completions' ? `通关 ${a.condition.value} 个副本` : a.condition.type === 'completions_half' ? '通关一半副本' : a.condition.type === 'completions_all' ? '通关所有副本' : a.condition.type === 'rebirths' ? `重生 ${a.condition.value} 次` : '';
+      const condStr = a.condition.type === 'hub_level' ? `宠物 Lv.${a.condition.value}` : a.condition.type === 'completions' ? `通关 ${a.condition.value} 个世界` : a.condition.type === 'completions_half' ? '通关一半世界' : a.condition.type === 'completions_all' ? '通关所有世界' : a.condition.type === 'rebirths' ? `重生 ${a.condition.value} 次` : '';
       it.innerHTML = `<span class="title-name" style="color:${a.unlocked ? 'var(--fg)' : 'var(--dim)'}">${a.unlocked ? a.name : '???'}</span><span class="title-desc">${a.unlocked ? a.desc : condStr}</span>`;
       achievementListEl.appendChild(it);
     });
@@ -1476,7 +1474,7 @@ async function renderAchievementPanel() {
   achievementListEl.appendChild(scenarioGroup);
 
   const id = gameState?.scenario_id;
-  if (!id) { achievementListEl.innerHTML += '<div class="hub-empty-text">请先进入副本</div>'; return; }
+  if (!id) { achievementListEl.innerHTML += '<div class="hub-empty-text">请先进入世界</div>'; return; }
   try {
     const d = await window.electron.invoke('get-scenario-detail', { id });
     if (!d || !d.achievements) return;
@@ -1606,13 +1604,44 @@ async function updateTooltip() {
 const onboardingModal = document.getElementById('onboarding-modal');
 const onboardingInput = document.getElementById('onboarding-name');
 const onboardingOk = document.getElementById('onboarding-ok');
+let _obGenderSet = null;
+document.querySelectorAll('.ob-gender-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const g = btn.dataset.gender;
+    _obGenderSet = g;
+    document.querySelectorAll('.ob-gender-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    try { await window.electron.invoke('set-pet-gender', { gender: g }); if (gameState) gameState.pet_gender = g === 'neutral' ? null : g; } catch {}
+  });
+});
 onboardingOk.addEventListener('click', async () => {
   const n = onboardingInput.value.trim();
   if (n) { try { await window.electron.invoke('set-player-name', { name: n }); if (gameState) gameState.player_name = n; } catch {} }
+  if (_obGenderSet) { try { await window.electron.invoke('set-pet-gender', { gender: _obGenderSet }); if (gameState) gameState.pet_gender = _obGenderSet === 'neutral' ? null : _obGenderSet; } catch {} }
   closeWithAnimation(onboardingModal);
   window.electron.invoke('set-onboarding-seen').catch(() => {});
   renderHubView(); renderHubCards(); updateUI();
 });
+
+// ── v4 更新说明弹窗（任务5）──
+function closeChangelog() {
+  closeWithAnimation(changelogModal);
+  window.electron.invoke('mark-changelog-seen').catch(() => {});
+}
+changelogClose.addEventListener('click', closeChangelog);
+changelogOk.addEventListener('click', closeChangelog);
+changelogModal.addEventListener('click', (e) => { if (e.target === changelogModal || e.target === document.getElementById('changelog-overlay')) closeChangelog(); });
+async function checkChangelog() {
+  try {
+    const info = await window.electron.invoke('get-changelog-info');
+    if (info && info.show && info.changelog) {
+      changelogTitleEl.textContent = tf('changelogTitle', info.changelog.version) + (info.changelog.title ? ' — ' + info.changelog.title : '');
+      changelogPointsEl.innerHTML = (info.changelog.points || []).map((p, i) => `<div class="cl-point${/重置|清理/.test(p) ? ' warn' : ''}">${p}</div>`).join('');
+      changelogModal.classList.remove('closing');
+      changelogModal.classList.remove('hidden');
+    }
+  } catch {}
+}
 
 // ── User Scenarios ──
 document.getElementById('btn-open-scenarios-folder')?.addEventListener('click', async () => {
@@ -1624,7 +1653,7 @@ document.getElementById('btn-refresh-scenarios')?.addEventListener('click', asyn
     scenarioList = await window.electron.invoke('get-scenario-list');
     renderHubCards();
     renderScenarioPanel();
-    showToast(`已加载 ${r.count} 个自制副本`, 'info');
+    showToast(`已加载 ${r.count} 个自制世界`, 'info');
   } catch { showToast('刷新失败', 'error'); }
 });
 
@@ -1637,6 +1666,8 @@ init().then(() => {
   applyTheme(gameState?.selected_font_theme || 'green');
   if (gameState && !gameState.is_in_hub) { switchView(false); addLog('system', tf('logStartScenario', formatRuntime(gameState.total_runtime_ms), gameState.level)); }
   updateUI(); updateTooltip(); setInterval(updateTooltip, 5000);
+  loadWorldIndex();
+  checkChangelog();
 
   // 首次启动自动弹出新手引导
   if (gameState && !gameState.has_seen_onboarding) {

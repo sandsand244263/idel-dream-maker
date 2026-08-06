@@ -14,6 +14,14 @@ const guidePanel = document.getElementById('no-pet-guide');
 const guideOpenFolder = document.getElementById('guide-open-folder');
 const guidePetdex = document.getElementById('guide-petdex');
 const canvasWrap = document.getElementById('canvas-wrap');
+const statFullness = document.getElementById('stat-fullness');
+const statMood = document.getElementById('stat-mood');
+const statClean = document.getElementById('stat-clean');
+const statFullnessV = document.getElementById('stat-fullness-v');
+const statMoodV = document.getElementById('stat-mood-v');
+const statCleanV = document.getElementById('stat-clean-v');
+const foodCount = document.getElementById('food-count');
+const soapCount = document.getElementById('soap-count');
 
 canvas.width = 120;
 canvas.height = 140;
@@ -348,6 +356,27 @@ function updateInfoBar(){
   infoText.textContent=title?`${gameInfo.scenario} | LV.${dl} | ${title}`:`${gameInfo.scenario} | LV.${dl}`;
   updateExpBar();
 }
+
+// ── v4 三维状态条 + 道具计数（§14.1/14.2）──
+function setStat(row, fill, valEl, v){
+  const value=Math.max(0,Math.min(100,Number(v)||0));
+  if(row){row.classList.toggle('low',value<30);fill.style.width=value+'%';}
+  if(valEl)valEl.textContent=Math.round(value);
+}
+function setItemCount(el,count){
+  if(!el)return;
+  const c=Number(count)||0;
+  el.textContent=(el===foodCount?'🍪':'🧼')+' ×'+c;
+  el.classList.toggle('empty',c===0);
+  el.classList.toggle('full',c>=50);
+}
+function updatePetStats(f,m,c,fo,so){
+  setStat(statFullness?statFullness.closest('.stat-row'):null,statFullness,statFullnessV,f);
+  setStat(statMood?statMood.closest('.stat-row'):null,statMood,statMoodV,m);
+  setStat(statClean?statClean.closest('.stat-row'):null,statClean,statCleanV,c);
+  setItemCount(foodCount,fo);
+  setItemCount(soapCount,so);
+}
 function applyTheme(theme, customTheme){
   document.body.className='';
   if(customTheme){
@@ -415,11 +444,13 @@ window.pet.on('game-tick',d=>{
       buffBadge.classList.add('hidden');
     }
   }
+  updatePetStats(d.pet_fullness, d.pet_mood, d.pet_cleanliness, d.pet_foods, d.pet_soaps);
   updateInfoBar();
 });
 window.pet.on('theme-changed',(d)=>{if(d){gameInfo.theme=d.theme;applyTheme(d.theme, d.customTheme);}});
 window.pet.on('pet-state',d=>{
   gameInfo.hubLevel=d.hubLevel||1;gameInfo.isInHub=d.isInHub!==false;gameInfo.level=d.level||1;
+  updatePetStats(d.petFullness, d.petMood, d.petCleanliness, d.petFoods, d.petSoaps);
   updateInfoBar();
 });
 window.pet.on('event-triggered',d=>{transitionTo('run');nq.enqueue({text:d.text,title:d.title||'事件',type:'event'},1);});
