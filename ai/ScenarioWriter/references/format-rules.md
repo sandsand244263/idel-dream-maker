@@ -1,3 +1,5 @@
+> **v3 存档**（MinLevel/500级/节日事件时代）。v4 新副本请用项目根目录 `docs/format-rules.md`（MinSeconds/旅程进度称号/隐藏链/结局规则）。本文件仅作历史参考。
+
 # ScenarioWriter 副本格式规则
 
 本文件定义 .md 副本文件的核心格式规范，同时被 SKILL.md 和验证脚本引用。
