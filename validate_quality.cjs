@@ -82,40 +82,74 @@ function checkScenario(s) {
   }
   if (!idError) console.log('  [OK] 事件编号无重复、无倒退');
 
-  // 分支等级覆盖：每个分支（含共享）在 1-500 每级至少 1 个可触发事件
-  // 共享事件（无分支）对所有分支可见
+  // 分支时长覆盖（v4）：每个分支（含共享）在 MinSeconds 时间轴上连续覆盖
+  // 规则：相邻事件间隔 ≤ 120 分钟（防长空白）；分支末尾必须有结局事件（CompletionTitle）
   const branches = (s.branches || []).concat(['']);
   if (!s.branches || s.branches.length === 0) {
-    console.log('  [WARN] 未配置 branches 字段（frontmatter），分支等级覆盖检查被跳过——请确认 frontmatter 已写 branches');
+    console.log('  [WARN] 未配置 branches 字段（frontmatter），分支时长覆盖检查被跳过——请确认 frontmatter 已写 branches');
     hasWarn = true;
   }
-  const sharedByLevel = {};
-  for (const e of events) {
-    if (!e.branch) {
-      const lv = e.minLevel || 1;
-      if (!sharedByLevel[lv]) sharedByLevel[lv] = 0;
-      sharedByLevel[lv]++;
-    }
-  }
+  const GAP_LIMIT = 120 * 60;  // 相邻事件最大间隔 120 分钟
   for (const b of branches) {
-    const byLevel = {};
-    for (const e of events) {
-      if (e.branch && e.branch !== b) continue;
-      const lv = e.minLevel || 1;
-      if (!byLevel[lv]) byLevel[lv] = 0;
-      byLevel[lv]++;
+    const evs = events
+      .filter(e => e.branch === b || (b === '' && !e.branch))
+      .sort((a, z) => (a.minSeconds || 0) - (z.minSeconds || 0));
+    // 共享段只要求开局连续性（到首个分支抉择），分支段要求全程
+    if (evs.length === 0) {
+      console.log(`  [WARN] 分支「${b || '(共享)'}」无事件`);
+      hasWarn = true;
+      continue;
     }
-    const missing = [];
-    // 共享事件（无分支）仅设计覆盖开局 Lv.1-5，之后由分支事件接管
-    const coverEnd = b === '' ? 5 : 500;
-    for (let lv = 1; lv <= coverEnd; lv++) {
-      if (!byLevel[lv]) missing.push(lv);
+    const gaps = [];
+    for (let i = 1; i < evs.length; i++) {
+      const gap = (evs[i].minSeconds || 0) - (evs[i - 1].minSeconds || 0);
+      if (gap > GAP_LIMIT) gaps.push({ from: evs[i - 1].id, to: evs[i].id, gapMin: Math.round(gap / 60) });
     }
-    if (missing.length > 0) {
-      console.log(`  [WARN] 分支「${b || '(共享)'}」等级缺口 ${missing.length} 级: ${missing.slice(0, 30).join(', ')}${missing.length > 30 ? '...' : ''}`);
+    if (gaps.length > 0) {
+      console.log(`  [WARN] 分支「${b || '(共享)'}」时间轴空白 ${gaps.length} 处（>120 分钟）: ${gaps.slice(0, 5).map(g => `${g.from}→${g.to}(${g.gapMin}分)`).join(', ')}`);
       hasWarn = true;
     } else {
-      console.log(`  [OK] 分支「${b || '(共享)'}」1-${coverEnd} 级全覆盖`);
+      console.log(`  [OK] 分支「${b || '(共享)'}」时间轴连续（${evs.length} 段，跨度 ${Math.round((evs[evs.length - 1].minSeconds || 0) / 3600)} 小时）`);
+    }
+  }
+
+  // ── 1.5 结局事件校验（v4）：CompletionTitle 有值 = 结局，必须位于分支链末尾 ──
+  const endings = events.filter(e => e.completionTitle);
+  if (endings.length === 0) {
+    console.log('  [WARN] 无结局事件（CompletionTitle 列无值）——每个分支必须有一个结局');
+    hasWarn = true;
+  } else {
+    let endingOk = true;
+    for (const e of endings) {
+      const sameBranch = events.filter(x => (x.branch || '') === (e.branch || ''));
+      const maxSec = Math.max(...sameBranch.map(x => x.minSeconds || 0));
+      if ((e.minSeconds || 0) !== maxSec) {
+        console.log(`  [ERROR] 结局 ${e.id} 不在分支「${e.branch || '(共享)'}」链末尾（链末 ${Math.round(maxSec / 60)} 分钟，结局在 ${Math.round((e.minSeconds || 0) / 60)} 分钟）`);
+        endingOk = false;
+      }
+    }
+    if (endingOk) console.log(`  [OK] ${endings.length} 个结局事件均位于分支链末尾`);
+    if (!endingOk) hasWarn = true;
+  }
+
+  // ── 1.6 隐藏链校验（v4）：Branch='hidden' 事件独立成链，时间轴连续 ──
+  const hiddenEvents = events.filter(e => e.branch === 'hidden');
+  if (hiddenEvents.length > 0) {
+    const hs = [...hiddenEvents].sort((a, z) => (a.minSeconds || 0) - (z.minSeconds || 0));
+    const hGaps = [];
+    for (let i = 1; i < hs.length; i++) {
+      const gap = (hs[i].minSeconds || 0) - (hs[i - 1].minSeconds || 0);
+      if (gap > GAP_LIMIT) hGaps.push(`${hs[i - 1].id}→${hs[i].id}(${Math.round(gap / 60)}分)`);
+    }
+    if (hGaps.length > 0) {
+      console.log(`  [WARN] 隐藏链时间轴空白 ${hGaps.length} 处: ${hGaps.slice(0, 5).join(', ')}`);
+      hasWarn = true;
+    } else {
+      console.log(`  [OK] 隐藏链连续（${hs.length} 段，跨度 ${Math.round((hs[hs.length - 1].minSeconds || 0) / 3600)} 小时）`);
+    }
+    if (!hiddenEvents.some(e => e.completionTitle)) {
+      console.log('  [WARN] 隐藏链无结局事件（CompletionTitle）——收集向内容建议有收束');
+      hasWarn = true;
     }
   }
 

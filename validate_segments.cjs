@@ -38,11 +38,11 @@ for (const line of eventLines) {
   if (parts.length < 10) continue;
   const id = parts[1];
   const type = parts[2];
-  const minLevel = parseInt(parts[3], 10);
+  const minSeconds = parseInt(parts[3], 10) || 0;   // v4：MinSeconds 列（原 MinLevel）
   const minRebirth = parseInt(parts[7], 10);
   const action = parts[8];
   const text = parts[9];
-  events.push({ id, type, minLevel, minRebirth, action, text, raw: line });
+  events.push({ id, type, minSeconds, minRebirth, action, text, raw: line });
 }
 
 // 2. 检查 ID 空隙
