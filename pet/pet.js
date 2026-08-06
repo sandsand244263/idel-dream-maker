@@ -20,7 +20,9 @@ const statFullnessV = document.getElementById('stat-fullness-v');
 const statMoodV = document.getElementById('stat-mood-v');
 const statCleanV = document.getElementById('stat-clean-v');
 const foodCount = document.getElementById('food-count');
+const foodNum = document.getElementById('food-num');
 const soapCount = document.getElementById('soap-count');
+const soapNum = document.getElementById('soap-num');
 
 canvas.width = 120;
 canvas.height = 140;
@@ -362,10 +364,10 @@ function setStat(row, fill, valEl, v){
   if(row){row.classList.toggle('low',value<30);fill.style.width=value+'%';}
   if(valEl)valEl.textContent=Math.round(value);
 }
-function setItemCount(el,count){
-  if(!el)return;
+function setItemCount(el, numEl, count){
+  if(!el||!numEl)return;
   const c=Number(count)||0;
-  el.textContent=(el===foodCount?'🍪':'🧼')+' ×'+c;
+  numEl.textContent=c;                 // 只更新数字（文字/emoji 在 HTML/CSS 中固定）
   el.classList.toggle('empty',c===0);
   el.classList.toggle('full',c>=50);
 }
@@ -373,8 +375,8 @@ function updatePetStats(f,m,c,fo,so){
   setStat(statFullness?statFullness.closest('.stat-row'):null,statFullness,statFullnessV,f);
   setStat(statMood?statMood.closest('.stat-row'):null,statMood,statMoodV,m);
   setStat(statClean?statClean.closest('.stat-row'):null,statClean,statCleanV,c);
-  setItemCount(foodCount,fo);
-  setItemCount(soapCount,so);
+  setItemCount(foodCount,foodNum,fo);
+  setItemCount(soapCount,soapNum,so);
 }
 function applyTheme(theme, customTheme){
   document.body.className='';

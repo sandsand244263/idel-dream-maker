@@ -95,6 +95,10 @@ function showCallnameInput() {
   document.getElementById('ctx-callname-input').classList.remove('hidden');
   document.getElementById('callname-field').focus();
 }
+function restoreMenu() {
+  document.querySelectorAll('#container > .ctx-item, #container > .ctx-sep').forEach(el => el.classList.remove('hidden'));
+  document.getElementById('ctx-callname-input').classList.add('hidden');
+}
 document.getElementById('ctx-callname').addEventListener('click', () => {
   window.ctxMenu.invoke('get-full-state').then(full => {
     const cur = full?.game?.pet_call_name || '';
@@ -104,10 +108,12 @@ document.getElementById('ctx-callname').addEventListener('click', () => {
 });
 document.getElementById('callname-ok').addEventListener('click', () => {
   const name = document.getElementById('callname-field').value.trim();
+  restoreMenu();
   window.ctxMenu.invoke('set-pet-callname', { name }).catch(() => {});
   window.ctxMenu.invoke('close-menu').catch(() => {});
 });
 document.getElementById('callname-cancel').addEventListener('click', () => {
+  restoreMenu();
   window.ctxMenu.invoke('close-menu').catch(() => {});
 });
 document.getElementById('callname-field').addEventListener('keydown', e => {
