@@ -212,7 +212,7 @@ const APP_VERSION = (() => {
 function createWindow() {
   mainWindow = createMainWindow(path.join(__dirname, 'preload.cjs'));
 
-  if (app.isPackaged) {
+  if (app.isPackaged || process.env.SCREENSHOT_MODE) {
     mainWindow.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
   } else {
     mainWindow.loadURL('http://localhost:1420');
@@ -3298,28 +3298,48 @@ async function runScreenshotMode(scenes) {
     mainWindow.focus();
     await sleep(1500);
     const shots = [];
-    // 场景 1：宠物窗口（含三维状态条/道具计数）
+    console.log('[shot] scene1 pet window');
+    // 场景 1：宠物窗口（模拟悬停显示完整 UI，6 帧动图源）
     if (scenes >= 1) {
       const pw = getPetWindow();
       if (pw) {
         pw.show();
         await sleep(800);
-        for (let i = 0; i < 8; i++) { shots.push(await pw.webContents.capturePage()); await sleep(400); }
+        try { pw.webContents.sendInputEvent({ type: 'mouseMove', x: 96, y: 160 }); } catch (e) { console.log('[shot] hover fail:', e.message); }
+        await sleep(600);
+        for (let i = 0; i < 6; i++) { const img = await cap(pw); if (img) shots.push(img); await sleep(450); }
       }
     }
-    // 场景 2：主窗口-家（世界卡片）
+    console.log('[shot] scene2 world select');
+    // 场景 2：世界选择面板（静帧）；先关闭更新弹窗
     if (scenes >= 2) {
-      await sleep(800);
-      for (let i = 0; i < 8; i++) { shots.push(await mainWindow.webContents.capturePage()); await sleep(400); }
+      mainWindow.show();
+      mainWindow.focus();
+      await sleep(1500);
+      try {
+        await mainWindow.webContents.executeJavaScript(`document.getElementById('changelog-ok').click()`);
+        await sleep(500);
+      } catch (e) { console.log('[shot] changelog close failed (may not be open):', e.message); }
+      try {
+        await mainWindow.webContents.executeJavaScript(`document.getElementById('btn-scenario').click()`);
+        await sleep(700);
+      } catch (e) { console.log('[shot] scenario panel open failed:', e.message); }
+      const img = await cap(mainWindow);
+      if (img) shots.push(img);
     }
-    // 场景 3：档案中心（历程菜单展开）
+    console.log('[shot] scene3 archive');
+    // 场景 3：档案中心（静帧）
     if (scenes >= 3) {
       try {
-        await mainWindow.webContents.executeJavaScript(`document.getElementById('journey-menu').classList.remove('hidden')`);
-      } catch (e) { console.log('[shot] journey-menu not found, skip scene 3 switch:', e.message); }
+        await mainWindow.webContents.executeJavaScript(`document.getElementById('journey-menu').classList.remove('hidden');`);
+        await sleep(300);
+        await mainWindow.webContents.executeJavaScript(`document.querySelector('[data-action="archive-pet"]').click();`);
+      } catch (e) { console.log('[shot] archive panel open failed:', e.message); }
       await sleep(700);
-      for (let i = 0; i < 8; i++) { shots.push(await mainWindow.webContents.capturePage()); await sleep(400); }
+      const img = await cap(mainWindow);
+      if (img) shots.push(img);
     }
+    console.log('[shot] saving frames');
     // 保存 PNG 序列
     for (let i = 0; i < shots.length; i++) {
       const p = path.join(SHOT_DIR, `shot_${String(i + 1).padStart(2, '0')}.png`);
@@ -3338,6 +3358,14 @@ function waitForLoad(win, timeout) {
     const t = setTimeout(() => reject(new Error('load timeout')), timeout);
     if (!win.webContents.isLoading()) { clearTimeout(t); return resolve(); }
     win.webContents.once('did-finish-load', () => { clearTimeout(t); resolve(); });
+  });
+}
+// capturePage 封装：5 秒超时防挂起；stayHidden 截隐藏窗口
+function cap(win) {
+  return new Promise((resolve) => {
+    let done = false;
+    const t = setTimeout(() => { if (!done) { done = true; console.log('[shot] capture timeout, skip frame'); resolve(null); } }, 5000);
+    win.webContents.capturePage({ stayHidden: true }).then(img => { if (!done) { done = true; clearTimeout(t); resolve(img); } }).catch(() => { if (!done) { done = true; clearTimeout(t); resolve(null); } });
   });
 }
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }

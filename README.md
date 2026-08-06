@@ -49,13 +49,13 @@ Idel-DreamMaker 是一个藏在系统托盘里的**宠物陪伴挂机游戏**。
 
 ## 截图
 
-| 宠物窗口 | 家（世界选择） | 故事气泡 |
+| 宠物窗口（悬停显示状态条） | 世界选择 | 档案中心 |
 |---------|-----------|---------|
-| ![宠物](docs/screenshots/pet-window.jpg) | ![家](docs/screenshots/hub.jpg) | ![故事](docs/screenshots/event.jpg) |
+| ![宠物窗口](docs/screenshots/pet-window.gif) | ![世界选择](docs/screenshots/hub.jpg) | ![档案中心](docs/screenshots/archive.jpg) |
 
-| 打字连击 | 档案中心 | 存档同步 |
-|---------|---------|---------|
-| ![打字连击](docs/screenshots/combo-hit.gif) | ![档案中心](docs/screenshots/v4-demo.gif) | ![存档同步](docs/screenshots/sync-setting.jpg) |
+| 打字连击 | 存档同步 |
+|---------|---------|
+| ![打字连击](docs/screenshots/combo-hit.gif) | ![存档同步](docs/screenshots/sync-setting.jpg) |
 
 ## 下载
 
