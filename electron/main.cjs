@@ -839,8 +839,9 @@ function isNonPrintableKey(vk) {
 
 function handleInputDown(keyId, keyChar, now) {
   if (!gameState) return;
-  if (keyDown[keyId]) return;
-  keyDown[keyId] = true;
+  // 去重：80ms 内重复=OS 按住自动重复（丢弃）；超时再来=keyup 丢失，视为新按下（防永久卡死）
+  if (keyDown[keyId] && now - keyDown[keyId] < 80) return;
+  keyDown[keyId] = now;
 
   gameState.totalKeyPresses = (gameState.totalKeyPresses || 0) + 1;
   gameState.dailyKeyPresses = (gameState.dailyKeyPresses || 0) + 1;
@@ -885,12 +886,18 @@ function handleInputDown(keyId, keyChar, now) {
   gameState.petFoodAccum = (gameState.petFoodAccum || 0) + 1;
   if (gameState.petFoodAccum >= V4_CONFIG.feedKeyRate) {
     gameState.petFoodAccum -= V4_CONFIG.feedKeyRate;
-    if (gameState.petFoods < V4_CONFIG.itemCap) gameState.petFoods = (gameState.petFoods || 0) + 1;
+    if (gameState.petFoods < V4_CONFIG.itemCap) {
+      gameState.petFoods = (gameState.petFoods || 0) + 1;
+      sendPetToast(`获得 食物 ×1（交互 ${V4_CONFIG.feedKeyRate} 击）`);
+    }
   }
   gameState.petSoapAccum = (gameState.petSoapAccum || 0) + 1;
   if (gameState.petSoapAccum >= V4_CONFIG.soapKeyRate) {
     gameState.petSoapAccum -= V4_CONFIG.soapKeyRate;
-    if (gameState.petSoaps < V4_CONFIG.itemCap) gameState.petSoaps = (gameState.petSoaps || 0) + 1;
+    if (gameState.petSoaps < V4_CONFIG.itemCap) {
+      gameState.petSoaps = (gameState.petSoaps || 0) + 1;
+      sendPetToast(`获得 肥皂 ×1（交互 ${V4_CONFIG.soapKeyRate} 击）`);
+    }
   }
 
   const ol = gameState.level;
@@ -934,7 +941,7 @@ function initInputListener() {
       handleInputDown(e.keycode, KEYCODE_TO_NAME[e.keycode] || '?', Date.now());
     });
     uIOhook.on('keyup', (e) => {
-      keyDown[e.keycode] = false;
+      keyDown[e.keycode] = 0;
     });
     uIOhook.on('mousedown', (e) => {
       if (e.button < 0 || e.button > 3) return;
