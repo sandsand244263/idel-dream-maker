@@ -17,7 +17,7 @@ html,body { width:100%;background:transparent;user-select:none;overflow:hidden; 
 .theme-black { --fg:#CDD6F4; --dim:#585B70; --bg:#0A0A12; --border:rgba(205,214,244,0.2); }
 .theme-white { --fg:#4C4F69; --dim:#9CA0B0; --bg:#F0F2F8; --border:rgba(76,79,105,0.15); }
 .theme-white #info-text { color:color-mix(in srgb,var(--fg) 80%,transparent); }
-.theme-white #exp-detail { color:color-mix(in srgb,var(--fg) 60%,transparent); }
+.theme-white #key-detail { color:color-mix(in srgb,var(--fg) 60%,transparent); }
 
 body { font-family:var(--font); color:var(--fg); }
 
@@ -27,7 +27,6 @@ body { font-family:var(--font); color:var(--fg); }
 #container:hover #exp-wrap,
 #container:hover #key-detail { opacity:1; }
 #container:hover #info-text,
-#container:hover #exp-detail,
 #container:hover #key-detail { color:var(--fg); }
 #container.compact #info-bar,
 #container.compact #exp-wrap { opacity:0; }
@@ -103,9 +102,10 @@ body { font-family:var(--font); color:var(--fg); }
 
 /* EXP progress bar — 默认淡显示，悬浮宠物窗口时清晰 */
 #exp-wrap { display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;opacity:0.3;transition:opacity 0.2s var(--ease-out); }
-#exp-track { width:70%;height:8px;background:color-mix(in srgb,var(--fg) 6%,transparent);border-radius:4px;overflow:hidden; }
-#exp-fill { height:100%;width:0%;border-radius:4px;position:relative;background:linear-gradient(90deg,color-mix(in srgb,var(--fg) 25%,transparent),color-mix(in srgb,var(--fg) 80%,transparent),color-mix(in srgb,var(--fg) 25%,transparent));background-size:200% 100%;animation:shimmer 3s var(--ease-in-out) infinite;will-change:background-position; }
-@keyframes shimmer { 0% { background-position:200% 0; } 100% { background-position:-200% 0; } }
+/* EXP 进度条 — 统一为 stat-row 样式（与三维条一致）；extra 行放今日按键/buff */
+#exp-wrap { display:flex;flex-direction:column;gap:2px;width:100%;padding:0 10px;flex-shrink:0;opacity:0.3;transition:opacity 0.2s var(--ease-out); }
+#container:hover #exp-wrap { opacity:1; }
+#exp-extra { display:flex;justify-content:flex-end;gap:6px;align-items:center;line-height:1; }
 
 /* Shake on keypress */
 @keyframes petShake {
@@ -118,8 +118,6 @@ body { font-family:var(--font); color:var(--fg); }
 }
 #container.shaking { animation: petShake 180ms var(--ease-in-out) !important; }
 
-#exp-pct { display:none; }
-#exp-detail { font-size:10px;color:color-mix(in srgb,var(--fg) 50%,transparent);line-height:1; }
 #key-detail { font-size:10px;color:color-mix(in srgb,var(--fg) 50%,transparent);line-height:1; }
 #buff-badge { font-size:11px;font-weight:bold;color:#FFD700;text-shadow:0 0 6px rgba(255,215,0,0.6);line-height:1;animation:buffPulse 0.8s var(--ease-in-out) infinite; }
 @keyframes buffPulse { 0%,100% { transform:scale(1);opacity:0.9; } 50% { transform:scale(1.15);opacity:1; } }
