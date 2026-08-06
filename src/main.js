@@ -487,7 +487,7 @@ function renderHubView() {
     if (hubCompletionDisplay) hubCompletionDisplay.textContent = tf('hubCompletion', stats.completionCount, stats.totalScenarios);
   }).catch(() => {});
   window.electron.invoke('get-full-state').then(full => {
-    if (full?.game?.pet_call_name !== undefined && full.game.pet_call_name !== gameState.pet_call_name) {
+    if (full?.game && (full.game.pet_call_name !== gameState.pet_call_name || full.game.pet_gender !== gameState.pet_gender)) {
       gameState = { ...gameState, pet_call_name: full.game.pet_call_name, pet_gender: full.game.pet_gender };
       if (hubPetInfo) {
         const g = gameState.pet_gender === 'male' ? t('genderMale') : gameState.pet_gender === 'female' ? t('genderFemale') : t('genderNeutral');
@@ -902,8 +902,8 @@ async function renderArchiveEvents() {
     groups.forEach((g, gi) => {
       const grp = document.createElement('div'); grp.className = 'archive-event-group';
       const hdr = document.createElement('div'); hdr.className = 'archive-event-header';
-      hdr.textContent = `${gi === 0 ? '▼ ' : '▶ '}${g.name}（${g.entries.length}）`;
-      const body = document.createElement('div'); body.className = 'archive-event-body' + (gi === 0 ? '' : ' hidden');
+      hdr.textContent = `▶ ${g.name}（${g.entries.length}）`;
+      const body = document.createElement('div'); body.className = 'archive-event-body hidden';
       g.entries.forEach(e => {
         const item = document.createElement('div'); item.className = 'archive-event-item ' + (e.ty || 'event');
         const ts = document.createElement('span'); ts.className = 'ts';
@@ -1621,6 +1621,7 @@ onboardingOk.addEventListener('click', async () => {
   closeWithAnimation(onboardingModal);
   window.electron.invoke('set-onboarding-seen').catch(() => {});
   renderHubView(); renderHubCards(); updateUI();
+  checkChangelog();   // 引导完成后弹更新说明（新用户时序）
 });
 
 // ── v4 更新说明弹窗（任务5）──
@@ -1666,8 +1667,9 @@ init().then(() => {
   applyTheme(gameState?.selected_font_theme || 'green');
   if (gameState && !gameState.is_in_hub) { switchView(false); addLog('system', tf('logStartScenario', formatRuntime(gameState.total_runtime_ms), gameState.level)); }
   updateUI(); updateTooltip(); setInterval(updateTooltip, 5000);
-  loadWorldIndex();
-  checkChangelog();
+  loadWorldIndex().then(() => { if (gameState?.is_in_hub !== false) renderHubCards(); });
+  // 老用户直接弹更新说明；新用户先走 onboarding，关闭后再弹
+  if (gameState && gameState.has_seen_onboarding) checkChangelog();
 
   // 首次启动自动弹出新手引导
   if (gameState && !gameState.has_seen_onboarding) {

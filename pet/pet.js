@@ -40,7 +40,7 @@ const DEFAULT_STATES = {
 
 let pets=[],selIdx=0,spritesheet=null,cols=8,rows=9,stateConfig=null;
 let curState='idle',frameIdx=0,frameList=[],animFrameId=null,lastFrameTime=0,returnTimer=null,debounceTimer=null;
-let gameInfo={level:1,title:'—',exp:0,scenario:'大厅',runtime:'0h0m0s',ach:0,theme:'green',hubLevel:1,isInHub:true,totalKeyPresses:0,dailyKeyPresses:0};
+let gameInfo={level:1,title:'—',exp:0,scenario:'家',runtime:'0h0m0s',ach:0,theme:'green',hubLevel:1,isInHub:true,totalKeyPresses:0,dailyKeyPresses:0};
 let displayExp=0,dragMoved=false,displayExpFull=0;
 
 // ── Guide Panel ──
@@ -428,7 +428,7 @@ window.pet.on('game-tick',d=>{
   gameInfo.hubLevel=d.hub_level||1;
   gameInfo.isInHub=d.is_in_hub!==false;
   if(d.currentTitle)gameInfo.title=d.currentTitle;
-  gameInfo.scenario=d.is_in_hub?'大厅':(d.scenario_name||'副本');
+  gameInfo.scenario=d.is_in_hub?'家':(d.scenario_name||'世界');
   const ms=d.total_runtime_ms||0,s=Math.floor(ms/1000);
   gameInfo.runtime=`${Math.floor(s/3600)}h${Math.floor((s%3600)/60)}m${s%60}s`;
   gameInfo.ach=(d.unlockedAchievements||[]).length;
