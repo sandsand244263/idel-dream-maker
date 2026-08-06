@@ -268,7 +268,7 @@ function updateExpBar(){
   expFill.style.width=`${rounded}%`;
   displayExpFull+=(e-displayExpFull)*0.3;
   if(Math.abs(displayExpFull-e)<1)displayExpFull=e;
-  expDetail.textContent=`${shortNum(displayExpFull)}/${shortNum(nr)} ${rounded}%`;   // 短格式防挤占轨道
+  expDetail.textContent=`${shortNum(displayExpFull)}/${shortNum(nr)}`;   // 短格式防挤占轨道（百分比已去掉）
 }
 const COMBO_COLORS={
   'D':['#888','#666'],'C':['#aaa','#888'],'B':['#6b6','#484'],
