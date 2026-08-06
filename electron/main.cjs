@@ -887,16 +887,14 @@ function handleInputDown(keyId, keyChar, now) {
   if (gameState.petFoodAccum >= V4_CONFIG.feedKeyRate) {
     gameState.petFoodAccum -= V4_CONFIG.feedKeyRate;
     if (gameState.petFoods < V4_CONFIG.itemCap) {
-      gameState.petFoods = (gameState.petFoods || 0) + 1;
-      sendPetToast(`获得 食物 ×1（交互 ${V4_CONFIG.feedKeyRate} 击）`);
+      gameState.petFoods = (gameState.petFoods || 0) + 1;   // 攒出食物（静默，不弹气泡——用户要求）
     }
   }
   gameState.petSoapAccum = (gameState.petSoapAccum || 0) + 1;
   if (gameState.petSoapAccum >= V4_CONFIG.soapKeyRate) {
     gameState.petSoapAccum -= V4_CONFIG.soapKeyRate;
     if (gameState.petSoaps < V4_CONFIG.itemCap) {
-      gameState.petSoaps = (gameState.petSoaps || 0) + 1;
-      sendPetToast(`获得 肥皂 ×1（交互 ${V4_CONFIG.soapKeyRate} 击）`);
+      gameState.petSoaps = (gameState.petSoaps || 0) + 1;   // 攒出肥皂（静默，不弹气泡——用户要求）
     }
   }
 
