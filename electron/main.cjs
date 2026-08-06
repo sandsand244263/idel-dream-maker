@@ -5,7 +5,7 @@ const https = require('https');
 
 const { createMainWindow, getMainWindow } = require('./windows.cjs');
 const { createTray, setToolTip, getTray, updateMenu } = require('./tray.cjs');
-const { registerPetIpcHandlers, forwardToPet, initPet, broadcastTheme, setOnPetSelected, showPetWindow } = require('./pet.cjs');
+const { registerPetIpcHandlers, forwardToPet, initPet, broadcastTheme, setOnPetSelected, showPetWindow, getPetWindow } = require('./pet.cjs');
 const { getTodaysHolidayId, getUpcomingHolidayId, getHolidayName, getHolidayIcon, getHolidayEventFromScenario, getRandomHolidayEvent } = require('./holiday.cjs');
 const { parseScenarioMd } = require('../src/scenario-parser.cjs');
 const { calcLevel, calcExpForLevel } = require('../level-curve.cjs');
@@ -3281,7 +3281,66 @@ app.whenReady().then(() => {
   // v4 主辅反转：启动只显示宠物窗口（主窗口=控制面板，双击宠物/托盘/右键打开）
   try { showPetWindow(); } catch (e) { console.error('show pet window failed:', e); }
   if (mainWindow) mainWindow.hide();
+
+  // 截图模式：SCREENSHOT_MODE=场景数 → 自动截帧 PNG 序列（readme gif 用，ffmpeg 转 gif）
+  if (process.env.SCREENSHOT_MODE) {
+    runScreenshotMode(parseInt(process.env.SCREENSHOT_MODE, 10) || 3);
+  }
 });
+
+// ── 截图模式（readme gif 生成，不参与正常流程）──
+const SHOT_DIR = path.join(__dirname, '..', 'shots_tmp');
+async function runScreenshotMode(scenes) {
+  try {
+    await waitForLoad(getPetWindow(), 15000);
+    await waitForLoad(mainWindow, 15000);
+    mainWindow.show();               // 截图需要主窗口可见
+    mainWindow.focus();
+    await sleep(1500);
+    const shots = [];
+    // 场景 1：宠物窗口（含三维状态条/道具计数）
+    if (scenes >= 1) {
+      const pw = getPetWindow();
+      if (pw) {
+        pw.show();
+        await sleep(800);
+        for (let i = 0; i < 8; i++) { shots.push(await pw.webContents.capturePage()); await sleep(400); }
+      }
+    }
+    // 场景 2：主窗口-家（世界卡片）
+    if (scenes >= 2) {
+      await sleep(800);
+      for (let i = 0; i < 8; i++) { shots.push(await mainWindow.webContents.capturePage()); await sleep(400); }
+    }
+    // 场景 3：档案中心（历程菜单展开）
+    if (scenes >= 3) {
+      try {
+        await mainWindow.webContents.executeJavaScript(`document.getElementById('journey-menu').classList.remove('hidden')`);
+      } catch (e) { console.log('[shot] journey-menu not found, skip scene 3 switch:', e.message); }
+      await sleep(700);
+      for (let i = 0; i < 8; i++) { shots.push(await mainWindow.webContents.capturePage()); await sleep(400); }
+    }
+    // 保存 PNG 序列
+    for (let i = 0; i < shots.length; i++) {
+      const p = path.join(SHOT_DIR, `shot_${String(i + 1).padStart(2, '0')}.png`);
+      fs.writeFileSync(p, shots[i].toPNG());
+    }
+    console.log(`[shot] saved ${shots.length} frames to ${SHOT_DIR}`);
+    app.exit(0);
+  } catch (e) {
+    console.error('[shot] failed:', e);
+    app.exit(1);
+  }
+}
+function waitForLoad(win, timeout) {
+  return new Promise((resolve, reject) => {
+    if (!win) return reject(new Error('no window'));
+    const t = setTimeout(() => reject(new Error('load timeout')), timeout);
+    if (!win.webContents.isLoading()) { clearTimeout(t); return resolve(); }
+    win.webContents.once('did-finish-load', () => { clearTimeout(t); resolve(); });
+  });
+}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 powerMonitor.on('shutdown', () => {
   if (gameState) writeSave(gameState, true);

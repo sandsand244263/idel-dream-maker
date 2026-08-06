@@ -39,9 +39,10 @@
 
     <main id="hub-view">
       <div id="hub-welcome">
-        <div id="hub-greeting" data-i18n="hubWelcome">欢迎回来</div>
+        <div id="hub-greeting" data-i18n="hubWelcome">欢迎回家</div>
         <div id="hub-player-name">Worker</div>
-        <div id="hub-level-display">大厅 Lv.1</div>
+        <div id="hub-level-display">宠物 Lv.1</div>
+        <div id="hub-pet-info"></div>
         <div id="hub-title-display"></div>
         <div id="hub-completion-display"></div>
       </div>
@@ -57,18 +58,19 @@
       <main id="log-area"></main>
     </div>
 
-    <div id="perma-status"><span id="perma-text">Worker | Hub Lv.1 | ? | — | 成就:0</span><span id="save-dot" class="hidden">●</span></div>
+    <div id="perma-status"><span id="perma-text">Worker | 宠物 Lv.1 | ? | — | 成就:0</span><span id="save-dot" class="hidden">●</span></div>
     <footer id="button-bar">
-      <button id="btn-backhub" class="bar-btn hidden" data-i18n="btnBack">大厅</button>
-      <button id="btn-scenario" class="bar-btn" data-i18n="btnScenario">副本</button>
+      <button id="btn-backhub" class="bar-btn hidden" data-i18n="btnBack">家</button>
+      <button id="btn-scenario" class="bar-btn" data-i18n="btnScenario">世界</button>
       <div id="btn-journey-wrap">
         <button id="btn-journey" class="bar-btn" data-i18n="btnJourney">历程</button>
         <div id="journey-menu" class="hidden">
           <div class="jm-item" data-action="titles" data-i18n="jTitle">称号</div>
           <div class="jm-item" data-action="achievement" data-i18n="jAchievement">成就</div>
-          <div class="jm-item" data-action="event" data-i18n="jEvent">事件</div>
-          <div class="jm-item" data-action="ending" data-i18n="jEnding">结局</div>
-          <div class="jm-item" data-action="stats" data-i18n="jStats">按键</div>
+          <div class="jm-item" data-action="archive-pet" data-i18n="jArchivePet">宠物档案</div>
+          <div class="jm-item" data-action="archive-world" data-i18n="jArchiveWorld">世界档案</div>
+          <div class="jm-item" data-action="archive-event" data-i18n="jEvent">事件</div>
+          <div class="jm-item" data-action="archive-stats" data-i18n="jStats">按键</div>
         </div>
       </div>
       <button id="btn-settings" class="bar-btn" data-i18n="btnSettings">设置</button>
@@ -79,8 +81,8 @@
   <div id="confirm-modal" class="hidden">
     <div id="confirm-overlay"></div>
     <div id="confirm-box">
-      <div id="confirm-title" data-i18n="confirmTitle">返回大厅</div>
-      <div id="confirm-desc" data-i18n="confirmDesc">确定返回大厅吗？副本进度将保留，经验累入全局等级。</div>
+      <div id="confirm-title" data-i18n="confirmTitle">返回家</div>
+      <div id="confirm-desc" data-i18n="confirmDesc">确定返回家吗？世界进度将保留。</div>
       <div id="confirm-buttons">
         <button id="confirm-cancel" data-i18n="confirmCancel">取消</button>
         <button id="confirm-ok" data-i18n="confirmOk">确定</button>
@@ -129,20 +131,17 @@
 
   <div id="ending-overlay" class="hidden">
     <div id="ending-box">
-      <div id="ending-header">旅程已达终点</div>
+      <div id="ending-header">旅程完成</div>
       <div id="ending-scenario-name"></div>
       <div id="ending-text"></div>
+      <div id="ending-status"></div>
       <div id="ending-title" style="margin-top:8px;font-size:12px;color:#FFD700;text-align:center;"></div>
-      <div id="ending-branch-info" style="font-size:10px;color:var(--dim);text-align:center;"></div>
-      <div id="ending-buttons">
-        <button id="ending-rebirth">选择其他分支</button>
-        <button id="ending-hub">返回大厅</button>
-      </div>
+      <div id="ending-buttons"></div>
     </div>
   </div>
 
   <div id="scenario-panel" class="hidden">
-    <div id="scenario-panel-header"><span data-i18n="panelScenario">副本选择</span><button id="scenario-close">✕</button></div>
+    <div id="scenario-panel-header"><span data-i18n="panelScenario">世界选择</span><button id="scenario-close">✕</button></div>
     <div id="scenario-list"></div>
   </div>
 
@@ -159,12 +158,12 @@
         <div class="ct-row"><span class="ct-label">bd</span><label class="ct-swatch" style="background:#00FF00"><input type="color" id="ct-border" value="#00FF00"></label><input class="ct-text" type="text" id="ct-border-text" value="#00FF00"></div>
         <button id="ct-save" data-i18n="ctSave">应用自定义配色</button>
       </div>
-      <div class="settings-section-title">副本</div>
+      <div class="settings-section-title">世界</div>
       <div class="setting-row">
-        <button id="btn-open-scenarios-folder" data-i18n="btnOpenScenariosFolder">打开副本文件夹</button>
-        <button id="btn-refresh-scenarios" data-i18n="btnRefreshScenarios">刷新副本列表</button>
+        <button id="btn-open-scenarios-folder" data-i18n="btnOpenScenariosFolder">打开世界文件夹</button>
+        <button id="btn-refresh-scenarios" data-i18n="btnRefreshScenarios">刷新世界列表</button>
       </div>
-      <div class="settings-hint" data-i18n="scenariosFolderHint">将 .md 副本文件放入打开的文件夹，点「刷新」即可自动加载</div>
+      <div class="settings-hint" data-i18n="scenariosFolderHint">将 .md 世界文件放入打开的文件夹，点「刷新」即可自动加载</div>
       <div class="settings-section-title">存档同步</div>
       <div class="settings-hint">仅<b>多设备传档</b>用。单机游玩无需设置，存档自动保存在系统目录。</div>
       <div class="settings-hint">设置后每30秒自动保存即推送云端，无需手动操作。点「立即同步」手动对齐。</div>
@@ -228,6 +227,51 @@
     <div id="stats-panel-header"><span data-i18n="panelStats">按键统计</span><button id="stats-close">✕</button></div>
     <div id="stats-list"></div>
   </div>
+
+  <div id="archive-panel" class="hidden">
+    <div id="archive-panel-header"><span data-i18n="archiveTitle">档案中心</span><button id="archive-close">✕</button></div>
+    <div id="archive-list">
+      <div class="archive-section">
+        <div class="archive-section-title" data-i18n="archivePet">宠物档案</div>
+        <div class="archive-section-body" id="archive-pet-body"></div>
+      </div>
+      <div class="archive-section">
+        <div class="archive-section-title" data-i18n="archiveWorld">世界档案</div>
+        <div class="archive-section-body" id="archive-world-body"></div>
+      </div>
+      <div class="archive-section">
+        <div class="archive-section-title" data-i18n="jEvent">事件记录</div>
+        <div class="archive-section-body" id="archive-event-body"></div>
+      </div>
+      <div class="archive-section">
+        <div class="archive-section-title" data-i18n="jStats">按键统计</div>
+        <div class="archive-section-body" id="archive-stats-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="revisit-modal" class="hidden">
+    <div id="revisit-overlay"></div>
+    <div id="revisit-box">
+      <div id="revisit-title"></div>
+      <div id="revisit-desc"></div>
+      <div id="revisit-buttons">
+        <button id="revisit-restart" class="revisit-btn">从头重温</button>
+        <button id="revisit-continue" class="revisit-btn">从抉择处继续</button>
+        <button id="revisit-cancel" class="revisit-btn revisit-btn-dim">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="changelog-modal" class="hidden">
+    <div id="changelog-overlay"></div>
+    <div id="changelog-box">
+      <div id="changelog-header"><span id="changelog-title"></span><button id="changelog-close">✕</button></div>
+      <div id="changelog-points"></div>
+      <button id="changelog-ok">知道了</button>
+    </div>
+  </div>
+
   <div id="toast" class="hidden"></div>
   <div id="onboarding-modal" class="hidden">
     <div id="onboarding-overlay"></div>
@@ -241,12 +285,22 @@
         <div class="ob-separator"></div>
         <div id="onboarding-name-row"><label data-i18n="obName">你的名称</label><input type="text" id="onboarding-name" data-i18n-placeholder="obNamePlaceholder" placeholder="输入名称" spellcheck="false" /></div>
         <div class="ob-separator"></div>
+        <div id="onboarding-gender-row">
+          <label data-i18n="onboardingGender">你的宠物是男孩还是女孩？</label>
+          <div id="ob-gender-btns">
+            <button class="ob-gender-btn" data-gender="male" data-i18n="obGenderMale">男孩</button>
+            <button class="ob-gender-btn" data-gender="female" data-i18n="obGenderFemale">女孩</button>
+            <button class="ob-gender-btn ob-gender-skip" data-gender="neutral" data-i18n="obGenderSkip">跳过</button>
+          </div>
+          <div id="ob-gender-hint" data-i18n="onboardingGenderSkip">跳过 = 中性（只用通用台词）</div>
+        </div>
+        <div class="ob-separator"></div>
         <p data-i18n="obHow"><b>如何开始：</b></p>
         <div class="ob-list-left">
-          <p data-i18n="obStep1">1. 点击 [副本] 选择一个故事世界</p>
-          <p data-i18n="obStep2">2. 进入后自动挂机，经验随时间增长</p>
-          <p data-i18n="obStep3">3. 升级解锁称号，随机弹出故事事件</p>
-          <p data-i18n="obStep4">4. 随时点击 [大厅] 退出，经验累入全局等级</p>
+          <p data-i18n="obStep1">1. 点击 [世界] 选择一个故事世界</p>
+          <p data-i18n="obStep2">2. 进入后挂机攒故事，打字还能加速</p>
+          <p data-i18n="obStep3">3. 点击宠物气泡读故事，通关分支解锁称号</p>
+          <p data-i18n="obStep4">4. 通关后解锁更多世界，故事还会重访</p>
         </div>
         <div class="ob-separator"></div>
         <p style="color:var(--dim);font-size:11px" data-i18n="obTip">提示：宠物窗口常驻桌面，点击宠物可交互</p>

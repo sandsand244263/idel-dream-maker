@@ -1,62 +1,87 @@
 // IPC via window.electron (provided by preload.cjs)
 
 const LANG = {
-  hubWelcome: '欢迎回来', hubLevel: '大厅 Lv.',
-  noScenarios: '暂无可用的副本', hubEmptyHint: '点击下方 [副本] 选择一个故事世界',
-  btnBack: '大厅', btnScenario: '副本', btnJourney: '历程',
+  hubWelcome: '欢迎回家', hubLevel: '宠物 Lv.',
+  noScenarios: '暂无可用的世界', hubEmptyHint: '点击下方 [世界] 选择一个故事世界',
+  btnBack: '家', btnScenario: '世界', btnJourney: '历程',
   btnSettings: '设置', btnTutorial: '教程',
   jTitle: '称号', jAchievement: '成就', jEvent: '事件', jStats: '按键',
-  panelScenario: '副本选择', panelTitles: '称号一览', panelAchievement: '成就一览', panelEvent: '事件记录', panelStats: '按键统计', panelSettings: '设置',
+  jArchivePet: '宠物档案', jArchiveWorld: '世界档案',
+  panelScenario: '世界选择', panelTitles: '称号一览', panelAchievement: '成就一览', panelEvent: '事件记录', panelStats: '按键统计', panelSettings: '设置',
   labelName: '名称',
   settingsSave: '保存', settingsThemeTitle: '主题', ctSave: '应用自定义配色',
   eventHeader: '事件', achievementHeader: '成就解锁',
-  systemInitFail: '初始化失败', systemEnterFail: '进入副本失败',
+  systemInitFail: '初始化失败', systemEnterFail: '进入世界失败',
   systemBackFail: '返回失败',
   systemLevelUp: '等级 {0}！{1}',
-  systemEntered: '进入: {0}', systemBack: '返回大厅 — 大厅 Lv.{0}',
-  systemTitleEquipFail: '佩戴称号失败', systemTitleFetchFail: '获取大厅称号失败',
-  systemDetailFail: '获取副本详情失败', systemThemeFail: '切换主题失败',
+  systemEntered: '进入: {0}', systemBack: '返回家',
+  systemTitleEquipFail: '佩戴称号失败', systemTitleFetchFail: '获取宠物称号失败',
+  systemDetailFail: '获取世界详情失败', systemThemeFail: '切换主题失败',
   logStartHub: '启动完成', logStartScenario: '已挂机 {0}，等级 {1}',
   scenarioEvent: '事件', scenarioAchievement: '成就',
   hubTitleEmpty: '尚无解锁称号',
-  confirmTitle: '返回大厅', confirmDesc: '确定返回大厅吗？副本进度将保留，经验累入全局等级。',
+  confirmTitle: '返回家', confirmDesc: '确定返回家吗？世界进度将保留。',
   confirmCancel: '取消', confirmOk: '确定',
   obWelcome: '欢迎来到', obSubtitle: 'Idel-DreamMaker',
-  obDesc1: '藏在系统托盘里的宠物陪伴应用', obDesc2: '挂机升级 · 解锁称号与成就',
+  obDesc1: '藏在系统托盘里的宠物陪伴应用', obDesc2: '挂机攒故事 · 解锁称号与成就',
   obDesc3: '触发故事事件——陪你度过每一刻',
-  obHow: '如何开始：',   obStep1: '点击 [副本] 选择一个故事世界',
-  obStep2: '进入后自动挂机，经验随时间增长', obStep3: '升级解锁称号，随机弹出故事事件',
-  obStep4: '随时点击 [大厅] 退出，经验累入全局等级',
+  obHow: '如何开始：',   obStep1: '点击 [世界] 选择一个故事世界',
+  obStep2: '进入后挂机攒故事，打字还能加速', obStep3: '点击宠物气泡读故事，通关分支解锁称号',
+  obStep4: '通关后解锁更多世界，故事还会重访',
   obTip: '提示：宠物窗口常驻桌面，点击宠物可交互',
   obName: '你的名称', obNamePlaceholder: '输入名称', obStart: '开始冒险',
-  btnOpenScenariosFolder: '打开副本文件夹',
-  btnRefreshScenarios: '刷新副本列表',
-  scenariosFolderHint: '将 .md 副本文件放入打开的文件夹，点「刷新」即可自动加载',
+  onboardingGender: '你的宠物是男孩还是女孩？',
+  onboardingGenderSkip: '跳过 = 中性（只用通用台词）',
+  obGenderMale: '男孩', obGenderFemale: '女孩', obGenderSkip: '跳过',
+  btnOpenScenariosFolder: '打开世界文件夹',
+  btnRefreshScenarios: '刷新世界列表',
+  scenariosFolderHint: '将 .md 世界文件放入打开的文件夹，点「刷新」即可自动加载',
   labelUserMade: '自制',
-  statusHub: '（大厅）', statusNone: '-',
+  statusHub: '（家）', statusNone: '-',
   eventToday: '今天',
   eventDate: '{0}月{1}日',
-  jEnding: '结局',
-  endingHeader: '旅程已达终点',
-  endingRebirth: '重新开始（重生）',
-  endingHub: '返回大厅',
+  endingHeader: '旅程完成',
+  endingStatusBranch: '这个世界还有 {0} 条分支没探索',
+  endingStatusHidden: '隐藏内容还剩 {0} 个未发现',
+  endingStatusAll: '这个世界的故事你已经看完了',
+  endingStatusUnlocked: '{0} 世界已解锁',
+  endingRevisit: '重访世界（从抉择处继续）',
+  endingBackSelect: '回到世界选择',
+  endingContinue: '继续收集',
+  endingGoNew: '前往新世界',
+  endingHub: '返回家',
   endingPanel: '结局收藏',
   endingEmpty: '暂无通关记录',
   endingRecord: '{0} · {1}周目 · {2}',
   hubCompletion: '通关 {0}/{1}',
-  hubTitleGroup: '大厅称号',
+  worldLocked: '通关 {0} 个世界后解锁',
+  worldInProgress: '进行中 · 已读 {0} 段',
+  worldCleared: '已通关 {0}/{1} 分支',
+  worldGraduated: '全分支通关 · 隐藏全收集',
+  hubTitleGroup: '宠物称号',
   completionTitleGroup: '通关称号',
   completionTitleEmpty: '暂无通关称号',
-  scenarioTitleGroup: '副本称号',
-  hubAchGroup: '大厅成就',
-  scenarioAchGroup: '副本成就',
-  scenarioLocked: '需要大厅 Lv.{0} 或通关 {1} 个副本',
-  rebirthConfirm: '确定重生吗？该副本进度将清空，你将重新体验其他分支的故事。经验加成 +10%（封顶 +50%）。',
+  scenarioTitleGroup: '世界称号',
+  hubAchGroup: '宠物成就',
+  scenarioAchGroup: '世界成就',
+  archiveTitle: '档案中心',
+  archivePet: '宠物档案', archiveWorld: '世界档案',
+  archName: '宠物名', archGender: '性别', archLevel: '等级', archFullness: '饱食', archMood: '心情', archClean: '清洁',
+  archFoods: '食物', archSoaps: '肥皂', archTime: '陪伴时长', archTyping: '累计打字', archStories: '阅读段数', archHidden: '隐藏内容',
+  archTierProgress: '称号进度',
+  archWorldNone: '暂无世界档案',
+  statsTotalTime: '陪伴总时长',
+  genderMale: '男孩', genderFemale: '女孩', genderNeutral: '中性',
+  petCall: '叫你 {0}',
+  changelogTitle: '{0} 更新说明', changelogOk: '知道了',
+  revisitTitle: '再次进入「{0}」',
+  revisitDesc: '这个世界你已经走过一段旅程，想从哪里开始？',
+  revisitRestart: '从头重温', revisitContinue: '从抉择处继续', revisitCancel: '取消',
   archivedLabel: '已归档',
   restoreBtn: '恢复',
   scenarioArchived: '已归档',
   archiveFail: '归档失败',
-  archiveAllDone: '所有副本都已通关',
+  archiveAllDone: '所有世界都已通关',
   archivePromptAction: '反馈与催更',
   feedbackTitle: '反馈与支持',
   openGitHub: '在 GitHub 提交 Issue',
@@ -133,19 +158,36 @@ const eventClose = document.getElementById('event-close');
 const eventListEl = document.getElementById('event-list');
 const hubTitleDisplay = document.getElementById('hub-title-display');
 const hubCompletionDisplay = document.getElementById('hub-completion-display');
+const hubPetInfo = document.getElementById('hub-pet-info');
 const endingOverlay = document.getElementById('ending-overlay');
 const endingScenarioName = document.getElementById('ending-scenario-name');
 const endingText = document.getElementById('ending-text');
 const endingTitleEl = document.getElementById('ending-title');
-const endingBranchInfo = document.getElementById('ending-branch-info');
-const endingRebirthBtn = document.getElementById('ending-rebirth');
-const endingHubBtn = document.getElementById('ending-hub');
+const endingStatusEl = document.getElementById('ending-status');
+const endingButtonsEl = document.getElementById('ending-buttons');
 const endingPanel = document.getElementById('ending-panel');
 const endingPanelClose = document.getElementById('ending-panel-close');
 const endingPanelList = document.getElementById('ending-panel-list');
 const statsPanel = document.getElementById('stats-panel');
 const statsClose = document.getElementById('stats-close');
 const statsListEl = document.getElementById('stats-list');
+const archivePanel = document.getElementById('archive-panel');
+const archiveClose = document.getElementById('archive-close');
+const archivePetBody = document.getElementById('archive-pet-body');
+const archiveWorldBody = document.getElementById('archive-world-body');
+const archiveEventBody = document.getElementById('archive-event-body');
+const archiveStatsBody = document.getElementById('archive-stats-body');
+const changelogModal = document.getElementById('changelog-modal');
+const changelogClose = document.getElementById('changelog-close');
+const changelogOk = document.getElementById('changelog-ok');
+const changelogTitleEl = document.getElementById('changelog-title');
+const changelogPointsEl = document.getElementById('changelog-points');
+const revisitModal = document.getElementById('revisit-modal');
+const revisitTitleEl = document.getElementById('revisit-title');
+const revisitDescEl = document.getElementById('revisit-desc');
+const revisitRestartBtn = document.getElementById('revisit-restart');
+const revisitContinueBtn = document.getElementById('revisit-continue');
+const revisitCancelBtn = document.getElementById('revisit-cancel');
 
 const confirmModal = document.getElementById('confirm-modal');
 const confirmOk = document.getElementById('confirm-ok');
@@ -216,41 +258,127 @@ async function init() {
   window.electron.on('scenario-changed', (event) => { gameState = event.game; currentScenario = event.scenario; currentTitle = { name: event.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('system', tf('systemEntered', currentScenario.nameCN)); updateUI(); });
   window.electron.on('auto-save', () => { flashSaveDot(); });
   window.electron.on('scenario-ending', (event) => {
-    endingScenarioName.textContent = event.scenarioName;
-    endingText.textContent = event.text;
-    if (event.endingTitle) {
-      endingTitleEl.textContent = '解锁称号: ' + event.endingTitle;
-      endingTitleEl.style.display = 'block';
-    } else {
-      endingTitleEl.style.display = 'none';
-    }
-    endingBranchInfo.textContent = event.branch ? '分支: ' + event.branch : '';
-    endingOverlay.classList.remove('closing');
-    endingOverlay.classList.remove('hidden');
+    showJourneyComplete(event);
   });
 }
 
-endingRebirthBtn.addEventListener('click', async () => {
-  const ok = await showConfirmModal(t('rebirthConfirm'));
-  if (!ok) return;
+// ── v4 旅程完成面板（§4.8 四态）──
+let _endingUnlocksCache = null;   // 本次会话最近的解锁状态快照（判定新解锁世界）
+async function showJourneyComplete(ev) {
+  // 刷新状态（gameCompletions 已更新，重新拉取）
   try {
-    const r = await window.electron.invoke('rebirth-scenario', { scenarioId: gameState?.scenario_id });
-    if (r.success) {
-      gameState.is_in_hub = true;
-      gameState.scenario_id = '';
-      hubLevel = r.hubLevel;
-      closeWithAnimation(endingOverlay);
-      switchView(true);
-      renderHubView();
-      renderHubCards();
-      updateUI();
-      addLog('info', '已选择其他分支，经验加成 +10%');
+    const full = await window.electron.invoke('get-full-state');
+    if (full?.game) { gameState = full.game; currentScenario = full.scenario; currentTitle = full.currentTitle; hubLevel = full.petLevel || hubLevel; }
+  } catch {}
+  endingScenarioName.textContent = ev.scenarioName;
+  endingText.textContent = ev.text;
+  if (ev.endingTitle) {
+    endingTitleEl.textContent = '解锁称号: ' + ev.endingTitle;
+    endingTitleEl.style.display = 'block';
+  } else {
+    endingTitleEl.style.display = 'none';
+  }
+  endingStatusEl.classList.remove('new-world');
+  endingButtonsEl.innerHTML = '';
+  const w = computeWorldState(ev.scenarioId);
+  const branchLeft = Math.max(0, w.branchTotal - w.completedBranches.length);
+  const hiddenLeft = Math.max(0, w.hiddenTotal - w.hiddenRead);
+  const btn = (label, action, primary) => {
+    const b = document.createElement('button');
+    b.textContent = label;
+    if (primary) b.classList.add('primary');
+    b.addEventListener('click', action);
+    endingButtonsEl.appendChild(b);
+    return b;
+  };
+  if (branchLeft > 0) {
+    endingStatusEl.textContent = tf('endingStatusBranch', branchLeft);
+    btn(t('endingRevisit'), () => { closeWithAnimation(endingOverlay); selectWorld(ev.scenarioId); }, true);
+    btn(t('endingBackSelect'), () => { closeWithAnimation(endingOverlay); exitToHome(); });
+  } else if (hiddenLeft > 0) {
+    endingStatusEl.textContent = tf('endingStatusHidden', hiddenLeft);
+    btn(t('endingContinue'), () => { closeWithAnimation(endingOverlay); selectWorld(ev.scenarioId); }, true);
+    btn(t('endingBackSelect'), () => { closeWithAnimation(endingOverlay); exitToHome(); });
+  } else {
+    endingStatusEl.textContent = t('endingStatusAll');
+    btn(t('endingBackSelect'), () => { closeWithAnimation(endingOverlay); exitToHome(); }, true);
+  }
+  // 新解锁世界判定：通关后 completionCount 达标的世界（排除当前世界）
+  try {
+    const unlocks = await window.electron.invoke('get-scenario-unlocks');
+    const newWorld = unlocks.find(u => u.unlocked && !u.archived && u.id !== ev.scenarioId && u.requirement && u.requirement.completions > 0 && (u.completionCount && u.completionCount >= u.requirement.completions));
+    if (newWorld) {
+      const sc = scenarioList.find(s => s.id === newWorld.id);
+      endingStatusEl.classList.add('new-world');
+      endingStatusEl.textContent = tf('endingStatusUnlocked', sc ? sc.nameCN : newWorld.id);
+      btn(t('endingGoNew'), () => { closeWithAnimation(endingOverlay); selectWorld(newWorld.id); }, true);
+      btn(t('endingBackSelect'), () => { closeWithAnimation(endingOverlay); exitToHome(); });
     }
-  } catch (e) { showToast('重生失败', 'error'); }
+  } catch {}
+  endingOverlay.classList.remove('closing');
+  endingOverlay.classList.remove('hidden');
+}
+
+// 回到世界选择：返回家并打开世界选择面板
+async function exitToHome() {
+  try {
+    const r = await window.electron.invoke('exit-to-hub');
+    gameState = gameState || {};
+    gameState.is_in_hub = true;
+    if (r && r.petLevel) hubLevel = r.petLevel;
+    switchView(true);
+    renderHubView(); renderHubCards(); updateUI();
+    addLog('system', t('systemBack'));
+    lastRuntime = 0;
+    scenarioList = await window.electron.invoke('get-scenario-list').catch(() => scenarioList);
+    renderScenarioPanel();
+    scenarioPanel.classList.remove('closing');
+    scenarioPanel.classList.remove('hidden');
+  } catch (e) { showToast(t('systemBackFail'), 'error'); }
+}
+
+// ── v4 重访起点选择（任务7）──
+function showRevisitModal(scenarioName) {
+  revisitTitleEl.textContent = tf('revisitTitle', scenarioName);
+  revisitDescEl.textContent = t('revisitDesc');
+  revisitModal.classList.remove('closing');
+  revisitModal.classList.remove('hidden');
+}
+revisitRestartBtn.addEventListener('click', async () => {
+  closeWithAnimation(revisitModal);
+  try {
+    const r = await window.electron.invoke('revisit-start', { mode: 'restart' });
+    if (r.success) { gameState = r.game; addLog('system', t('systemBack')); updateUI(); }
+  } catch {}
 });
-endingHubBtn.addEventListener('click', () => {
-  closeWithAnimation(endingOverlay);
+revisitContinueBtn.addEventListener('click', async () => {
+  closeWithAnimation(revisitModal);
+  try {
+    const r = await window.electron.invoke('revisit-start', { mode: 'continue' });
+    if (r.success) { gameState = r.game; updateUI(); }
+  } catch {}
 });
+revisitCancelBtn.addEventListener('click', () => {
+  closeWithAnimation(revisitModal);
+  exitToHome();
+});
+
+// ── v4 统一进入世界入口：处理 worldRevisited 重访弹窗 ──
+async function selectWorld(id) {
+  try {
+    const r = await window.electron.invoke('select-scenario', { id, alias: '' });
+    gameState = r.game; currentScenario = r.scenario;
+    currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' };
+    switchView(false);
+    addLog('system', tf('systemEntered', currentScenario.nameCN));
+    updateUI();
+    if (r.worldRevisited) showRevisitModal(currentScenario.nameCN);
+    return r;
+  } catch (e) {
+    showToast(t('systemEnterFail'), 'error');
+    return null;
+  }
+}
 endingPanelClose.addEventListener('click', () => closeWithAnimation(endingPanel));
 
 function switchView(inHub) {
@@ -300,18 +428,73 @@ document.addEventListener('animationend', (e) => {
   }
 });
 
+// ── v4 世界数据索引（fetch 构建产物，用于分支/隐藏进度推导）──
+let worldIndex = {};   // sid -> { branches:[], events:[] }
+async function loadWorldIndex() {
+  try {
+    const resp = await fetch('/scenarios_data.json');
+    const data = await resp.json();
+    const list = Array.isArray(data) ? data : (data.scenarios || []);
+    list.forEach(sc => { worldIndex[sc.id] = { branches: Array.isArray(sc.branches) ? sc.branches : [], events: sc.events || [] }; });
+  } catch (e) { worldIndex = {}; }
+}
+
+// 按世界计算：已通关分支集合 / 隐藏收集 / 已读段数（当前世界用 live 状态，其余用切出快照）
+function computeWorldState(sid) {
+  const cur = !!gameState && sid === gameState.scenario_id;
+  const triggered = cur ? (gameState.triggered_events || []) : ((gameState?.scenario_progress?.[sid]?.triggeredEvents) || []);
+  const wi = worldIndex[sid] || { branches: [], events: [] };
+  const completed = new Set();
+  let hiddenRead = 0;
+  for (const e of wi.events) {
+    if (!e.completionTitle || !e.branch) continue;
+    if (triggered.includes(e.id)) completed.add(e.branch);
+  }
+  const hiddenEvents = wi.events.filter(e => e.branch === 'hidden');
+  for (const e of hiddenEvents) if (triggered.includes(e.id)) hiddenRead++;
+  return {
+    branchTotal: wi.branches.length,
+    completedBranches: [...completed],
+    hiddenTotal: hiddenEvents.length,
+    hiddenRead,
+    readCount: triggered.length,
+  };
+}
+
+function branchLineHtml(branches, completed) {
+  if (!branches || branches.length === 0) return '';
+  const spans = branches.map(b => {
+    const done = completed.includes(b);
+    return `<span class="${done ? 'br-done' : 'br-todo'}">${done ? '✓' : '·'} ${b}</span>`;
+  });
+  return `<div class="hub-card-branches">${spans.join('')}</div>`;
+}
+
 // ── Hub View ──
 let _hubStatsTimer = null;
 function renderHubView() {
   if (!gameState) return;
   hubGreeting.textContent = t('hubWelcome'); hubPlayerName.textContent = gameState.player_name;
   hubLevelDisplay.textContent = `${t('hubLevel')}${hubLevel}`;
-  // 大厅统计 5 秒节流一次（避免每 500ms tick 空转 IPC）
+  if (hubPetInfo) {
+    const g = gameState.pet_gender === 'male' ? t('genderMale') : gameState.pet_gender === 'female' ? t('genderFemale') : t('genderNeutral');
+    hubPetInfo.textContent = `${g} · ${tf('petCall', gameState.pet_call_name || '主人')}`;
+  }
+  // 家统计 5 秒节流一次（避免每 500ms tick 空转 IPC）；顺带刷新宠物称谓（右键菜单改名后可见）
   if (_hubStatsTimer) return;
   _hubStatsTimer = setTimeout(() => { _hubStatsTimer = null; }, 5000);
   window.electron.invoke('get-hub-stats').then(stats => {
     if (hubTitleDisplay) hubTitleDisplay.textContent = stats.hubTitle ? stats.hubTitle.name : '';
     if (hubCompletionDisplay) hubCompletionDisplay.textContent = tf('hubCompletion', stats.completionCount, stats.totalScenarios);
+  }).catch(() => {});
+  window.electron.invoke('get-full-state').then(full => {
+    if (full?.game?.pet_call_name !== undefined && full.game.pet_call_name !== gameState.pet_call_name) {
+      gameState = { ...gameState, pet_call_name: full.game.pet_call_name, pet_gender: full.game.pet_gender };
+      if (hubPetInfo) {
+        const g = gameState.pet_gender === 'male' ? t('genderMale') : gameState.pet_gender === 'female' ? t('genderFemale') : t('genderNeutral');
+        hubPetInfo.textContent = `${g} · ${tf('petCall', gameState.pet_call_name || '主人')}`;
+      }
+    }
   }).catch(() => {});
 }
 
@@ -322,12 +505,12 @@ function renderHubCards() {
     hubScenarioList.innerHTML = `<div class="hub-empty"><div class="hub-empty-icon">[ ~ ~ ]</div><div class="hub-empty-text">${t('noScenarios')}</div><div class="hub-empty-hint">${t('hubEmptyHint')}</div></div>`;
     return;
   }
-  // 新手引导：未进过任何副本时显示
+  // 新手引导：未进过任何世界时显示
   const hasProgress = gameState?.scenario_progress && Object.keys(gameState.scenario_progress).length > 0;
-  if (!hasProgress) {
+  if (!hasProgress && !gameState?.triggered_events?.length) {
     const guide = document.createElement('div');
     guide.className = 'hub-guide';
-    guide.textContent = '→ 点击下方[副本]开始你的第一个故事';
+    guide.textContent = '→ 点击下方[世界]开始你的第一个故事';
     hubScenarioList.appendChild(guide);
   }
   Promise.all([
@@ -339,41 +522,52 @@ function renderHubCards() {
     const archivedSet = new Set(archivedIds || []);
     const activeList = scenarioList.filter(s => !archivedSet.has(s.id));
     const archivedList = scenarioList.filter(s => archivedSet.has(s.id));
-    // 未归档卡片
+    // 未归档卡片（v4 四态：锁定/进行中/通关/毕业）
     activeList.forEach(s => {
-      const u = unlockMap[s.id] || { unlocked: true };
+      const u = unlockMap[s.id] || { unlocked: true, requirement: {} };
+      const locked = !u.unlocked;
+      const w = computeWorldState(s.id);
+      const graduated = !locked && w.branchTotal > 0 && w.completedBranches.length >= w.branchTotal && w.hiddenRead >= w.hiddenTotal;
+      const cleared = !locked && w.completedBranches.length > 0;
       const card = document.createElement('div');
-      card.className = 'hub-card' + (u.unlocked ? '' : ' locked');
-      let progressHtml = '';
-      if (u.unlocked) {
-        const progress = gameState?.scenario_progress?.[s.id];
-        const completion = gameState?.gameCompletions?.find(c => c.scenarioId === s.id);
-        const rebirthCount = gameState?.rebirthCounts?.[s.id] || 0;
-        if (completion) {
-          progressHtml = `<div class="hub-card-progress"><span class="progress-complete">✓ 通关</span>${rebirthCount > 0 ? `<span class="progress-rebirth">↻ R${rebirthCount}</span>` : ''}</div>`;
-        } else if (progress) {
-          const lvl = calcLevel(progress.totalExpEarned || progress.total_exp_earned || 0);
-          progressHtml = `<div class="hub-card-progress"><span class="progress-level">Lv.${lvl}</span></div>`;
-        }
-      }
-      const archiveBtn = (u.unlocked && u.canArchive) ? `<span class="archive-btn" data-sid="${s.id}">[归档]</span>` : '';
-      const userTag = s.isUserMade ? `<span class="user-made-tag">${t('labelUserMade')}</span>` : '';
+      card.className = 'hub-card' + (locked ? ' locked' : '') + (graduated ? ' graduated' : '');
       const nameDiv = document.createElement('div'); nameDiv.className = 'hub-card-name';
-      nameDiv.textContent = `${s.nameCN} (${s.name})`;
+      nameDiv.textContent = `${s.nameCN} (${s.name})${cleared ? ' ✓' : ''}`;
       if (s.isUserMade) { const tagSpan = document.createElement('span'); tagSpan.className = 'user-made-tag'; tagSpan.textContent = t('labelUserMade'); nameDiv.appendChild(tagSpan); }
       card.appendChild(nameDiv);
+      if (graduated) {
+        const tag = document.createElement('span'); tag.className = 'grad-tag'; tag.textContent = '毕业';
+        card.appendChild(tag);
+      }
       const descDiv = document.createElement('div'); descDiv.className = 'hub-card-desc';
       descDiv.textContent = s.description; card.appendChild(descDiv);
       const metaDiv = document.createElement('div'); metaDiv.className = 'hub-card-meta';
       metaDiv.textContent = `${s.eventCount} ${t('scenarioEvent')} · ${s.achievementCount} ${t('scenarioAchievement')}`;
       card.appendChild(metaDiv);
-      if (progressHtml) { const tmp = document.createElement('div'); tmp.innerHTML = progressHtml; while (tmp.firstChild) card.appendChild(tmp.firstChild); }
+      // 状态行（四态）
+      const statusDiv = document.createElement('div'); statusDiv.className = 'hub-card-status';
+      if (locked) {
+        statusDiv.textContent = tf('worldLocked', u.requirement?.completions || 0);
+      } else if (graduated) {
+        statusDiv.textContent = t('worldGraduated');
+      } else if (cleared) {
+        statusDiv.textContent = tf('worldCleared', w.completedBranches.length, w.branchTotal);
+      } else {
+        statusDiv.textContent = tf('worldInProgress', w.readCount);
+      }
+      card.appendChild(statusDiv);
+      // 分支进度行（通关/毕业态）
+      if (cleared && w.branchTotal > 0) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = branchLineHtml(worldIndex[s.id]?.branches || [], w.completedBranches);
+        while (tmp.firstChild) card.appendChild(tmp.firstChild);
+      }
+      const archiveBtn = (u.unlocked && u.canArchive) ? `<span class="archive-btn" data-sid="${s.id}">[归档]</span>` : '';
       if (archiveBtn) { const tmp = document.createElement('div'); tmp.innerHTML = archiveBtn; while (tmp.firstChild) card.appendChild(tmp.firstChild); }
-      if (!u.unlocked) { const lockDiv = document.createElement('div'); lockDiv.className = 'hub-card-lock'; lockDiv.textContent = tf('scenarioLocked', u.requirement.hub_level || 0, u.requirement.completions || 0); card.appendChild(lockDiv); }
-      if (u.unlocked) {
+      if (!locked) {
         card.addEventListener('click', async (e) => {
           if (e.target.closest('.archive-btn')) return;
-          try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('system', tf('systemEntered', currentScenario.nameCN)); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); }
+          await selectWorld(s.id);
         });
         card.querySelector('.archive-btn')?.addEventListener('click', async (e) => {
           e.stopPropagation();
@@ -394,11 +588,10 @@ function renderHubCards() {
       archivedList.forEach(s => {
         const card = document.createElement('div');
         card.className = 'hub-card archived-card';
-        const completion = gameState?.gameCompletions?.find(c => c.scenarioId === s.id);
-        const rebirthCount = gameState?.rebirthCounts?.[s.id] || 0;
+        const w = computeWorldState(s.id);
         let progHtml = '';
-        if (completion) {
-          progHtml = `<div class="hub-card-progress"><span class="progress-complete">✓ 通关</span>${rebirthCount > 0 ? `<span class="progress-rebirth">↻ R${rebirthCount}</span>` : ''}</div>`;
+        if (w.completedBranches.length > 0) {
+          progHtml = `<div class="hub-card-status">${tf('worldCleared', w.completedBranches.length, w.branchTotal)}</div>`;
         }
         const aNameDiv = document.createElement('div'); aNameDiv.className = 'hub-card-name';
         aNameDiv.textContent = `${s.nameCN} (${s.name})`; card.appendChild(aNameDiv);
@@ -424,16 +617,6 @@ function renderHubCards() {
     // 降级：全部可点击，无归档
     scenarioList.forEach(s => {
       const card = document.createElement('div'); card.className = 'hub-card';
-      let progressHtml = '';
-      const progress = gameState?.scenario_progress?.[s.id];
-      const completion = gameState?.gameCompletions?.find(c => c.scenarioId === s.id);
-      const rebirthCount = gameState?.rebirthCounts?.[s.id] || 0;
-      if (completion) {
-        progressHtml = `<div class="hub-card-progress"><span class="progress-complete">✓ 通关</span>${rebirthCount > 0 ? `<span class="progress-rebirth">↻ R${rebirthCount}</span>` : ''}</div>`;
-      } else if (progress) {
-        const lvl = calcLevel(progress.totalExpEarned || progress.total_exp_earned || 0);
-        progressHtml = `<div class="hub-card-progress"><span class="progress-level">Lv.${lvl}</span></div>`;
-      }
       const fNameDiv = document.createElement('div'); fNameDiv.className = 'hub-card-name';
       fNameDiv.textContent = `${s.nameCN} (${s.name})`; card.appendChild(fNameDiv);
       const fDescDiv = document.createElement('div'); fDescDiv.className = 'hub-card-desc';
@@ -441,10 +624,7 @@ function renderHubCards() {
       const fMetaDiv = document.createElement('div'); fMetaDiv.className = 'hub-card-meta';
       fMetaDiv.textContent = `${s.eventCount} ${t('scenarioEvent')} · ${s.achievementCount} ${t('scenarioAchievement')}`;
       card.appendChild(fMetaDiv);
-      if (progressHtml) { const tmp = document.createElement('div'); tmp.innerHTML = progressHtml; while (tmp.firstChild) card.appendChild(tmp.firstChild); }
-      card.addEventListener('click', async () => {
-        try { const r = await window.electron.invoke('select-scenario', { id: s.id, alias: '' }); gameState = r.game; currentScenario = r.scenario; currentTitle = getTitleByIndex(gameState.equipped_title_index) || { name: r.scenario.playerTitle, color: '#888', desc: '' }; switchView(false); addLog('system', tf('systemEntered', currentScenario.nameCN)); updateUI(); } catch (e) { showToast(t('systemEnterFail'), 'error'); }
-      });
+      card.addEventListener('click', async () => { await selectWorld(s.id); });
       hubScenarioList.appendChild(card);
     });
   });
@@ -468,7 +648,14 @@ function renderAllCompletePrompt() {
 btnBackHub.addEventListener('click', async () => {
   const ok = await showConfirmModal(t('confirmDesc'));
   if (!ok) return;
-  try { const r = await window.electron.invoke('exit-to-hub'); gameState.hub_total_exp = r.hubTotalExp; hubLevel = r.hubLevel; gameState.is_in_hub = true; switchView(true); renderHubView(); renderHubCards(); addLog('system', tf('systemBack', hubLevel)); updateUI(); lastRuntime = 0; } catch (e) { showToast(t('systemBackFail'), 'error'); }
+  try {
+    const r = await window.electron.invoke('exit-to-hub');
+    if (r && r.petLevel) hubLevel = r.petLevel;
+    gameState.is_in_hub = true;
+    gameState.scenario_id = '';
+    switchView(true); renderHubView(); renderHubCards();
+    addLog('system', t('systemBack')); updateUI(); lastRuntime = 0;
+  } catch (e) { showToast(t('systemBackFail'), 'error'); }
 });
 
 // ── UI ──
@@ -586,13 +773,174 @@ document.querySelectorAll('.jm-item').forEach(el => {
     const action = el.dataset.action;
     if (action === 'titles') { renderTitlesPanel(); titlesPanel.classList.remove('closing'); titlesPanel.classList.remove('hidden'); }
     else if (action === 'achievement') { renderAchievementPanel(); achievementPanel.classList.remove('closing'); achievementPanel.classList.remove('hidden'); }
-    else if (action === 'event') { renderEventPanel(); eventPanel.classList.remove('closing'); eventPanel.classList.remove('hidden'); }
-    else if (action === 'ending') { renderEndingPanel(); endingPanel.classList.remove('closing'); endingPanel.classList.remove('hidden'); }
-    else if (action === 'stats') { renderStatsPanel(); statsPanel.classList.remove('closing'); statsPanel.classList.remove('hidden'); }
+    else if (action === 'archive-pet') { openArchivePanel('pet'); }
+    else if (action === 'archive-world') { openArchivePanel('world'); }
+    else if (action === 'archive-event') { openArchivePanel('event'); }
+    else if (action === 'archive-stats') { openArchivePanel('stats'); }
   });
 });
 eventClose.addEventListener('click', () => closeWithAnimation(eventPanel));
 statsClose.addEventListener('click', () => closeWithAnimation(statsPanel));
+
+// ── v4 档案中心（四区：宠物/世界/事件/按键）──
+async function openArchivePanel(section) {
+  renderArchivePet();
+  renderArchiveWorld();
+  renderArchiveEvents();
+  renderArchiveStats();
+  archivePanel.classList.remove('closing');
+  archivePanel.classList.remove('hidden');
+  if (section) {
+    const ids = { pet: 'archive-pet-body', world: 'archive-world-body', event: 'archive-event-body', stats: 'archive-stats-body' };
+    const target = document.getElementById(ids[section]);
+    if (target) setTimeout(() => target.scrollIntoView({ block: 'start' }), 50);
+  }
+}
+archiveClose.addEventListener('click', () => closeWithAnimation(archivePanel));
+
+function shortNum(n) {
+  const v = Number(n);
+  if (Number.isNaN(v)) return '0';
+  if (v < 1000) return v.toFixed(0);
+  if (v < 1000000) return (v / 1000).toFixed(2) + 'k';
+  if (v < 1000000000) return (v / 1000000).toFixed(2) + 'M';
+  return (v / 1000000000).toFixed(2) + 'B';
+}
+
+function kvRow(key, val, cls) {
+  return `<div class="archive-kv"><span class="kv-key">${key}</span><span class="kv-val${cls ? ' ' + cls : ''}">${val}</span></div>`;
+}
+
+// 宠物档案区
+async function renderArchivePet() {
+  if (!archivePetBody || !gameState) return;
+  const g = gameState.pet_gender === 'male' ? t('genderMale') : gameState.pet_gender === 'female' ? t('genderFemale') : t('genderNeutral');
+  const rt = formatRuntime(gameState.total_runtime_ms || 0);
+  const rows = [
+    kvRow(t('archName'), gameState.player_name || '—'),
+    kvRow(t('archGender'), `${g} · ${tf('petCall', gameState.pet_call_name || '主人')}`),
+    kvRow(t('archLevel'), 'Lv.' + (gameState.pet_level || 1)),
+    kvRow(t('archFullness'), (gameState.pet_fullness ?? 80) + '/100', (gameState.pet_fullness ?? 80) < 30 ? 'warn' : ''),
+    kvRow(t('archMood'), (gameState.pet_mood ?? 80) + '/100', (gameState.pet_mood ?? 80) < 30 ? 'warn' : ''),
+    kvRow(t('archClean'), (gameState.pet_cleanliness ?? 80) + '/100', (gameState.pet_cleanliness ?? 80) < 30 ? 'warn' : ''),
+    kvRow(t('archFoods'), '🍪 ×' + (gameState.pet_foods || 0)),
+    kvRow(t('archSoaps'), '🧼 ×' + (gameState.pet_soaps || 0)),
+    kvRow(t('archTime'), rt),
+    kvRow(t('archTyping'), shortNum(gameState.total_key_presses || 0)),
+    kvRow(t('archStories'), (gameState.pet_stories_read || 0) + ' 段' + ((gameState.pet_hidden_read || 0) > 0 ? `（隐藏 ${gameState.pet_hidden_read}）` : '')),
+  ];
+  // 称号进度（阶梯档位：当前档/下一档）
+  let tierHtml = '';
+  try {
+    const tr = await window.electron.invoke('get-tier-achievements');
+    if (tr && tr.tiers) {
+      const tierRows = tr.tiers.map(x => {
+        const prog = x.unlockedTiers > 0 ? `${x.currentName} → ${x.nextName}` : `未解锁 → ${x.nextName}`;
+        const val = x.current === undefined ? '' : `${x.current}/${x.nextValue}`;
+        return `<div class="archive-tier-row"><span class="tr-name">${x.name}</span><span class="tr-prog"><b>${prog}</b> ${val}</span></div>`;
+      });
+      tierHtml = `<div style="margin-top:6px;border-top:1px solid color-mix(in srgb,var(--fg) 4%,transparent);padding-top:4px;"><div class="archive-kv" style="margin-bottom:2px;"><span class="kv-key">${t('archTierProgress')}</span></div>${tierRows.join('')}</div>`;
+    }
+  } catch {}
+  archivePetBody.innerHTML = rows.join('') + tierHtml;
+}
+
+// 世界档案区（复用 §14.3 卡片样式）
+async function renderArchiveWorld() {
+  if (!archiveWorldBody) return;
+  archiveWorldBody.innerHTML = '<div class="skeleton"><div class="skeleton-line"></div><div class="skeleton-line"></div></div>';
+  try {
+    const unlocks = await window.electron.invoke('get-scenario-unlocks');
+    if (!scenarioList || scenarioList.length === 0) { archiveWorldBody.innerHTML = `<div class="hub-empty-text">${t('archWorldNone')}</div>`; return; }
+    const unlockMap = {}; unlocks.forEach(u => unlockMap[u.id] = u);
+    let html = '';
+    scenarioList.forEach(s => {
+      const u = unlockMap[s.id] || { unlocked: true, requirement: {} };
+      const locked = !u.unlocked;
+      const w = computeWorldState(s.id);
+      const graduated = !locked && w.branchTotal > 0 && w.completedBranches.length >= w.branchTotal && w.hiddenRead >= w.hiddenTotal;
+      const cleared = !locked && w.completedBranches.length > 0;
+      let statusText;
+      if (locked) statusText = tf('worldLocked', u.requirement?.completions || 0);
+      else if (graduated) statusText = t('worldGraduated');
+      else if (cleared) statusText = tf('worldCleared', w.completedBranches.length, w.branchTotal);
+      else statusText = tf('worldInProgress', w.readCount);
+      const branches = (worldIndex[s.id]?.branches || []).map(b => {
+        const done = w.completedBranches.includes(b);
+        return `<span class="${done ? 'br-done' : 'br-todo'}">${done ? '✓' : '·'} ${b}</span>`;
+      }).join('');
+      const snap = gameState?.scenario_progress?.[s.id];
+      const runtime = snap?.totalRuntimeMs ? formatRuntime(snap.totalRuntimeMs) : (s.id === gameState?.scenario_id ? formatRuntime(gameState.total_runtime_ms || 0) : '—');
+      html += `<div class="archive-world-card${locked ? ' locked' : ''}${graduated ? ' graduated' : ''}" data-sid="${s.id}">
+        <div class="awc-name">${s.nameCN} (${s.name})${cleared ? ' ✓' : ''}</div>
+        <div class="awc-status">${statusText}</div>
+        ${branches ? `<div class="awc-branches">${branches}</div>` : ''}
+        <div class="awc-meta">${w.readCount} 段 · ${runtime}${w.hiddenTotal > 0 ? ` · 隐藏 ${w.hiddenRead}/${w.hiddenTotal}` : ''}</div>
+      </div>`;
+    });
+    archiveWorldBody.innerHTML = html;
+    archiveWorldBody.querySelectorAll('.archive-world-card:not(.locked)').forEach(card => {
+      card.addEventListener('click', async () => { closeWithAnimation(archivePanel); await selectWorld(card.dataset.sid); });
+    });
+  } catch { archiveWorldBody.innerHTML = '<div class="hub-empty-text">加载失败</div>'; }
+}
+
+// 事件记录区（按世界分组的阅读史 + 系统日志）
+async function renderArchiveEvents() {
+  if (!archiveEventBody) return;
+  archiveEventBody.innerHTML = '<div class="skeleton"><div class="skeleton-line"></div><div class="skeleton-line"></div></div>';
+  try {
+    const logWorldIds = await window.electron.invoke('get-log-scenarios').catch(() => []);
+    if (!logWorldIds || logWorldIds.length === 0) { archiveEventBody.innerHTML = '<div class="hub-empty-text">暂无事件记录</div>'; return; }
+    const nameOf = id => { const s = scenarioList.find(x => x.id === id); return s ? s.nameCN : id; };
+    const groups = [];
+    for (const wid of logWorldIds) {
+      const entries = await window.electron.invoke('get-log-entries', { scenario: wid }).catch(() => []);
+      if (!entries || entries.length === 0) continue;
+      groups.push({ id: wid, name: nameOf(wid), entries });
+    }
+    if (groups.length === 0) { archiveEventBody.innerHTML = '<div class="hub-empty-text">暂无事件记录</div>'; return; }
+    archiveEventBody.innerHTML = '';
+    groups.forEach((g, gi) => {
+      const grp = document.createElement('div'); grp.className = 'archive-event-group';
+      const hdr = document.createElement('div'); hdr.className = 'archive-event-header';
+      hdr.textContent = `${gi === 0 ? '▼ ' : '▶ '}${g.name}（${g.entries.length}）`;
+      const body = document.createElement('div'); body.className = 'archive-event-body' + (gi === 0 ? '' : ' hidden');
+      g.entries.forEach(e => {
+        const item = document.createElement('div'); item.className = 'archive-event-item ' + (e.ty || 'event');
+        const ts = document.createElement('span'); ts.className = 'ts';
+        ts.textContent = e.t && e.t.length >= 16 ? `[${e.t.slice(11, 16)}]` : '[--:--]';
+        const msg = document.createElement('span'); msg.className = 'msg'; msg.textContent = e.m;
+        item.appendChild(ts); item.appendChild(msg);
+        body.appendChild(item);
+      });
+      hdr.addEventListener('click', () => {
+        const hidden = body.classList.contains('hidden');
+        body.classList.toggle('hidden');
+        hdr.textContent = `${hidden ? '▼ ' : '▶ '}${g.name}（${g.entries.length}）`;
+      });
+      grp.appendChild(hdr); grp.appendChild(body);
+      archiveEventBody.appendChild(grp);
+    });
+  } catch { archiveEventBody.innerHTML = '<div class="hub-empty-text">加载失败</div>'; }
+}
+
+// 按键统计区（保留现有 + 陪伴总时长）
+async function renderArchiveStats() {
+  if (!archiveStatsBody) return;
+  try {
+    const s = await window.electron.invoke('get-key-stats');
+    const rt = formatRuntime(gameState?.total_runtime_ms || 0);
+    const items = [
+      `<div class="archive-stats-row"><span class="stats-label">${t('statsTotalTime')}</span><span class="stats-value">${rt}</span></div>`,
+      `<div class="archive-stats-row"><span class="stats-label">总输入</span><span class="stats-value">${(s.total || 0).toLocaleString()}</span></div>`,
+      `<div class="archive-stats-row"><span class="stats-label">今日按键</span><span class="stats-value">${(s.daily || 0).toLocaleString()}</span></div>`,
+      `<div class="archive-stats-row"><span class="stats-label">当前连击</span><span class="stats-value">${s.keyChar ? s.keyChar + ' ×' + s.streak : '—'}</span></div>`,
+      `<div class="archive-stats-row"><span class="stats-label">最高连击</span><span class="stats-value">${(s.highestStreak || 0).toLocaleString()}</span></div>`,
+    ];
+    archiveStatsBody.innerHTML = items.join('');
+  } catch { archiveStatsBody.innerHTML = '<div class="stats-row" style="color:var(--dim)">加载失败</div>'; }
+}
 
 function openSettingsPanel() {
   refreshSyncStatus();

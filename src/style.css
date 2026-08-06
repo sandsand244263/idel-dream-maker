@@ -158,16 +158,16 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 #achievement-desc { color: var(--dim); font-size: 10px; }
 
 /* ── Scenario / Settings / Titles / Achievement / Event Panels ── */
-#scenario-panel, #settings-panel, #titles-panel, #achievement-panel, #event-panel { position: fixed; top: 0; right: 0; width: 280px; height: 100vh; scrollbar-gutter: stable; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; z-index: 200; display: flex; flex-direction: column; animation: panelSlideIn 0.15s var(--ease-out); will-change: transform; }
-#scenario-panel.closing, #settings-panel.closing, #titles-panel.closing, #achievement-panel.closing, #event-panel.closing,
+#scenario-panel, #settings-panel, #titles-panel, #achievement-panel, #event-panel, #archive-panel { position: fixed; top: 0; right: 0; width: 280px; height: 100vh; scrollbar-gutter: stable; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; z-index: 200; display: flex; flex-direction: column; animation: panelSlideIn 0.15s var(--ease-out); will-change: transform; }
+#scenario-panel.closing, #settings-panel.closing, #titles-panel.closing, #achievement-panel.closing, #event-panel.closing, #archive-panel.closing,
 #ending-panel.closing, #stats-panel.closing { animation: panelSlideOut 0.12s var(--ease-out) forwards; }
 @keyframes panelSlideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 @keyframes panelSlideOut { from { transform: translateX(0); } to { transform: translateX(100%); } }
-#scenario-panel.hidden, #settings-panel.hidden, #titles-panel.hidden, #achievement-panel.hidden, #event-panel.hidden { display: none; }
-#scenario-panel-header, #settings-header, #titles-panel-header, #achievement-panel-header, #event-panel-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--dim); font-weight: bold; font-size: 12px; letter-spacing: 1px; }
-#scenario-panel-header button, #settings-header button, #titles-panel-header button, #achievement-panel-header button, #event-panel-header button { background: transparent; border: none; color: var(--dim); font-size: 14px; cursor: pointer; }
-@media (hover:hover){ #scenario-panel-header button:hover, #settings-header button:hover, #titles-panel-header button:hover, #achievement-panel-header button:hover, #event-panel-header button:hover{  color: var(--fg);  } }
-#scenario-panel-header button:active, #settings-header button:active, #titles-panel-header button:active, #achievement-panel-header button:active, #event-panel-header button:active { transform:scale(0.96); }
+#scenario-panel.hidden, #settings-panel.hidden, #titles-panel.hidden, #achievement-panel.hidden, #event-panel.hidden, #archive-panel.hidden { display: none; }
+#scenario-panel-header, #settings-header, #titles-panel-header, #achievement-panel-header, #event-panel-header, #archive-panel-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--dim); font-weight: bold; font-size: 12px; letter-spacing: 1px; }
+#scenario-panel-header button, #settings-header button, #titles-panel-header button, #achievement-panel-header button, #event-panel-header button, #archive-panel-header button { background: transparent; border: none; color: var(--dim); font-size: 14px; cursor: pointer; }
+@media (hover:hover){ #scenario-panel-header button:hover, #settings-header button:hover, #titles-panel-header button:hover, #achievement-panel-header button:hover, #event-panel-header button:hover, #archive-panel-header button:hover{  color: var(--fg);  } }
+#scenario-panel-header button:active, #settings-header button:active, #titles-panel-header button:active, #achievement-panel-header button:active, #event-panel-header button:active, #archive-panel-header button:active { transform:scale(0.96); }
 #scenario-list, #titles-list, #achievement-list, #event-list { flex: 1; overflow-y: auto; padding: 6px; }
 #scenario-list::-webkit-scrollbar, #titles-list::-webkit-scrollbar, #achievement-list::-webkit-scrollbar, #event-list::-webkit-scrollbar { width: 10px; }
 #scenario-list::-webkit-scrollbar-track, #titles-list::-webkit-scrollbar-track, #achievement-list::-webkit-scrollbar-track, #event-list::-webkit-scrollbar-track { background: var(--bg); }
@@ -313,7 +313,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 .theme-white #ending-rebirth { border-color:#B8860B !important; color:#B8860B !important; }
 
 @media (max-width: 420px) { #event-overlay { width: calc(100% - 10px); right: 5px; } #scenario-panel,
- #settings-panel, #titles-panel, #achievement-panel, #event-panel, #ending-panel, #stats-panel { width: 100%; } }
+ #settings-panel, #titles-panel, #achievement-panel, #event-panel, #ending-panel, #stats-panel, #archive-panel { width: 100%; } }
 @media (prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;}}
 
 /* ── Ending Overlay ── */
@@ -420,5 +420,128 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 /* ── 反馈面板 ── */
 @media (hover:hover){ #feedback-email:hover{  text-decoration: underline;  } }
 #feedback-email:active { transform: scale(0.96); }
+
+/* ── v4: 家视图宠物信息行 ── */
+#hub-pet-info { font-size: 10px; color: color-mix(in srgb, var(--fg) 65%, transparent); }
+
+/* ── v4: 世界卡片四态（§14.3） ── */
+.hub-card { position: relative; }
+.hub-card.locked { opacity: 0.45; border: 1px dashed color-mix(in srgb, var(--fg) 15%, transparent); }
+.hub-card.graduated { border: 1px solid var(--fg); }
+.hub-card-status { font-size: 10px; color: color-mix(in srgb, var(--fg) 65%, transparent); margin-top: 4px; }
+.hub-card.locked .hub-card-status { color: var(--dim); }
+.hub-card-branches { font-size: 10px; margin-top: 4px; display: flex; flex-wrap: wrap; gap: 2px 8px; }
+.hub-card-branches .br-done { color: var(--fg); }
+.hub-card-branches .br-todo { color: color-mix(in srgb, var(--fg) 40%, transparent); }
+.grad-tag { position: absolute; top: 4px; right: 4px; font-size: 10px; padding: 1px 4px; border-radius: 2px; border: 1px solid color-mix(in srgb, var(--fg) 40%, transparent); color: var(--fg); }
+
+/* ── v4: 档案中心（§14.5） ── */
+#archive-list { flex: 1; overflow-y: auto; padding: 0; }
+#archive-list::-webkit-scrollbar { width: 10px; }
+#archive-list::-webkit-scrollbar-track { background: var(--bg); }
+#archive-list::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
+.archive-section { margin-bottom: 8px; }
+.archive-section-title { font-size: 12px; font-weight: bold; padding: 8px 10px 4px; border-bottom: 1px solid color-mix(in srgb, var(--fg) 4%, transparent); }
+.archive-section-body { padding: 8px; }
+.archive-kv { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; line-height: 1.6; }
+.archive-kv .kv-key { font-size: 10px; color: color-mix(in srgb, var(--fg) 50%, transparent); flex-shrink: 0; }
+.archive-kv .kv-val { font-size: 11px; color: var(--fg); text-align: right; }
+.archive-kv .kv-val.dim { color: var(--dim); }
+.archive-kv .kv-val.warn { color: #FF9800; }
+.archive-tier-row { font-size: 10px; line-height: 1.6; display: flex; justify-content: space-between; gap: 8px; }
+.archive-tier-row .tr-name { color: var(--dim); flex-shrink: 0; }
+.archive-tier-row .tr-prog { color: color-mix(in srgb, var(--fg) 65%, transparent); text-align: right; }
+.archive-tier-row .tr-prog b { color: var(--fg); font-weight: bold; }
+.archive-world-card { border: 1px solid var(--border); border-radius: 8px; padding: 8px; margin-bottom: 6px; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+.archive-world-card:hover { border-color: var(--fg); background: color-mix(in srgb, var(--fg) 4%, transparent); }
+.archive-world-card:active { transform: scale(0.96); }
+.archive-world-card.locked { opacity: 0.45; border: 1px dashed color-mix(in srgb, var(--fg) 15%, transparent); cursor: not-allowed; }
+.archive-world-card.locked:hover { border-color: color-mix(in srgb, var(--fg) 15%, transparent); background: transparent; }
+.archive-world-card.graduated { border: 1px solid var(--fg); }
+.awc-name { font-size: 12px; font-weight: bold; color: var(--fg); margin-bottom: 4px; }
+.awc-status { font-size: 10px; color: color-mix(in srgb, var(--fg) 65%, transparent); }
+.archive-world-card.locked .awc-status { color: var(--dim); }
+.awc-branches { font-size: 10px; margin-top: 4px; display: flex; flex-wrap: wrap; gap: 2px 8px; }
+.awc-branches .br-done { color: var(--fg); }
+.awc-branches .br-todo { color: color-mix(in srgb, var(--fg) 40%, transparent); }
+.awc-meta { font-size: 10px; color: var(--dim); margin-top: 4px; }
+.archive-event-group { border-bottom: 1px solid color-mix(in srgb, var(--fg) 4%, transparent); }
+.archive-event-header { padding: 4px 2px; cursor: pointer; font-size: 10px; font-weight: bold; color: var(--dim); user-select: none; transition: background 0.12s, color 0.12s; }
+.archive-event-header:hover { color: var(--fg); background: color-mix(in srgb, var(--fg) 4%, transparent); }
+.archive-event-body { padding: 0 2px 4px 10px; }
+.archive-event-body.hidden { display: none; }
+.archive-event-body .log-entry { margin-bottom: 4px; }
+.archive-event-item { font-size: 10px; line-height: 1.5; margin-bottom: 4px; }
+.archive-event-item .ts { color: var(--dim); margin-right: 6px; white-space: nowrap; }
+.archive-event-item.event .msg::before { content: '[!] '; color: #FF9800; }
+.archive-event-item.levelup .msg::before { content: '[UP] '; color: #FFEB3B; }
+.archive-event-item.achievement .msg::before { content: '[ACH] '; color: #00E5FF; }
+.archive-stats-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border); font-size: 11px; }
+.archive-stats-row .stats-label { color: var(--dim); }
+.archive-stats-row .stats-value { color: var(--fg); font-weight: bold; }
+
+/* ── v4: 旅程完成面板（§14.4，替代旧 ending overlay） ── */
+#ending-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:250; display:flex; align-items:center; justify-content:center; animation:fadeIn 0.3s var(--ease-out); will-change: opacity; }
+#ending-overlay.closing { animation:fadeOut 0.15s var(--ease-out) forwards; }
+#ending-box { width:280px; padding:20px; background:var(--bg); border:1px solid var(--dim); border-radius:8px; text-align:center; animation:slideIn 0.3s var(--ease-out); }
+#ending-header { font-size:14px; font-weight:bold; color:var(--fg); margin-bottom:8px; }
+#ending-scenario-name { font-size:12px; color:var(--fg); margin-bottom:8px; }
+#ending-text { font-size:11px; color:color-mix(in srgb,var(--fg) 70%,transparent); line-height:1.7; margin-bottom:12px; white-space:pre-wrap; max-height:160px; overflow-y:auto; }
+#ending-status { font-size:12px; line-height:1.5; color:color-mix(in srgb,var(--fg) 65%,transparent); margin-bottom:12px; }
+#ending-status.new-world { color: var(--fg); }
+#ending-buttons { display:flex; flex-direction:column; gap:8px; }
+#ending-buttons button { width:100%; padding:6px 0; font-size:11px; font-family:inherit; background:color-mix(in srgb,var(--fg) 10%,transparent); color:var(--fg); border:1px solid color-mix(in srgb,var(--fg) 25%,transparent); border-radius:4px; cursor:pointer; transition:background 0.15s,border-color 0.15s,transform 0.12s; }
+#ending-buttons button:hover { background:color-mix(in srgb,var(--fg) 20%,transparent); border-color:color-mix(in srgb,var(--fg) 45%,transparent); }
+#ending-buttons button:active { transform:scale(0.96); }
+#ending-buttons button.primary { border:1px solid var(--fg); background:color-mix(in srgb,var(--fg) 10%,transparent); }
+#ending-buttons button.primary:hover { background:color-mix(in srgb,var(--fg) 20%,transparent); }
+
+/* ── v4: 更新说明弹窗（§14.8） ── */
+#changelog-modal { position:fixed; top:0; left:0; width:100%; height:100%; z-index:400; display:flex; align-items:center; justify-content:center; animation:modalFadeIn 0.15s var(--ease-out); }
+#changelog-modal.closing { animation:modalFadeOut 0.1s var(--ease-out) forwards; }
+#changelog-modal.hidden { display:none; }
+#changelog-overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); }
+#changelog-box { position:relative; background:var(--bg); border:1px solid var(--dim); border-radius:8px; padding:8px; width:280px; box-shadow:0 0 30px color-mix(in srgb, var(--fg) 15%, transparent); animation:slideIn 0.3s var(--ease-out); }
+#changelog-header { display:flex; justify-content:space-between; align-items:center; padding:4px 6px 6px; font-size:14px; font-weight:bold; }
+#changelog-header button { background:transparent; border:none; color:var(--dim); font-size:14px; cursor:pointer; font-family:var(--font); }
+#changelog-header button:hover { color:var(--fg); }
+#changelog-header button:active { transform:scale(0.96); }
+#changelog-points { padding:0 6px; max-height:260px; overflow-y:auto; }
+#changelog-points::-webkit-scrollbar { width:10px; }
+#changelog-points::-webkit-scrollbar-track { background:var(--bg); }
+#changelog-points::-webkit-scrollbar-thumb { background:var(--dim); border-radius:2px; }
+.cl-point { font-size:11px; line-height:1.5; margin-bottom:4px; color:color-mix(in srgb,var(--fg) 70%,transparent); }
+.cl-point::before { content:'· '; }
+.cl-point.warn { color:#FF9800; }
+#changelog-ok { display:block; margin:10px auto 4px; padding:6px 24px; font-family:var(--font); font-size:11px; background:color-mix(in srgb,var(--fg) 10%,transparent); color:var(--fg); border:1px solid var(--fg); border-radius:4px; cursor:pointer; }
+#changelog-ok:hover { background:color-mix(in srgb,var(--fg) 20%,transparent); }
+#changelog-ok:active { transform:scale(0.96); }
+
+/* ── v4: 重访起点选择（任务7） ── */
+#revisit-modal { position:fixed; top:0; left:0; width:100%; height:100%; z-index:350; display:flex; align-items:center; justify-content:center; animation:modalFadeIn 0.15s var(--ease-out); }
+#revisit-modal.closing { animation:modalFadeOut 0.1s var(--ease-out) forwards; }
+#revisit-modal.hidden { display:none; }
+#revisit-overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); }
+#revisit-box { position:relative; background:var(--bg); border:1px solid var(--dim); border-radius:8px; padding:16px; width:260px; box-shadow:0 0 30px color-mix(in srgb, var(--fg) 15%, transparent); animation:slideIn 0.3s var(--ease-out); }
+#revisit-title { font-weight:bold; font-size:14px; margin-bottom:8px; text-align:center; }
+#revisit-desc { font-size:11px; color:color-mix(in srgb,var(--fg) 65%,transparent); margin-bottom:14px; line-height:1.6; text-align:center; }
+#revisit-buttons { display:flex; flex-direction:column; gap:8px; }
+.revisit-btn { width:100%; padding:6px 0; font-size:11px; font-family:var(--font); background:color-mix(in srgb,var(--fg) 10%,transparent); color:var(--fg); border:1px solid var(--fg); border-radius:4px; cursor:pointer; }
+.revisit-btn:hover { background:color-mix(in srgb,var(--fg) 20%,transparent); }
+.revisit-btn:active { transform:scale(0.96); }
+.revisit-btn-dim { background:color-mix(in srgb,var(--fg) 5%,transparent); border-color:color-mix(in srgb,var(--fg) 12%,transparent); color:color-mix(in srgb,var(--fg) 45%,transparent); }
+.revisit-btn-dim:hover { background:color-mix(in srgb,var(--fg) 5%,transparent); }
+
+/* ── v4: onboarding 性别一步（§14.9） ── */
+#onboarding-gender-row { display:flex; flex-direction:column; align-items:center; gap:6px; }
+#onboarding-gender-row label { font-size:11px; color:var(--fg); }
+#ob-gender-btns { display:flex; gap:4px; width:100%; }
+.ob-gender-btn { flex:1; font-family:var(--font); font-size:11px; padding:4px 0; border-radius:4px; background:color-mix(in srgb,var(--fg) 10%,transparent); color:var(--fg); border:1px solid color-mix(in srgb,var(--fg) 25%,transparent); cursor:pointer; transition:background 0.15s,border-color 0.15s; }
+.ob-gender-btn:hover { background:color-mix(in srgb,var(--fg) 20%,transparent); border-color:color-mix(in srgb,var(--fg) 45%,transparent); }
+.ob-gender-btn:active { transform:scale(0.96); }
+.ob-gender-btn.selected { border-color:var(--fg); background:color-mix(in srgb,var(--fg) 18%,transparent); }
+.ob-gender-skip { background:color-mix(in srgb,var(--fg) 5%,transparent); border-color:color-mix(in srgb,var(--fg) 12%,transparent); color:color-mix(in srgb,var(--fg) 45%,transparent); }
+.ob-gender-skip:hover { background:color-mix(in srgb,var(--fg) 5%,transparent); border-color:color-mix(in srgb,var(--fg) 12%,transparent); }
+#ob-gender-hint { font-size:10px; color:color-mix(in srgb,var(--fg) 50%,transparent); }
 
 .hidden { display: none !important; }
