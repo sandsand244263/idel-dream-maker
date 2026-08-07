@@ -277,7 +277,7 @@ scenarios.forEach(s => {
 // ── 13. 事件数据完整性 ──
 const allEvents = scenarios.flatMap(s => s.events || []);
 test('事件检查', '有story类型事件', allEvents.some(e => e.type === 'story'), true);
-test('事件检查', 'story事件有minLevel', allEvents.filter(e => e.type === 'story').every(e => typeof e.minLevel === 'number'), true);
+test('事件检查', 'story事件有minSeconds', allEvents.filter(e => e.type === 'story').every(e => typeof e.minSeconds === 'number'), true);
 test('事件检查', '所有事件有ID', allEvents.every(e => typeof e.id === 'string' && e.id.length > 0), true);
 test('事件检查', '所有事件有text', allEvents.every(e => typeof e.text === 'string' && e.text.length > 0), true);
 // ID 唯一性
@@ -528,22 +528,41 @@ if (w2) {
   test('内容完整性', 'AI结局裸flag可匹配', aiEnding[0] && mockCheckFlagRequire(aiEnding[0].flagRequire, { shut_down_completely: true }), true);
 }
 
-// ── simulate_levelup 的 flag 过滤逻辑（mcp-server v3.7.9：按分支+条件+未触发筛选） ──
-function mockPickLevelEvent(events, level, branch, flags, triggered) {
+// ── 时间解锁模拟（v4：minSeconds 门槛 + 分支 + flag + once 过滤，与 nextStoryEvent 一致） ──
+function mockPickTimeEvent(events, seconds, branch, flags, triggered) {
   const cb = branch || '';
-  return events.find(e =>
-    e.minLevel === level &&
+  const targetIds = new Set();
+  for (const e of events) {
+    for (const k of ['choice1Target', 'choice2Target', 'choice3Target', 'choice4Target']) {
+      if (e[k]) targetIds.add(e[k]);
+    }
+  }
+  const pool = events.filter(e =>
+    e.type === 'story' &&
+    (!e.minSeconds || e.minSeconds <= seconds) &&
+    !(e.once && (triggered || []).includes(e.id)) &&
     (!e.branch || e.branch === cb) &&
     mockCheckFlagRequire(e.flagRequire, flags) &&
-    !(e.once && (triggered || []).includes(e.id))
+    !targetIds.has(e.id)
   );
+  pool.sort((a, b) => (a.minSeconds || 0) - (b.minSeconds || 0));
+  return pool[0] || null;
 }
-test('升级模拟', 'survivor Lv.222 无flag=无事件(条件不满足)', mockPickLevelEvent(w2.events, 222, 'survivor', {}, []), undefined);
-test('升级模拟', 'survivor Lv.222 invited_ahqiang=1 命中 e0222', mockPickLevelEvent(w2.events, 222, 'survivor', { invited_ahqiang: 1 }, [])?.id, 'wasteland_e0222');
-test('升级模拟', 'ai Lv.500 无flag=命中无条件承接事件 e2000', mockPickLevelEvent(w2.events, 500, 'ai', {}, [])?.id, 'wasteland_e2000');
-test('升级模拟', 'ai Lv.500 跳过e2000且无flag=无事件(结局全有条件)', mockPickLevelEvent(w2.events, 500, 'ai', {}, ['wasteland_e2000']), undefined);
-test('升级模拟', 'ai Lv.500 shut_down_completely 命中 e2000a', mockPickLevelEvent(w2.events, 500, 'ai', { shut_down_completely: true }, ['wasteland_e2000'])?.id, 'wasteland_e2000a');
-test('升级模拟', 'once事件已触发则跳过', mockPickLevelEvent(w2.events, 222, 'survivor', { invited_ahqiang: 1 }, ['wasteland_e0222']), undefined);
+// 已读链构造：<seconds 的共享+目标分支事件视为已读（目标秒数的事件本身未读，模拟顺序推进）
+function readUpTo(events, seconds, branch) {
+  return events.filter(e =>
+    e.type === 'story' && (e.minSeconds || 0) < seconds &&
+    (!e.branch || e.branch === branch || e.branch === '')
+  ).map(e => e.id);
+}
+test('时间解锁', 'survivor 未到门槛=无事件(2999s<3000s)', mockPickTimeEvent(w2.events, 2999, 'survivor', {}, readUpTo(w2.events, 2999, 'survivor'))?.id, undefined);
+test('时间解锁', 'survivor 3000s 命中共享承接 e0005', mockPickTimeEvent(w2.events, 3000, 'survivor', {}, readUpTo(w2.events, 3000, 'survivor'))?.id, 'wasteland_e0005');
+test('时间解锁', 'survivor 共享已读后命中分支承接 e0006', mockPickTimeEvent(w2.events, 3600, 'survivor', {}, readUpTo(w2.events, 3600, 'survivor').concat(['wasteland_e0005']))?.id, 'wasteland_e0006');
+test('时间解锁', 'survivor 34200s 无flag=跳过有flag事件(无下一段)', mockPickTimeEvent(w2.events, 34200, 'survivor', {}, readUpTo(w2.events, 34200, 'survivor'))?.id, undefined);
+test('时间解锁', 'survivor 34200s fed_wangcai=1 命中 e0057', mockPickTimeEvent(w2.events, 34200, 'survivor', { fed_wangcai: 1 }, readUpTo(w2.events, 34200, 'survivor'))?.id, 'wasteland_e0057');
+test('时间解锁', 'ai 300000s 无flag=无条件承接 e2000', mockPickTimeEvent(w2.events, 300000, 'ai', {}, readUpTo(w2.events, 300000, 'ai'))?.id, 'wasteland_e2000');
+test('时间解锁', 'ai 300000s shut_down_completely 命中 e2000a', mockPickTimeEvent(w2.events, 300000, 'ai', { shut_down_completely: true }, readUpTo(w2.events, 300000, 'ai').concat(['wasteland_e2000']))?.id, 'wasteland_e2000a');
+test('时间解锁', 'once事件已触发则跳过(共享+分支都读完无下一段)', mockPickTimeEvent(w2.events, 3000, 'survivor', {}, readUpTo(w2.events, 3000, 'survivor').concat(['wasteland_e0005', 'wasteland_e0005a']))?.id, undefined);
 
 // ── 生成报告 ──
 const passed = results.filter(r => r.pass).length;

@@ -233,40 +233,51 @@ const TOOLS = {
   },
 
   simulate_levelup: {
-    description: '模拟升一级，返回该级真正会触发的事件文本（按分支 + 剧情条件 flag 过滤）。仅副本内可用。',
-    inputSchema: { type: 'object', properties: {} },
-    call() {
+    description: '模拟推进挂机时长（默认+600秒），返回该时长下解锁的下一个事件（按分支 + 剧情条件 flag 过滤，与 nextStoryEvent 一致）。仅副本内可用。',
+    inputSchema: { type: 'object', properties: { seconds: { type: 'number', description: '推进的秒数，默认 600' } } },
+    call(args) {
       requireDev();
       const save = readSave();
       if (!save) return { success: false, error: '存档文件不存在，请先运行 state_init' };
-      if (save.isInHub) return { success: false, error: '当前在大厅，无法升级。请先进入副本（state_set 设 isInHub=false）' };
+      if (save.isInHub) return { success: false, error: '当前在家，无法推进故事。请先进入副本（state_set 设 isInHub=false）' };
 
       const scenarios = readScenarios();
       const scenario = scenarios.find(s => s.id === save.scenarioId);
       if (!scenario) return { success: false, error: '找不到当前副本' };
 
-      const newLevel = (save.level || 0) + 1;
-      save.level = newLevel;
-      save.exp = calcExpForLevel(newLevel);
-      save.totalExpEarned = Math.max(save.totalExpEarned || 0, save.exp);
+      const addSec = Math.max(0, Number((args && args.seconds) || 600));
+      if (!save.scenarioProgress) save.scenarioProgress = {};
+      const prog = save.scenarioProgress[save.scenarioId] || {};
+      const storySeconds = (prog.storySeconds || 0) + addSec;
+      save.scenarioProgress[save.scenarioId] = { ...prog, storySeconds };
 
-      // 按当前分支 + flag 条件 + 未触发过滤，选出该级真正会触发的事件
+      // 与 nextStoryEvent 一致：minSeconds 门槛 + 分支 + flag + once + choice target 排除，取门槛最低的下一段
       const cb = save.currentBranch || '';
       const flags = save.flags || {};
       const triggered = save.triggeredEvents || [];
-      const ev = scenario.events.find(e =>
-        e.minLevel === newLevel &&
+      const targetIds = new Set();
+      for (const e of scenario.events) {
+        for (const k of ['choice1Target', 'choice2Target', 'choice3Target', 'choice4Target']) {
+          if (e[k]) targetIds.add(e[k]);
+        }
+      }
+      const pool = scenario.events.filter(e =>
+        e.type === 'story' &&
+        (!e.minSeconds || e.minSeconds <= storySeconds) &&
+        !(e.once && triggered.includes(e.id)) &&
         (!e.branch || e.branch === cb) &&
         checkFlagRequire(e.flagRequire, flags) &&
-        !(e.once && triggered.includes(e.id))
+        !targetIds.has(e.id)
       );
+      pool.sort((a, b) => (a.minSeconds || 0) - (b.minSeconds || 0));
+      const ev = pool[0] || null;
       if (ev) {
         if (!save.triggeredEvents) save.triggeredEvents = [];
         save.triggeredEvents.push(ev.id);
       }
       writeSave(save);
 
-      const result = { success: true, level: newLevel, text: ev ? ev.text : '[当前等级无事件]' };
+      const result = { success: true, storySeconds, text: ev ? ev.text : '[当前时长无新事件]' };
       if (ev && ev.choice1 && ev.choice1Target) result.note = '此事件包含选择分支';
       return result;
     }
@@ -290,7 +301,7 @@ const TOOLS = {
       if (!scenario) return { success: false, error: '找不到副本: ' + (sid || '(无)') };
       const ev = scenario.events.find(e => e.id === args.eventId);
       if (!ev) return { success: false, error: '找不到事件: ' + args.eventId };
-      return { success: true, event: { id: ev.id, text: ev.text, type: ev.type, minLevel: ev.minLevel } };
+      return { success: true, event: { id: ev.id, text: ev.text, type: ev.type, minSeconds: ev.minSeconds } };
     }
   },
 
