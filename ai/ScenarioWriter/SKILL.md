@@ -80,7 +80,7 @@ allowed-tools: Glob, Read, Write, Edit, Bash
 
 ```yaml
 ---
-id: wasteland               # 副本唯一 ID（小写字母 + 数字 + 下划线）
+id: backrooms              # 副本唯一 ID（小写字母 + 数字 + 下划线）
 name: Wasteland             # 英文名称
 name_cn: 废土               # 中文名称
 description: 核战后的废土世界...  # 副本描述（一句话）

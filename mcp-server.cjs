@@ -109,7 +109,7 @@ const TOOLS = {
       requireDev();
       const defaultSave = {
         playerName: '测试玩家',
-        scenarioId: 'wasteland',
+        scenarioId: 'backrooms',
         isInHub: false,
         level: 1,
         exp: 0,
@@ -149,7 +149,7 @@ const TOOLS = {
     inputSchema: {
       type: 'object',
       properties: {
-        scenarioId: { type: 'string', description: '副本 ID，如 wasteland。不传则检查全部' }
+        scenarioId: { type: 'string', description: '副本 ID，如 backrooms。不传则检查全部' }
       },
       required: []
     },
@@ -288,7 +288,7 @@ const TOOLS = {
     inputSchema: {
       type: 'object',
       properties: {
-        eventId: { type: 'string', description: '事件 ID，如 wasteland_e0050' },
+        eventId: { type: 'string', description: '事件 ID，如 backrooms_e0050' },
         scenarioId: { type: 'string', description: '副本 ID，默认取当前存档中的副本' }
       },
       required: ['eventId']

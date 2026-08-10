@@ -175,23 +175,23 @@ test('重生加成', '5次=100%(超过封顶)', calcRebirthBonus(5), 1.0);
 test('重生加成', '10次=100%(远超封顶)', calcRebirthBonus(10), 1.0);
 
 // ── 4. 副本称号 ──
-const w = scenarios.find(s => s.id === 'wasteland');
+const w = scenarios.find(s => s.id === 'backrooms');
 if (w) {
-  test('副本称号', 'LV.0 返回第一个称号(Lv.1)', getCurrentTitle(w, 0)?.name, '初醒者');
-  test('副本称号', 'LV.1 = 初醒者', getCurrentTitle(w, 1)?.name, '初醒者');
-  test('副本称号', 'LV.2 = 探路者', getCurrentTitle(w, 2)?.name, '探路者');
-  test('副本称号', 'LV.3 = 独行者', getCurrentTitle(w, 3)?.name, '独行者');
+  test('副本称号', 'LV.0 返回第一个称号(Lv.1)', getCurrentTitle(w, 0)?.name, '卡入者');
+  test('副本称号', 'LV.1 = 卡入者', getCurrentTitle(w, 1)?.name, '卡入者');
+  test('副本称号', 'LV.2 = 卡入者(未到Lv.5)', getCurrentTitle(w, 2)?.name, '卡入者');
+  test('副本称号', 'LV.5 = 迷途者', getCurrentTitle(w, 5)?.name, '迷途者');
   const lastTitle = w.titles[w.titles.length - 1];
   test('副本称号', `LV.500 = 最后一个称号(${lastTitle.name})`, getCurrentTitle(w, 500)?.name, lastTitle.name);
-  test('副本称号', 'LV.500 解锁全部30个', getUnlockedTitles(w, 500).length, 30);
-  test('副本称号', 'LV.5 解锁数 ≥3', getUnlockedTitles(w, 5).length >= 3, true);
+  test('副本称号', 'LV.500 解锁全部10个', getUnlockedTitles(w, 500).length, 10);
+  test('副本称号', 'LV.5 解锁数 ≥2', getUnlockedTitles(w, 5).length >= 2, true);
   // 检查 title level 严格递增
   let mono = true;
   for (let i = 1; i < w.titles.length; i++) if (w.titles[i].level <= w.titles[i-1].level) { mono = false; break; }
   test('副本称号', '称号level严格递增', mono, true);
   test('副本称号', '称号 color 字段非空', w.titles.every(t => typeof t.color === 'string'), true);
   test('副本称号', '称号 desc 字段非空', w.titles.every(t => typeof t.desc === 'string' && t.desc.length > 0), true);
-  test('副本称号', 'completion_title 非空', w.completion_title === '灰烬新生', true);
+  test('副本称号', 'completion_title = 前厅', w.completion_title === '前厅', true);
   test('副本称号', 'playerTitle 存在(player_title格式)', typeof (w.playerTitle || w.player_title) === 'string' && (w.playerTitle || w.player_title).length > 0, true);
 }
 
@@ -213,9 +213,9 @@ test('大厅称号', '大厅称号level严格递增', hubMono, true);
 
 // ── 6. 大厅成就 ──
 const empty = { gameCompletions: [], rebirthCounts: {}, unlockedAchievements: [] };
-const fullCompletion = { gameCompletions: [{ scenarioId:'wasteland' }], rebirthCounts: {}, unlockedAchievements: [] };
-const rebirthState = { gameCompletions: [{ scenarioId:'wasteland' }], rebirthCounts: { wasteland: 3 }, unlockedAchievements: [] };
-const partialUnlocked = { gameCompletions: [{ scenarioId:'wasteland' }], rebirthCounts: {}, unlockedAchievements: ['hub_lv50'] };
+const fullCompletion = { gameCompletions: [{ scenarioId:'backrooms' }], rebirthCounts: {}, unlockedAchievements: [] };
+const rebirthState = { gameCompletions: [{ scenarioId:'backrooms' }], rebirthCounts: { backrooms: 3 }, unlockedAchievements: [] };
+const partialUnlocked = { gameCompletions: [{ scenarioId:'backrooms' }], rebirthCounts: {}, unlockedAchievements: ['hub_lv50'] };
 
 test('大厅成就', 'Lv.1无通关=无解锁', checkHubAchievements(empty, 1).length, 0);
 test('大厅成就', 'Lv.50=初出茅庐', checkHubAchievements(empty, 50).length, 1);
@@ -227,34 +227,36 @@ test('大厅成就', '已解锁的不重复解锁(hub_lv50已解锁，LV100仍�
 test('大厅成就', '重生次数检查：重生3次解锁轮回者+半数+大圆满', checkHubAchievements(rebirthState, 1).length, 4); // half + all + rebirth1 + rebirth3
 
 // ── 7. 副本成就 ──
-const emptyGs = { scenarioId:'wasteland', unlockedAchievements: [], rebirthCounts: {}, triggeredEvents: [], totalRuntimeMs: 0 };
-test('副本成就', 'Lv.1 解锁1个(首个称号titles=1)', checkScenarioAchievements(emptyGs, w, 1).length, 1);
-test('副本成就', 'Lv.5 解锁成就数(1个level+3个titles)', checkScenarioAchievements(emptyGs, w, 5).length, 4);
-test('副本成就', 'Lv.10 解锁成就数(2个level+3个titles)', checkScenarioAchievements(emptyGs, w, 10).length, 5);
-test('副本成就', 'Lv.500 解锁全部level+titles成就(13+13)', checkScenarioAchievements(emptyGs, w, 500).length, 26);
-// runtime 条件
+const emptyGs = { scenarioId:'backrooms', unlockedAchievements: [], rebirthCounts: {}, triggeredEvents: [], totalRuntimeMs: 0 };
+test('副本成就', '后室无成就表=0', checkScenarioAchievements(emptyGs, w, 1).length, 0);
+// 用 mock 成就验证条件逻辑（后室是简单副本无成就表）
+const mockAch = { ...w, achievements: [
+  { id: 'bk_a001', condition: { type: 'level', value: 5 } },
+  { id: 'bk_a002', condition: { type: 'runtime', value: 3600000 } },
+  { id: 'bk_a003', condition: { type: 'events', value: 50 } },
+  { id: 'bk_a004', condition: { type: 'titles', value: 2 } },
+] };
 const rtGs = { ...emptyGs, totalRuntimeMs: 3600000 };
-test('副本成就', 'runtime=1h 解锁一小时成就', checkScenarioAchievements(rtGs, w, 1).some(a => a.id === 'wasteland_a014'), true);
-// events 条件
 const evGs = { ...emptyGs, triggeredEvents: Array(50).fill('x') };
-test('副本成就', 'events=50 触发成就', checkScenarioAchievements(evGs, w, 1).length > 0, true);
+test('副本成就', 'level条件: Lv.5 解锁 bk_a001', checkScenarioAchievements(emptyGs, mockAch, 5).map(a=>a.id).includes('bk_a001'), true);
+test('副本成就', 'runtime=1h 解锁 bk_a002', checkScenarioAchievements(rtGs, mockAch, 1).map(a=>a.id).includes('bk_a002'), true);
+test('副本成就', 'events=50 触发 bk_a003', checkScenarioAchievements(evGs, mockAch, 1).map(a=>a.id).includes('bk_a003'), true);
+test('副本成就', 'titles=2 触发 bk_a004(Lv.5解锁2称号)', checkScenarioAchievements(emptyGs, mockAch, 5).map(a=>a.id).includes('bk_a004'), true);
 // 已解锁的不重复
-const unlockedGs = { ...emptyGs, unlockedAchievements: ['wasteland_a001', 'wasteland_a039'] };
-test('副本成就', '已解锁成就不重复(Lv.5初踏废土+titles=2已解锁=剩2)', checkScenarioAchievements(unlockedGs, w, 5).length, 2); // a002? titles=1 + titles=4
-
-// 检查所有成就 ID 唯一
-const allIds = w.achievements.map(a => a.id);
+const unlockedGs = { ...emptyGs, unlockedAchievements: ['bk_a001'] };
+test('副本成就', '已解锁成就不重复', checkScenarioAchievements(unlockedGs, mockAch, 5).map(a=>a.id).includes('bk_a001'), false);
+// 成就 ID 唯一 / 条件有效
+const allIds = mockAch.achievements.map(a => a.id);
 test('副本成就', '所有成就ID唯一', new Set(allIds).size === allIds.length, true);
-// 检查所有成就条件有效
-const validConditions = w.achievements.every(a => ['level','runtime','events','titles'].includes(a.condition.type));
+const validConditions = mockAch.achievements.every(a => ['level','runtime','events','titles'].includes(a.condition.type));
 test('副本成就', '所有成就 condition.type 有效', validConditions, true);
 
 // ── 8. canArchive ──
-test('canArchive', '无任何记录=false', canArchiveScenario(empty, 'wasteland'), false);
-const fullBranches = { gameCompletions: [{ scenarioId:'wasteland' }], completedBranches: ['survivor','merchant','fugitive','ai'] };
-test('canArchive', '已通关+全部分支=true', canArchiveScenario(fullBranches, 'wasteland'), true);
-const partialBranches = { gameCompletions: [{ scenarioId:'wasteland' }], completedBranches: ['survivor','merchant'] };
-test('canArchive', '已通关+部分分支=false', canArchiveScenario(partialBranches, 'wasteland'), false);
+test('canArchive', '无任何记录=false', canArchiveScenario(empty, 'backrooms'), false);
+const fullBranches = { gameCompletions: [{ scenarioId:'backrooms' }], completedBranches: [] };
+test('canArchive', '已通关+无分支需求=true', canArchiveScenario(fullBranches, 'backrooms'), true);
+const partialBranches = { gameCompletions: [{ scenarioId:'backrooms' }] };
+test('canArchive', '仅通关记录=true', canArchiveScenario(partialBranches, 'backrooms'), true);
 test('canArchive', '不存在的副本=false', canArchiveScenario(empty, 'nonexistent'), false);
 
 // ── 10. 重生加成 ──
@@ -267,8 +269,8 @@ test('重生加成', 'exp: 10次=100%(超过封顶)', calcRebirthExpBonus(10), 1
 scenarios.forEach(s => {
   test('数据完整性', `${s.id}: 有nameCN`, typeof (s.name_cn || s.nameCN) === 'string' && s.name_cn.length > 0, true);
   test('数据完整性', `${s.id}: 有description`, typeof s.description === 'string' && s.description.length > 0, true);
-  test('数据完整性', `${s.id}: 30个称号`, s.titles.length === 30, true);
-  test('数据完整性', `${s.id}: 50个成就`, s.achievements.length === 50, true);
+  test('数据完整性', `${s.id}: 称号数>=10`, s.titles.length >= 10, true);
+  test('数据完整性', `${s.id}: 成就表可为空(简单副本)`, (s.achievements || []).length >= 0, true);
   test('数据完整性', `${s.id}: mechanic有效`, ['standard','cultivation','cyber','tide','polar'].includes(s.mechanic), true);
   test('数据完整性', `${s.id}: max_rebirth >= 0`, typeof s.max_rebirth === 'number' && s.max_rebirth >= 0, true);
   test('数据完整性', `${s.id}: completion_title非空`, typeof s.completion_title === 'string' && s.completion_title.length > 0, true);
@@ -295,7 +297,7 @@ scenarios.forEach(s => {
 const holidayEvents = allEvents.filter(e => e.type === 'holiday' || e.holiday_id);
 test('节日检查', '节日事件含holiday_id', holidayEvents.every(e => typeof e.holiday_id === 'string'), holidayEvents.length === 0 || true);
 test('节日检查', '节日事件含type=advance或day', holidayEvents.every(e => ['advance','day'].includes(e.type)), holidayEvents.length === 0 || true);
-test('节日检查', '节日事件数>=0(当前wasteland无常驻节日事件)', holidayEvents.length >= 0, true);
+test('节日检查', '节日事件数>=0(当前backrooms无常驻节日事件)', holidayEvents.length >= 0, true);
 
 // ── 16. Branch 数据 ──
 const storyByBranch = {};
@@ -513,19 +515,38 @@ test('catch-up', '经验高于门槛=保留超出部分', mockCatchUpExp(1500000
 test('catch-up', '经验等于门槛=不变', mockCatchUpExp(980100, 100), 980100);
 
 // ── 内容完整性：flag 引用（54个flag全部有设置来源且新语义可用） ──
-const w2 = scenarios.find(s => s.id === 'wasteland');
+const w2 = scenarios.find(s => s.id === 'backrooms');
 if (w2) {
   const flagRequireEvents = w2.events.filter(e => e.flagRequire);
-  test('内容完整性', 'flagRequire 事件数 > 300', flagRequireEvents.length > 300, true);
-  const semi = flagRequireEvents.filter(e => e.flagRequire.includes(';')).length;
-  test('内容完整性', ';分隔条件事件 > 54（走线变体加 invited_ahqiang=false 后增加）', semi > 54, true);
-  const bare = flagRequireEvents.filter(e => !/[=<>;|&]/.test(e.flagRequire)).length;
-  test('内容完整性', '裸flag名事件 3 个(AI结局)', bare, 3);
-  const aiEnding = w2.events.filter(e => e.id === 'wasteland_e2000a' || e.id === 'wasteland_e2000b' || e.id === 'wasteland_e2000c');
-  test('内容完整性', 'AI三个结局事件存在', aiEnding.length, 3);
-  const e0501 = w2.events.find(e => e.id === 'wasteland_e0501');
-  test('内容完整性', 'e0501 用;分隔(修复后可触发)', e0501 && mockCheckFlagRequire(e0501.flagRequire, { saved_ahqiang: 'false', fed_wangcai: 1 }), true);
-  test('内容完整性', 'AI结局裸flag可匹配', aiEnding[0] && mockCheckFlagRequire(aiEnding[0].flagRequire, { shut_down_completely: true }), true);
+  test('内容完整性', '后室无 flag 事件（简单副本设计）', flagRequireEvents.length === 0, true);
+  const endings = w2.events.filter(e => e.completionTitle);
+  test('内容完整性', '后室 1 个结局事件（前厅）', endings.length, 1);
+  test('内容完整性', '结局事件为链末(最大minSeconds)', endings[0] && endings[0].minSeconds === Math.max(...w2.events.filter(e=>e.type==='story').map(e=>e.minSeconds||0)), true);
+  // ── 时间解锁语义 mock（原废土真实数据改为构造数据，保留分支/flag/once/target 覆盖） ──
+  const mockTimeEvents = [
+    { id: 'tm1', type: 'story', minSeconds: 3000, once: true, branch: '', flagRequire: '' },
+    { id: 'tm1a', type: 'story', minSeconds: 0, once: true, branch: 'survivor', flagRequire: '' },
+    { id: 'tm2', type: 'story', minSeconds: 3600, once: true, branch: 'survivor', flagRequire: '' },
+    { id: 'tm3', type: 'story', minSeconds: 34200, once: true, branch: 'survivor', flagRequire: 'fed_wangcai=true' },
+    { id: 'tm4', type: 'story', minSeconds: 300000, once: true, branch: 'ai', flagRequire: '' },
+    { id: 'tm5', type: 'story', minSeconds: 300000, once: true, branch: 'ai', flagRequire: 'shut_down_completely=true' },
+    { id: 'tmX', type: 'story', minSeconds: 3000, once: true, branch: '', flagRequire: '', choice1Target: 'tmXa' },
+    { id: 'tmXa', type: 'story', minSeconds: 0, once: true, branch: 'survivor', flagRequire: '' },
+  ];
+  test('时间解锁', '未到门槛=无事件(2999s<3000s)', mockPickTimeEvent(mockTimeEvents, 2999, 'survivor', {}, readUpTo(mockTimeEvents, 2999, 'survivor'))?.id, undefined);
+  test('时间解锁', '3000s 命中共享事件', mockPickTimeEvent(mockTimeEvents, 3000, 'survivor', {}, readUpTo(mockTimeEvents, 3000, 'survivor'))?.id, 'tm1');
+  test('时间解锁', '共享已读后命中分支事件', mockPickTimeEvent(mockTimeEvents, 3600, 'survivor', {}, readUpTo(mockTimeEvents, 3600, 'survivor').concat(['tm1']))?.id, 'tm2');
+  test('时间解锁', '无flag=跳过有flag事件(无下一段)', mockPickTimeEvent(mockTimeEvents, 34200, 'survivor', {}, readUpTo(mockTimeEvents, 34200, 'survivor'))?.id, undefined);
+  test('时间解锁', 'fed_wangcai=1 命中 tm3', mockPickTimeEvent(mockTimeEvents, 34200, 'survivor', { fed_wangcai: 1 }, readUpTo(mockTimeEvents, 34200, 'survivor'))?.id, 'tm3');
+  test('时间解锁', 'ai 300000s 无flag=无条件事件', mockPickTimeEvent(mockTimeEvents, 300000, 'ai', {}, readUpTo(mockTimeEvents, 300000, 'ai'))?.id, 'tm4');
+  test('时间解锁', 'ai 300000s shut_down 命中 tm5', mockPickTimeEvent(mockTimeEvents, 300000, 'ai', { shut_down_completely: true }, readUpTo(mockTimeEvents, 300000, 'ai').concat(['tm4']))?.id, 'tm5');
+  test('时间解锁', 'choice target 不自动触发', mockPickTimeEvent(mockTimeEvents, 3600, 'survivor', {}, readUpTo(mockTimeEvents, 3600, 'survivor').concat(['tm1','tm2']))?.id, undefined);
+  test('时间解锁', 'once 已触发则跳过', mockPickTimeEvent(mockTimeEvents, 3000, 'survivor', {}, readUpTo(mockTimeEvents, 3000, 'survivor').concat(['tm1','tm1a','tmX']))?.id, undefined);
+  // 后室真实数据冒烟
+  const bkEvs = w2.events;
+  test('时间解锁', '后室 e0001 门槛 0s', mockPickTimeEvent(bkEvs, 0, '', {}, [])?.id, 'backrooms_e0001');
+  test('时间解锁', '后室 1200s 命中 e0002', mockPickTimeEvent(bkEvs, 1200, '', {}, ['backrooms_e0001'])?.id, 'backrooms_e0002');
+  test('时间解锁', '后室全部读完=无事件', mockPickTimeEvent(bkEvs, 100800, '', {}, readUpTo(bkEvs, 100800, '').concat(['backrooms_e0085']))?.id, undefined);
 }
 
 // ── 时间解锁模拟（v4：minSeconds 门槛 + 分支 + flag + once 过滤，与 nextStoryEvent 一致） ──
@@ -555,14 +576,7 @@ function readUpTo(events, seconds, branch) {
     (!e.branch || e.branch === branch || e.branch === '')
   ).map(e => e.id);
 }
-test('时间解锁', 'survivor 未到门槛=无事件(2999s<3000s)', mockPickTimeEvent(w2.events, 2999, 'survivor', {}, readUpTo(w2.events, 2999, 'survivor'))?.id, undefined);
-test('时间解锁', 'survivor 3000s 命中共享承接 e0005', mockPickTimeEvent(w2.events, 3000, 'survivor', {}, readUpTo(w2.events, 3000, 'survivor'))?.id, 'wasteland_e0005');
-test('时间解锁', 'survivor 共享已读后命中分支承接 e0006', mockPickTimeEvent(w2.events, 3600, 'survivor', {}, readUpTo(w2.events, 3600, 'survivor').concat(['wasteland_e0005']))?.id, 'wasteland_e0006');
-test('时间解锁', 'survivor 34200s 无flag=跳过有flag事件(无下一段)', mockPickTimeEvent(w2.events, 34200, 'survivor', {}, readUpTo(w2.events, 34200, 'survivor'))?.id, undefined);
-test('时间解锁', 'survivor 34200s fed_wangcai=1 命中 e0057', mockPickTimeEvent(w2.events, 34200, 'survivor', { fed_wangcai: 1 }, readUpTo(w2.events, 34200, 'survivor'))?.id, 'wasteland_e0057');
-test('时间解锁', 'ai 300000s 无flag=无条件承接 e2000', mockPickTimeEvent(w2.events, 300000, 'ai', {}, readUpTo(w2.events, 300000, 'ai'))?.id, 'wasteland_e2000');
-test('时间解锁', 'ai 300000s shut_down_completely 命中 e2000a', mockPickTimeEvent(w2.events, 300000, 'ai', { shut_down_completely: true }, readUpTo(w2.events, 300000, 'ai').concat(['wasteland_e2000']))?.id, 'wasteland_e2000a');
-test('时间解锁', 'once事件已触发则跳过(共享+分支都读完无下一段)', mockPickTimeEvent(w2.events, 3000, 'survivor', {}, readUpTo(w2.events, 3000, 'survivor').concat(['wasteland_e0005', 'wasteland_e0005a']))?.id, undefined);
+
 
 // ── 生成报告 ──
 const passed = results.filter(r => r.pass).length;

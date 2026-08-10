@@ -7,7 +7,7 @@
 
 ```
 scenarios_wip/                # 制作中工作区（gitignore，不随仓库发布）
-  {副本id}/                    # 每个副本一个目录（如 wasteland_middle_earth）
+  {副本id}/                    # 每个副本一个目录（如 backrooms_sequel）
     state.md                  # 进行中状态（权威记忆）
     log.md                    # 会话流水账（断点摘要）
     batches/                  # 批次文件（每批一个，权威记录）

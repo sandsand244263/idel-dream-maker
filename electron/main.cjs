@@ -2944,38 +2944,13 @@ app.whenReady().then(() => {
     };
   }
 
-  // ── Old save migration (v3.3.1 → v3.4.0) ──
-  if (gameState.rebirthCounts && Object.keys(gameState.rebirthCounts).length > 0) {
-    const wastelandBranches = ['survivor', 'merchant', 'fugitive', 'ai'];
-    const oldRebirths = gameState.rebirthCounts['wasteland'] || 0;
-    if (oldRebirths > 0) {
-      // Map old rebirths to completed branches
-      if (!gameState.branchProgress) gameState.branchProgress = {};
-      if (!gameState.branchProgress['wasteland']) gameState.branchProgress['wasteland'] = [];
-      for (let i = 0; i < Math.min(oldRebirths, wastelandBranches.length); i++) {
-        if (!gameState.branchProgress['wasteland'].includes(wastelandBranches[i])) {
-          gameState.branchProgress['wasteland'].push(wastelandBranches[i]);
-        }
-      }
-      // Award hub exp bonus for rebirths
-      gameState.hubTotalExp = (gameState.hubTotalExp || 0) + gameState.totalExpEarned * 0.1 * oldRebirths;
-      // Clean old data
-      delete gameState.rebirthCounts['wasteland'];
-      // Reset scenario to hub to avoid stale state
-      gameState.scenarioId = '';
-      gameState.isInHub = true;
-      gameState.currentBranch = '';
-      gameState.flags = gameState.flags || {};
-      console.log(`[migration] Mapped ${oldRebirths} rebirths → ${gameState.branchProgress['wasteland'].length} branches, awarded hub EXP bonus`);
-    }
-  }
   // Ensure new fields exist
   if (!gameState.currentBranch) gameState.currentBranch = '';
   if (!gameState.branchProgress) gameState.branchProgress = {};
   // Migrate legacy completedBranches array (v3.7.8-) into per-scenario structure
   if (Array.isArray(gameState.completedBranches)) {
     const legacyBranchMap = { scavenger: 'survivor', soldier: 'fugitive' };
-    const sid = gameState.scenarioId || 'wasteland';
+    const sid = gameState.scenarioId || 'backrooms';
     if (!gameState.branchProgress[sid]) gameState.branchProgress[sid] = [];
     for (const b of gameState.completedBranches) {
       const mapped = legacyBranchMap[b] || b;

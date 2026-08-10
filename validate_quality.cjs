@@ -4,7 +4,7 @@
  *
  * 用法：node validate_quality.cjs [scenarioId]
  *   - 不带参数：检查全部副本
- *   - 带参数：只检查指定副本（如 wasteland）
+ *   - 带参数：只检查指定副本（如 backrooms）
  *
  * 检查项：
  *   1. 事件 ID 连续性：主线事件编号（eXXXX，无 a/b/c/d 后缀）按出现顺序必须

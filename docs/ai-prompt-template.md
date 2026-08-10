@@ -54,7 +54,7 @@ completion_title: 通关称号 # 通关后获得的家称号（各结局可独�
 | {id}_e0001 | story | 0 | 0 | 1 | 是 | | | | | | | | | | | | | 行动词 | 30-80 字文本 |
 
 **ID 命名规则：**
-- 普通 story：`{id}_e{四位编号}`（如 `wasteland_e0001`）
+- 普通 story：`{id}_e{四位编号}`（如 `backrooms_e0001`）
 - choice target 事件：`{id}_e{编号}a` / `{id}_e{编号}b` / `{id}_e{编号}c` / `{id}_e{编号}d`
 
 **事件类型说明：**

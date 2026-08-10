@@ -10,12 +10,12 @@
  *   4. 写入输出文件
  *
  * 示例：
- *   node merge.cjs scenarios/wasteland.md ^
- *     temp/wasteland_titles.md ^
- *     temp/wasteland_achievements.md ^
- *     temp/wasteland_r0_seg1.md temp/wasteland_r0_seg2.md ... ^
- *     temp/wasteland_r1_seg1.md ... ^
- *     temp/wasteland_holidays.md
+ *   node merge.cjs scenarios/backrooms.md ^
+ *     temp/backrooms_titles.md ^
+ *     temp/backrooms_achievements.md ^
+ *     temp/backrooms_r0_seg1.md temp/backrooms_r0_seg2.md ... ^
+ *     temp/backrooms_r1_seg1.md ... ^
+ *     temp/backrooms_holidays.md
  */
 
 const fs = require('fs');

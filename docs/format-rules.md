@@ -8,7 +8,7 @@
 
 ```yaml
 ---
-id: wasteland               # 副本唯一 ID（小写字母 + 数字 + 下划线）
+id: backrooms              # 副本唯一 ID（小写字母 + 数字 + 下划线）
 name: Wasteland             # 英文名称
 name_cn: 废土               # 中文名称
 description: 核战后的废土世界...  # 副本描述（一句话）
@@ -161,7 +161,7 @@ FlagRequire: helped_merchant=true&reputation>20
 
 | 列名 | 必填 | 说明 | 示例 |
 |------|------|------|------|
-| ID | 是 | `{id}_a{三位编号}` | wasteland_a001 |
+| ID | 是 | `{id}_a{三位编号}` | backrooms_a001 |
 | Name | 是 | 成就名称 | 初踏废土 |
 | Description | 是 | 成就描述 | 到达 5 级 |
 | Icon | 否 | 显示图标，默认 ★ | ★ |

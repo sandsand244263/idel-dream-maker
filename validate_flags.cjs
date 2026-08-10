@@ -4,7 +4,7 @@
  * 规则：旗标抉择设的 flag 必须被至少一个 FlagRequire 引用。
  *
  * 用法：node validate_flags.cjs [scenarioId]
- * 示例：node validate_flags.cjs wasteland
+ * 示例：node validate_flags.cjs backrooms
  *       不传参数则检查所有副本
  */
 

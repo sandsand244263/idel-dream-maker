@@ -8,7 +8,7 @@
 
 ```yaml
 ---
-id: wasteland           # 必填。小写字母/数字/下划线
+id: backrooms           # 必填。小写字母/数字/下划线
 name: Wasteland         # 必填。英文名
 name_cn: 废土           # 必填。中文名
 description: 核战后的废土世界...  # 必填。世界观描述
