@@ -220,16 +220,23 @@ const partialUnlocked = { gameCompletions: [{ scenarioId:'backrooms' }], rebirth
 test('大厅成就', 'Lv.1无通关=无解锁', checkHubAchievements(empty, 1).length, 0);
 test('大厅成就', 'Lv.50=初出茅庐', checkHubAchievements(empty, 50).length, 1);
 test('大厅成就', 'Lv.100=初出茅庐+百级之路', checkHubAchievements(empty, 100).length, 2);
-// 只有1个副本时 completions=1 → 半数圆满+大圆满同时解锁
+// 世界数量会随内容增加（v4.0：后室 + 废土 = 2），期望值按实际副本数推算，加世界不会再假红
+const worldCount = scenarios.length;
+const halfNeed = Math.ceil(worldCount / 2);   // 半数圆满门槛
+const allNeed = worldCount;                   // 大圆满门槛
 const allAch = checkHubAchievements(fullCompletion, 50);
-test('大厅成就', '通关1个+LV50=解锁初出茅庐+半数圆满+大圆满', allAch.length, 3);
-test('大厅成就', '已解锁的不重复解锁(hub_lv50已解锁，LV100仍可解锁半数+大圆满)', checkHubAchievements(partialUnlocked, 100).length, 3); // hub_lv100 + half + all
-test('大厅成就', '重生次数检查：重生3次解锁轮回者+半数+大圆满', checkHubAchievements(rebirthState, 1).length, 4); // half + all + rebirth1 + rebirth3
+test('大厅成就', `通关1个世界+LV50=初出茅庐(半数需${halfNeed}个)`, allAch.length, 1 + (1 >= halfNeed ? 1 : 0) + (1 >= allNeed ? 1 : 0));
+test('大厅成就', '已解锁的不重复解锁(hub_lv50已解锁，LV100仍解锁百级+半数)', checkHubAchievements(partialUnlocked, 100).length, 1 + (1 >= halfNeed ? 1 : 0)); // hub_lv100 + 半数
+test('大厅成就', '重生次数检查：重生3次解锁轮回者+半数', checkHubAchievements(rebirthState, 1).length, (1 >= halfNeed ? 1 : 0) + 2); // 半数 + rebirth1 + rebirth3
+const allWorldsState = { gameCompletions: scenarios.map(s => ({ scenarioId: s.id })), rebirthCounts: {}, unlockedAchievements: [] };
+test('大厅成就', '通关全部世界=半数+大圆满', checkHubAchievements(allWorldsState, 1).length, 2); // 半数 + 大圆满
 
 // ── 7. 副本成就 ──
 const emptyGs = { scenarioId:'backrooms', unlockedAchievements: [], rebirthCounts: {}, triggeredEvents: [], totalRuntimeMs: 0 };
-test('副本成就', '后室无成就表=0', checkScenarioAchievements(emptyGs, w, 1).length, 0);
-// 用 mock 成就验证条件逻辑（后室是简单副本无成就表）
+// v4.0 发布前给后室补齐了 50 条成就
+test('副本成就', '后室成就表 50 条', (w.achievements || []).length, 50);
+test('副本成就', 'Lv.1 无进度解锁最低档两条(等级1 + 首个称号)', checkScenarioAchievements(emptyGs, w, 1).length, 2);
+// 用 mock 成就验证条件逻辑（与真实成就表隔离）
 const mockAch = { ...w, achievements: [
   { id: 'bk_a001', condition: { type: 'level', value: 5 } },
   { id: 'bk_a002', condition: { type: 'runtime', value: 3600000 } },
@@ -250,6 +257,22 @@ const allIds = mockAch.achievements.map(a => a.id);
 test('副本成就', '所有成就ID唯一', new Set(allIds).size === allIds.length, true);
 const validConditions = mockAch.achievements.every(a => ['level','runtime','events','titles'].includes(a.condition.type));
 test('副本成就', '所有成就 condition.type 有效', validConditions, true);
+
+// ── 7b. 废土（第二个世界）冒烟 ──
+const wl = scenarios.find(s => s.id === 'wasteland');
+test('废土冒烟', '世界存在', !!wl, true);
+test('废土冒烟', '4 条分支', ((wl && wl.branches) || []).length, 4);
+test('废土冒烟', '成就 50 条', ((wl && wl.achievements) || []).length, 50);
+test('废土冒烟', '事件 2204 条', (wl && wl.events.length) || 0, 2204);
+const wlChoice = wl && wl.events.find(e => e.id === 'wasteland_e0005');
+test('废土冒烟', '第5段是选线抉择(四个选项)', !!(wlChoice && wlChoice.choice1 && wlChoice.choice4), true);
+const wlTargets = wlChoice ? [wlChoice.choice1Target, wlChoice.choice2Target, wlChoice.choice3Target, wlChoice.choice4Target] : [];
+test('废土冒烟', '四个选项目标都存在', wlTargets.length === 4 && wlTargets.every(t => wl.events.some(e => e.id === t)), true);
+const wlBranchOfTarget = wlTargets.map(t => ((wl.events.find(e => e.id === t)) || {}).branch).filter(Boolean);
+test('废土冒烟', '四个选项各指向一条分支', new Set(wlBranchOfTarget).size, 4);
+test('废土冒烟', '每条分支都有结局事件', ((wl && wl.branches) || []).every(b => wl.events.some(e => e.branch === b && e.completionTitle)), true);
+test('废土冒烟', '旧格式已换算为 minSeconds', (wl && wl.events.every(e => typeof e.minSeconds === 'number')) || false, true);
+test('废土冒烟', '老引擎的等级门槛已无残留(minLevel 不再使用)', (wl && wl.events.every(e => e.minLevel === undefined || e.minLevel === 0)) || false, true);
 
 // ── 8. canArchive ──
 test('canArchive', '无任何记录=false', canArchiveScenario(empty, 'backrooms'), false);

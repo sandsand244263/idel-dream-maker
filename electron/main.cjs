@@ -1092,13 +1092,14 @@ function resetGameForScenario(scenario, alias) {
   gameState.level = calcLevel(gameState.petTotalExp);
   gameState.exp = gameState.petTotalExp;
   if (p) {
-    gameState.totalRuntimeMs = p.totalRuntimeMs || 0;
+    // v4.0：陪伴总时长改为全局累计（换世界不清零，玩家最在意的数字之一）；单世界时长另存于 scenarioProgress[sid].totalRuntimeMs
     gameState.triggeredEvents = p.triggeredEvents ? [...p.triggeredEvents] : [];
     gameState.unlockedAchievements = [...new Set([...hubPersist, ...(p.unlockedAchievements || [])])];
     gameState.equippedTitleIndex = p.equippedTitleIndex || 0;
     gameState.currentBranch = p.currentBranch || '';
   } else {
-    gameState.totalRuntimeMs = 0;
+    // 首次进入这个世界：不清零全局陪伴时长，只补一个进度容器
+    gameState.scenarioProgress[scenario.id] = { ...(gameState.scenarioProgress[scenario.id] || {}), totalRuntimeMs: 0 };
     gameState.triggeredEvents = [];
     gameState.unlockedAchievements = hubPersist;
     gameState.equippedTitleIndex = 0;
@@ -1128,8 +1129,10 @@ function exitToHub() {
     gameState.unlockedTitleSets[sid] = unlocked;
 
     // v4：经验全局（petTotalExp），出副本不再折算入大厅
+    // v4.0 修复：整对象要先用旧值打底——原来重建对象会丢掉 storySeconds（回大厅后剧情计时归零，下一段永远解锁不出来）
     gameState.scenarioProgress[sid] = {
-      totalRuntimeMs: gameState.totalRuntimeMs,
+      ...(gameState.scenarioProgress[sid] || {}),
+      totalRuntimeMs: (gameState.scenarioProgress[sid] && gameState.scenarioProgress[sid].totalRuntimeMs) || 0,
       triggeredEvents: [...gameState.triggeredEvents],
       unlockedAchievements: [...gameState.unlockedAchievements],
       equippedTitleIndex: gameState.equippedTitleIndex,
@@ -1482,6 +1485,8 @@ function startGameLoop() {
     const sid = gameState.scenarioId;
     if (!gameState.scenarioProgress[sid]) gameState.scenarioProgress[sid] = {};
     gameState.scenarioProgress[sid].storySeconds = (gameState.scenarioProgress[sid].storySeconds || 0) + delta / 1000;
+    // v4.0：单世界陪伴时长与全局总时长分别累计（全局值换世界不清零）
+    gameState.scenarioProgress[sid].totalRuntimeMs = (gameState.scenarioProgress[sid].totalRuntimeMs || 0) + delta;
 
     // Pending choice blocks all progress
     if (gameState.pendingChoiceEvent) return;
@@ -1707,8 +1712,10 @@ function registerIpcHandlers() {
       const oldSid = gameState.scenarioId;
       if (!gameState.scenarioProgress) gameState.scenarioProgress = {};
       // v4：经验全局，切副本不再折算
+      // v4.0 修复：同样要用旧值打底，保留 storySeconds（否则切世界会丢剧情计时）
       gameState.scenarioProgress[oldSid] = {
-        totalRuntimeMs: gameState.totalRuntimeMs,
+        ...(gameState.scenarioProgress[oldSid] || {}),
+        totalRuntimeMs: (gameState.scenarioProgress[oldSid] && gameState.scenarioProgress[oldSid].totalRuntimeMs) || 0,
         triggeredEvents: [...gameState.triggeredEvents],
         unlockedAchievements: [...gameState.unlockedAchievements],
         equippedTitleIndex: gameState.equippedTitleIndex,
@@ -2509,14 +2516,17 @@ function registerIpcHandlers() {
   // ── v4 更新说明弹窗（首启一次）──
   const CHANGELOG_V4 = {
     version: 'v4.0',
-    title: '宠物陪伴时代',
+    title: '双世界：废土 + 后室',
     points: [
-      '宠物成为主界面：启动只显示宠物窗口，大厅变成「家」',
-      '故事按挂机时长解锁：挂机 20 分钟解锁一段，打字还能加速',
-      '饲养宠物：吃饱/心情/清洁三维状态，喂食和洗澡需要打字攒道具',
-      '成就改为阶梯制：等级/时长/打字/阅读/通关，档位无限延伸',
+      '两个世界同时开放：老世界《废土》回归，新世界《后室》上线，随时可以切换',
+      '废土：4 条人生线（幸存者 / 游商 / 逃亡者 / 数据体），进入后先选你要走的那条路',
+      '后室：85 段单线故事，从卡进黄墙一路走到「前厅」结局',
+      '故事按挂机时长解锁（后室约 20 分钟一段，废土约 10 分钟一级），打字还能加速',
+      '成就补齐：两个世界各 50 个，另有等级 / 时长 / 打字 / 阅读 / 通关的阶梯成就',
+      '饲养宠物：吃饱 / 心情 / 清洁三维状态，喂食和洗澡要打字攒道具',
       '宠物有性别和称谓：可以设定它叫你什么',
-      '旧副本剧情与日志已清理（数值保留），废土世界正在重做中',
+      '宠物成为主界面：启动只显示宠物窗口，大厅变成「家」',
+      '注意：旧版的故事进度不会保留（等级 / 成就 / 统计照常保留），可以重新读一遍',
     ],
   };
   ipcMain.handle('get-changelog-info', () => {
@@ -2971,6 +2981,11 @@ app.whenReady().then(() => {
     gameState.currentBranch = '';
     gameState.pendingChoiceEvent = null;
     gameState._catchUpQueue = null;
+    // v4.0：旧存档只有一个世界（废土）——把累计陪伴时长归到它名下，免得世界卡片显示 0
+    if ((gameState.totalRuntimeMs || 0) > 0) {
+      const legacySid = (gameState.scenarioId && findScenarioById(gameState.scenarioId)) ? gameState.scenarioId : 'wasteland';
+      gameState.scenarioProgress[legacySid] = { ...(gameState.scenarioProgress[legacySid] || {}), totalRuntimeMs: gameState.totalRuntimeMs };
+    }
     gameState._v4CleanupDone = true;
     // 旧日志清理
     try {
@@ -2986,6 +3001,16 @@ app.whenReady().then(() => {
     if (currentScenario) {
       currentTitle = getCurrentTitle(currentScenario, gameState.level);
       setLogSession(gameState.scenarioId);
+    } else {
+      // 存档里记的世界已不存在（副本被删除/改名/换格式）→ 视为回到大厅。
+      // 否则会卡在一个"空世界"：经验不涨、剧情不出、只能自己摸回大厅。
+      console.log('[migration] 存档里的世界不存在，已回到大厅:', gameState.scenarioId);
+      gameState.scenarioId = '';
+      gameState.isInHub = true;
+      gameState._pendingStoryEvent = null;
+      gameState.pendingChoiceEvent = null;
+      currentScenario = null;
+      currentTitle = null;
     }
   } else {
     currentScenario = null;
