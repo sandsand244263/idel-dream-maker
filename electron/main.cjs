@@ -276,6 +276,10 @@ function normalizeGameState(gs) {
   if (!gs.tierAchievements || typeof gs.tierAchievements !== 'object') gs.tierAchievements = { level: 0, time: 0, typing: 0, stories: 0, worlds: 0, hidden: 0 };
   if (typeof gs.petStoriesRead !== 'number') gs.petStoriesRead = 0;
   if (typeof gs.petHiddenRead !== 'number') gs.petHiddenRead = 0;
+  // v4.1 事件成就的高水位：事件类成就按"触发过 N 个不同事件"判定，而 triggeredEvents
+  // 同时也是"已读"记录（重访从头重温/跨分支清理会清它）。用高水位兜底，兑现设计文档
+  // §8.1"已解锁永不收回"——计数只增不减。
+  if (typeof gs.petEventsPeak !== 'number') gs.petEventsPeak = (gs.triggeredEvents?.length || 0);
   // v4 宠物性别：male / female / null=中性（只用通用池）
   if (gs.petGender !== 'male' && gs.petGender !== 'female') gs.petGender = null;
   // v4 宠物称谓：null=默认"主人"，设置后替换台词中的"主人"占位
@@ -899,12 +903,8 @@ function handleInputDown(keyId, keyChar, now) {
 
   try { forwardToPet('key-combo', { streak, grade, keyChar, total: gameState.totalKeyPresses, daily: gameState.dailyKeyPresses }); } catch {}
 
-  // v4（V2 决策）：仅抉择阻塞时停；在家也涨 EXP/攒道具/三维恢复（EXP/三维/道具全局运行）
-  if (gameState.pendingChoiceEvent) {
-    buffGradeTime = 0;
-    return;
-  }
-
+  // v4.1：抉择只拦剧情推进（checkStoryUnlock 内部已判），不再冻结 EXP/道具/三维——
+  // 挂机党晚上没点那个抉择，不该白挂一夜还饿着宠物（设计：等级只涨不清零、无惩罚）
   const mult = getComboMultiplier(grade);
   const keyExp = 1.0 * mult * (1 + getPetExpBonus());
   gameState.petTotalExp = (gameState.petTotalExp || 0) + keyExp;
@@ -1413,7 +1413,8 @@ function checkAchievements() {
         met = gameState.totalRuntimeMs >= a.condition.value;
         break;
       case 'events':
-        met = gameState.triggeredEvents.length >= a.condition.value;
+        // v4.1：用高水位判定（只增不减），避免清理/重访导致已解锁成就被收回
+        met = Math.max(gameState.triggeredEvents.length, gameState.petEventsPeak || 0) >= a.condition.value;
         break;
       case 'titles':
         met = getUnlockedTitles(currentScenario, gameState.level).length >= a.condition.value;
@@ -1532,12 +1533,10 @@ function startGameLoop() {
     // v4.0：单世界陪伴时长与全局总时长分别累计（全局值换世界不清零）
     gameState.scenarioProgress[sid].totalRuntimeMs = (gameState.scenarioProgress[sid].totalRuntimeMs || 0) + delta;
 
-    // Pending choice blocks all progress
-    if (gameState.pendingChoiceEvent) return;
-
+    // v4.1：抉择只拦剧情推进（checkStoryUnlock 内部已判 pendingChoiceEvent 并直接返回），
+    // 这里不再 return——否则没点抉择时 EXP/成就/陪伴时长全停，挂机党白挂一夜（设计：无惩罚）
     // v4 时间解锁检查：顺序链下一段（取代旧 catch-up/升级触发）
     checkStoryUnlock();
-    if (gameState.pendingChoiceEvent) return;   // 解锁出抉择时本 tick 不再继续 EXP（保持旧行为）
 
     gameState.totalRuntimeMs += delta;
     let expMultiplier = 1;
@@ -1619,6 +1618,11 @@ function startGameLoop() {
         };
         forwardToPet('event-triggered', ritualPayload);
       }
+    }
+
+    // v4.1：事件计数高水位（事件类成就只增不减，见设计文档 §8.1）
+    if (gameState.triggeredEvents.length > (gameState.petEventsPeak || 0)) {
+      gameState.petEventsPeak = gameState.triggeredEvents.length;
     }
 
     // Achievement check
@@ -3086,57 +3090,28 @@ app.whenReady().then(() => {
       for (const ev of toAdd) gameState.triggeredEvents.push(ev.id);
       console.log(`[migration] auto-acknowledged ${toAdd.length} new events below Lv.${gameState.level}`);
     }
-    // Clean up cross-branch events that were wrongly added (e.g. from a
-    // previous migration without branch filtering).
-    const cleaned = gameState.triggeredEvents.filter(id => {
-      if (id.startsWith('ms_') || id.startsWith('holiday_') || id.startsWith('scenario_ending_')) return true;
-      const ev = currentScenario.events.find(e => e.id === id);
-      if (!ev) return true;
-      if (ev.branch && ev.branch !== '' && ev.branch !== cb) return false;
-      return true;
-    });
-    if (cleaned.length < gameState.triggeredEvents.length) {
-      gameState.triggeredEvents = cleaned;
-      console.log(`[migration] cleaned ${oldLen - cleaned.length} cross-branch events from triggered list`);
-    }
-    // Achievement self-check: remove achievements whose conditions are no
-    // longer met (e.g. event-count achievements unlocked by cross-branch
-    // contamination that are now invalid after cleanup).
-    if (currentScenario && currentScenario.achievements && gameState.unlockedAchievements) {
-      const removedAch = [];
-      const keepAch = [];
-      for (const aid of gameState.unlockedAchievements) {
-        const ach = currentScenario.achievements.find(a => a.id === aid);
-        if (!ach || !ach.condition) { keepAch.push(aid); continue; }
-        let ok = false;
-        switch (ach.condition.type) {
-          case 'level':
-            ok = gameState.level >= ach.condition.value;
-            break;
-          case 'events':
-            ok = gameState.triggeredEvents.length >= ach.condition.value;
-            break;
-          case 'runtime':
-            ok = gameState.totalRuntimeMs >= ach.condition.value;
-            break;
-          case 'titles': {
-            const titles = getUnlockedTitles(currentScenario, gameState.level);
-            ok = titles.length >= ach.condition.value;
-            break;
-          }
-          default: ok = true;
-        }
-        if (!ok) removedAch.push(aid);
-        else keepAch.push(aid);
+    // v4.1：跨分支清理 + 成就自检改成一次性迁移（原来每次启动都跑）。
+    // 它会把"不属于当前分支"的已读记录删掉，紧接着的成就自检又据此撤销已解锁的事件类
+    // 成就——换了分支后重启（本机每天 05:30 自动重启）就掉进度，违反设计文档 §8.1
+    // "已解锁永不收回"。清理本身只对老存档的脏数据有意义，跑一次就够。
+    if (!gameState._branchCleanupDone) {
+      const cleaned = gameState.triggeredEvents.filter(id => {
+        if (id.startsWith('ms_') || id.startsWith('holiday_') || id.startsWith('scenario_ending_')) return true;
+        const ev = currentScenario.events.find(e => e.id === id);
+        if (!ev) return true;
+        if (ev.branch && ev.branch !== '' && ev.branch !== cb) return false;
+        return true;
+      });
+      if (cleaned.length < gameState.triggeredEvents.length) {
+        gameState.triggeredEvents = cleaned;
+        console.log(`[migration] cleaned ${oldLen - cleaned.length} cross-branch events from triggered list`);
       }
-      if (removedAch.length > 0) {
-        gameState.unlockedAchievements = keepAch;
-        console.log(`[selfcheck] removed ${removedAch.length} invalid achievements: ${removedAch.join(', ')}`);
-      }
-      // Clean up log files: remove achievement/event entries that don't
-      // match current game state, regardless of whether the achievement
-      // was in unlockedAchievements.
+      // 成就自检：v4.1 起只补不删——已解锁的成就永不收回（条件不再满足也不动它）。
+      // 计数类成就的判定已改走高水位（petEventsPeak），不会因清理而掉档。
+      // 仅保留日志清理：删掉对不上当前状态的历史条目（世界档案的故事阅读史）。
       cleanupLogFiles(currentScenario, gameState);
+      gameState._branchCleanupDone = true;
+      console.log('[migration] 跨分支清理与成就自检完成（一次性，不再每次启动运行）');
     }
   }
 
