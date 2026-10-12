@@ -18,55 +18,55 @@
         "desc": "你穿过了错误的墙"
       },
       {
-        "level": 5,
+        "level": 4,
         "name": "迷途者",
         "color": "#7A7A7A",
         "desc": "你开始数不清自己走了多久"
       },
       {
-        "level": 10,
+        "level": 7,
         "name": "拾荒客",
         "color": "#6D4C41",
         "desc": "你学会了在后室找吃的"
       },
       {
-        "level": 20,
+        "level": 12,
         "name": "夜行者",
         "color": "#5C6BC0",
         "desc": "灯光之外，你只信自己的脚步声"
       },
       {
-        "level": 35,
+        "level": 17,
         "name": "穿层者",
         "color": "#66BB6A",
         "desc": "你穿过了一扇又一扇门"
       },
       {
-        "level": 50,
+        "level": 23,
         "name": "无眠者",
         "color": "#FF9800",
         "desc": "你很久没有真正睡过觉了"
       },
       {
-        "level": 75,
+        "level": 30,
         "name": "阈限旅人",
         "color": "#7E57C2",
         "desc": "你开始分不清前后室"
       },
       {
-        "level": 100,
+        "level": 37,
         "name": "深渊回响",
         "color": "#F44336",
         "desc": "你听见了后室的呼吸"
       },
       {
-        "level": 130,
+        "level": 44,
         "name": "边界守望",
         "color": "#00ACC1",
         "desc": "出口也许就在下一层"
       },
       {
-        "level": 150,
+        "level": 52,
         "name": "前厅归来",
         "color": "#FFFFFF",
         "desc": "你回到了有阳光的地方"
@@ -956,7 +956,7 @@
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 5
+          "value": 3
         },
         "minRebirth": 0
       },
@@ -967,7 +967,7 @@
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 8
+          "value": 5
         },
         "minRebirth": 0
       },
@@ -978,7 +978,7 @@
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 12
+          "value": 7
         },
         "minRebirth": 0
       },
@@ -989,7 +989,7 @@
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 18
+          "value": 10
         },
         "minRebirth": 0
       },
@@ -1000,7 +1000,7 @@
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 25
+          "value": 13
         },
         "minRebirth": 0
       },
@@ -1011,7 +1011,7 @@
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 35
+          "value": 16
         },
         "minRebirth": 0
       },
@@ -1022,7 +1022,7 @@
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 50
+          "value": 20
         },
         "minRebirth": 0
       },
@@ -1033,7 +1033,7 @@
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 65
+          "value": 24
         },
         "minRebirth": 0
       },
@@ -1044,7 +1044,7 @@
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 80
+          "value": 28
         },
         "minRebirth": 0
       },
@@ -1055,7 +1055,7 @@
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 100
+          "value": 33
         },
         "minRebirth": 0
       },
@@ -1066,7 +1066,7 @@
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 115
+          "value": 39
         },
         "minRebirth": 0
       },
@@ -1077,7 +1077,7 @@
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 130
+          "value": 46
         },
         "minRebirth": 0
       },
@@ -1088,7 +1088,7 @@
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 150
+          "value": 55
         },
         "minRebirth": 0
       },
@@ -1518,163 +1518,163 @@
         "desc": "你习惯了一个人面对一切"
       },
       {
-        "level": 5,
+        "level": 4,
         "name": "记录者",
         "color": "#66BB6A",
         "desc": "你开始记下这条路上的痕迹"
       },
       {
-        "level": 8,
+        "level": 5,
         "name": "穿行者",
         "color": "#6D4C41",
         "desc": "你穿越废墟、数据和荒原，不曾停步"
       },
       {
-        "level": 12,
+        "level": 6,
         "name": "忍耐者",
         "color": "#5C6BC0",
         "desc": "时间磨不掉的，只会让你更坚硬"
       },
       {
-        "level": 16,
+        "level": 8,
         "name": "积累者",
         "color": "#FF9800",
         "desc": "无论物资、经验还是算力，你都在积蓄"
       },
       {
-        "level": 20,
+        "level": 10,
         "name": "幸存者",
         "color": "#78909C",
         "desc": "你活过了本该结束的时刻"
       },
       {
-        "level": 25,
+        "level": 12,
         "name": "扎根者",
         "color": "#48A999",
         "desc": "你在废墟中找到了属于自己的位置"
       },
       {
-        "level": 30,
+        "level": 14,
         "name": "守望者",
         "color": "#7E57C2",
         "desc": "你注视着前方，不放过任何信号"
       },
       {
-        "level": 36,
+        "level": 17,
         "name": "破壁者",
         "color": "#BDBDBD",
         "desc": "你打破了曾经困住你的界限"
       },
       {
-        "level": 42,
+        "level": 20,
         "name": "通路者",
         "color": "#F44336",
         "desc": "无论面前是荒野还是防火墙，你都找到了路"
       },
       {
-        "level": 50,
+        "level": 23,
         "name": "跋涉者",
         "color": "#9E9D24",
         "desc": "你走过的路已经足够写成一本书"
       },
       {
-        "level": 60,
+        "level": 26,
         "name": "连线者",
         "color": "#FF6F00",
         "desc": "你与世界建立了千丝万缕的连接"
       },
       {
-        "level": 75,
+        "level": 30,
         "name": "磨砺者",
         "color": "#00ACC1",
         "desc": "每一次试炼都让你变得更加锋利"
       },
       {
-        "level": 90,
+        "level": 34,
         "name": "穿云者",
         "color": "#D81B60",
         "desc": "你看见了更高处的风景"
       },
       {
-        "level": 110,
+        "level": 38,
         "name": "不败者",
         "color": "#76FF03",
         "desc": "没有你克服不了的困境"
       },
       {
-        "level": 130,
+        "level": 42,
         "name": "洞见者",
         "color": "#FFD600",
         "desc": "你看透了表象之下的运行法则"
       },
       {
-        "level": 150,
+        "level": 46,
         "name": "承载者",
         "color": "#B388FF",
         "desc": "你背负的东西已经足够重，但你还在走"
       },
       {
-        "level": 180,
+        "level": 50,
         "name": "书写者",
         "color": "#FF1744",
         "desc": "你在时间的裂缝里刻下了自己的印记"
       },
       {
-        "level": 210,
+        "level": 54,
         "name": "融合者",
         "color": "#00E5FF",
         "desc": "你的存在与这片天地融为一体"
       },
       {
-        "level": 240,
+        "level": 58,
         "name": "见证者",
         "color": "#FF9100",
         "desc": "你目睹了太多开始和结束"
       },
       {
-        "level": 260,
+        "level": 62,
         "name": "临界者",
         "color": "#8D6E63",
         "desc": "你站在已知与未知的交界线上"
       },
       {
-        "level": 280,
+        "level": 66,
         "name": "不灭之火",
         "color": "#EA80FC",
         "desc": "无论风暴多大，都无法将你熄灭"
       },
       {
-        "level": 320,
+        "level": 70,
         "name": "恒在者",
         "color": "#FF6E40",
         "desc": "你学会了与时间并肩而行"
       },
       {
-        "level": 360,
+        "level": 73,
         "name": "重构者",
         "color": "#00E676",
         "desc": "你不断重新定义自己是什么"
       },
       {
-        "level": 400,
+        "level": 76,
         "name": "虚无穿行者",
         "color": "#C6FF00",
         "desc": "你在虚无中走出了一条自己的路"
       },
       {
-        "level": 440,
+        "level": 79,
         "name": "回响者",
         "color": "#FFAB00",
         "desc": "你的存在在废墟之上久久回荡"
       },
       {
-        "level": 480,
+        "level": 82,
         "name": "超越者",
         "color": "#448AFF",
         "desc": "你已经超越了最初的形态"
       },
       {
-        "level": 500,
+        "level": 85,
         "name": "灰烬新生",
         "color": "#FFFFFF",
         "desc": "你从灰烬中走出，已是全新的人"
@@ -27156,6 +27156,17 @@
       },
       {
         "id": "wasteland_a005",
+        "name": "四十风霜",
+        "desc": "达到 Lv.40",
+        "icon": "★",
+        "condition": {
+          "type": "level",
+          "value": 40
+        },
+        "minRebirth": 0
+      },
+      {
+        "id": "wasteland_a006",
         "name": "五十征程",
         "desc": "达到 Lv.50",
         "icon": "★",
@@ -27166,90 +27177,79 @@
         "minRebirth": 0
       },
       {
-        "id": "wasteland_a006",
-        "name": "百级里程碑",
-        "desc": "达到 Lv.100",
-        "icon": "★",
-        "condition": {
-          "type": "level",
-          "value": 100
-        },
-        "minRebirth": 0
-      },
-      {
         "id": "wasteland_a007",
-        "name": "一百五十级",
-        "desc": "达到 Lv.150",
+        "name": "六十里程",
+        "desc": "达到 Lv.60",
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 150
+          "value": 60
         },
         "minRebirth": 0
       },
       {
         "id": "wasteland_a008",
-        "name": "两百之巅",
-        "desc": "达到 Lv.200",
+        "name": "七十荒原",
+        "desc": "达到 Lv.70",
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 200
+          "value": 70
         },
         "minRebirth": 0
       },
       {
         "id": "wasteland_a009",
-        "name": "两百五十里",
-        "desc": "达到 Lv.250",
+        "name": "七十五关",
+        "desc": "达到 Lv.75",
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 250
+          "value": 75
         },
         "minRebirth": 0
       },
       {
         "id": "wasteland_a010",
-        "name": "三百峰顶",
-        "desc": "达到 Lv.300",
+        "name": "八十不悔",
+        "desc": "达到 Lv.80",
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 300
+          "value": 80
         },
         "minRebirth": 0
       },
       {
         "id": "wasteland_a011",
-        "name": "四百长路",
-        "desc": "达到 Lv.400",
+        "name": "八十五难",
+        "desc": "达到 Lv.85",
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 400
+          "value": 85
         },
         "minRebirth": 0
       },
       {
         "id": "wasteland_a012",
-        "name": "满级之路",
-        "desc": "达到 Lv.450",
+        "name": "九十长路",
+        "desc": "达到 Lv.90",
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 450
+          "value": 90
         },
         "minRebirth": 0
       },
       {
         "id": "wasteland_a013",
-        "name": "废土传说",
-        "desc": "达到 Lv.500",
+        "name": "九十五重",
+        "desc": "达到 Lv.95",
         "icon": "★",
         "condition": {
           "type": "level",
-          "value": 500
+          "value": 95
         },
         "minRebirth": 0
       },
@@ -27266,6 +27266,17 @@
       },
       {
         "id": "wasteland_a015",
+        "name": "六小时",
+        "desc": "挂机满6小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 21600000
+        },
+        "minRebirth": 0
+      },
+      {
+        "id": "wasteland_a016",
         "name": "半日闲",
         "desc": "挂机满12小时",
         "icon": "★",
@@ -27276,7 +27287,29 @@
         "minRebirth": 0
       },
       {
-        "id": "wasteland_a016",
+        "id": "wasteland_a017",
+        "name": "一昼夜",
+        "desc": "挂机满24小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 86400000
+        },
+        "minRebirth": 0
+      },
+      {
+        "id": "wasteland_a018",
+        "name": "一日半",
+        "desc": "挂机满36小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 129600000
+        },
+        "minRebirth": 0
+      },
+      {
+        "id": "wasteland_a019",
         "name": "两天两夜",
         "desc": "挂机满48小时",
         "icon": "★",
@@ -27287,7 +27320,29 @@
         "minRebirth": 0
       },
       {
-        "id": "wasteland_a017",
+        "id": "wasteland_a020",
+        "name": "三日三夜",
+        "desc": "挂机满72小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 259200000
+        },
+        "minRebirth": 0
+      },
+      {
+        "id": "wasteland_a021",
+        "name": "四日四夜",
+        "desc": "挂机满96小时",
+        "icon": "★",
+        "condition": {
+          "type": "runtime",
+          "value": 345600000
+        },
+        "minRebirth": 0
+      },
+      {
+        "id": "wasteland_a022",
         "name": "五天五夜",
         "desc": "挂机满120小时",
         "icon": "★",
@@ -27298,90 +27353,35 @@
         "minRebirth": 0
       },
       {
-        "id": "wasteland_a018",
-        "name": "十日谈",
-        "desc": "挂机满240小时",
-        "icon": "★",
-        "condition": {
-          "type": "runtime",
-          "value": 864000000
-        },
-        "minRebirth": 0
-      },
-      {
-        "id": "wasteland_a019",
-        "name": "半月记",
-        "desc": "挂机满360小时",
-        "icon": "★",
-        "condition": {
-          "type": "runtime",
-          "value": 1296000000
-        },
-        "minRebirth": 0
-      },
-      {
-        "id": "wasteland_a020",
-        "name": "二十日",
-        "desc": "挂机满480小时",
-        "icon": "★",
-        "condition": {
-          "type": "runtime",
-          "value": 1728000000
-        },
-        "minRebirth": 0
-      },
-      {
-        "id": "wasteland_a021",
-        "name": "月度报告",
-        "desc": "挂机满600小时",
-        "icon": "★",
-        "condition": {
-          "type": "runtime",
-          "value": 2160000000
-        },
-        "minRebirth": 0
-      },
-      {
-        "id": "wasteland_a022",
-        "name": "废土常客",
-        "desc": "挂机满720小时",
-        "icon": "★",
-        "condition": {
-          "type": "runtime",
-          "value": 2592000000
-        },
-        "minRebirth": 0
-      },
-      {
         "id": "wasteland_a023",
-        "name": "全程记录",
-        "desc": "挂机满840小时",
+        "name": "六日六夜",
+        "desc": "挂机满144小时",
         "icon": "★",
         "condition": {
           "type": "runtime",
-          "value": 3024000000
+          "value": 518400000
         },
         "minRebirth": 0
       },
       {
         "id": "wasteland_a024",
-        "name": "不灭者",
-        "desc": "挂机满939小时",
+        "name": "七日七夜",
+        "desc": "挂机满168小时",
         "icon": "★",
         "condition": {
           "type": "runtime",
-          "value": 3380400000
+          "value": 604800000
         },
         "minRebirth": 0
       },
       {
         "id": "wasteland_a025",
-        "name": "废土人生",
-        "desc": "挂机满1000小时",
+        "name": "八日八夜",
+        "desc": "挂机满192小时",
         "icon": "★",
         "condition": {
           "type": "runtime",
-          "value": 3600000000
+          "value": 691200000
         },
         "minRebirth": 0
       },

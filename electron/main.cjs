@@ -280,6 +280,8 @@ function normalizeGameState(gs) {
   // 同时也是"已读"记录（重访从头重温/跨分支清理会清它）。用高水位兜底，兑现设计文档
   // §8.1"已解锁永不收回"——计数只增不减。
   if (typeof gs.petEventsPeak !== 'number') gs.petEventsPeak = (gs.triggeredEvents?.length || 0);
+  // v4.1：本世界是否已读到结局（读到就收尾，不再往下推多个结局）
+  if (typeof gs._storyEnded !== 'boolean') gs._storyEnded = false;
   // v4 宠物性别：male / female / null=中性（只用通用池）
   if (gs.petGender !== 'male' && gs.petGender !== 'female') gs.petGender = null;
   // v4 宠物称谓：null=默认"主人"，设置后替换台词中的"主人"占位
@@ -1111,6 +1113,7 @@ function pickHolidayLine() {
 
 function resetGameForScenario(scenario, alias) {
   gameState.scenarioId = scenario.id;
+  gameState._storyEnded = false;              // v4.1：进入世界/换世界 → 解除"已读到结局"收尾状态
   if (gameState.pendingChoiceEvent) {
     appendLogEntry('info', `切换世界，放弃未完成的抉择 (${gameState.pendingChoiceEvent.eventId})`);
     gameState.pendingChoiceEvent = null;
@@ -1174,6 +1177,7 @@ function exitToHub() {
   gameState.isInHub = true;
   gameState.currentBranch = '';
   gameState.pendingChoiceEvent = null;
+  gameState._storyEnded = false;              // v4.1：回大厅 → 清收尾状态
   currentScenario = null;
   currentTitle = null;
 }
@@ -1295,6 +1299,9 @@ function nextStoryEvent(type, cb) {
 // ── v4 时间解锁核心：检查顺序链下一段（普通段挂待读气泡，抉择段直接弹抉择）──
 function checkStoryUnlock() {
   if (!currentScenario || gameState.isInHub) return;
+  // v4.1：本世界已读到结局 → 收尾，不再往下推（原来 Lv.500 有 55 个结局段，
+  // 踩中多个 flag 的玩家会一段接一段读到好几个结局，每次弹一次"旅程完成"面板）
+  if (gameState._storyEnded) return;
   if (gameState.pendingChoiceEvent) return;    // 抉择阻塞：不推进
   if (gameState._pendingStoryEvent) return;    // 已有待读气泡：不重复推送
   const sid = gameState.scenarioId;
@@ -1319,6 +1326,41 @@ function checkStoryUnlock() {
     try { mainWindow.webContents.send('story-ready', sp); } catch {}
     forwardToPet('story-ready', sp);
   }
+}
+
+// ── v4.1 剧情进度：给宠物窗显示"下一段约 X 分钟"（口径与 nextStoryEvent 一致）──
+function getStoryProgress() {
+  if (!currentScenario || gameState.isInHub) return null;
+  if (gameState._storyEnded) return null;      // 本世界已读到结局：不再推进，不显示进度
+  const sid = gameState.scenarioId;
+  const prog = (gameState.scenarioProgress && gameState.scenarioProgress[sid]) || {};
+  if (prog.continuousBrowse) return null;      // 重访=连续浏览，不卡时间，不显示进度
+  const ss = prog.storySeconds || 0;
+  const cb = gameState.currentBranch || '';
+  const targetIds = new Set();
+  for (const e of currentScenario.events) {
+    if (e.choice1Target) targetIds.add(e.choice1Target);
+    if (e.choice2Target) targetIds.add(e.choice2Target);
+    if (e.choice3Target) targetIds.add(e.choice3Target);
+    if (e.choice4Target) targetIds.add(e.choice4Target);
+  }
+  const pool = currentScenario.events.filter(e => {
+    if (e.type && e.type !== 'story') return false;
+    if (e.once && gameState.triggeredEvents.includes(e.id)) return false;
+    if (e.branch && e.branch !== '' && e.branch !== cb) return false;
+    if (!checkFlagRequire(e.flagRequire)) return false;
+    if (targetIds.has(e.id)) return false;
+    return true;
+  });
+  if (pool.length === 0) return null;
+  pool.sort((a, b) => (a.minSeconds || 0) - (b.minSeconds || 0));
+  const target = pool[0].minSeconds || 0;
+  const remain = Math.max(0, target - ss);
+  return {
+    pct: target > 0 ? Math.min(100, Math.round((ss / target) * 1000) / 10) : 100,
+    remain: Math.round(remain),
+    isChoice: !!(pool[0].choice1 && pool[0].choice1Target),
+  };
 }
 
 // ── v4 分支通关：结局事件（带 CompletionTitle）读完 → 通关记录 + 旅程完成弹窗 ──
@@ -1364,6 +1406,9 @@ function handleBranchEnding(ev) {
   };
   try { mainWindow.webContents.send('scenario-ending', endingPayload); } catch {}
   forwardToPet('scenario-ending', endingPayload);
+  // v4.1：读到结局即收尾——本世界不再往下推（避免连续弹多个"旅程完成"）
+  gameState._storyEnded = true;
+  gameState._pendingStoryEvent = null;
   checkHubAchievements();
 }
 
@@ -1491,6 +1536,11 @@ function startGameLoop() {
       buff_multiplier: buffMultiplier,
       buff_remaining: buffExpireTime ? Math.max(0, buffExpireTime - Date.now()) : 0,
     };
+    // v4.1：剧情进度（宠物窗"下一段约 X 分钟"）——-1 表示不适用（在家/重访/已读完）
+    const _sp = getStoryProgress();
+    payload.story_pct = _sp ? _sp.pct : -1;
+    payload.story_remain = _sp ? _sp.remain : -1;
+    payload.story_is_choice = _sp ? _sp.isChoice : false;
     // v4.1 优化：历史数组只在变化时下发（否则每 500ms 重复搬运全部历史 id）。
     // 渲染端用 { ...gameState, ...p } 合并，缺省键保留旧值，语义不变。
     const arrSig = {
@@ -1815,6 +1865,7 @@ function registerIpcHandlers() {
     if (!gameState || gameState.isInHub || !gameState.scenarioId) return { success: false, error: '未在世界中' };
     const sid = gameState.scenarioId;
     if (!gameState.scenarioProgress[sid]) gameState.scenarioProgress[sid] = {};
+    gameState._storyEnded = false;              // v4.1：重访 → 解除收尾状态（可以走新分支/重温）
     if (mode === 'restart') {
       gameState.triggeredEvents = [];
       gameState.currentBranch = '';

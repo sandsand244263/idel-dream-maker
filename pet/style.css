@@ -91,6 +91,17 @@ body { font-family:var(--font); color:var(--fg); }
 .stat-value { font-size:10px;color:color-mix(in srgb,var(--fg) 60%,transparent);width:24px;text-align:right;flex-shrink:0;font-variant-numeric:tabular-nums;transition:color 0.25s var(--ease-out); }
 #exp-row .stat-value { width:auto;min-width:64px; }   /* EXP 数值长（7.5k/8.1k 63%），放宽 */
 #exp-row .stat-track { min-width:36px; }               /* 防数值过长把轨道挤成 0 */
+
+/* ── v4.1 剧情进度：下一段还差多久（细条 + 剩余时间）── */
+#story-wrap { width:100%;display:flex;flex-direction:column;flex-shrink:0;padding:0 12px;opacity:0.55;transition:opacity 0.25s var(--ease-out); }
+#container:hover #story-wrap { opacity:1; }
+#container.compact #story-wrap { opacity:0; }
+#container.compact:hover #story-wrap { opacity:1; }
+#story-row .stat-value { width:auto;min-width:60px; }
+#story-fill { background:linear-gradient(180deg,#7FD8FF 0%,#00BFFF 100%);box-shadow:0 0 5px rgba(0,191,255,0.5); }
+#story-row.ready .stat-value { color:#00BFFF; }
+#story-row.choice .stat-value { color:#FF9E64; }
+#story-row.choice #story-fill { background:linear-gradient(180deg,#FFC08A 0%,#FF9E64 100%);box-shadow:0 0 5px rgba(255,158,100,0.5); }
 .stat-row.low .stat-value { color:#FF9800; }
 #container:hover .stat-label, #container:hover .stat-value { color:var(--fg); }
 #container:hover .stat-row.low .stat-value { color:#FF9800; }

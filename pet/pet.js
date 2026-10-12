@@ -23,6 +23,11 @@ const foodCount = document.getElementById('food-count');
 const foodNum = document.getElementById('food-num');
 const soapCount = document.getElementById('soap-count');
 const soapNum = document.getElementById('soap-num');
+// v4.1 剧情进度（下一段还差多久）
+const storyWrap = document.getElementById('story-wrap');
+const storyRow = document.getElementById('story-row');
+const storyFill = document.getElementById('story-fill');
+const storyDetail = document.getElementById('story-detail');
 
 canvas.width = 120;
 canvas.height = 140;
@@ -383,6 +388,25 @@ function updatePetStats(f,m,c,fo,so){
   setItemCount(foodCount,foodNum,fo);
   setItemCount(soapCount,soapNum,so);
 }
+
+// v4.1 剧情进度：pct<0 = 不适用（在家/重访/已读完）→ 隐藏
+function fmtStoryRemain(sec){
+  if(sec<=0) return '可读';
+  if(sec<60) return '1 分钟内';
+  if(sec<3600) return `${Math.ceil(sec/60)} 分钟`;
+  const h=sec/3600;
+  return h<10?`${h.toFixed(1)} 小时`:`${Math.round(h)} 小时`;
+}
+function updateStoryProgress(pct,remain,isChoice){
+  if(!storyWrap) return;
+  if(pct===undefined||pct===null||pct<0){storyWrap.classList.add('hidden');return;}
+  storyWrap.classList.remove('hidden');
+  storyFill.style.width=`${Math.max(0,Math.min(100,pct))}%`;
+  storyDetail.textContent=fmtStoryRemain(remain||0);
+  const ready=(remain||0)<=0;
+  storyRow.classList.toggle('ready',ready);
+  storyRow.classList.toggle('choice',!!isChoice&&ready);
+}
 function applyTheme(theme, customTheme){
   document.body.className='';
   if(customTheme){
@@ -466,6 +490,7 @@ window.pet.on('game-tick',d=>{
     }
   }
   updatePetStats(d.pet_fullness, d.pet_mood, d.pet_cleanliness, d.pet_foods, d.pet_soaps);
+  updateStoryProgress(d.story_pct, d.story_remain, d.story_is_choice);
   updateInfoBar();
 });
 window.pet.on('theme-changed',(d)=>{if(d){gameInfo.theme=d.theme;applyTheme(d.theme, d.customTheme);}});
