@@ -269,7 +269,12 @@ function updateExpBar(){
   displayExpFull+=(e-displayExpFull)*0.3;
   if(Math.abs(displayExpFull-e)<1)displayExpFull=e;
   expDetail.textContent=`${shortNum(displayExpFull)}/${shortNum(nr)}`;   // 短格式防挤占轨道（百分比已去掉）
+  return displayExp===target&&displayExpFull===e;
 }
+// v4.1 优化：经验条动画按需运行（原为 60fps 常驻循环，闲置/最小化也白烧 CPU）
+let expRafId=null;
+function expTick(){ expRafId=updateExpBar()?null:requestAnimationFrame(expTick); }
+function kickExpAnim(){ if(expRafId==null) expRafId=requestAnimationFrame(expTick); }
 const COMBO_COLORS={
   'D':['#888','#666'],'C':['#aaa','#888'],'B':['#6b6','#484'],
   'A':['#6bf','#48a'],'S':['#ff6','#cc4'],'SS':['#f80','#c60'],'SSS':['#f44','#c22'],
@@ -355,7 +360,7 @@ function updateInfoBar(){
   const title=gameInfo.title&&gameInfo.title!=='—'?gameInfo.title:'';
   const dl=gameInfo.level||1;   // v4 单轨：唯一等级（大厅/世界同一 petTotalExp）
   infoText.textContent=title?`${gameInfo.scenario} | LV.${dl} | ${title}`:`${gameInfo.scenario} | LV.${dl}`;
-  updateExpBar();
+  kickExpAnim();
 }
 
 // ── v4 三维状态条 + 道具计数（§14.1/14.2）──
@@ -447,7 +452,7 @@ window.pet.on('game-tick',d=>{
   gameInfo.scenario=d.is_in_hub?'家':(d.scenario_name||'世界');
   const ms=d.total_runtime_ms||0,s=Math.floor(ms/1000);
   gameInfo.runtime=`${Math.floor(s/3600)}h${Math.floor((s%3600)/60)}m${s%60}s`;
-  gameInfo.ach=(d.unlockedAchievements||[]).length;
+  if(d.unlockedAchievements) gameInfo.ach=d.unlockedAchievements.length;   // v4.1：该字段可能缺省（只在变化时下发）
   if(d.theme&&d.theme!==gameInfo.theme){gameInfo.theme=d.theme;applyTheme(d.theme, d.customTheme);}
   if(keyDetail){const tk=d.total_key_presses||0,dk=d.daily_key_presses||0;keyDetail.textContent=`⌨ ${shortNum(tk)}   今日 ${shortNum(dk)}`;}
   if (buffBadge) {
@@ -532,9 +537,7 @@ window.pet.invoke('scan-pets').then(r=>{
 }).catch(()=>{});
 window.pet.invoke('pet-get-state').then(()=>updateInfoBar()).catch(()=>{});
 
-let expRafId=null;
-function expLoop(){updateExpBar();expRafId=requestAnimationFrame(expLoop);}
-expRafId=requestAnimationFrame(expLoop);
+kickExpAnim();   // 启动时跑一次，之后由数据变化触发
 const IDLE_ANIMS=['failed','review','extra1','extra2'];
 // Random idle animation every 20s (30% chance)
 setInterval(() => {

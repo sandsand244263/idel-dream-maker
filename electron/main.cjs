@@ -313,6 +313,29 @@ function clearLogSession() {
   _currentLogFile = null;
 }
 
+// v4.1：日志保留上限——每个副本只保留最近 N 个会话日志（文件名带时间戳，字典序即时间序），
+// 避免日志目录随游玩次数无限增长。启动时执行一次。
+const LOG_KEEP_PER_SCENARIO = 10;
+function pruneLogs() {
+  try {
+    const dir = getLogDir();
+    const files = fs.readdirSync(dir).filter(f => f.endsWith('.log'));
+    const groups = {};
+    for (const f of files) {
+      const sid = f.startsWith('_legacy_') ? '_legacy' : f.replace(/_\d{8}_\d{6}\.log$/, '');
+      (groups[sid] = groups[sid] || []).push(f);
+    }
+    for (const sid of Object.keys(groups)) {
+      const list = groups[sid];
+      if (list.length <= LOG_KEEP_PER_SCENARIO) continue;
+      list.sort();
+      for (const f of list.slice(0, list.length - LOG_KEEP_PER_SCENARIO)) {
+        try { fs.unlinkSync(path.join(dir, f)); } catch {}
+      }
+    }
+  } catch {}
+}
+
 function appendLogEntry(type, msg) {
   if (!_currentLogFile) return;
   try {
@@ -617,15 +640,22 @@ function writeSave(data, silent) {
     const fileName = getSaveFileName();
     const tmpPath = path.join(dir, fileName + '.tmp');
     const finalPath = path.join(dir, fileName);
-    fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf-8');
+    fs.writeFileSync(tmpPath, JSON.stringify(data), 'utf-8');   // v4.1：改紧凑 JSON（原缩进美化体积翻倍）
     fs.renameSync(tmpPath, finalPath);
     const syncCfg = readSyncConfig();
     if (syncCfg && syncCfg.path && !silent) syncToCloud(syncCfg, silent);
   } catch (e) { console.error('Save failed:', e); appendLogEntry('error', `存档写入失败: ${e.message}`); }
 }
 
+// v4.1：云同步限流——非静默存盘会整目录拷贝日志，高频操作时改为最多每 20 秒一次
+let _lastCloudSyncAt = 0;
+const CLOUD_SYNC_MIN_INTERVAL_MS = 20000;
+
 function syncToCloud(cfg, silent) {
   try {
+    const now = Date.now();
+    if (now - _lastCloudSyncAt < CLOUD_SYNC_MIN_INTERVAL_MS) return;
+    _lastCloudSyncAt = now;
     const cloudDir = path.join(cfg.path, 'Idel-DreamMaker-Sync');
     if (!fs.existsSync(cloudDir)) fs.mkdirSync(cloudDir, { recursive: true });
     // 防回滚：云端存档更新时不覆盖
@@ -1411,6 +1441,11 @@ let lastHubReminderMs = 0;
 
 const TICK_MS = 500;
 
+// v4.1 优化：game-tick 里的历史数组（触发事件/成就/通关记录/flags）只在变化时下发。
+// 指纹用「长度 + 末元素」——这些数组以追加为主，末元素变化即可判定；flags 小，直接序列化比对。
+let _tickArrSig = { triggered: '', achievements: '', completions: '', flags: '' };
+function _arrSigOf(a) { return Array.isArray(a) && a.length ? a.length + '|' + a[a.length - 1] : '0'; }
+
 function startGameLoop() {
   if (gameLoopInterval) return;
   hubIdleMs = 0;
@@ -1433,8 +1468,6 @@ function startGameLoop() {
       total_runtime_ms: gameState.totalRuntimeMs,
       equipped_title_index: gameState.equippedTitleIndex,
       is_in_hub: gameState.isInHub,
-      unlockedAchievements: gameState.unlockedAchievements,
-      triggered_events: gameState.triggeredEvents,
       language: gameState.language,
       currentTitle: currentTitle ? currentTitle.name : null,
       scenario_name: currentScenario ? (currentScenario.name_cn || currentScenario.nameCN || currentScenario.name) : null,
@@ -1450,18 +1483,29 @@ function startGameLoop() {
       pet_gender: gameState.petGender,
       current_branch: gameState.currentBranch || '',
       completed_branches: (gameState.branchProgress && gameState.branchProgress[gameState.scenarioId]) || [],
-      flags: gameState.flags || {},
       mechanic: currentScenario ? (currentScenario.mechanic || 'standard') : 'standard',
       hub_title: gameState?.equippedCompletionTitle?.title || getHubTitle(calcLevel(gameState.petTotalExp)).name,
       total_key_presses: gameState.totalKeyPresses || 0,
       daily_key_presses: gameState.dailyKeyPresses || 0,
       buff_multiplier: buffMultiplier,
       buff_remaining: buffExpireTime ? Math.max(0, buffExpireTime - Date.now()) : 0,
-      gameCompletions: gameState.gameCompletions || [],
     };
+    // v4.1 优化：历史数组只在变化时下发（否则每 500ms 重复搬运全部历史 id）。
+    // 渲染端用 { ...gameState, ...p } 合并，缺省键保留旧值，语义不变。
+    const arrSig = {
+      triggered: _arrSigOf(gameState.triggeredEvents),
+      achievements: _arrSigOf(gameState.unlockedAchievements),
+      completions: _arrSigOf(gameState.gameCompletions),
+      flags: JSON.stringify(gameState.flags || {}),
+    };
+    if (arrSig.triggered !== _tickArrSig.triggered) payload.triggered_events = gameState.triggeredEvents || [];
+    if (arrSig.achievements !== _tickArrSig.achievements) payload.unlockedAchievements = gameState.unlockedAchievements || [];
+    if (arrSig.completions !== _tickArrSig.completions) payload.gameCompletions = gameState.gameCompletions || [];
+    if (arrSig.flags !== _tickArrSig.flags) payload.flags = gameState.flags || {};
+    _tickArrSig = arrSig;
     try { mainWindow.webContents.send('game-tick', payload); } catch {}
     forwardToPet('game-tick', payload);
-    forwardToPet('pet-state', { petLevel: calcLevel(gameState.petTotalExp), isInHub: gameState.isInHub, level: gameState.level, petFullness: gameState.petFullness || 80, petMood: gameState.petMood || 80, petCleanliness: gameState.petCleanliness || 80, petFoods: gameState.petFoods || 0, petSoaps: gameState.petSoaps || 0, petDroopy: isPetDroopy() });
+    // v4.1：pet-state 与 game-tick 内容重叠，已合并（原先每 tick 多发一包）
 
     if (gameState.isInHub) {
       if (!allScenariosFullyCompleted()) {
@@ -2873,6 +2917,9 @@ app.whenReady().then(() => {
   // 单实例锁：防止多开互相覆盖存档
   const gotTheLock = app.requestSingleInstanceLock();
   if (!gotTheLock) { app.quit(); return; }
+
+  // v4.1：启动时清理超量日志（每副本保留最近 10 个会话）
+  pruneLogs();
 
   // 全局错误捕获
   const errorLogPath = path.join(getAppDataPath(), 'errors.log');

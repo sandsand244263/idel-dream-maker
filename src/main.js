@@ -670,7 +670,8 @@ function updateUI() {
 
 function updateExpBar() {
   if (!gameState || !expBarFill || !expBarText) return;
-  const exp = gameState.total_exp_earned || 0;
+  // v4 单轨化后经验唯一来源是 pet_total_exp（旧字段 total_exp_earned 已不再下发）
+  const exp = gameState.pet_total_exp ?? gameState.exp ?? 0;
   const lv = gameState.level || 1;
   const currReq = calcExpForLevel(lv);
   const nextReq = calcExpForLevel(lv + 1);
