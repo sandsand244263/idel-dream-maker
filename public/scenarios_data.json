@@ -7,7 +7,10 @@
     "player_title": "卡入者",
     "mechanic": "standard",
     "max_rebirth": 0,
-    "branches": [],
+    "branches": [
+      "home",
+      "city"
+    ],
     "unlock_requirement": {},
     "completion_title": "前厅",
     "titles": [
@@ -141,7 +144,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你拧开瓶盖闻了闻——有淡淡的杏仁味。你没有喝，先把它塞进背包。在这个地方，任何一样东西都可能是陷阱，也可能是礼物。你决定相信后者，但保留警惕。"
+        "text": "你拧开瓶盖闻了闻——有淡淡的杏仁味。标签上写着：喝一点，别喝多。你捏着瓶子站在走廊里，脚下的地毯是潮湿的。",
+        "choice1": "先喝一口",
+        "choice1Target": "backrooms_e0007a",
+        "choice2": "先收进背包",
+        "choice2Target": "backrooms_e0007b"
+      },
+      {
+        "id": "backrooms_e0007a",
+        "type": "story",
+        "minSeconds": 7200,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你喝了一小口。味道很奇怪——甜的，但甜得很陌生，像记忆里某种东西被篡改过。胃里暖起来，走廊的嗡鸣好像退远了一点。你把瓶盖拧紧了。"
+      },
+      {
+        "id": "backrooms_e0007b",
+        "type": "story",
+        "minSeconds": 7200,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你没有喝，把它塞进背包。在这个地方，任何一样东西都可能是陷阱，也可能是礼物。你决定相信后者，但保留警惕。"
       },
       {
         "id": "backrooms_e0008",
@@ -201,7 +228,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "第七个拐角没有楼梯间。你在第八个拐角找到了它——一扇漆成灰色的门，门缝里透出向下的光。楼梯很窄，扶手冰凉。下去，还是继续在黄房间里打转？你选择了下去。"
+        "text": "第七个拐角没有楼梯间。你在第八个拐角找到了它——一扇漆成灰色的门，门缝里透出向下走的光。楼梯很窄，扶手冰凉。下去，还是继续在黄房间里打转？",
+        "choice1": "下去",
+        "choice1Target": "backrooms_e0013a",
+        "choice2": "先再转一圈",
+        "choice2Target": "backrooms_e0013b"
+      },
+      {
+        "id": "backrooms_e0013a",
+        "type": "story",
+        "minSeconds": 14400,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你扶着冰凉的扶手往下走。走到第十级的时候，上面的光被拐角切断，只剩脚下那一小块。"
+      },
+      {
+        "id": "backrooms_e0013b",
+        "type": "story",
+        "minSeconds": 14400,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你转身继续在黄房间里走。又走了很久，走廊还是那副样子，墙还是那面墙。你最后还是回到了那扇灰色的门前——这一次你没有再犹豫，推开了它。"
       },
       {
         "id": "backrooms_e0014",
@@ -291,7 +342,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你第一次真正喝了一口杏仁水。味道很奇怪——甜的，但甜得很陌生，像记忆里的某种东西被篡改过。胃里暖起来，困意退潮。你想起卡片上的话：别相信安静。仓库深处，铁靴声又响起来了。"
+        "text": "你喝了一口杏仁水。甜的，但甜得很陌生，像记忆里某种东西被篡改过。胃里暖起来，困意退潮。你想起卡片上的话：别相信安静。仓库深处，铁靴声又响起来了。"
       },
       {
         "id": "backrooms_e0023",
@@ -301,7 +352,31 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "铁靴声越来越近。你来不及多想，钻进了检修口。管道很窄，你得侧着身体爬。身后传来金属摩擦声——有什么东西也在往洞口探。你加快了速度，膝盖磕在管道接缝上，疼得倒吸凉气。"
+        "text": "铁靴声越来越近。你面前是那个黑黢黢的检修口——钻进去，还是继续在货架之间躲？",
+        "choice1": "钻进去",
+        "choice1Target": "backrooms_e0023a",
+        "choice2": "先躲进货架深处",
+        "choice2Target": "backrooms_e0023b"
+      },
+      {
+        "id": "backrooms_e0023a",
+        "type": "story",
+        "minSeconds": 26400,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你来不及多想，一头钻进检修口。管道很窄，你得侧着身体爬。身后传来金属摩擦声——有什么东西也在往洞口探。你加快了速度，膝盖磕在管道接缝上，疼得倒吸凉气。"
+      },
+      {
+        "id": "backrooms_e0023b",
+        "type": "story",
+        "minSeconds": 26400,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你缩进货架最里面，把自己塞进两个纸箱之间。铁靴声从面前走过，停了很久。等它走远，你才慢慢退出来——然后还是钻进了那个检修口。管道很窄，你得侧着身体爬，膝盖磕在接缝上，疼得倒吸凉气。"
       },
       {
         "id": "backrooms_e0024",
@@ -866,12 +941,48 @@
       {
         "id": "backrooms_e0080",
         "type": "story",
-        "minSeconds": 94800,
+        "minSeconds": 96000,
         "minHours": 0,
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "井底是一扇门，普普通通的木门，门把是黄铜的，擦得锃亮。门缝里透出光——白天的光，带颜色的，能看见灰尘在光里漂浮的那种。你握住门把，金属是温的，像被人握过很多次。你回头看了一眼井口，天空还是黄昏。你推开了门。"
+        "text": "井底是一扇门，普普通通的木门，门把是黄铜的，擦得锃亮。门缝里透出光——白天的光，带颜色的，能看见灰尘在光里漂浮的那种。你握住门把，金属是温的，像被人握过很多次。你回头看了一眼井口，天空还是黄昏。"
+      },
+      {
+        "id": "backrooms_e0080a",
+        "type": "story",
+        "minSeconds": 96000,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你握着门把站了很久。光从门缝里漏出来，落在手背上。身后那片黄昏的麦田很安静，安静得像在等你反悔。",
+        "choice1": "推开门",
+        "choice1Target": "backrooms_e0080b",
+        "choice2": "转身走向城市的灯",
+        "choice2Target": "backrooms_e0080c"
+      },
+      {
+        "id": "backrooms_e0080b",
+        "type": "story",
+        "minSeconds": 96000,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你握住门把，用力推开了它。门后涌出来的光把你的影子拉得很长，一直拉到井壁上。",
+        "branch": "home"
+      },
+      {
+        "id": "backrooms_e0080c",
+        "type": "story",
+        "minSeconds": 96000,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你松开手，转过身，背对着那扇门往城市的方向走。走了很久，脚下的泥土慢慢变成了柏油。",
+        "branch": "city"
       },
       {
         "id": "backrooms_e0081",
@@ -881,7 +992,8 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "门后的光吞没了你。你眯起眼睛，等它们适应——你站在一条巷子里，傍晚，路灯刚亮。熟悉的墙，熟悉的味道，熟悉的水泥地面。你回头，身后的墙完整而坚固，没有门，连裂缝都没有。你伸出手，摸了摸墙，墙面冰凉，纹丝不动。"
+        "text": "你眯起眼睛，等它们适应——你站在一条巷子里，傍晚，路灯刚亮。熟悉的墙，熟悉的味道，熟悉的水泥地面。你回头，身后的墙完整而坚固，没有门，连裂缝都没有。你伸出手，摸了摸墙，墙面冰凉，纹丝不动。",
+        "branch": "home"
       },
       {
         "id": "backrooms_e0082",
@@ -891,7 +1003,8 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你沿着巷子走出去，城市的声音涌过来：车流、人声、手机铃声。一切如常，像什么都没有发生过。你在便利店买了一瓶水，站在门口喝完——水是甜的，陌生的甜。你低头看了看瓶子，标签上写着矿泉水。你把它攥紧了。"
+        "text": "你沿着巷子走出去，城市的声音涌过来：车流、人声、手机铃声。一切如常，像什么都没有发生过。你在便利店买了一瓶水，站在门口喝完——水是甜的，陌生的甜。你低头看了看瓶子，标签上写着矿泉水。你把它攥紧了。",
+        "branch": "home"
       },
       {
         "id": "backrooms_e0083",
@@ -901,7 +1014,8 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你回了家。钥匙还能打开门，桌上的杯子还在原位，电视待机的红灯亮着。日历停在昨天，手机充电器的灯还亮着——一切都在等你，像只过了一个下午。你站在客厅中央，忽然觉得这个家有点陌生，又忽然觉得，能觉得陌生，也是一种奢侈。"
+        "text": "你回了家。钥匙还能打开门，桌上的杯子还在原位，电视待机的红灯亮着。日历停在昨天，手机充电器的灯还亮着——一切都在等你，像只过了一个下午。你站在客厅中央，忽然觉得这个家有点陌生，又忽然觉得，能觉得陌生，也是一种奢侈。",
+        "branch": "home"
       },
       {
         "id": "backrooms_e0084",
@@ -911,7 +1025,8 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "夜里你睡得很好。没有嗡鸣，没有铁靴声，没有黄昏的天空。第二天早上你醒来，阳光从窗帘缝里漏进来。你看着天花板，想：那些在井壁上留言的人，后来都出去了吗？你希望他们出去了。你翻了个身，把这个念头和昨晚的梦一起压在枕头底下。"
+        "text": "夜里你睡得很好。没有嗡鸣，没有铁靴声，没有黄昏的天空。第二天早上你醒来，阳光从窗帘缝里漏进来。你看着天花板，想：那些在井壁上留言的人，后来都出去了吗？你希望他们出去了。你翻了个身，把这个念头和昨晚的梦一起压在枕头底下。",
+        "branch": "home"
       },
       {
         "id": "backrooms_e0085",
@@ -922,7 +1037,251 @@
         "weight": 1,
         "once": true,
         "text": "你站在阳台，看着楼下的街道。有人在遛狗，有孩子在跑，有人在打电话。你忽然想起 L9 的那片麦田，想起稻草人脸上僵硬的笑。你深吸了一口气——空气是新鲜的，带着汽车尾气和早餐铺子的味道。这是真的。你对自己说：这是真的。然后你转身，去上班。生活继续，像后室从未发生过。但你知道，井底的划痕里，有你的一枚硬币。",
+        "branch": "home",
         "completionTitle": "前厅"
+      },
+      {
+        "id": "backrooms_e0086",
+        "type": "story",
+        "minSeconds": 97200,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你沿街走了两公里。便利店亮着灯，橱窗里摆着热狗和咖啡，收银机抽屉开着。汽车停在路边，钥匙插在锁孔里。这是一座被按了暂停键的城市——所有人都消失得干干净净，只留下生活的痕迹。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0087",
+        "type": "story",
+        "minSeconds": 98400,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "便利店门开着，你走进去。收银台后面没有店员，但收音机在放一首你听过的老歌。货架上的东西都是真的——你拿了一瓶水，把硬币放在柜台上。你离开时，收音机换了下一首歌，像在为你送行。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0088",
+        "type": "story",
+        "minSeconds": 99600,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "城市广播在头顶响起，声音温柔得像客服：「欢迎回家，流浪者。城市会照顾你。请注意，深夜请勿外出。」你抬头找喇叭，找不到。广播每隔十分钟循环一次，每次都从「欢迎回家」开始。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0089",
+        "type": "story",
+        "minSeconds": 100800,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在 ATM 前停下，屏幕亮着，显示你的账户余额——和现实里一模一样，一分不多一分不少。你盯着那串数字看了很久。这座城市知道你的一切，这比任何怪物都让人脊背发凉。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0090",
+        "type": "story",
+        "minSeconds": 102000,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "远处有人影朝你走来，步伐正常得让人想哭。你跑过去——那是橱窗里的塑料假人，被人摆成走路的姿势，脸上画着微笑，面向你站了一整条街。你退后两步，它没有动。你绕过它继续走。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0091",
+        "type": "story",
+        "minSeconds": 103200,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "药店的门虚掩着，你在货架上找到绷带和创可贴，还有两瓶杏仁水。标签是中文的，和你小时候楼下药店的一模一样。你在收银台留下几张皱巴巴的钞票——虽然这里大概没有人在乎钱。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0092",
+        "type": "story",
+        "minSeconds": 104400,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "路过地下车库入口时，你看见一个黑影一闪而过，快得不像人类。你停下来，屏住呼吸——车库深处传来什么东西拖地的声音，一下，又一下。你没有进去。广播恰好响起：「深夜请勿外出。」你加快了脚步。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0093",
+        "type": "story",
+        "minSeconds": 105600,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "地铁站入口的闸机全部敞开，像在邀请你。你走进去，站台上空无一人，时刻表显示：末班车 3:00。现在 2:47。你坐在长椅上，等着那班不知道会不会来的车。这座城市给你的温柔，让你不安。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0094",
+        "type": "story",
+        "minSeconds": 106800,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "3 点整，车来了。车门没有开，车窗里的乘客坐得笔直，目视前方，像一排整齐的蜡像。车停在站台，三秒，然后开走。广播响起：「欢迎回家，流浪者。请等待下一班。」你知道你等不起下一班。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0095",
+        "type": "story",
+        "minSeconds": 108000,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你跳下轨道，沿着隧道走。黑暗里只有你的脚步声和滴水声。走了大概二十分钟，隧道尽头出现一道墙缝，缝里透出淡蓝色的光——不是这个城市的光。你侧身挤进去，世界的颜色在你身后熄灭。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0096",
+        "type": "story",
+        "minSeconds": 109200,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "墙缝的另一边，世界变成了网格。地面是一格一格的坐标线，天空是平铺的像素，远处的建筑只渲染了一半，露出灰色的骨架。你站在一条数据组成的街道上，脚下是你看不懂的代码。这里的一切都像没做完。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0097",
+        "type": "story",
+        "minSeconds": 110400,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你试着走了一步——地面发出轻微的机械声，像踩在键盘上。建筑半透明，你可以看见里面空荡荡的房间骨架。一架「飞机」从头顶飞过，只是一个三角形的贴图，拖着没有渲染的尾迹。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0098",
+        "type": "story",
+        "minSeconds": 111600,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "街角站着一个「人」，西装笔挺，重复着同一个动作：抬手看表，放下，抬手看表。你走近，他没有任何反应。他的脸上没有五官，只有一片光滑的皮肤，像建模时忘了画。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0099",
+        "type": "story",
+        "minSeconds": 112800,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "空中悬浮着一行红色大字，像游戏里的系统提示：SYSTEM ERROR。你往前走，它跟着你移动。你停下来，它也停下来。你试着说「你好」，它闪烁了一下，变成一个问号。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0100",
+        "type": "story",
+        "minSeconds": 114000,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你走进一栋半透明的办公楼，找到一张桌子，桌上有半杯咖啡——杯子的贴图在缓慢旋转，但咖啡是画的。你伸手去碰，手指穿过了杯子。这个世界欢迎你，但它不是真的。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0101",
+        "type": "story",
+        "minSeconds": 115200,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "在街道尽头，你发现一堵没有加载完的墙——方块纹理一片一片地消失，露出后面纯粹的空白。你捡起一块石头扔进去，石头没有落地声。空白在扩大，像在呼吸。你知道这就是出口，但你在犹豫。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0102",
+        "type": "story",
+        "minSeconds": 116400,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在角落找到一台自动售货机，玻璃柜里摆着杏仁水。你投了币——它吐出一瓶，是真实的，冰凉的，瓶身贴着熟悉的标签。你喝了一口。在全是假货的世界里，这是唯一真的东西。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0103",
+        "type": "story",
+        "minSeconds": 117600,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你抬头看天，云是重复平铺的贴图，每一朵都一样。你数了数，天上有四十七朵一模一样的云。你想起现实里小时候看的动画片，背景循环播放的蓝天。这个世界连天空都是敷衍的。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0104",
+        "type": "story",
+        "minSeconds": 118800,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你发现自己的影子慢了两秒——你抬手，影子两秒后才抬手。你跳一下，影子两秒后才落地。你停下来盯着影子看，它终于也停了下来，然后，它朝你挥了挥手。你没有挥手。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0105",
+        "type": "story",
+        "minSeconds": 120000,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你不再犹豫，转身跑向那堵没有加载完的墙，一头撞进空白里。世界在你身后碎裂成像素，一块一块地剥落，像剥落的墙纸。你闭着眼，感觉自己在坠落，又像是在上升。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0106",
+        "type": "story",
+        "minSeconds": 121200,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "像素落定，雾气扑面而来。你站在一片水汽蒸腾的旷野上，脚下是温热的石头，不远处有一片冒着白烟的温泉。水里有东西在动——咕嘟，咕嘟。无数只青蛙从水里探出头，齐刷刷地看向你。",
+        "branch": "city"
+      },
+      {
+        "id": "backrooms_e0107",
+        "type": "story",
+        "minSeconds": 122400,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在温泉边坐下，把鞋脱了泡进水里。水汽升上来，远处的天边显出一条笔直的缝——世界的边界，像素在那里一条一条地停住。青蛙们还在看你，一动不动。你忽然想笑：找了这么久的出口，最后发现出口就是这块没做完的地方。你没有站起来。你对自己说：这次不走了，等它做完再说。",
+        "branch": "city",
+        "completionTitle": "未加载的城"
       }
     ],
     "holidayEvents": [],
@@ -1684,27 +2043,107 @@
       {
         "id": "wasteland_e0001",
         "type": "story",
+        "minSeconds": 0,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你睁开眼。不知道睡了多久，只知道世界已经不再是你认识的样子了。混凝土的墙，循环的空气，头顶一盏指示灯忽明忽暗地亮着。"
+      },
+      {
+        "id": "wasteland_e0001a",
+        "type": "story",
+        "minSeconds": 120,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你摸黑坐起来，先清点身边剩下的东西：半壶水，两听罐头，一节电池。数字比记忆里少。"
+      },
+      {
+        "id": "wasteland_e0001b",
+        "type": "story",
+        "minSeconds": 240,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "墙上的旧终端还在工作，屏幕上滚着一行字：地表辐射已降至可通行水平。窗口期十二小时，过期不再重算。"
+      },
+      {
+        "id": "wasteland_e0001c",
+        "type": "story",
+        "minSeconds": 360,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "剩下的储备撑不过下一次窗口期。留在这里是慢慢地等，出去是快一点地活。"
+      },
+      {
+        "id": "wasteland_e0001d",
+        "type": "story",
+        "minSeconds": 480,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你把能带的都塞进背包：水、罐头、一把刀、一盒火柴。带不走的留在原地，它们本来也不是你的。"
+      },
+      {
+        "id": "wasteland_e0002",
+        "type": "story",
         "minSeconds": 600,
         "minHours": 0,
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你睁开眼。不知道睡了多久，只知道世界已经不再是你认识的样子了。废土在面前铺开，没有尽头。"
+        "text": "气闸的把手冰凉。你握住它，停了三秒。这三秒里你想了很多，又好像什么都没想。"
       },
       {
-        "id": "wasteland_e0002",
+        "id": "wasteland_e0002a",
         "type": "story",
-        "minSeconds": 1200,
+        "minSeconds": 720,
         "minHours": 0,
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "空气里有灰烬和金属的味道。你站起来确认自己还活着，迈出了第一步。"
+        "text": "门开了。风先一步灌进来，带着灰和铁锈的味道。你咳了两声，眼睛睁不开。"
+      },
+      {
+        "id": "wasteland_e0002b",
+        "type": "story",
+        "minSeconds": 840,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "等你适应了光，才发现太阳是灰白色的。天很低，像一块没擦干净的玻璃压在地上。"
+      },
+      {
+        "id": "wasteland_e0002c",
+        "type": "story",
+        "minSeconds": 960,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你回头看了一眼。门在身后缓缓合上，密封条压出最后一声轻响。它不会再为你打开第二次。"
+      },
+      {
+        "id": "wasteland_e0002d",
+        "type": "story",
+        "minSeconds": 1080,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你迈出了第一步。靴子踩在干硬的土地上，声音很闷，没有回声——这地方太空了。"
       },
       {
         "id": "wasteland_e0003",
         "type": "story",
-        "minSeconds": 1800,
+        "minSeconds": 1200,
         "minHours": 0,
         "minRebirth": 0,
         "weight": 1,
@@ -1712,14 +2151,144 @@
         "text": "这片土地上的规则很简单——活着，或者不活着。你决定选择前者。"
       },
       {
+        "id": "wasteland_e0003a",
+        "type": "story",
+        "minSeconds": 1320,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你走了一个小时。没有房子，没有人，没有声音。只有风和灰，还有你自己的呼吸。"
+      },
+      {
+        "id": "wasteland_e0003b",
+        "type": "story",
+        "minSeconds": 1440,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "路边停着一辆车，烧得只剩骨架。你绕着它走了半圈，车里没有人，也没有行李，像被搬空过。"
+      },
+      {
+        "id": "wasteland_e0003c",
+        "type": "story",
+        "minSeconds": 1560,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "远处的斜坡上趴着一个人，面朝下，没人管。你站在原地看着，没有走近。"
+      },
+      {
+        "id": "wasteland_e0003d",
+        "type": "story",
+        "minSeconds": 1680,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你绕过他继续走。你决定不去看第二眼——有些东西看清楚了，就走不动了。"
+      },
+      {
         "id": "wasteland_e0004",
+        "type": "story",
+        "minSeconds": 1800,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "远处有动静。你停下，握紧了刀。走过来的是一个人，背着东西，隔着五十步停住。你们互相看了一会儿，谁都没说话。"
+      },
+      {
+        "id": "wasteland_e0004a",
+        "type": "story",
+        "minSeconds": 1920,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他抬手指了指东边，然后转身走了。没有打招呼，也没有回头。在这里，这已经算是善意。"
+      },
+      {
+        "id": "wasteland_e0004b",
+        "type": "story",
+        "minSeconds": 2040,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你顺着他指的方向走。走到天快黑的时候，看见一片轮廓——铁皮、帐篷、烟。有人在这里活着。"
+      },
+      {
+        "id": "wasteland_e0004c",
+        "type": "story",
+        "minSeconds": 2160,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "镇口站着两个人，手里有枪。他们从头到脚打量你，像看一件还不知道价钱的货。"
+      },
+      {
+        "id": "wasteland_e0004d",
+        "type": "story",
+        "minSeconds": 2280,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在镇口站了一会儿，听清了这里的规矩：有人靠捡，有人靠卖，有人靠躲。还有人——据说不是人。"
+      },
+      {
+        "id": "wasteland_e0004e",
         "type": "story",
         "minSeconds": 2400,
         "minHours": 0,
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "远处有动静，近处有未知。你可以感觉到四条截然不同的道路在前方等你，但此刻你只知道一件事：你要活下去。"
+        "text": "这四种活法你居然都听得懂。这才是最麻烦的地方。"
+      },
+      {
+        "id": "wasteland_e0004f",
+        "type": "story",
+        "minSeconds": 2520,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "天要黑了。镇上的人开始收摊、关门、点灯。你得在天黑之前决定站在哪一边。"
+      },
+      {
+        "id": "wasteland_e0004g",
+        "type": "story",
+        "minSeconds": 2640,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你摸了摸口袋，里面只剩一样东西：一枚磨得看不清年份的硬币。你把它攥在手里。"
+      },
+      {
+        "id": "wasteland_e0004h",
+        "type": "story",
+        "minSeconds": 2760,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你忽然想起自己为什么要活下来。不是为了活着本身，是为了还能做一次选择。"
+      },
+      {
+        "id": "wasteland_e0004i",
+        "type": "story",
+        "minSeconds": 2880,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你抬起头。四条路在你面前摊开，每一条都有人走，每一条都有人死在上面。"
       },
       {
         "id": "wasteland_e0005",
@@ -1729,7 +2298,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你站在避难所的铁门前。身后是冰冷的混凝土，眼前是未知的废土。风沙从门缝涌入，呛得你咳嗽。你要如何开启新生活？",
+        "text": "你站在岔路口。身后是你走出来的那片荒原，眼前是四条通向不同日子的路。风从背后推着你，像在催。你要如何开启新生活？",
         "choice1": "走入废土",
         "choice1Target": "wasteland_e0005a",
         "choice2": "推车摆摊",
@@ -26637,6 +27206,271 @@
         "branch": "ai",
         "flagRequire": "transform_to_wave=true",
         "completionTitle": "化波者"
+      },
+      {
+        "id": "wasteland_e2100",
+        "type": "story",
+        "minSeconds": 0,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "四条路你都走完了。最后你回到一个没有路标的地方——不是荒野，是一个房间。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2101",
+        "type": "story",
+        "minSeconds": 600,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "房间中央立着一台机器，还在转。它不大，比一辆手推车大不了多少，外壳落满灰，指示灯亮着。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2102",
+        "type": "story",
+        "minSeconds": 1200,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "机器旁边摊着一本厚册子，纸已经发黄。封面上没有名字，只有一个编号。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2103",
+        "type": "story",
+        "minSeconds": 1800,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你翻开第一页。上面写着一个日期，和一句话：今天他往北走了。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2104",
+        "type": "story",
+        "minSeconds": 2400,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "第二页写着：今天他推着车去了渣客镇。第三页写着：今天他没有回头。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2105",
+        "type": "story",
+        "minSeconds": 3000,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你越翻越快。册子里记着很多人，每一个都走过这片废土，每一个都选了不同的路。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2106",
+        "type": "story",
+        "minSeconds": 3600,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "有人带着一条狗活到了很老。有人把一辆手推车推成了商队。有人一辈子在躲，躲到最后没力气躲了。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2107",
+        "type": "story",
+        "minSeconds": 4200,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "还有人根本没做过人。他在数据里醒来，用算力重新算了一遍这个世界。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2108",
+        "type": "story",
+        "minSeconds": 4800,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "每一个的结局后面，都跟着同一行小字：已归档。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2109",
+        "type": "story",
+        "minSeconds": 5400,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你数了数前面记过的人数——七十二个。你翻到最后一页，看见自己的编号，和封面上那个一模一样。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2110",
+        "type": "story",
+        "minSeconds": 6000,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你终于明白：那四条路不是你走出来的，是这台机器记下来的。你是第七十三个。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2111",
+        "type": "story",
+        "minSeconds": 6600,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你想起那些反复出现的东西：一座锈掉的信号塔，一个编号十三区的地下机房，一扇你推过很多次的门。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2112",
+        "type": "story",
+        "minSeconds": 7200,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "它们不是巧合，是同一个东西的不同名字——一台一直在看着这片废土的机器。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2113",
+        "type": "story",
+        "minSeconds": 7800,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你想起旺财脖子上的项圈，想起阿强留下的背包，想起阿珍摊位上那盏一直亮着的灯。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2114",
+        "type": "story",
+        "minSeconds": 8400,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "它们都在册子里。每一个都出现过不止一次，每一次都换了一个样子，换了一个名字。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2115",
+        "type": "story",
+        "minSeconds": 9000,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在这片土地上走过的每一步，都被数过。包括你以为没人看见的那些。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2116",
+        "type": "story",
+        "minSeconds": 9600,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你坐在机器旁边，坐了很久。机器嗡嗡地转着，像在等你做决定。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2117",
+        "type": "story",
+        "minSeconds": 10200,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你想起册子里那七十二个「已归档」的人。他们没有一个在这本册子上写过字。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2118",
+        "type": "story",
+        "minSeconds": 10800,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你拿起机器旁那支笔。笔杆很凉，笔尖是干的，你在手心里哈了一口气。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2119",
+        "type": "story",
+        "minSeconds": 11400,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你在最后一页的空白处写下第一行：今天他决定不归档。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2120",
+        "type": "story",
+        "minSeconds": 12000,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "机器停了一下。真的停了一下——指示灯暗了半秒，然后又亮起来，转得比刚才慢。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2121",
+        "type": "story",
+        "minSeconds": 12600,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你接着往下写：他记得那条狗的名字，记得那个不爱说话的人，记得集市上那盏灯。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2122",
+        "type": "story",
+        "minSeconds": 13200,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你写下最后一句：这些不是记录，是他活过的日子。",
+        "branch": "hidden"
+      },
+      {
+        "id": "wasteland_e2123",
+        "type": "story",
+        "minSeconds": 13800,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你合上册子，走出房间。天还是灰的，风还是干的。但这一次你知道自己站在第几页。你走进风里，身后那台机器还在转——只是它记下的，第一次不是结局。",
+        "branch": "hidden",
+        "completionTitle": "第七十三次"
       }
     ],
     "holidayEvents": [

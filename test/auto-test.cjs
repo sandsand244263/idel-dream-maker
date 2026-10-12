@@ -263,7 +263,11 @@ const wl = scenarios.find(s => s.id === 'wasteland');
 test('废土冒烟', '世界存在', !!wl, true);
 test('废土冒烟', '4 条分支', ((wl && wl.branches) || []).length, 4);
 test('废土冒烟', '成就 50 条', ((wl && wl.achievements) || []).length, 50);
-test('废土冒烟', '事件 2204 条', (wl && wl.events.length) || 0, 2204);
+test('废土冒烟', '事件 2249 条', (wl && wl.events.length) || 0, 2249);
+// v4.1 新增内容：开篇扩容 + 隐藏链
+test('废土冒烟', '共享开篇 26 段(含选线抉择)', ((wl && wl.events) || []).filter(e => !e.branch).length, 26);
+test('废土冒烟', '隐藏链 24 段且末段带通关称号', ((wl && wl.events) || []).filter(e => e.branch === 'hidden').length, 24);
+test('废土冒烟', '隐藏链末段是结局', (((wl && wl.events) || []).filter(e => e.branch === 'hidden').slice(-1)[0] || {}).completionTitle, '第七十三次');
 const wlChoice = wl && wl.events.find(e => e.id === 'wasteland_e0005');
 test('废土冒烟', '第5段是选线抉择(四个选项)', !!(wlChoice && wlChoice.choice1 && wlChoice.choice4), true);
 const wlTargets = wlChoice ? [wlChoice.choice1Target, wlChoice.choice2Target, wlChoice.choice3Target, wlChoice.choice4Target] : [];
@@ -276,10 +280,11 @@ test('废土冒烟', '老引擎的等级门槛已无残留(minLevel 不再使用
 
 // ── 8. canArchive ──
 test('canArchive', '无任何记录=false', canArchiveScenario(empty, 'backrooms'), false);
-const fullBranches = { gameCompletions: [{ scenarioId:'backrooms' }], completedBranches: [] };
-test('canArchive', '已通关+无分支需求=true', canArchiveScenario(fullBranches, 'backrooms'), true);
-const partialBranches = { gameCompletions: [{ scenarioId:'backrooms' }] };
-test('canArchive', '仅通关记录=true', canArchiveScenario(partialBranches, 'backrooms'), true);
+// v4.1：后室改成两条分支（回家 / 城市），毕业需两条都走完
+const fullBranches = { gameCompletions: [{ scenarioId:'backrooms' }], completedBranches: ['home', 'city'] };
+test('canArchive', '已通关+全分支=true', canArchiveScenario(fullBranches, 'backrooms'), true);
+const partialBranches = { gameCompletions: [{ scenarioId:'backrooms' }], completedBranches: ['home'] };
+test('canArchive', '已通关但只走一条分支=false', canArchiveScenario(partialBranches, 'backrooms'), false);
 test('canArchive', '不存在的副本=false', canArchiveScenario(empty, 'nonexistent'), false);
 
 // ── 10. 重生加成 ──
@@ -543,8 +548,13 @@ if (w2) {
   const flagRequireEvents = w2.events.filter(e => e.flagRequire);
   test('内容完整性', '后室无 flag 事件（简单副本设计）', flagRequireEvents.length === 0, true);
   const endings = w2.events.filter(e => e.completionTitle);
-  test('内容完整性', '后室 1 个结局事件（前厅）', endings.length, 1);
-  test('内容完整性', '结局事件为链末(最大minSeconds)', endings[0] && endings[0].minSeconds === Math.max(...w2.events.filter(e=>e.type==='story').map(e=>e.minSeconds||0)), true);
+  // v4.1：后室两条结局线——回家线（前厅）/ 城市线（未加载的城）
+  test('内容完整性', '后室 2 个结局事件', endings.length, 2);
+  test('内容完整性', '每个结局都在自己分支链末尾', endings.every(e => {
+    const same = w2.events.filter(x => (x.branch || '') === (e.branch || ''));
+    return e.minSeconds === Math.max(...same.map(x => x.minSeconds || 0));
+  }), true);
+  test('内容完整性', '后室 4 个抉择（杏仁水/楼梯/检修口/井底）', w2.events.filter(e => e.choice1).length, 4);
   // ── 时间解锁语义 mock（原废土真实数据改为构造数据，保留分支/flag/once/target 覆盖） ──
   const mockTimeEvents = [
     { id: 'tm1', type: 'story', minSeconds: 3000, once: true, branch: '', flagRequire: '' },

@@ -1309,8 +1309,10 @@ function checkStoryUnlock() {
   const bp = (gameState.branchProgress && gameState.branchProgress[sid]) || [];
   const branches = currentScenario.branches || [];
   const hiddenActive = branches.length > 0 && branches.every(b => bp.includes(b));
-  let ev = nextStoryEvent('story');
-  if (!ev && hiddenActive) ev = nextStoryEvent('story', 'hidden');
+  // v4.1：隐藏链激活后优先推隐藏段——否则会先弹掉残余的分支结局（flag 兜底结局等），
+  // 被 _storyEnded 收尾挡住，隐藏链反而要玩家再退出重进一次才看得到
+  let ev = hiddenActive ? nextStoryEvent('story', 'hidden') : null;
+  if (!ev) ev = nextStoryEvent('story');
   if (!ev) return;
   if (ev.choice1 && ev.choice1Target) {
     // 抉择段：解锁即弹抉择（正文+选项，不选不推进）
