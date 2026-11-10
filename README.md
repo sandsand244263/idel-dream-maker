@@ -178,7 +178,6 @@ merge.cjs               分段文件合并脚本
 validate_flags.cjs      flag 引用链校验
 validate_md.cjs         .md 格式校验
 validate_quality.cjs    内容质量校验（ID/等级覆盖/伏笔回收率）
-test-utils.cjs          AI 测试工具（dev 存档操作）
 mcp-server.cjs          AI 测试 MCP 服务（--dev）
 level-curve.cjs         升级曲线共享公式
 ```
