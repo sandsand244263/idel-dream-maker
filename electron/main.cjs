@@ -1522,11 +1522,14 @@ function startGameLoop() {
       theme: gameState.selectedFontTheme || 'green',
       custom_theme: gameState.customTheme || null,
       pet_level: calcLevel(gameState.petTotalExp),
-      pet_fullness: gameState.petFullness || 80,
-      pet_mood: gameState.petMood || 80,
-      pet_cleanliness: gameState.petCleanliness || 80,
-      pet_foods: gameState.petFoods || 0,
-      pet_soaps: gameState.petSoaps || 0,
+      // v4 单轨：大厅等级与宠物等级共用一个经验池。界面用 hub_total_exp 算大厅等级（原先从不发这个键，导致大厅等级恒 1）
+      hub_total_exp: gameState.petTotalExp,
+      // 三维/道具用 ?? 而不是 ||：0 是合法值（饿到见底要能显示 0），不能被默认值盖掉
+      pet_fullness: gameState.petFullness ?? 80,
+      pet_mood: gameState.petMood ?? 80,
+      pet_cleanliness: gameState.petCleanliness ?? 80,
+      pet_foods: gameState.petFoods ?? 0,
+      pet_soaps: gameState.petSoaps ?? 0,
       pet_droopy: isPetDroopy(),
       pet_gender: gameState.petGender,
       current_branch: gameState.currentBranch || '',
@@ -1774,6 +1777,8 @@ function registerIpcHandlers() {
     return {
       game: serializeGame(),
       petLevel: calcLevel(gameState.petTotalExp),
+      // v4 单轨：大厅等级 = 宠物等级。界面初始化读 hubLevel，缺这个键会恒显示 1
+      hubLevel: calcLevel(gameState.petTotalExp),
       scenario: currentScenario ? {
         id: currentScenario.id,
         name: currentScenario.name,
@@ -2675,12 +2680,14 @@ function registerIpcHandlers() {
         petTotalExp: cloudData.petTotalExp || 0,
         lastWriteTimestamp: cloudData.lastWriteTimestamp || '',
         petLevel: calcLevel(cloudData.petTotalExp || 0),
+        hubLevel: calcLevel(cloudData.petTotalExp || 0),
       };
       const local = {
         playerName: gameState?.playerName || '?',
         petTotalExp: gameState?.petTotalExp || 0,
         lastWriteTimestamp: gameState?.lastWriteTimestamp || '',
         petLevel: calcLevel(gameState?.petTotalExp || 0),
+        hubLevel: calcLevel(gameState?.petTotalExp || 0),
       };
       return { hasCloudSave: true, cloud, local };
     } catch { return { hasCloudSave: false }; }
@@ -2755,8 +2762,15 @@ function registerIpcHandlers() {
       try {
         const petState = {
           petLevel: calcLevel(gameState.petTotalExp),
+          // 宠物窗 pet-state 读方要这 8 个键（缺了会把三维/道具显示成 0）
+          hubLevel: calcLevel(gameState.petTotalExp),
           isInHub: gameState.isInHub,
           level: gameState.level,
+          petFullness: gameState.petFullness ?? 80,
+          petMood: gameState.petMood ?? 80,
+          petCleanliness: gameState.petCleanliness ?? 80,
+          petFoods: gameState.petFoods ?? 0,
+          petSoaps: gameState.petSoaps ?? 0,
         };
         forwardToPet('pet-state', petState);
       } catch {}
