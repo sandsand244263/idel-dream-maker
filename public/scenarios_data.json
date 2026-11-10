@@ -529,6 +529,40 @@
         "text": "你推开一间办公室的门。工位上摊着没合上的笔记本，笔搁在写了一半的句子中间。桌上的咖啡杯里，液体早就干成了褐色的圈。这里像所有人同时消失了，连告别都没来得及。你拿起那支笔，在笔记本空白处写下自己的名字。"
       },
       {
+        "id": "backrooms_e0038a",
+        "type": "story",
+        "minSeconds": 45000,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你回到走廊。经过 305 室的时候，里面传出电话铃声——老式座机，一声一声，很有耐心。门虚掩着，缝里透出灯管的白光。",
+        "choice1": "接起来",
+        "choice1Target": "backrooms_e0038b",
+        "choice2": "让它响",
+        "choice2Target": "backrooms_e0038c"
+      },
+      {
+        "id": "backrooms_e0038b",
+        "type": "story",
+        "minSeconds": 45000,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你推门进去，拿起听筒。那头没有声音，只有很轻的呼吸。你「喂」了一声，呼吸停了半秒，然后一个很像你的声音说：别接。你还没问，电话挂了。你握着听筒站了很久，直到忙音变成嘟嘟声。"
+      },
+      {
+        "id": "backrooms_e0038c",
+        "type": "story",
+        "minSeconds": 45000,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你没有接。铃声跟着你走了两条走廊，然后变成三声短促的拨号音，停了。你回头看了一眼那扇门——它现在关着，门牌上写着 305。你确定自己刚才没有关门。"
+      },
+      {
         "id": "backrooms_e0039",
         "type": "story",
         "minSeconds": 45600,
@@ -679,6 +713,40 @@
         "text": "酒店三楼的舞厅大门敞着，里面灯火通明，音乐声若有若无——是一支老曲子，你在外婆的收音机里听过。舞池里没有人，但地板上印满了舞步，新的叠着旧的。你在门口站了一会儿，鞠了一躬，然后离开了。"
       },
       {
+        "id": "backrooms_e0053a",
+        "type": "story",
+        "minSeconds": 63000,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "音乐换了。这一支你听过——外婆的收音机，周日早上。舞池还是空的，但地板上那些旧舞步里，有一双鞋印是新的，鞋底还湿着。",
+        "choice1": "走进去跳",
+        "choice1Target": "backrooms_e0053b",
+        "choice2": "关上门",
+        "choice2Target": "backrooms_e0053c"
+      },
+      {
+        "id": "backrooms_e0053b",
+        "type": "story",
+        "minSeconds": 63000,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你走进舞池，跟着那支曲子走了几步。地板在你脚下轻轻回响，像有人在另一个时间陪你跳。曲子结束的时候，你面前的地板上多了一双鞋印，正对着你的脚尖。"
+      },
+      {
+        "id": "backrooms_e0053c",
+        "type": "story",
+        "minSeconds": 63000,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你把门关上。门合上的一瞬间，里面的音乐停了。走廊安静得能听见自己吞咽的声音。你没有回头，一路走到消防通道。"
+      },
+      {
         "id": "backrooms_e0054",
         "type": "story",
         "minSeconds": 63600,
@@ -787,6 +855,40 @@
         "weight": 1,
         "once": true,
         "text": "水下有一座公交站，顶棚下挂着时刻表。你潜下去看——所有班次都写着\"末班\"。站台的座椅上坐着一个穿雨衣的人形，一动不动。你浮上水面换气，再潜下去时，座椅空了，只有一件雨衣叠得整整齐齐。"
+      },
+      {
+        "id": "backrooms_e0064a",
+        "type": "story",
+        "minSeconds": 76320,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你又潜了下去。那个穿雨衣的人形坐回了长椅，但这次它伸出一只手，掌心朝上，像在等什么。",
+        "choice1": "把东西放上去",
+        "choice1Target": "backrooms_e0064b",
+        "choice2": "不管它，浮上去",
+        "choice2Target": "backrooms_e0064c"
+      },
+      {
+        "id": "backrooms_e0064b",
+        "type": "story",
+        "minSeconds": 76320,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你把剩下的半瓶杏仁水放进它掌心。它的手指慢慢合拢，包住瓶子。你浮上去换气，再潜下来时，长椅空了，瓶盖拧开摆在椅子上，瓶子是空的。"
+      },
+      {
+        "id": "backrooms_e0064c",
+        "type": "story",
+        "minSeconds": 76320,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你什么也没给，直接浮上去。再潜下来看时，它还在那儿，手还是伸着。你游远了，回头看它仍然保持着那个姿势，像在等一个不会来的人。"
       },
       {
         "id": "backrooms_e0065",
@@ -907,6 +1009,40 @@
         "weight": 1,
         "once": true,
         "text": "吃完饭，你在农舍里翻到一本日历，年份是你卡入后室那年。日历上画满了圈，全是同一天：你离开家的那天。你数了数——从你进门起，这本日历已经翻了三百多页。你合上日历，把它放回原处，像什么都没看见。"
+      },
+      {
+        "id": "backrooms_e0076a",
+        "type": "story",
+        "minSeconds": 90720,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "麦田里那个身影朝你走过来。走近了，你看清他的脸——很年轻，嘴唇干裂，眼神是那种刚进来的眼神。他问你：这里是哪里？",
+        "choice1": "告诉他实话",
+        "choice1Target": "backrooms_e0076b",
+        "choice2": "说这里挺好的",
+        "choice2Target": "backrooms_e0076c"
+      },
+      {
+        "id": "backrooms_e0076b",
+        "type": "story",
+        "minSeconds": 90720,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你说这里是后室，你会走很久，但最后有一扇门。他听完点点头，说了声谢谢，转身走了。你看着他的背影，忽然想起自己刚进来时也问过一模一样的问题——那时候没有人回答你。"
+      },
+      {
+        "id": "backrooms_e0076c",
+        "type": "story",
+        "minSeconds": 90720,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你说这里挺好的，有麦田，有房子，有热粥。他笑了一下，肩膀松下来。你们在田埂上坐了一会儿，谁也没说话。走的时候你没有回头——你知道他会在这里待很久，而你那句话能让这段时间好过一点。"
       },
       {
         "id": "backrooms_e0077",
@@ -1282,6 +1418,227 @@
         "text": "你在温泉边坐下，把鞋脱了泡进水里。水汽升上来，远处的天边显出一条笔直的缝——世界的边界，像素在那里一条一条地停住。青蛙们还在看你，一动不动。你忽然想笑：找了这么久的出口，最后发现出口就是这块没做完的地方。你没有站起来。你对自己说：这次不走了，等它做完再说。",
         "branch": "city",
         "completionTitle": "未加载的城"
+      },
+      {
+        "id": "backrooms_e0200",
+        "type": "story",
+        "minSeconds": 123120,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你醒来的时候，嗡鸣又回来了。不是温泉边的水汽，也不是家里的天花板——是荧光灯，均匀得没有一丝影子。黄墙。你又在这里了。",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0201",
+        "type": "story",
+        "minSeconds": 123600,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "走廊和你第一次见到的一模一样。地毯还是潮的，门还是那些门。你往前走，脚步很稳——你已经知道怎么在这种地方活下来了。",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0202",
+        "type": "story",
+        "minSeconds": 124080,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你开始数房间。这是你给自己下的禁令，但这次你数了：一百零七间。数完最后一间，你站在原地等了一会儿，什么也没有发生。",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0203",
+        "type": "story",
+        "minSeconds": 124560,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "然后你听见身后有一扇门开了。声音很轻，像有人只是把手放在门把上转了一下，没有推开。",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0204",
+        "type": "story",
+        "minSeconds": 125040,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你回头。走廊尽头多了一扇门，就在你刚才走过的地方——你确定那里原来是一面墙。",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0205",
+        "type": "story",
+        "minSeconds": 125520,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "门上没有房间号。你伸手摸了摸，木头是温的。你把耳朵贴上去，听见里面有人在数数：……一百零五，一百零六，一百零七……",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0206",
+        "type": "story",
+        "minSeconds": 126000,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "数到一百零七就停了。然后那个人轻轻叹了口气，从头开始数。",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0207",
+        "type": "story",
+        "minSeconds": 126480,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你推开门。里面是一间很小的房间，一张桌子，一把椅子，一盏台灯。桌上摊着一本笔记本，纸边卷起，写满了数字。",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0208",
+        "type": "story",
+        "minSeconds": 126960,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "椅子上坐着一个人，背对着你，肩膀很窄，衣服旧得看不出颜色。他没有回头，只是说：你来得比上一个晚。",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0209",
+        "type": "story",
+        "minSeconds": 127440,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你问他这是第几间。他说第一百零八间。他说这间不在走廊里，在走廊后面——所有数完房间的人都会走到这里。",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0210",
+        "type": "story",
+        "minSeconds": 127920,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他合上笔记本，转过身。你看见他的脸——是你的脸，只是老了很多，眼睛下面有两道深沟。",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0211",
+        "type": "story",
+        "minSeconds": 128400,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他说他在这里等你很久了。他说每个走进后室的人都会分成两个：一个往外走，一个留下来数房间。走掉的那个忘了，留下来的这个负责记住。",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0212",
+        "type": "story",
+        "minSeconds": 128880,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你问他记得什么。他翻开笔记本，第一页写着一个日期，是你卡进来的那天。后面每一页都是一行字：今天他还在走。",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0213",
+        "type": "story",
+        "minSeconds": 129360,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他说：我以为写完这本就能出去。写到这里我才明白——不是我在记你，是你在记我。你走出去的那一部分，得靠我留下来，才算真的发生过。",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0214",
+        "type": "story",
+        "minSeconds": 129840,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "他把笔记本推给你。最后一页空着，笔搁在纸上。他说：写一句。写完你就可以走了，这次是真的。",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0215",
+        "type": "story",
+        "minSeconds": 130320,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你想了很久，写下：我数过，一共一百零八间。写完抬头，房间开始变淡，像一张被水泡开的纸。",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0216",
+        "type": "story",
+        "minSeconds": 130800,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "那个人站起来，把椅子推回桌边。他说：这次换我出去看看。你要不要留在这里，替我数？",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0217",
+        "type": "story",
+        "minSeconds": 131280,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你没有回答。你只是把笔放回桌上，然后转身走向门口。门外的走廊已经变成了另一种颜色——不是黄，是早上六点的灰白。",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0218",
+        "type": "story",
+        "minSeconds": 131760,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你回头最后看了一眼。房间里的灯还亮着，桌上那本笔记本翻在最后一页，那一行字还在。门自己关上了，没有声音。",
+        "branch": "hidden"
+      },
+      {
+        "id": "backrooms_e0219",
+        "type": "story",
+        "minSeconds": 132240,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你站在走廊里，第一次觉得这里的嗡鸣是有人陪着你的声音。你不知道自己现在算第几个，但你记得那个数字。一百零八。",
+        "branch": "hidden",
+        "completionTitle": "第一百零八间"
       }
     ],
     "holidayEvents": [],

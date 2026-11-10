@@ -549,12 +549,13 @@ if (w2) {
   test('内容完整性', '后室无 flag 事件（简单副本设计）', flagRequireEvents.length === 0, true);
   const endings = w2.events.filter(e => e.completionTitle);
   // v4.1：后室两条结局线——回家线（前厅）/ 城市线（未加载的城）
-  test('内容完整性', '后室 2 个结局事件', endings.length, 2);
+  // v4.2：隐藏链收束段（第一百零八间）也带 CompletionTitle，共 3 个
+  test('内容完整性', '后室 3 个结局事件（含隐藏链收束）', endings.length, 3);
   test('内容完整性', '每个结局都在自己分支链末尾', endings.every(e => {
     const same = w2.events.filter(x => (x.branch || '') === (e.branch || ''));
     return e.minSeconds === Math.max(...same.map(x => x.minSeconds || 0));
   }), true);
-  test('内容完整性', '后室 4 个抉择（杏仁水/楼梯/检修口/井底）', w2.events.filter(e => e.choice1).length, 4);
+  test('内容完整性', '后室 8 个抉择（杏仁水/楼梯/检修口/电话/舞厅/雨衣人/新人/井底）', w2.events.filter(e => e.choice1).length, 8);
   // ── 时间解锁语义 mock（原废土真实数据改为构造数据，保留分支/flag/once/target 覆盖） ──
   const mockTimeEvents = [
     { id: 'tm1', type: 'story', minSeconds: 3000, once: true, branch: '', flagRequire: '' },
