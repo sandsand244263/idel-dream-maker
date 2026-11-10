@@ -11200,6 +11200,18 @@
         "branch": "merchant"
       },
       {
+        "id": "wasteland_e0670c",
+        "type": "story",
+        "minSeconds": 102960,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "回到渣客镇时，那条狗还蹲在镇口等你们。你没赶它。阿珍找了个破碗放在车边，它喝了两口水，就趴下不走了。",
+        "branch": "merchant",
+        "flagRequire": "fed_wangcai=1"
+      },
+      {
         "id": "wasteland_e0672",
         "type": "story",
         "minSeconds": 103200,
@@ -11594,6 +11606,18 @@
         "once": true,
         "text": "你们开了五天车到达那座山脚下。山路比想象中好走——以前是盘山公路。",
         "branch": "merchant"
+      },
+      {
+        "id": "wasteland_e0670d",
+        "type": "story",
+        "minSeconds": 124560,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "翻山前那晚你们在山脚扎营。半夜狗突然冲着坡下狂叫，叫声跟平时不一样。你提灯一照——坡下全是新鲜的脚印，有人摸上来过。你们抱着枪坐到天亮，那伙人始终没敢动。",
+        "branch": "merchant",
+        "flagRequire": "fed_wangcai=1"
       },
       {
         "id": "wasteland_e0708",
