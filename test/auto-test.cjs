@@ -263,7 +263,7 @@ const wl = scenarios.find(s => s.id === 'wasteland');
 test('废土冒烟', '世界存在', !!wl, true);
 test('废土冒烟', '4 条分支', ((wl && wl.branches) || []).length, 4);
 test('废土冒烟', '成就 50 条', ((wl && wl.achievements) || []).length, 50);
-test('废土冒烟', '事件 2251 条', (wl && wl.events.length) || 0, 2251);
+test('废土冒烟', '事件 2258 条', (wl && wl.events.length) || 0, 2258);
 // v4.1 新增内容：开篇扩容 + 隐藏链
 test('废土冒烟', '共享开篇 26 段(含选线抉择)', ((wl && wl.events) || []).filter(e => !e.branch).length, 26);
 test('废土冒烟', '隐藏链 24 段且末段带通关称号', ((wl && wl.events) || []).filter(e => e.branch === 'hidden').length, 24);

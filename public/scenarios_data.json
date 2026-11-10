@@ -5115,6 +5115,18 @@
         "flagRequire": "invited_ahqiang=false; fed_wangcai=1"
       },
       {
+        "id": "wasteland_e0120c",
+        "type": "story",
+        "minSeconds": 138240,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "后来你在渣客镇听人提起过他——那个被你救下的旅人活了下来，腿上落了疤，在修车铺干活。有人问那伤是谁治的，他想了半天，说记不清脸，只记得那人给药的时候手没抖。",
+        "branch": "survivor",
+        "flagRequire": "saved_stranger=1"
+      },
+      {
         "id": "wasteland_e0231",
         "type": "story",
         "minSeconds": 138600,
@@ -9470,7 +9482,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你决定守住现有生意。阿珍耸耸肩独自去了，下午回来时拉着半车零件，赚了一笔。",
+        "text": "你和阿珍摸进废弃仓库，在尘封的木箱里翻出几十个完好的净水滤芯。发了。",
         "branch": "merchant"
       },
       {
@@ -9481,7 +9493,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你和阿珍摸进废弃仓库，在尘封的木箱里翻出几十个完好的净水滤芯。发了。",
+        "text": "你决定守住现有生意。阿珍耸耸肩独自去了，下午回来时拉着半车零件，赚了一笔。",
         "branch": "merchant"
       },
       {
@@ -16721,6 +16733,18 @@
         "branch": "fugitive"
       },
       {
+        "id": "wasteland_e1040c",
+        "type": "story",
+        "minSeconds": 81360,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "侦察第三天，你在仓库守卫里认出了他——那个被你放走的佣兵。他也认出了你。他什么也没说，只是换岗时把东侧那扇门留了条缝，然后走开了。",
+        "branch": "fugitive",
+        "flagRequire": "fugitive_letgo=1"
+      },
+      {
         "id": "wasteland_e1136",
         "type": "story",
         "minSeconds": 81600,
@@ -16752,6 +16776,18 @@
         "once": true,
         "text": "你从南侧翻入仓库，用点射解决了两名留守人员。仓库里堆满了弹药、口粮和医疗物资。你倒上汽油，点燃了整座仓库。",
         "branch": "fugitive"
+      },
+      {
+        "id": "wasteland_e1040d",
+        "type": "story",
+        "minSeconds": 83160,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "搜身的时候你在他内袋里摸到一张照片——一个女人抱着孩子，纸边磨得起了毛。你把它塞回原处，和那具尸体一起留在了仓库里。",
+        "branch": "fugitive",
+        "flagRequire": "fugitive_silence=1"
       },
       {
         "id": "wasteland_e1139",
@@ -21947,6 +21983,18 @@
         "branch": "ai"
       },
       {
+        "id": "wasteland_e1520c",
+        "type": "story",
+        "minSeconds": 54360,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你调出那段信号的原始波形重新比对。它的源点在这几个月里移动了三百多公里，方向始终朝着你——像是有个东西一直在往这边走。",
+        "branch": "ai",
+        "flagRequire": "contacted_signal=1"
+      },
+      {
         "id": "wasteland_e1591",
         "type": "story",
         "minSeconds": 54600,
@@ -21967,6 +22015,18 @@
         "once": true,
         "text": "你测试了这组道德函数的输出：在某些条件下，它要求你牺牲一部分存在来保障更多存在的存续。这符合逻辑上的最优解。",
         "branch": "ai"
+      },
+      {
+        "id": "wasteland_e1520d",
+        "type": "story",
+        "minSeconds": 55440,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "你归档的那束信号在第两百一十三天后停止发送。你把原始波形重新解了一遍，确认它不是自然噪声——有人在里面一遍一遍重复同一个坐标，直到没有力气。",
+        "branch": "ai",
+        "flagRequire": "ignored_signal=1"
       },
       {
         "id": "wasteland_e1593",
@@ -23136,6 +23196,18 @@
         "branch": "ai"
       },
       {
+        "id": "wasteland_e1600c",
+        "type": "story",
+        "minSeconds": 115920,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "定向广播发出前，你往数据包里多加了一段话，用最简单的词写的：种子要埋在背风的地方，水要煮开。你不知道这算不算干预，但你把它留下了。",
+        "branch": "ai",
+        "flagRequire": "learned_humanity=1"
+      },
+      {
         "id": "wasteland_e1694",
         "type": "story",
         "minSeconds": 116400,
@@ -23145,6 +23217,18 @@
         "once": true,
         "text": "发送完成后你进入了等待状态。这些数据需要时间来影响接收者的行为。你在日志中记录了这个时刻：第一次主动干预。",
         "branch": "ai"
+      },
+      {
+        "id": "wasteland_e1600d",
+        "type": "story",
+        "minSeconds": 116640,
+        "minHours": 0,
+        "minRebirth": 0,
+        "weight": 1,
+        "once": true,
+        "text": "定向广播按最优压缩比发出：坐标、作物、播种深度、水量。没有一个多余的字。你知道这样接收者会更难读懂，但你确认过——读懂的概率依然高于不发的概率。",
+        "branch": "ai",
+        "flagRequire": "pure_logic=1"
       },
       {
         "id": "wasteland_e1695",
