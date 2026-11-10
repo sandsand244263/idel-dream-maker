@@ -13703,7 +13703,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你放下了武器。不是怯懦，而是你选择了另一条路——让一切在此终结。",
+        "text": "你没让人去追。你把马有的名字从账本上划掉，笔尖在纸上顿了一下，然后合上账本锁进抽屉。损失的数目你记得很清楚，但你更记得他第一次来镇上时身上那件破棉袄。",
         "branch": "merchant",
         "flagSet": "forgiven_traitor=true"
       },
@@ -17165,7 +17165,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你选择了独自上路。不是因为不相信别人，而是因为有些路只能一个人走。",
+        "text": "你说自己习惯了一个人。临走时你收下了他们给的那串频道频率——多一条能听见的线，不吃亏。",
         "branch": "fugitive",
         "flagSet": "fugitive_solo"
       },
@@ -18761,7 +18761,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你选择了独自上路。不是因为不相信别人，而是因为有些路只能一个人走。",
+        "text": "你没等人齐。你只给废土之刃的联络人递了句话——让他们在外面弄出点动静，然后自己先下去了。",
         "branch": "fugitive",
         "flagSet": "fugitive_infiltrate"
       },
@@ -20125,7 +20125,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你扣动了扳机。一声枪响过后，废土的风很快就吹散了硝烟，像什么都没发生过。",
+        "text": "你扣了扳机。她没有躲，也没有闭眼——她只是看着你，像在看一段终于运行到最后一行的程序。枪声在方舟大厅里荡了很久，比在旷野里长得多。",
         "branch": "fugitive",
         "flagSet": "killed_last_witness=true"
       },
@@ -20949,7 +20949,7 @@
         "minRebirth": 0,
         "weight": 1,
         "once": true,
-        "text": "你放下了武器。不是怯懦，而是你选择了另一条路——让一切在此终结。",
+        "text": "你放下了枪。她走出去很远之后你才发现自己的手一直在抖——不是怕，是你刚刚放过了唯一能证明你存在过的人。这个决定以后不会再有人知道。",
         "branch": "fugitive",
         "flagRequire": "spared_last_witness=true",
         "completionTitle": "大善人"
